@@ -1,0 +1,13 @@
+{
+  "NAME": "floating_fire_l",
+  "MAGICS": [
+    {
+      "NAME": "magic0031L",
+      "CX": -40,
+      "CY": -50,
+      "INTERVAL": 50,
+      "REPEAT": true,
+      "SPECIAL_FLAG": 0
+    }
+  ]
+}

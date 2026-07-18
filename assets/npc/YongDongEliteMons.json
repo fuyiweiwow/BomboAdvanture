@@ -1,0 +1,14 @@
+{
+  "name": "EliteMons",
+  "chs_name": "精锐魔王兵",
+  "character": "Character18804",
+  "blood": 6400,
+  "self_damage_blood": 3532,
+  "speed": 3,
+  "contact": 1200,
+  "defense": 2000,
+  "resent_dist": 6,
+  "skills": [
+    {"name": "ThunderAttack", "init": 3000, "interval": 3000, "max": -1}
+  ]
+}

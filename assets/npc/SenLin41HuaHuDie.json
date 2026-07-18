@@ -1,0 +1,13 @@
+{
+  "name": "SenLin41HuaHuDie",
+  "chs_name": "花蝴蝶",
+  "character": "Character18709",
+  "blood": 750,
+  "speed": 2.5,
+  "contact": 50,
+  "defense": 100,
+  "resent_dist": 7,
+  "skills": [
+    {"name": "Skill21044", "init": 2500, "interval": 3000, "max": -1}
+  ]
+}

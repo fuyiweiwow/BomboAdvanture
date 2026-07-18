@@ -1,0 +1,31 @@
+{
+  "TYPE": "desert",
+  "NAME": "elem6",
+  "WIDTH": 1,
+  "HEIGHT": 1,
+  "BLOCK": [[[1, 1]], [[1], [1]]],
+  "BREAKABLE": true,
+  "CAN_HIDE": false,
+  "INTERVAL": 100,
+
+  "STAND": {
+    "IMG": [
+      "elem6_stand_0_0.png"
+    ],
+
+    "CX": [-3],
+    "CY": [-23]
+  },
+
+  "DIE": {
+    "IMG": [
+      "elem6_die_0_0.png",
+      "elem6_die_0_1.png",
+      "elem6_die_0_2.png"
+    ],
+
+    "CX": [-4, -4, -4],
+    "CY": [-23, -18, -12]
+  }
+
+}

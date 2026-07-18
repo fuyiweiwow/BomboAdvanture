@@ -1,0 +1,23 @@
+{
+  "NAME": "recovery",
+  "MAGICS": [
+    {
+      "NAME": "magic0088",
+      "CX": -40,
+      "CY": -60,
+      "INTERVAL": 80,
+      "REPEAT": true,
+      "COLOR_ADD": [0, 255, 128],
+      "SPECIAL_FLAG": 0
+    },
+    {
+      "NAME": "magic0030",
+      "CX": -30,
+      "CY": -30,
+      "INTERVAL": 20,
+      "REPEAT": true,
+      "COLOR_ADD": [0, 0, 0],
+      "SPECIAL_FLAG": 0
+    }
+  ]
+}

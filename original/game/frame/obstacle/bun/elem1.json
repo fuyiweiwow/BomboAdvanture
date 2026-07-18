@@ -1,0 +1,42 @@
+{
+  "TYPE": "bun",
+  "NAME": "elem1",
+  "WIDTH": 1,
+  "HEIGHT": 1,
+  "BLOCK": [[[0, 0]], [[0], [0]]],
+  "BREAKABLE": true,
+  "CAN_HIDE": false,
+  "BACKGROUND": false,
+  "INTERVAL": 100,
+  "CAN_PUSH": true,
+  "PUSH_TIME": 500,
+  "CONTACT": 200,
+
+  "STAND": {
+      "IMG": [
+        "elem1_stand_0_0.png"
+      ],
+      "CX": [-2],
+      "CY": [-10]
+  },
+
+  "PUSH": {
+    "IMG": [
+      "elem1_die_0_0.png"
+    ],
+    "CX": [-1],
+    "CY": [-4]
+  },
+
+  "DIE": {
+      "IMG": [
+        "elem1_die_0_0.png",
+        "elem1_die_0_1.png",
+        "elem1_die_0_2.png",
+        "elem1_die_0_3.png"
+      ],
+      "CX": [-1, -1, -2, -1],
+      "CY": [-4, -3, -10, -10]
+  }
+
+}

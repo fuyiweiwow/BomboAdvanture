@@ -1,0 +1,13 @@
+{
+  "name": "JourneyGoldenBird",
+  "chs_name": "金雀",
+  "character": "Pet63",
+  "blood": 100,
+  "speed": 3,
+  "contact": 0,
+  "defense": 0,
+  "resent_dist": 4,
+  "skills": [
+    {"name": "BombThrowGold", "init": 2500, "interval": 10000, "max": -1}
+  ]
+}

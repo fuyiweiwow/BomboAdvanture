@@ -1,0 +1,14 @@
+{
+  "name": "JourneyChristmasBunny",
+  "chs_name": "圣诞兔",
+  "character": "Pet92",
+  "blood": 15000,
+  "speed": 3,
+  "contact": 800,
+  "defense": 3500,
+  "resent_dist": 5,
+  "skills": [
+    {"name": "BombEscape", "init": 0, "interval": 0, "max": 1},
+    {"name": "BombJail", "init": 2500, "interval": 10000, "max": -1}
+  ]
+}

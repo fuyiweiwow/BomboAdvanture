@@ -1,0 +1,13 @@
+{
+  "name": "JourneyLongMaoSmall",
+  "chs_name": "迷你龙猫",
+  "character": "Pet93",
+  "blood": 12000,
+  "speed": 3,
+  "contact": 500,
+  "defense": 7000,
+  "resent_dist": 4,
+  "skills": [
+    {"name": "TemporaryHidden", "init": 2500, "interval": 6000, "max": -1}
+  ]
+}

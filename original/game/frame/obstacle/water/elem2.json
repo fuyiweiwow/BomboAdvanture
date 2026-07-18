@@ -1,0 +1,30 @@
+{
+  "TYPE": "water",
+  "NAME": "elem2",
+  "WIDTH": 1,
+  "HEIGHT": 1,
+  "BLOCK": [[[1, 1]], [[1], [1]]],
+  "BREAKABLE": true,
+  "CAN_HIDE": false,
+  "INTERVAL": 100,
+
+  "STAND": {
+      "IMG": [
+        "elem2_stand_0_0.png"
+      ],
+      "CX": [-5],
+      "CY": [-12]
+  },
+
+  "DIE": {
+      "IMG": [
+        "elem2_die_0_0.png",
+        "elem2_die_0_1.png",
+        "elem2_die_0_2.png",
+        "elem2_die_0_3.png"
+      ],
+      "CX": [-5, -5, -5, -5],
+      "CY": [-5, 1, 3, 5]
+  }
+
+}

@@ -1,0 +1,13 @@
+{
+  "name": "ShowWangFanaticSnowball",
+  "chs_name": "疯狂的雪球怪",
+  "character": "Character18805",
+  "blood": 3000,
+  "speed": 3,
+  "contact": 300,
+  "defense": 500,
+  "resent_dist": 6,
+  "skills": [
+    {"name": "Skill21008", "init": 2000, "interval": 0, "max": 1}
+  ]
+}

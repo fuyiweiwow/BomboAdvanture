@@ -1,0 +1,14 @@
+{
+  "name": "MiZhiDiRedWizard",
+  "chs_name": "厉害的红巫师",
+  "character": "Character17601",
+  "blood": 32000,
+  "self_damage_blood": 3532,
+  "speed": 3,
+  "contact": 2000,
+  "defense": 11000,
+  "resent_dist": 7,
+  "skills": [
+    {"name": "HeiLongAbyssDragonRecovery", "init": 3000, "interval": 15000, "max": -1}
+  ]
+}

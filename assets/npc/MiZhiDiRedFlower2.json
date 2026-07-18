@@ -1,0 +1,13 @@
+{
+  "name": "MiZhiDiRedFlower2",
+  "chs_name": "厉害的大红花",
+  "character": "Character18704",
+  "blood": 4000,
+  "speed": 2.5,
+  "contact": 600,
+  "defense": 1600,
+  "resent_dist": 7,
+  "skills": [
+    {"name": "HeiLongFloatingFire", "init": 3000, "interval": 5000, "max": -1}
+  ]
+}

@@ -1,0 +1,212 @@
+{
+    "NAME": "cap672",
+    "STAND_R": {
+        "IMG": [
+            "cap672_stand_0_0.png",
+            "cap672_stand_0_1.png",
+            "cap672_stand_0_2.png",
+            "cap672_stand_0_3.png",
+            "cap672_stand_0_4.png",
+            "cap672_stand_0_5.png"
+        ],
+        "CX": [
+            23,
+            23,
+            23,
+            23,
+            23,
+            23
+        ],
+        "CY": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+        ]
+    },
+    "STAND_U": {
+        "IMG": [
+            "cap672_stand_1_0.png",
+            "cap672_stand_1_1.png",
+            "cap672_stand_1_2.png",
+            "cap672_stand_1_3.png",
+            "cap672_stand_1_4.png",
+            "cap672_stand_1_5.png"
+        ],
+        "CX": [
+            10,
+            10,
+            10,
+            10,
+            10,
+            10
+        ],
+        "CY": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+        ]
+    },
+    "STAND_L": {
+        "IMG": [
+            "cap672_stand_2_0.png",
+            "cap672_stand_2_1.png",
+            "cap672_stand_2_2.png",
+            "cap672_stand_2_3.png",
+            "cap672_stand_2_4.png",
+            "cap672_stand_2_5.png"
+        ],
+        "CX": [
+            26,
+            26,
+            26,
+            26,
+            26,
+            26
+        ],
+        "CY": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+        ]
+    },
+    "STAND_D": {
+        "IMG": [
+            "cap672_stand_3_0.png",
+            "cap672_stand_3_1.png",
+            "cap672_stand_3_2.png",
+            "cap672_stand_3_3.png",
+            "cap672_stand_3_4.png",
+            "cap672_stand_3_5.png"
+        ],
+        "CX": [
+            10,
+            10,
+            10,
+            10,
+            10,
+            10
+        ],
+        "CY": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+        ]
+    },
+    "R": {
+        "IMG": [
+            "cap672_walk_0_0.png",
+            "cap672_walk_0_1.png",
+            "cap672_walk_0_2.png",
+            "cap672_walk_0_3.png",
+            "cap672_walk_0_4.png",
+            "cap672_walk_0_5.png"
+        ],
+        "CX": [
+            23,
+            23,
+            23,
+            23,
+            23,
+            23
+        ],
+        "CY": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+        ]
+    },
+    "U": {
+        "IMG": [
+            "cap672_walk_1_0.png",
+            "cap672_walk_1_1.png",
+            "cap672_walk_1_2.png",
+            "cap672_walk_1_3.png",
+            "cap672_walk_1_4.png",
+            "cap672_walk_1_5.png"
+        ],
+        "CX": [
+            10,
+            11,
+            12,
+            10,
+            9,
+            8
+        ],
+        "CY": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+        ]
+    },
+    "L": {
+        "IMG": [
+            "cap672_walk_2_0.png",
+            "cap672_walk_2_1.png",
+            "cap672_walk_2_2.png",
+            "cap672_walk_2_3.png",
+            "cap672_walk_2_4.png",
+            "cap672_walk_2_5.png"
+        ],
+        "CX": [
+            26,
+            26,
+            26,
+            26,
+            26,
+            26
+        ],
+        "CY": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+        ]
+    },
+    "D": {
+        "IMG": [
+            "cap672_walk_3_0.png",
+            "cap672_walk_3_1.png",
+            "cap672_walk_3_2.png",
+            "cap672_walk_3_3.png",
+            "cap672_walk_3_4.png",
+            "cap672_walk_3_5.png"
+        ],
+        "CX": [
+            10,
+            9,
+            8,
+            10,
+            11,
+            12
+        ],
+        "CY": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+        ]
+    },
+    "INTERVAL": 200
+}

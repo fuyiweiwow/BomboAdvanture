@@ -1,0 +1,212 @@
+{
+    "NAME": "cladorn34",
+    "STAND_R": {
+        "IMG": [
+            "cladorn34_stand_0_0.png",
+            "cladorn34_stand_0_1.png",
+            "cladorn34_stand_0_2.png",
+            "cladorn34_stand_0_3.png",
+            "cladorn34_stand_0_4.png",
+            "cladorn34_stand_0_5.png"
+        ],
+        "CX": [
+            39,
+            39,
+            39,
+            39,
+            39,
+            37
+        ],
+        "CY": [
+            61,
+            61,
+            61,
+            61,
+            61,
+            61
+        ]
+    },
+    "STAND_U": {
+        "IMG": [
+            "cladorn34_stand_1_0.png",
+            "cladorn34_stand_1_1.png",
+            "cladorn34_stand_1_2.png",
+            "cladorn34_stand_1_3.png",
+            "cladorn34_stand_1_4.png",
+            "cladorn34_stand_1_5.png"
+        ],
+        "CX": [
+            34,
+            36,
+            37,
+            34,
+            36,
+            38
+        ],
+        "CY": [
+            60,
+            60,
+            60,
+            60,
+            60,
+            60
+        ]
+    },
+    "STAND_L": {
+        "IMG": [
+            "cladorn34_stand_2_0.png",
+            "cladorn34_stand_2_1.png",
+            "cladorn34_stand_2_2.png",
+            "cladorn34_stand_2_3.png",
+            "cladorn34_stand_2_4.png",
+            "cladorn34_stand_2_5.png"
+        ],
+        "CX": [
+            39,
+            39,
+            37,
+            39,
+            39,
+            38
+        ],
+        "CY": [
+            61,
+            61,
+            61,
+            61,
+            61,
+            61
+        ]
+    },
+    "STAND_D": {
+        "IMG": [
+            "cladorn34_stand_3_0.png",
+            "cladorn34_stand_3_1.png",
+            "cladorn34_stand_3_2.png",
+            "cladorn34_stand_3_3.png",
+            "cladorn34_stand_3_4.png",
+            "cladorn34_stand_3_5.png"
+        ],
+        "CX": [
+            34,
+            36,
+            37,
+            34,
+            36,
+            38
+        ],
+        "CY": [
+            60,
+            60,
+            60,
+            60,
+            60,
+            60
+        ]
+    },
+    "R": {
+        "IMG": [
+            "cladorn34_walk_0_0.png",
+            "cladorn34_walk_0_1.png",
+            "cladorn34_walk_0_2.png",
+            "cladorn34_walk_0_3.png",
+            "cladorn34_walk_0_4.png",
+            "cladorn34_walk_0_5.png"
+        ],
+        "CX": [
+            39,
+            39,
+            39,
+            39,
+            39,
+            37
+        ],
+        "CY": [
+            61,
+            61,
+            61,
+            61,
+            61,
+            61
+        ]
+    },
+    "U": {
+        "IMG": [
+            "cladorn34_walk_1_0.png",
+            "cladorn34_walk_1_1.png",
+            "cladorn34_walk_1_2.png",
+            "cladorn34_walk_1_3.png",
+            "cladorn34_walk_1_4.png",
+            "cladorn34_walk_1_5.png"
+        ],
+        "CX": [
+            34,
+            36,
+            37,
+            34,
+            36,
+            38
+        ],
+        "CY": [
+            60,
+            60,
+            60,
+            60,
+            60,
+            60
+        ]
+    },
+    "L": {
+        "IMG": [
+            "cladorn34_walk_2_0.png",
+            "cladorn34_walk_2_1.png",
+            "cladorn34_walk_2_2.png",
+            "cladorn34_walk_2_3.png",
+            "cladorn34_walk_2_4.png",
+            "cladorn34_walk_2_5.png"
+        ],
+        "CX": [
+            39,
+            39,
+            37,
+            39,
+            39,
+            38
+        ],
+        "CY": [
+            61,
+            61,
+            61,
+            61,
+            61,
+            61
+        ]
+    },
+    "D": {
+        "IMG": [
+            "cladorn34_walk_3_0.png",
+            "cladorn34_walk_3_1.png",
+            "cladorn34_walk_3_2.png",
+            "cladorn34_walk_3_3.png",
+            "cladorn34_walk_3_4.png",
+            "cladorn34_walk_3_5.png"
+        ],
+        "CX": [
+            34,
+            36,
+            37,
+            34,
+            36,
+            38
+        ],
+        "CY": [
+            60,
+            60,
+            60,
+            60,
+            60,
+            60
+        ]
+    },
+    "INTERVAL": 200
+}

@@ -1,0 +1,21 @@
+﻿# res://src/core/const_color.gd  (autoload: C)
+extends Node
+
+# (game/const/color.py)  -- values are Godot Colors (0..1)
+const CHARACTER_RED = Color(1.0, 0.0, 0.0)
+const CHARACTER_BLUE = Color(0.0, 102.0 / 255.0, 1.0)
+const CHARACTER_YELLOW = Color(1.0, 176.0 / 255.0, 0.0)
+const CHARACTER_GREEN = Color(64.0 / 255.0, 160.0 / 255.0, 64.0 / 255.0)
+const CHARACTER_ORANGE = Color(1.0, 106.0 / 255.0, 0.0)
+const CHARACTER_PINK = Color(1.0, 64.0 / 255.0, 160.0 / 255.0)
+const CHARACTER_PURPLE = Color(160.0 / 255.0, 32.0 / 255.0, 1.0)
+const CHARACTER_BLACK = Color(96.0 / 255.0, 96.0 / 255.0, 96.0 / 255.0)
+const CHARACTER_WHITE = Color(128.0 / 255.0, 128.0 / 255.0, 128.0 / 255.0)
+
+const COLOR_WHITE = Color(1.0, 1.0, 1.0)
+const COLOR_RED = Color(1.0, 0.0, 0.0)
+const COLOR_GREEN = Color(0.0, 1.0, 0.0)
+const COLOR_BLUE = Color(0.0, 0.0, 1.0)
+const COLOR_YELLOW = Color(1.0, 1.0, 0.0)
+const COLOR_CYAN = Color(0.0, 1.0, 1.0)
+const COLOR_BLACK = Color(0.0, 0.0, 0.0)

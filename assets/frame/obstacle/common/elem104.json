@@ -1,0 +1,28 @@
+{
+  "TYPE": "common",
+  "NAME": "elem104",
+  "WIDTH": 1,
+  "HEIGHT": 1,
+  "BLOCK": [[[1, 1]], [[1], [1]]],
+  "BREAKABLE": true,
+  "CAN_HIDE": false,
+  "INTERVAL": 100,
+
+  "STAND": {
+    "IMG": [
+      "elem104_stand_0_0.png"
+    ],
+    "CX": [2],
+    "CY": [-14]
+  },
+
+  "DIE": {
+    "IMG": [
+      "elem104_die_0_0.png",
+      "elem104_die_0_1.png",
+      "elem104_die_0_2.png"
+    ],
+    "CX": [2, 1, 1],
+    "CY": [-14, -16, -16]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "JourneyIceWizard",
+  "chs_name": "冰法师",
+  "character": "Character18101",
+  "blood": 15000,
+  "speed": 2.5,
+  "contact": 1000,
+  "defense": 2000,
+  "resent_dist": 5,
+  "skills": [
+    {"name": "DistantIce5x5", "init": 3500, "interval": 10000, "max": -1},
+    {"name": "HeiLongPutIceTrap", "init": 2500, "interval": 10000, "max": -1}
+  ]
+}

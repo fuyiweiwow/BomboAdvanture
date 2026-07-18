@@ -1,0 +1,13 @@
+{
+  "name": "Puppet",
+  "chs_name": "粗线假人",
+  "character": "Character17101",
+  "blood": 8100,
+  "speed": 3,
+  "contact": 120,
+  "defense": 0,
+  "resent_dist": 3,
+  "skills": [
+    {"name": "Skill21018", "init": 2000, "interval": 10000, "max": -1}
+  ]
+}

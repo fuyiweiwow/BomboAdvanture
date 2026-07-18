@@ -1,0 +1,24 @@
+{
+    "NAME": "bomb462",
+    "STAND": {
+        "IMG": [
+            "bomb462_stand_0_0.png",
+            "bomb462_stand_0_1.png",
+            "bomb462_stand_0_2.png",
+            "bomb462_stand_0_3.png"
+        ],
+        "CX": [
+            3,
+            2,
+            2,
+            4
+        ],
+        "CY": [
+            8,
+            11,
+            11,
+            6
+        ]
+    },
+    "INTERVAL": 250
+}

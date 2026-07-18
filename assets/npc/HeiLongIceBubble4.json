@@ -1,0 +1,13 @@
+{
+  "name": "HeiLongIceBubble4",
+  "chs_name": "冰泡泡",
+  "character": "Character18301",
+  "blood": 500,
+  "speed": 3,
+  "contact": 0,
+  "defense": 20,
+  "resent_dist": 6,
+  "skills": [
+    {"name": "HeiLongPutIceTrap", "init": 2500, "interval": 10000, "max": -1}
+  ]
+}

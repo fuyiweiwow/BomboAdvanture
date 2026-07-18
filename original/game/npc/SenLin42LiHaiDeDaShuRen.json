@@ -1,0 +1,13 @@
+{
+  "name": "SenLin42LiHaiDeDaShuRen",
+  "chs_name": "厉害的大树人",
+  "character": "Character18706",
+  "blood": 16000,
+  "self_damage_blood": 4556,
+  "speed": 2.5,
+  "contact": 1000,
+  "defense": 6400,
+  "resent_dist": 7,
+  "skills": [
+  ]
+}

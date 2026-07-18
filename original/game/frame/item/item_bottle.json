@@ -1,0 +1,20 @@
+{
+  "NAME": "item_bottle",
+  "INTERVAL": 300,
+
+  "STAND": {
+      "IMG": [
+        "item30001_stand_0_0.png",
+        "item30001_stand_0_1.png",
+        "item30001_stand_0_2.png",
+        "item30001_stand_0_1.png",
+        "item30001_stand_0_0.png",
+        "item30001_stand_0_1.png",
+        "item30001_stand_0_2.png",
+        "item30001_stand_0_1.png"
+      ],
+      "CX": [3, 3, 3, 3, 3, 3, 3, 3],
+      "CY": [5, 4, 3, 2, 1, 2, 3, 4]
+  }
+
+}

@@ -1,0 +1,212 @@
+{
+    "NAME": "fpack128",
+    "STAND_R": {
+        "IMG": [
+            "fpack128_stand_0_0.png",
+            "fpack128_stand_0_1.png",
+            "fpack128_stand_0_2.png",
+            "fpack128_stand_0_3.png",
+            "fpack128_stand_0_4.png",
+            "fpack128_stand_0_5.png"
+        ],
+        "CX": [
+            30,
+            29,
+            10,
+            14,
+            8,
+            4
+        ],
+        "CY": [
+            19,
+            22,
+            17,
+            2,
+            11,
+            19
+        ]
+    },
+    "STAND_U": {
+        "IMG": [
+            "fpack128_stand_1_0.png",
+            "fpack128_stand_1_1.png",
+            "fpack128_stand_1_2.png",
+            "fpack128_stand_1_3.png",
+            "fpack128_stand_1_4.png",
+            "fpack128_stand_1_5.png"
+        ],
+        "CX": [
+            4,
+            11,
+            9,
+            16,
+            16,
+            8
+        ],
+        "CY": [
+            36,
+            25,
+            15,
+            5,
+            12,
+            11
+        ]
+    },
+    "STAND_L": {
+        "IMG": [
+            "fpack128_stand_2_0.png",
+            "fpack128_stand_2_1.png",
+            "fpack128_stand_2_2.png",
+            "fpack128_stand_2_3.png",
+            "fpack128_stand_2_4.png",
+            "fpack128_stand_2_5.png"
+        ],
+        "CX": [
+            42,
+            44,
+            52,
+            52,
+            52,
+            52
+        ],
+        "CY": [
+            19,
+            22,
+            17,
+            2,
+            11,
+            19
+        ]
+    },
+    "STAND_D": {
+        "IMG": [
+            "fpack128_stand_3_0.png",
+            "fpack128_stand_3_1.png",
+            "fpack128_stand_3_2.png",
+            "fpack128_stand_3_3.png",
+            "fpack128_stand_3_4.png",
+            "fpack128_stand_3_5.png"
+        ],
+        "CX": [
+            4,
+            11,
+            9,
+            16,
+            16,
+            8
+        ],
+        "CY": [
+            36,
+            25,
+            15,
+            5,
+            12,
+            11
+        ]
+    },
+    "R": {
+        "IMG": [
+            "fpack128_walk_0_0.png",
+            "fpack128_walk_0_1.png",
+            "fpack128_walk_0_2.png",
+            "fpack128_walk_0_3.png",
+            "fpack128_walk_0_4.png",
+            "fpack128_walk_0_5.png"
+        ],
+        "CX": [
+            30,
+            29,
+            10,
+            14,
+            8,
+            4
+        ],
+        "CY": [
+            19,
+            22,
+            17,
+            2,
+            11,
+            19
+        ]
+    },
+    "U": {
+        "IMG": [
+            "fpack128_walk_1_0.png",
+            "fpack128_walk_1_1.png",
+            "fpack128_walk_1_2.png",
+            "fpack128_walk_1_3.png",
+            "fpack128_walk_1_4.png",
+            "fpack128_walk_1_5.png"
+        ],
+        "CX": [
+            4,
+            11,
+            9,
+            16,
+            16,
+            8
+        ],
+        "CY": [
+            36,
+            25,
+            15,
+            5,
+            12,
+            11
+        ]
+    },
+    "L": {
+        "IMG": [
+            "fpack128_walk_2_0.png",
+            "fpack128_walk_2_1.png",
+            "fpack128_walk_2_2.png",
+            "fpack128_walk_2_3.png",
+            "fpack128_walk_2_4.png",
+            "fpack128_walk_2_5.png"
+        ],
+        "CX": [
+            42,
+            44,
+            52,
+            52,
+            52,
+            52
+        ],
+        "CY": [
+            19,
+            22,
+            17,
+            2,
+            11,
+            19
+        ]
+    },
+    "D": {
+        "IMG": [
+            "fpack128_walk_3_0.png",
+            "fpack128_walk_3_1.png",
+            "fpack128_walk_3_2.png",
+            "fpack128_walk_3_3.png",
+            "fpack128_walk_3_4.png",
+            "fpack128_walk_3_5.png"
+        ],
+        "CX": [
+            4,
+            11,
+            9,
+            16,
+            16,
+            8
+        ],
+        "CY": [
+            36,
+            25,
+            15,
+            5,
+            12,
+            11
+        ]
+    },
+    "INTERVAL": 200
+}

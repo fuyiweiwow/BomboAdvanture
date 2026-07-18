@@ -1,0 +1,16 @@
+{
+  "name": "Ghost",
+  "chs_name": "魔法僧儡",
+  "character": "Character18401",
+  "blood": 16000,
+  "speed": 2.5,
+  "contact": 500,
+  "defense": 0,
+  "resent_dist": 3,
+  "skills": [
+    {"name": "HeiLongHellDragonCharge", "init": 12000, "interval": 36000, "max": -1},
+    {"name": "RevengeDash", "init": 0, "interval": 0, "max": 1},
+    {"name": "Skill21044", "init": 3000, "interval": 1000, "max": -1},
+    {"name": "LandQuake", "init": 0, "interval": 0, "max": 1}
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "SenLin52ShiTouRen",
+  "chs_name": "石头人",
+  "character": "Character18707",
+  "blood": 16000,
+  "self_damage_blood": 3556,
+  "speed": 2.5,
+  "contact": 1400,
+  "defense": 3200,
+  "resent_dist": 8,
+  "skills": [
+    {"name": "HeiLongDizzy9x9", "init": 3000, "interval": 9000, "max": -1}
+  ]
+}

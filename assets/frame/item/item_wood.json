@@ -1,0 +1,20 @@
+{
+  "NAME": "item_wood",
+  "INTERVAL": 300,
+
+  "STAND": {
+      "IMG": [
+        "item30049_stand_0_0.png",
+        "item30049_stand_0_1.png",
+        "item30049_stand_0_2.png",
+        "item30049_stand_0_1.png",
+        "item30049_stand_0_0.png",
+        "item30049_stand_0_1.png",
+        "item30049_stand_0_2.png",
+        "item30049_stand_0_1.png"
+      ],
+      "CX": [0, 0, 0, 0, 0, 0, 0, 0],
+      "CY": [8, 7, 6, 5, 4, 5, 6, 7]
+  }
+
+}

@@ -1,0 +1,49 @@
+[地图]
+HeiLong		黑龙王国（全7关）
+SenLin		谜之森林
+MiZhiDi		谜之底
+FengBao		风暴海湾（悠闲制作）
+JiZhou		极昼平原（悠闲制作）
+NuFeng		怒风峡谷（悠闲制作）
+ShouWang	守望山麓（悠闲制作）
+YongDong	永冬之巅
+YeWai		魔法王国野外营地（100の雨女制作）
+
+
+[人物]
+Maomao		毛毛
+Asha		阿莎
+Monkey		小悟空
+Titan		泰坦
+Fox		小倩
+Maria		玛丽亚
+CaiBaozi	菜包子
+Xiami		小虾米
+
+
+[人物技能]
+BloodElixirSmall	小体力药
+BloodElixirMiddle	中体力药
+BloodElixirLarge	大体力药
+PowerElixir		力量药水
+FriendlyElixir		玫瑰药水
+MockingElixir		嘲笑药水
+RevivalCard		复活卡
+FireworkRed		红色烟花
+FireworkYellow		黄色烟花
+FireworkBlue		蓝色烟花
+FireworkGreen		绿色烟花
+FireworkPurple		紫色烟花
+FireworkHeart		心形烟花
+FireworkRound		圆形烟花
+
+
+[颜色]
+Red		红色
+Blue		蓝色
+Yellow		黄色
+Green		绿色
+Pink		粉色
+Orange		橙色
+Purple		紫色
+Black		黑色

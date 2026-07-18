@@ -1,0 +1,14 @@
+{
+  "NAME": "dirty_path",
+  "MAGICS": [
+    {
+      "NAME": "magic0130",
+      "CX": 0,
+      "CY": 20,
+      "INTERVAL": 50,
+      "REPEAT": true,
+      "COLOR_SUB": [127, 0, 0],
+      "SPECIAL_FLAG": 0
+    }
+  ]
+}

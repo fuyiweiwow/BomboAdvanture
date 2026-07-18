@@ -1,0 +1,17 @@
+{
+  "name": "PoisonBall",
+  "chs_name": "淬毒傀儡",
+  "character": "Character16901",
+  "blood": 5400,
+  "speed": 3.5,
+  "contact": 85,
+  "defense": 0,
+  "resent_dist": 3,
+  "skills": [
+    {"name": "Skill21007", "init": 2000, "interval": 1000, "max": -1}
+  ],
+  "gifts": [
+    {"name": "item_cucumber", "possibility": 0.5},
+    {"name": "item_cabbage", "possibility": 0.5}
+  ]
+}

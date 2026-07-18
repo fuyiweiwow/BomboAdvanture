@@ -1,0 +1,25 @@
+{
+  "name": "DarkBall",
+  "chs_name": "黑暗元素",
+  "character": "Character16801",
+  "blood": 15000,
+  "speed": 3.6,
+  "contact": 300,
+  "defense": 2000,
+  "resent_dist": 6,
+  "skills": [
+    {"name": "Skill21008", "init": 2000, "interval": 0, "max": 1},
+    {"name": "Skill21008", "init": 3500, "interval": 0, "max": 1},
+    {"name": "Skill21008", "init": 5000, "interval": 0, "max": 1},
+    {"name": "Skill21011", "init": 16500, "interval": 0, "max": 1},
+    {"name": "Skill21011", "init": 18000, "interval": 0, "max": 1},
+    {"name": "Skill21011", "init": 19500, "interval": 0, "max": 1},
+    {"name": "Skill21014", "init": 21000, "interval": 0, "max": 1},
+    {"name": "Skill21014", "init": 33500, "interval": 0, "max": 1},
+    {"name": "Skill21014", "init": 41000, "interval": 0, "max": 1}
+  ],
+  "gifts": [
+    {"name": "item_iron", "possibility": 0.8},
+    {"name": "item_pet_card", "possibility": 1}
+  ]
+}

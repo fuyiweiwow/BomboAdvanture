@@ -1,0 +1,13 @@
+{
+  "name": "JourneyNineTailedFoxCub",
+  "chs_name": "九尾幼崽",
+  "character": "Pet111",
+  "blood": 15000,
+  "speed": 3.5,
+  "contact": 1000,
+  "defense": 2000,
+  "resent_dist": 5,
+  "skills": [
+    {"name": "NearSlow", "init": 0, "interval": 0, "max": 1}
+  ]
+}

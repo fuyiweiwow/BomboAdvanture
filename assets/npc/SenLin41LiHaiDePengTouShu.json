@@ -1,0 +1,14 @@
+{
+  "name": "SenLin41LiHaiDePengTouShu",
+  "chs_name": "厉害的蓬头树",
+  "character": "Character18705",
+  "blood": 8000,
+  "self_damage_blood": 4556,
+  "speed": 2.5,
+  "contact": 800,
+  "defense": 3200,
+  "resent_dist": 7,
+  "skills": [
+    {"name": "Skill21054", "init": 12000, "interval": 20000, "max": -1}
+  ]
+}

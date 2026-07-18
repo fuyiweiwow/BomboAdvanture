@@ -1,0 +1,13 @@
+{
+  "name": "NuFengFanaticPuppet",
+  "chs_name": "狂热傀儡人",
+  "character": "Character18806",
+  "blood": 3000,
+  "speed": 3,
+  "contact": 400,
+  "defense": 1000,
+  "resent_dist": 6,
+  "skills": [
+
+  ]
+}

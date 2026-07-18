@@ -1,0 +1,13 @@
+{
+  "NAME": "defect_repeat",
+  "MAGICS": [
+    {
+      "NAME": "magic0026",
+      "CX": 0,
+      "CY": -10,
+      "INTERVAL": 80,
+      "REPEAT": true,
+      "SPECIAL_FLAG": 1
+    }
+  ]
+}

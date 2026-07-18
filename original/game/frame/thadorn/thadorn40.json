@@ -1,0 +1,212 @@
+{
+    "NAME": "thadorn40",
+    "STAND_R": {
+        "IMG": [
+            "thadorn40_stand_0_0.png",
+            "thadorn40_stand_0_1.png",
+            "thadorn40_stand_0_2.png",
+            "thadorn40_stand_0_3.png",
+            "thadorn40_stand_0_4.png",
+            "thadorn40_stand_0_5.png"
+        ],
+        "CX": [
+            32,
+            32,
+            32,
+            32,
+            32,
+            32
+        ],
+        "CY": [
+            2,
+            3,
+            4,
+            2,
+            3,
+            4
+        ]
+    },
+    "STAND_U": {
+        "IMG": [
+            "thadorn40_stand_1_0.png",
+            "thadorn40_stand_1_1.png",
+            "thadorn40_stand_1_2.png",
+            "thadorn40_stand_1_3.png",
+            "thadorn40_stand_1_4.png",
+            "thadorn40_stand_1_5.png"
+        ],
+        "CX": [
+            31,
+            31,
+            31,
+            31,
+            31,
+            31
+        ],
+        "CY": [
+            2,
+            3,
+            4,
+            2,
+            3,
+            4
+        ]
+    },
+    "STAND_L": {
+        "IMG": [
+            "thadorn40_stand_2_0.png",
+            "thadorn40_stand_2_1.png",
+            "thadorn40_stand_2_2.png",
+            "thadorn40_stand_2_3.png",
+            "thadorn40_stand_2_4.png",
+            "thadorn40_stand_2_5.png"
+        ],
+        "CX": [
+            40,
+            40,
+            40,
+            40,
+            40,
+            40
+        ],
+        "CY": [
+            2,
+            3,
+            4,
+            2,
+            3,
+            4
+        ]
+    },
+    "STAND_D": {
+        "IMG": [
+            "thadorn40_stand_3_0.png",
+            "thadorn40_stand_3_1.png",
+            "thadorn40_stand_3_2.png",
+            "thadorn40_stand_3_3.png",
+            "thadorn40_stand_3_4.png",
+            "thadorn40_stand_3_5.png"
+        ],
+        "CX": [
+            31,
+            31,
+            31,
+            31,
+            31,
+            31
+        ],
+        "CY": [
+            1,
+            2,
+            3,
+            1,
+            2,
+            3
+        ]
+    },
+    "R": {
+        "IMG": [
+            "thadorn40_walk_0_0.png",
+            "thadorn40_walk_0_1.png",
+            "thadorn40_walk_0_2.png",
+            "thadorn40_walk_0_3.png",
+            "thadorn40_walk_0_4.png",
+            "thadorn40_walk_0_5.png"
+        ],
+        "CX": [
+            32,
+            32,
+            32,
+            32,
+            32,
+            32
+        ],
+        "CY": [
+            2,
+            3,
+            4,
+            2,
+            3,
+            4
+        ]
+    },
+    "U": {
+        "IMG": [
+            "thadorn40_walk_1_0.png",
+            "thadorn40_walk_1_1.png",
+            "thadorn40_walk_1_2.png",
+            "thadorn40_walk_1_3.png",
+            "thadorn40_walk_1_4.png",
+            "thadorn40_walk_1_5.png"
+        ],
+        "CX": [
+            31,
+            31,
+            31,
+            31,
+            31,
+            31
+        ],
+        "CY": [
+            2,
+            3,
+            4,
+            2,
+            3,
+            4
+        ]
+    },
+    "L": {
+        "IMG": [
+            "thadorn40_walk_2_0.png",
+            "thadorn40_walk_2_1.png",
+            "thadorn40_walk_2_2.png",
+            "thadorn40_walk_2_3.png",
+            "thadorn40_walk_2_4.png",
+            "thadorn40_walk_2_5.png"
+        ],
+        "CX": [
+            40,
+            40,
+            40,
+            40,
+            40,
+            40
+        ],
+        "CY": [
+            2,
+            3,
+            4,
+            2,
+            3,
+            4
+        ]
+    },
+    "D": {
+        "IMG": [
+            "thadorn40_walk_3_0.png",
+            "thadorn40_walk_3_1.png",
+            "thadorn40_walk_3_2.png",
+            "thadorn40_walk_3_3.png",
+            "thadorn40_walk_3_4.png",
+            "thadorn40_walk_3_5.png"
+        ],
+        "CX": [
+            31,
+            31,
+            31,
+            31,
+            31,
+            31
+        ],
+        "CY": [
+            1,
+            2,
+            3,
+            1,
+            2,
+            3
+        ]
+    },
+    "INTERVAL": 200
+}

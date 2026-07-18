@@ -1,0 +1,212 @@
+{
+    "NAME": "footprint16",
+    "STAND_R": {
+        "IMG": [
+            "footprint16_stand_0_0.png",
+            "footprint16_stand_0_1.png",
+            "footprint16_stand_0_2.png",
+            "footprint16_stand_0_3.png",
+            "footprint16_stand_0_4.png",
+            "footprint16_stand_0_5.png"
+        ],
+        "CX": [
+            2,
+            1,
+            2,
+            2,
+            0,
+            2
+        ],
+        "CY": [
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+        ]
+    },
+    "STAND_U": {
+        "IMG": [
+            "footprint16_stand_1_0.png",
+            "footprint16_stand_1_1.png",
+            "footprint16_stand_1_2.png",
+            "footprint16_stand_1_3.png",
+            "footprint16_stand_1_4.png",
+            "footprint16_stand_1_5.png"
+        ],
+        "CX": [
+            7,
+            7,
+            7,
+            7,
+            7,
+            7
+        ],
+        "CY": [
+            2,
+            1,
+            2,
+            2,
+            0,
+            2
+        ]
+    },
+    "STAND_L": {
+        "IMG": [
+            "footprint16_stand_2_0.png",
+            "footprint16_stand_2_1.png",
+            "footprint16_stand_2_2.png",
+            "footprint16_stand_2_3.png",
+            "footprint16_stand_2_4.png",
+            "footprint16_stand_2_5.png"
+        ],
+        "CX": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+        ],
+        "CY": [
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+        ]
+    },
+    "STAND_D": {
+        "IMG": [
+            "footprint16_stand_3_0.png",
+            "footprint16_stand_3_1.png",
+            "footprint16_stand_3_2.png",
+            "footprint16_stand_3_3.png",
+            "footprint16_stand_3_4.png",
+            "footprint16_stand_3_5.png"
+        ],
+        "CX": [
+            7,
+            7,
+            7,
+            7,
+            7,
+            7
+        ],
+        "CY": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+        ]
+    },
+    "R": {
+        "IMG": [
+            "footprint16_walk_0_0.png",
+            "footprint16_walk_0_1.png",
+            "footprint16_walk_0_2.png",
+            "footprint16_walk_0_3.png",
+            "footprint16_walk_0_4.png",
+            "footprint16_walk_0_5.png"
+        ],
+        "CX": [
+            2,
+            1,
+            2,
+            2,
+            0,
+            2
+        ],
+        "CY": [
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+        ]
+    },
+    "U": {
+        "IMG": [
+            "footprint16_walk_1_0.png",
+            "footprint16_walk_1_1.png",
+            "footprint16_walk_1_2.png",
+            "footprint16_walk_1_3.png",
+            "footprint16_walk_1_4.png",
+            "footprint16_walk_1_5.png"
+        ],
+        "CX": [
+            7,
+            7,
+            7,
+            7,
+            7,
+            7
+        ],
+        "CY": [
+            2,
+            1,
+            2,
+            2,
+            0,
+            2
+        ]
+    },
+    "L": {
+        "IMG": [
+            "footprint16_walk_2_0.png",
+            "footprint16_walk_2_1.png",
+            "footprint16_walk_2_2.png",
+            "footprint16_walk_2_3.png",
+            "footprint16_walk_2_4.png",
+            "footprint16_walk_2_5.png"
+        ],
+        "CX": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+        ],
+        "CY": [
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+        ]
+    },
+    "D": {
+        "IMG": [
+            "footprint16_walk_3_0.png",
+            "footprint16_walk_3_1.png",
+            "footprint16_walk_3_2.png",
+            "footprint16_walk_3_3.png",
+            "footprint16_walk_3_4.png",
+            "footprint16_walk_3_5.png"
+        ],
+        "CX": [
+            7,
+            7,
+            7,
+            7,
+            7,
+            7
+        ],
+        "CY": [
+            4,
+            4,
+            4,
+            4,
+            4,
+            4
+        ]
+    },
+    "INTERVAL": 200
+}

@@ -1,0 +1,13 @@
+{
+  "name": "JourneyLongMaoMedium",
+  "chs_name": "中龙猫",
+  "character": "Pet94",
+  "blood": 24000,
+  "speed": 2.5,
+  "contact": 1000,
+  "defense": 10000,
+  "resent_dist": 5,
+  "skills": [
+    {"name": "LandQuake", "init": 0, "interval": 0, "max": 1}
+  ]
+}

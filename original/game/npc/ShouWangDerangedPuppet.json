@@ -1,0 +1,14 @@
+{
+  "name": "ShouWangDerangedPuppet",
+  "chs_name": "错乱的傀儡鸭",
+  "character": "Character18806",
+  "blood": 5000,
+  "self_damage_blood": 4556,
+  "speed": 3,
+  "contact": 600,
+  "defense": 1200,
+  "resent_dist": 6,
+  "skills": [
+
+  ]
+}

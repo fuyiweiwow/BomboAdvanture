@@ -1,0 +1,13 @@
+{
+  "NAME": "fire_explode",
+  "MAGICS": [
+    {
+      "NAME": "magic0006",
+      "CX": 0,
+      "CY": 0,
+      "INTERVAL": 50,
+      "REPEAT": false,
+      "SPECIAL_FLAG": 1
+    }
+  ]
+}

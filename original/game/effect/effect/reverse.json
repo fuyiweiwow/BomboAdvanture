@@ -1,0 +1,14 @@
+{
+  "NAME": "reverse",
+  "MAGICS": [
+    {
+      "NAME": "magic0025",
+      "CX": 0,
+      "CY": -40,
+      "INTERVAL": 100,
+      "REPEAT": true,
+      "MAX_TIME": 5000,
+      "SPECIAL_FLAG": 0
+    }
+  ]
+}

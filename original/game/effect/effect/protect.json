@@ -1,0 +1,14 @@
+{
+  "NAME": "protect",
+  "MAGICS": [
+    {
+      "NAME": "magic0139",
+      "CX": 0,
+      "CY": 0,
+      "INTERVAL": 50,
+      "REPEAT": true,
+      "COLOR_ADD": [64, 64, 64],
+      "SPECIAL_FLAG": 0
+    }
+  ]
+}

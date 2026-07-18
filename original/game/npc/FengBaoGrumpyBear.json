@@ -1,0 +1,14 @@
+{
+  "name": "FengBaoGrumpyBear",
+  "chs_name": "暴躁的永东熊",
+  "character": "Character18807",
+  "blood": 10000,
+  "speed": 3,
+  "contact": 400,
+  "defense": 1000,
+  "resent_dist": 6,
+  "skills": [
+    {"name": "Skill21005", "init": 2000, "interval": 10000, "max": -1},
+    {"name": "FengBaoSword100", "init": 2500, "interval": 5000, "max": -1}
+  ]
+}

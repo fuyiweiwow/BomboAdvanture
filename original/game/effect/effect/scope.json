@@ -1,0 +1,13 @@
+{
+  "NAME": "scope",
+  "MAGICS": [
+    {
+      "NAME": "magic0022",
+      "CX": -250,
+      "CY": -250,
+      "INTERVAL": 20,
+      "REPEAT": false,
+      "SPECIAL_FLAG": 0
+    }
+  ]
+}

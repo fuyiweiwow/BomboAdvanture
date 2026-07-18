@@ -1,0 +1,117 @@
+{
+
+  "basic": {
+    "name": "Journey5",
+    "width": 20,
+    "height": 13,
+    "scroll": [0, 0],
+    "music": "smw_castle.ogg",
+    "begin": [1, 11]
+  },
+
+  "floors": [
+    {
+      "type": "mine", "name": "elem35",
+      "squares": [
+        {"x1": 1, "y1": 1, "x2": 18, "y2": 11}
+      ]
+    },
+    {
+      "type": "mine", "name": "elem34",
+      "squares": [
+        {"x1": 0, "y1": 1, "x2": 0, "y2": 11}
+      ]
+    },
+    {
+      "type": "mine", "name": "elem32",
+      "squares": [
+        {"x1": 1, "y1": 0, "x2": 18, "y2": 0}
+      ]
+    },
+    {
+      "type": "mine", "name": "elem38",
+      "squares": [
+        {"x1": 1, "y1": 12, "x2": 18, "y2": 12}
+      ]
+    },
+    {
+      "type": "mine", "name": "elem36",
+      "squares": [
+        {"x1": 19, "y1": 1, "x2": 19, "y2": 11}
+      ]
+    }
+  ],
+
+  "floor": [
+    {
+      "type": "mine", "name": "elem30",
+      "points": [
+        {"x": 0, "y": 0}
+      ]
+    },
+    {
+      "type": "mine", "name": "elem37",
+      "points": [
+        {"x": 0, "y": 12}
+      ]
+    },
+    {
+      "type": "mine", "name": "elem33",
+      "points": [
+        {"x": 19, "y": 0}
+      ]
+    },
+    {
+      "type": "mine", "name": "elem39",
+      "points": [
+        {"x": 19, "y": 12}
+      ]
+    }
+  ],
+
+  "obstacles": [
+  ],
+
+  "obstacle": [
+    {
+      "type": "treasure", "name": "elem8",
+      "points": [
+        {"x": 5, "y": 3},
+        {"x": 4, "y": 4},
+        {"x": 6, "y": 4},
+        {"x": 13, "y": 3},
+        {"x": 12, "y": 4},
+        {"x": 14, "y": 4},
+        {"x": 8, "y": 8},
+        {"x": 10, "y": 8},
+        {"x": 8, "y": 9},
+        {"x": 9, "y": 9},
+        {"x": 10, "y": 9},
+        {"x": 17, "y": 5},
+        {"x": 17, "y": 6},
+        {"x": 17, "y": 7}
+      ]
+    }
+  ],
+
+  "districts": [
+    {
+      "square": {
+        "x1": 0, "y1": 0, "x2": 19, "y2": 12
+      },
+      "npcs": [
+        {"name": "JourneyBatRandom", "x": 5, "y": 4},
+        {"name": "JourneyBatChase", "x": 13, "y": 4}
+      ]
+    },
+    {
+      "square": {
+        "x1": 0, "y1": 0, "x2": 19, "y2": 12
+      },
+      "npcs": [
+        {"name": "JourneySkeleton", "x": 9, "y": 8}
+      ]
+    }
+  ]
+
+}

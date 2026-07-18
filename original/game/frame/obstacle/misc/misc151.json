@@ -1,0 +1,22 @@
+{
+  "TYPE": "misc",
+  "NAME": "misc151",
+  "WIDTH": 3,
+  "HEIGHT": 3,
+  "BLOCK": [[[1, 1, 1, 1], [0, 0, 0, 0], [1, 1, 1, 1]], [[1, 0, 1], [1, 0, 1], [1, 0, 1], [1, 0, 1]]],
+  "BREAKABLE": false,
+  "CAN_HIDE": true,
+  "INTERVAL": 100,
+
+  "STAND": {
+      "IMG": [
+        "misc151_stand_0_0.png",
+        "misc151_stand_0_1.png",
+        "misc151_stand_0_2.png",
+        "misc151_stand_0_3.png"
+      ],
+      "CX": [0, 0, 0, 0],
+      "CY": [-21, -21, -21, -21]
+  }
+
+}

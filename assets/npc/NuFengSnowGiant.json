@@ -1,0 +1,13 @@
+{
+  "name": "SnowGiant",
+  "chs_name": "石像雪巨人",
+  "character": "Character18801",
+  "blood": 28000,
+  "speed": 3,
+  "contact": 2000,
+  "defense": 7500,
+  "resent_dist": 6,
+  "skills": [
+	{"name": "Skill21069", "init": 2500, "interval": 5000, "max": -1}
+  ]
+}

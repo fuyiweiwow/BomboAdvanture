@@ -1,0 +1,13 @@
+{
+  "name": "JourneyBatMinion",
+  "chs_name": "小蝙蝠",
+  "character": "Pet77",
+  "blood": 3500,
+  "speed": 2.5,
+  "contact": 1000,
+  "defense": 0,
+  "resent_dist": 20,
+  "skills": [
+    {"name": "MinionChase", "init": 2500, "interval": 10000, "max": -1}
+  ]
+}

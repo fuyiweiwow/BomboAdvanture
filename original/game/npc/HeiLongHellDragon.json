@@ -1,0 +1,16 @@
+{
+  "name": "HeiLongHellDragon",
+  "chs_name": "地狱火龙",
+  "character": "Character18606",
+  "blood": 32000,
+  "self_damage_blood": 3532,
+  "speed": 4,
+  "contact": 2400,
+  "defense": 5000,
+  "resent_dist": 11,
+  "skills": [
+    {"name": "HeiLongHellDragonDistantFire", "init": 3000, "interval": 10000, "max": -1},
+    {"name": "HeiLongHellDragonCharge", "init": 4000, "interval": 64000, "max": -1},
+    {"name": "HeiLongHellDragonScope", "init": 7000, "interval": 32000, "max": -1}
+  ]
+}

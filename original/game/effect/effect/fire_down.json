@@ -1,0 +1,13 @@
+{
+  "NAME": "fire_down",
+  "MAGICS": [
+    {
+      "NAME": "magic0009",
+      "CX": -35,
+      "CY": -174,
+      "INTERVAL": 50,
+      "REPEAT": true,
+      "SPECIAL_FLAG": 1
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "HeiLongAbyssDragon",
+  "chs_name": "深渊火龙",
+  "character": "Character18605",
+  "blood": 30000,
+  "self_damage_blood": 3628,
+  "speed": 2.5,
+  "contact": 1200,
+  "defense": 4000,
+  "resent_dist": 11,
+  "skills": [
+    {"name": "HeiLongAbyssDragonDistantFire", "init": 3000, "interval": 11000, "max": -1},
+    {"name": "HeiLongAbyssDragonCharge", "init": 4000, "interval": 150000, "max": -1},
+    {"name": "HeiLongAbyssDragonSword", "init": 7000, "interval": 3000, "max": -1},
+    {"name": "HeiLongAbyssDragonRecovery", "init": 7000, "interval": 15000, "max": -1}
+  ]
+}

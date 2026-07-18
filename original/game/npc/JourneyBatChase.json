@@ -1,0 +1,13 @@
+{
+  "name": "JourneyBatChase",
+  "chs_name": "索魂蝙蝠",
+  "character": "Pet78",
+  "blood": 21000,
+  "speed": 0,
+  "contact": 2000,
+  "defense": 0,
+  "resent_dist": 20,
+  "skills": [
+    {"name": "BombThrowRainPlayer", "init": 2500, "interval": 12000, "max": -1}
+  ]
+}

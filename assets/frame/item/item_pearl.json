@@ -1,0 +1,20 @@
+{
+  "NAME": "item_pearl",
+  "INTERVAL": 300,
+
+  "STAND": {
+      "IMG": [
+        "item30031_stand_0_0.png",
+        "item30031_stand_0_1.png",
+        "item30031_stand_0_2.png",
+        "item30031_stand_0_1.png",
+        "item30031_stand_0_0.png",
+        "item30031_stand_0_1.png",
+        "item30031_stand_0_2.png",
+        "item30031_stand_0_1.png"
+      ],
+      "CX": [7, 7, 7, 7, 7, 7, 7, 7],
+      "CY": [15, 14, 13, 12, 11, 12, 13, 14]
+  }
+
+}

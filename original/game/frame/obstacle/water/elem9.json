@@ -1,0 +1,19 @@
+{
+  "TYPE": "water",
+  "NAME": "elem9",
+  "WIDTH": 3,
+  "HEIGHT": 2,
+  "BLOCK": [[[1, 1, 1], [1, 1, 1], [1, 1, 1]], [[1, 1], [1, 1], [1, 1], [1, 1]]],
+  "BREAKABLE": false,
+  "CAN_HIDE": false,
+  "INTERVAL": 1000,
+
+  "STAND": {
+      "IMG": [
+        "elem9_stand_0_0.png"
+      ],
+      "CX": [0],
+      "CY": [-18]
+  }
+
+}

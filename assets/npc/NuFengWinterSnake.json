@@ -1,0 +1,13 @@
+{
+  "name": "NuFengWinterSnake",
+  "chs_name": "疯狂的永冬蛇",
+  "character": "Character18808",
+  "blood": 3000,
+  "speed": 3,
+  "contact": 400,
+  "defense": 900,
+  "resent_dist": 6,
+  "skills": [
+
+  ]
+}

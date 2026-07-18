@@ -1,0 +1,15 @@
+{
+  "name": "HeiLongBlackWizard",
+  "chs_name": "黑巫师",
+  "character": "Character17801",
+  "blood": 30000,
+  "self_damage_blood": 3628,
+  "speed": 3,
+  "contact": 1200,
+  "defense": 3000,
+  "resent_dist": 11,
+  "skills": [
+    {"name": "HeiLongBlackWizardPutIceTrap", "init": 3000, "interval": 2000, "max": -1},
+    {"name": "HeiLongBlackWizardPutFireTrap", "init": 4000, "interval": 6000, "max": -1}
+  ]
+}

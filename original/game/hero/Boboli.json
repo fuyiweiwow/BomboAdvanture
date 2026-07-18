@@ -1,0 +1,33 @@
+{
+  "name": "Boboli",
+  "character": "Character10501",
+  "icon_img": "icon_bbl",
+  "decorations": {
+    "disable_foot_and_leg": false,
+    "bomb_skin": "bomb_yx",
+    "cap": null,
+    "hair": null,
+    "eye": null,
+    "ear": null,
+    "mouth": null,
+    "cladorn": null,
+    "fpack": null,
+    "npack": null,
+    "thadorn": null,
+    "footprint": null,
+    "head_effect": null,
+    "body_effect": null
+  },
+  "blood": 4500,
+  "speed": 5.83333,
+  "bomb": 7,
+  "restore": 700,
+  "power": 3,
+  "damage": 3500,
+  "defense": 0,
+  "skills": [
+    {"name": "BloodElixirLarge", "init": 3000, "interval": 8000, "max": 8},
+    {"name": "PowerElixir", "init": 3000, "interval": 8000, "max": 8},
+    {"name": "RevivalCard", "init": 3000, "interval": 8000, "max": 3}
+  ]
+}

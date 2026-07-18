@@ -1,0 +1,15 @@
+{
+  "name": "HeiLongSkeletonKnight",
+  "chs_name": "骷髅骑士",
+  "character": "Character16701",
+  "blood": 30000,
+  "self_damage_blood": 3628,
+  "speed": 3.5,
+  "contact": 2000,
+  "defense": 4500,
+  "resent_dist": 11,
+  "skills": [
+    {"name": "HeiLongSkeletonKnightPutThunderTrap", "init": 3500, "interval": 2000, "max": -1},
+    {"name": "HeiLongThunder3x3HP800", "init": 3000, "interval": 6000, "max": -1}
+  ]
+}

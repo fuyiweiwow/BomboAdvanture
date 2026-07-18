@@ -1,0 +1,13 @@
+{
+  "name": "FengBaoSnowball",
+  "chs_name": "雪球怪",
+  "character": "Character18805",
+  "blood": 500,
+  "speed": 3,
+  "contact": 10,
+  "defense": 50,
+  "resent_dist": 6,
+  "skills": [
+
+  ]
+}

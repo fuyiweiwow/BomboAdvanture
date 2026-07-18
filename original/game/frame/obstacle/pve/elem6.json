@@ -1,0 +1,19 @@
+{
+  "TYPE": "pve",
+  "NAME": "elem6",
+  "WIDTH": 2,
+  "HEIGHT": 4,
+  "BLOCK": [[[1, 1, 1, 1, 1], [1, 1, 1, 1, 1]], [[1, 1, 1, 1], [1, 1, 1, 1], [1, 0, 1, 1]]],
+  "BREAKABLE": false,
+  "CAN_HIDE": false,
+  "INTERVAL": 1000,
+
+  "STAND": {
+      "IMG": [
+        "elem6_stand_0_0.png"
+      ],
+      "CX": [0],
+      "CY": [0]
+  }
+
+}

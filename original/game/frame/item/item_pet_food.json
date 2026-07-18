@@ -1,0 +1,13 @@
+{
+  "NAME": "item_pet_food",
+  "INTERVAL": 300,
+
+  "STAND": {
+      "IMG": [
+        "item26001_stand_0_0.png"
+      ],
+      "CX": [4],
+      "CY": [1]
+  }
+
+}

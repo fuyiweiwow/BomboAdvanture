@@ -1,0 +1,14 @@
+{
+  "name": "JourneyLargeGhost",
+  "chs_name": "大幽灵",
+  "character": "Pet98",
+  "blood": 29000,
+  "speed": 3,
+  "contact": 1500,
+  "defense": 7500,
+  "resent_dist": 4,
+  "skills": [
+    {"name": "PermanentlyHidden", "init": 2500, "interval": 0, "max": 1},
+    {"name": "PutBomb", "init": 3000, "interval": 1500, "max": -1}
+  ]
+}

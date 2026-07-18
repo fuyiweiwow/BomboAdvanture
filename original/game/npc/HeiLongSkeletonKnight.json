@@ -1,0 +1,20 @@
+{
+  "name": "HeiLongSkeletonKnight",
+  "chs_name": "骷髅骑士",
+  "character": "Character16701",
+  "blood": 30000,
+  "self_damage_blood": 3628,
+  "speed": 3.5,
+  "contact": 2000,
+  "defense": 4500,
+  "resent_dist": 11,
+  "skills": [
+    {"name": "HeiLongSkeletonKnightPutThunderTrap", "init": 3500, "interval": 10000000, "max": 1},
+    {"name": "HeiLongThunder3x3HP800", "init": 3000, "interval": 10000000, "max": 1},
+    {"name": "HeiLongSkeletonKnightEnhance", "init": 4500, "interval": 30000, "max": -1},
+    {"name": "HeiLongSkeletonKnightPutThunderTrap", "init": 5500, "interval": 6000, "max": -1},
+    {"name": "HeiLongSkeletonKnightPutThunderTrap", "init": 7500, "interval": 6000, "max": -1},
+    {"name": "HeiLongThunder3x3HP800", "init": 8500, "interval": 6000, "max": -1},
+    {"name": "HeiLongSkeletonKnightPutThunderTrap", "init": 9500, "interval": 6000, "max": -1}
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "JourneyHappySapling",
+  "chs_name": "快乐的树苗",
+  "character": "Pet103",
+  "blood": 15000,
+  "speed": 3,
+  "contact": 400,
+  "defense": 10000,
+  "resent_dist": 5,
+  "skills": [
+    {"name": "RevengeDash", "init": 2500, "interval": 0, "max": 1},
+    {"name": "SlowSword", "init": 2500, "interval": 5000, "max": -1}
+  ]
+}

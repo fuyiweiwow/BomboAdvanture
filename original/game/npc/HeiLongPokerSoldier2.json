@@ -1,0 +1,13 @@
+{
+  "name": "HeiLongPokerSoldier2",
+  "chs_name": "卡牌战士",
+  "character": "Character17501",
+  "blood": 1000,
+  "speed": 3,
+  "contact": 0,
+  "defense": 50,
+  "resent_dist": 5,
+  "skills": [
+    {"name": "Skill21065", "init": 3000, "interval": 5000, "max": -1}
+  ]
+}

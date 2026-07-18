@@ -1,0 +1,25 @@
+{
+  "TYPE": "common",
+  "NAME": "elem135",
+  "WIDTH": 1,
+  "HEIGHT": 1,
+  "BLOCK": [[[0, 0]], [[0], [0]]],
+  "BREAKABLE": false,
+  "CAN_HIDE": false,
+  "BACKGROUND": true,
+  "INTERVAL": 100,
+
+  "STAND": {
+    "IMG": [
+      "elem135_stand_0_0.png",
+      "elem135_stand_0_1.png",
+      "elem135_stand_0_2.png",
+      "elem135_stand_0_3.png",
+      "elem135_stand_0_4.png"
+    ],
+
+    "CX": [0, 0, 0, 0, 0],
+    "CY": [0, 0, 0, 0, 0]
+  }
+
+}

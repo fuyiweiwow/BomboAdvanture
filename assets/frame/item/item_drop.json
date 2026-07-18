@@ -1,0 +1,20 @@
+{
+  "NAME": "item_drop",
+  "INTERVAL": 300,
+
+  "STAND": {
+      "IMG": [
+        "item30091_stand_0_0.png",
+        "item30091_stand_0_1.png",
+        "item30091_stand_0_2.png",
+        "item30091_stand_0_1.png",
+        "item30091_stand_0_0.png",
+        "item30091_stand_0_1.png",
+        "item30091_stand_0_2.png",
+        "item30091_stand_0_1.png"
+      ],
+      "CX": [10, 10, 10, 10, 10, 10, 10, 10],
+      "CY": [13, 12, 11, 10, 9, 10, 11, 12]
+  }
+
+}

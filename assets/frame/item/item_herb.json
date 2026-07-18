@@ -1,0 +1,20 @@
+{
+  "NAME": "item_herb",
+  "INTERVAL": 300,
+
+  "STAND": {
+      "IMG": [
+        "item30007_stand_0_0.png",
+        "item30007_stand_0_1.png",
+        "item30007_stand_0_2.png",
+        "item30007_stand_0_1.png",
+        "item30007_stand_0_0.png",
+        "item30007_stand_0_1.png",
+        "item30007_stand_0_2.png",
+        "item30007_stand_0_1.png"
+      ],
+      "CX": [2, 2, 2, 2, 2, 2, 2, 2],
+      "CY": [9, 8, 7, 6, 5, 6, 7, 8]
+  }
+
+}

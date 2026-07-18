@@ -1,0 +1,28 @@
+{
+  "TYPE": "box",
+  "NAME": "elem1cyan-obstacle",
+  "WIDTH": 1,
+  "HEIGHT": 1,
+  "BLOCK": [[[1, 1]], [[1], [1]]],
+  "BREAKABLE": false,
+  "CAN_HIDE": false,
+  "BACKGROUND": false,
+  "INTERVAL": 100,
+
+  "STAND": {
+      "IMG": [
+        "elem1cyan-obstacle_stand_0_0.png",
+		"elem1cyan-obstacle_stand_0_1.png",
+		"elem1cyan-obstacle_stand_0_2.png",
+		"elem1cyan-obstacle_stand_0_3.png"
+      ],
+      "CX": [0,0,0,0],
+      "CY": [0,0,0,0]
+  },
+  
+  "DIE": {
+      "IMG": [],
+      "CX": [],
+      "CY": []
+  }
+}

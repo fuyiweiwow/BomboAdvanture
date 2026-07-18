@@ -1,0 +1,13 @@
+{
+  "name": "SenLin51DaHongHua",
+  "chs_name": "大红花",
+  "character": "Character18704",
+  "blood": 2000,
+  "speed": 2.5,
+  "contact": 6000,
+  "defense": 400,
+  "resent_dist": 8,
+  "skills": [
+    {"name": "Skill21082", "init": 3000, "interval": 10000, "max": -1}
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "FengBaoSpecialIcy_1",
+  "chs_name": "特别的冰妖",
+  "character": "Character18810",
+  "blood": 2500,
+  "speed": 3,
+  "contact": 400,
+  "defense": 800,
+  "resent_dist": 6,
+  "skills": [
+    {"name": "Skill21005", "init": 2000, "interval": 10000, "max": -1}
+  ]
+}

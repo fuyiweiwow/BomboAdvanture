@@ -1,0 +1,13 @@
+{
+  "name": "GhostEasy",
+  "chs_name": "魔法僧儡",
+  "character": "Character18401",
+  "blood": 15000,
+  "speed": 3.5,
+  "contact": 190,
+  "defense": 0,
+  "resent_dist": 3,
+  "skills": [
+    {"name": "Skill21025", "init": 2000, "interval": 5000, "max": -1}
+  ]
+}

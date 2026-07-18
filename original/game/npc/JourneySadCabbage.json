@@ -1,0 +1,13 @@
+{
+  "name": "JourneySadCabbage",
+  "chs_name": "忧郁的白菜",
+  "character": "Pet14",
+  "blood": 6000,
+  "speed": 2.5,
+  "contact": 200,
+  "defense": 7500,
+  "resent_dist": 5,
+  "skills": [
+    {"name": "RevengeDash", "init": 2500, "interval": 0, "max": 1}
+  ]
+}

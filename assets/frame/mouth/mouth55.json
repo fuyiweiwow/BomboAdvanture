@@ -1,0 +1,212 @@
+{
+    "NAME": "mouth55",
+    "STAND_R": {
+        "IMG": [
+            "mouth55_stand_0_0.png",
+            "mouth55_stand_0_1.png",
+            "mouth55_stand_0_2.png",
+            "mouth55_stand_0_3.png",
+            "mouth55_stand_0_4.png",
+            "mouth55_stand_0_5.png"
+        ],
+        "CX": [
+            50,
+            49,
+            49,
+            50,
+            51,
+            52
+        ],
+        "CY": [
+            48,
+            48,
+            48,
+            48,
+            48,
+            48
+        ]
+    },
+    "STAND_U": {
+        "IMG": [
+            "mouth55_stand_1_0.png",
+            "mouth55_stand_1_1.png",
+            "mouth55_stand_1_2.png",
+            "mouth55_stand_1_3.png",
+            "mouth55_stand_1_4.png",
+            "mouth55_stand_1_5.png"
+        ],
+        "CX": [
+            35,
+            34,
+            34,
+            35,
+            35,
+            36
+        ],
+        "CY": [
+            48,
+            48,
+            48,
+            48,
+            48,
+            48
+        ]
+    },
+    "STAND_L": {
+        "IMG": [
+            "mouth55_stand_2_0.png",
+            "mouth55_stand_2_1.png",
+            "mouth55_stand_2_2.png",
+            "mouth55_stand_2_3.png",
+            "mouth55_stand_2_4.png",
+            "mouth55_stand_2_5.png"
+        ],
+        "CX": [
+            33,
+            32,
+            32,
+            33,
+            34,
+            34
+        ],
+        "CY": [
+            48,
+            48,
+            48,
+            48,
+            48,
+            48
+        ]
+    },
+    "STAND_D": {
+        "IMG": [
+            "mouth55_stand_3_0.png",
+            "mouth55_stand_3_1.png",
+            "mouth55_stand_3_2.png",
+            "mouth55_stand_3_3.png",
+            "mouth55_stand_3_4.png",
+            "mouth55_stand_3_5.png"
+        ],
+        "CX": [
+            35,
+            34,
+            34,
+            35,
+            35,
+            36
+        ],
+        "CY": [
+            48,
+            48,
+            48,
+            48,
+            48,
+            48
+        ]
+    },
+    "R": {
+        "IMG": [
+            "mouth55_walk_0_0.png",
+            "mouth55_walk_0_1.png",
+            "mouth55_walk_0_2.png",
+            "mouth55_walk_0_3.png",
+            "mouth55_walk_0_4.png",
+            "mouth55_walk_0_5.png"
+        ],
+        "CX": [
+            50,
+            49,
+            49,
+            50,
+            51,
+            52
+        ],
+        "CY": [
+            48,
+            48,
+            48,
+            48,
+            48,
+            48
+        ]
+    },
+    "U": {
+        "IMG": [
+            "mouth55_walk_1_0.png",
+            "mouth55_walk_1_1.png",
+            "mouth55_walk_1_2.png",
+            "mouth55_walk_1_3.png",
+            "mouth55_walk_1_4.png",
+            "mouth55_walk_1_5.png"
+        ],
+        "CX": [
+            35,
+            34,
+            34,
+            35,
+            35,
+            36
+        ],
+        "CY": [
+            48,
+            48,
+            48,
+            48,
+            48,
+            48
+        ]
+    },
+    "L": {
+        "IMG": [
+            "mouth55_walk_2_0.png",
+            "mouth55_walk_2_1.png",
+            "mouth55_walk_2_2.png",
+            "mouth55_walk_2_3.png",
+            "mouth55_walk_2_4.png",
+            "mouth55_walk_2_5.png"
+        ],
+        "CX": [
+            33,
+            32,
+            32,
+            33,
+            34,
+            34
+        ],
+        "CY": [
+            48,
+            48,
+            48,
+            48,
+            48,
+            48
+        ]
+    },
+    "D": {
+        "IMG": [
+            "mouth55_walk_3_0.png",
+            "mouth55_walk_3_1.png",
+            "mouth55_walk_3_2.png",
+            "mouth55_walk_3_3.png",
+            "mouth55_walk_3_4.png",
+            "mouth55_walk_3_5.png"
+        ],
+        "CX": [
+            35,
+            34,
+            34,
+            35,
+            35,
+            36
+        ],
+        "CY": [
+            48,
+            48,
+            48,
+            48,
+            48,
+            48
+        ]
+    },
+    "INTERVAL": 200
+}

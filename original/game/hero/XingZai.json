@@ -1,0 +1,33 @@
+{
+  "name": "XingZai",
+  "character": "Character11101",
+  "icon_img": "icon_xz",
+  "decorations": {
+    "disable_foot_and_leg": false,
+    "bomb_skin": "bomb1",
+    "cap": null,
+    "hair": null,
+    "eye": null,
+    "ear": null,
+    "mouth": null,
+    "cladorn": null,
+    "fpack": null,
+    "npack": null,
+    "thadorn": null,
+    "footprint": null,
+    "head_effect": null,
+    "body_effect": null
+  },
+  "blood": 4500,
+  "speed": 5.83333,
+  "bomb": 7,
+  "restore": 700,
+  "power": 3,
+  "damage": 3500,
+  "defense": 0,
+  "skills": [
+    {"name": "BloodElixirLarge", "init": 2000, "interval": 5000, "max": 10},
+    {"name": "PowerElixir", "init": 2000, "interval": 5000, "max": 10},
+    {"name": "RevivalCard", "init": 2000, "interval": 5000, "max": 10}
+  ]
+}

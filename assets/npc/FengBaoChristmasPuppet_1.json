@@ -1,0 +1,13 @@
+{
+  "name": "FengBaoChristmasPuppet_1",
+  "chs_name": "圣诞傀儡人",
+  "character": "Character18806",
+  "blood": 2000,
+  "speed": 3,
+  "contact": 200,
+  "defense": 600,
+  "resent_dist": 6,
+  "skills": [
+
+  ]
+}

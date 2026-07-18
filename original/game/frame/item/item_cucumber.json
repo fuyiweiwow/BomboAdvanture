@@ -1,0 +1,20 @@
+{
+  "NAME": "item_cucumber",
+  "INTERVAL": 300,
+
+  "STAND": {
+      "IMG": [
+        "item30014_stand_0_0.png",
+        "item30014_stand_0_1.png",
+        "item30014_stand_0_2.png",
+        "item30014_stand_0_1.png",
+        "item30014_stand_0_0.png",
+        "item30014_stand_0_1.png",
+        "item30014_stand_0_2.png",
+        "item30014_stand_0_1.png"
+      ],
+      "CX": [1, 1, 1, 1, 1, 1, 1, 1],
+      "CY": [8, 7, 6, 5, 4, 5, 6, 7]
+  }
+
+}

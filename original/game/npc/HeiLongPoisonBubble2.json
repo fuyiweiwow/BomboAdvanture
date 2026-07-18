@@ -1,0 +1,14 @@
+{
+  "name": "HeiLongPoisonBubble2",
+  "chs_name": "毒泡泡",
+  "character": "Character16901",
+  "blood": 500,
+  "speed": 3,
+  "contact": 0,
+  "defense": 0,
+  "resent_dist": 5,
+  "skills": [
+    {"name": "Skill21066", "init": 3000, "interval": 10000, "max": -1},
+    {"name": "HeiLongReverse", "init": 4000, "interval": 20000, "max": -1}
+  ]
+}

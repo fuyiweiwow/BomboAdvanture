@@ -1,0 +1,31 @@
+{
+  "name": "HeiLongRedWizard",
+  "chs_name": "红巫师",
+  "character": "Character17601",
+  "blood": 30000,
+  "self_damage_blood": 3628,
+  "speed": 3,
+  "contact": 2000,
+  "defense": 4500,
+  "resent_dist": 11,
+  "skills": [
+    {"name": "HeiLongRedWizardPutFireTrap", "init": 4000, "interval": 24000, "max": -1},
+    {"name": "HeiLongReverse", "init": 5000, "interval": 24000, "max": -1},
+    {"name": "BloodElixirMiddle", "init": 3000, "interval": 24000, "max": -1},
+    {"name": "HeiLongFloatingFire", "init": 3000, "interval": 24000, "max": -1},
+    {"name": "HeiLongRedWizardPutFireTrap", "init": 7000, "interval": 24000, "max": -1},
+    {"name": "HeiLongFloatingFire", "init": 8000, "interval": 24000, "max": -1},
+    {"name": "HeiLongRedWizardPutFireTrap", "init": 10000, "interval": 24000, "max": -1},
+    {"name": "HeiLongReverse", "init": 11000, "interval": 24000, "max": -1},
+    {"name": "BloodElixirMiddle", "init":13000, "interval": 24000, "max": -1},
+    {"name": "HeiLongFloatingFire", "init": 13000, "interval": 24000, "max": -1},
+    {"name": "HeiLongRedWizardPutFireTrap", "init": 14000, "interval": 24000, "max": -1},
+    {"name": "HeiLongReverse", "init": 16000, "interval": 24000, "max": -1},
+    {"name": "HeiLongFloatingFire", "init": 17000, "interval": 24000, "max": -1},
+    {"name": "HeiLongRedWizardPutFireTrap", "init": 18000, "interval": 24000, "max": -1},
+    {"name": "HeiLongRedWizardPutFireTrap", "init": 21000, "interval": 24000, "max": -1},
+    {"name": "HeiLongFloatingFire", "init": 22000, "interval": 24000, "max": -1},
+    {"name": "HeiLongReverse", "init": 23000, "interval": 24000, "max": -1},
+    {"name": "HeiLongRedWizardPutFireTrap", "init": 24000, "interval": 24000, "max": -1}
+  ]
+}

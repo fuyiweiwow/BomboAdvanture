@@ -1,0 +1,13 @@
+{
+  "NAME": "got_fire_2",
+  "MAGICS": [
+    {
+      "NAME": "magic0130",
+      "CX": 0,
+      "CY": 20,
+      "INTERVAL": 80,
+      "REPEAT": true,
+      "SPECIAL_FLAG": 0
+    }
+  ]
+}

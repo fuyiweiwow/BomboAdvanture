@@ -1,0 +1,190 @@
+{
+
+  "basic": {
+    "name": "Journey1",
+    "width": 20,
+    "height": 13,
+    "scroll": [0, 0],
+    "music": "smw_title.ogg",
+    "begin": [1, 1],
+    "finish": [8, 0]
+  },
+
+  "floors": [
+    {
+      "type": "field", "name": "elem1",
+      "squares": [
+        {"x1": 0, "y1": 0, "x2": 19, "y2": 12}
+      ]
+    },
+    {
+      "type": "field", "name": "elem21",
+      "squares": [
+        {"x1": 8, "y1": 8, "x2": 11, "y2": 8},
+        {"x1": 9, "y1": 3, "x2": 11, "y2": 3}
+      ]
+    },
+	{
+      "type": "field", "name": "elem22",
+      "squares": [
+        {"x1": 1, "y1": 0, "x2": 1, "y2": 10},
+        {"x1": 8, "y1": 0, "x2": 8, "y2": 2},
+        {"x1": 12, "y1": 4, "x2": 12, "y2": 7}
+      ]
+    }
+  ],
+
+  "floor": [
+    {
+      "type": "field", "name": "elem17",
+      "points": [
+        {"x": 8, "y": 3}
+      ]
+    },
+    {
+      "type": "field", "name": "elem19",
+      "points": [
+        {"x": 12, "y": 8}
+      ]
+    },
+    {
+      "type": "field", "name": "elem20",
+      "points": [
+        {"x": 12, "y": 3}
+      ]
+    }
+  ],
+
+  "obstacles": [
+    {
+      "type": "field", "name": "elem8",
+      "squares": [
+        {"x1": 0, "y1": 0, "x2": 0, "y2": 9},
+        {"x1": 5, "y1": 12, "x2": 19, "y2": 12},
+        {"x1": 10, "y1": 0, "x2": 19, "y2": 0},
+        {"x1": 19, "y1": 1, "x2": 19, "y2": 11}
+      ]
+    },
+    {
+      "type": "town", "name": "elem10",
+      "squares": [
+        {"x1": 7, "y1": 0, "x2": 7, "y2": 3}
+      ]
+    },
+    {
+      "type": "town", "name": "elem22",
+      "squares": [
+        {"x1": 7, "y1": 5, "x2": 7, "y2": 6}
+      ]
+    },
+    {
+      "type": "town", "name": "elem23",
+      "squares": [
+        {"x1": 8, "y1": 7, "x2": 10, "y2": 7}
+      ]
+    },
+    {
+      "type": "town", "name": "elem25",
+      "squares": [
+        {"x1": 11, "y1": 5, "x2": 11, "y2": 6}
+      ]
+    },
+    {
+      "type": "town", "name": "elem26",
+      "squares": [
+        {"x1": 8, "y1": 4, "x2": 10, "y2": 4}
+      ]
+    }
+  ],
+
+  "obstacle": [
+
+    {
+      "type": "field", "name": "elem9",
+      "points": [
+        {"x": 2, "y": 1}
+      ]
+    },
+    {
+      "type": "field", "name": "elem10",
+      "points": [
+        {"x": 0, "y": 10},
+        {"x": 4, "y": 11},
+        {"x": 4, "y": 12},
+        {"x": 9, "y": 0}
+      ]
+    },
+    {
+      "type": "field", "name": "elem11",
+      "points": [
+        {"x": 8, "y": 5}
+      ]
+    },
+    {
+      "type": "field", "name": "elem14",
+      "points": [
+        {"x": 7, "y": 8}
+      ]
+    },
+    {
+      "type": "town", "name": "elem11",
+      "points": [
+        {"x": 7, "y": 7}
+      ]
+    },
+    {
+      "type": "town", "name": "elem12",
+      "points": [
+        {"x": 11, "y": 7}
+      ]
+    },
+    {
+      "type": "town", "name": "elem13",
+      "points": [
+        {"x": 11, "y": 4}
+      ]
+    },
+    {
+      "type": "town", "name": "elem19",
+      "points": [
+        {"x": 0, "y": 11}
+      ]
+    },
+    {
+      "type": "town", "name": "elem24",
+      "points": [
+        {"x": 7, "y": 4}
+      ]
+    }
+  ],
+
+  "districts": [
+    {
+      "square": {
+        "x1": 0, "y1": 0, "x2": 7, "y2": 12
+      },
+      "npcs": [
+        {"name": "JourneySadCabbage", "x": 6, "y": 7},
+        {"name": "JourneySadCabbage", "x": 4, "y": 7}
+      ]
+    },
+    {
+      "square": {
+        "x1": 7, "y1": 0, "x2": 19, "y2": 12
+      },
+      "npcs": [
+        {"name": "JourneyHappySapling", "x": 16, "y": 7},
+        {"name": "JourneyHappySapling", "x": 18, "y": 5}
+      ]
+    },
+    {
+      "square": {
+        "x1": 0, "y1": 0, "x2": 19, "y2": 12
+      },
+      "npcs": [
+        {"name": "JourneyGreenTree", "x": 6, "y": 7}
+      ]
+    }
+  ]
+
+}

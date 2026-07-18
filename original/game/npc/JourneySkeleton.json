@@ -1,0 +1,17 @@
+{
+  "name": "JourneySkeleton",
+  "chs_name": "骷髅王",
+  "character": "Character18001",
+  "blood": 42000,
+  "speed": 0,
+  "contact": 2000,
+  "defense": 0,
+  "resent_dist": 20,
+  "skills": [
+    {"name": "SpawnMinions", "init": 2500, "interval": 30000, "max": -1},
+    {"name": "IceFireSwitch", "init": 11000, "interval": 30000, "max": -1},
+    {"name": "HeiLongReverse", "init": 20000, "interval": 30000, "max": -1},
+    {"name": "BloodAccelerate", "init": 0, "interval": 0, "max": 1},
+    {"name": "LoomingFire", "init": 0, "interval": 0, "max": 1}
+  ]
+}

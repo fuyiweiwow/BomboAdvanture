@@ -1,0 +1,23 @@
+{
+  "TYPE": "box",
+  "NAME": "elem1orange-slide-down-2x",
+  "WIDTH": 1,
+  "HEIGHT": 1,
+  "BLOCK": [[[0, 0]], [[0], [0]]],
+  "BREAKABLE": false,
+  "CAN_HIDE": false,
+  "SLIDE": [4, 1],
+  "BACKGROUND": true,
+  "INTERVAL": 100,
+
+  "STAND": {
+      "IMG": [
+        "elem1orange-slide-down-2x_stand_0_0.png",
+		"elem1orange-slide-down-2x_stand_0_1.png",
+		"elem1orange-slide-down-2x_stand_0_2.png",
+		"elem1orange-slide-down-2x_stand_0_3.png"
+      ],
+      "CX": [0,0,0,0],
+      "CY": [0,0,0,0]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "NAME": "dizzy_explode_blue",
+  "MAGICS": [
+    {
+      "NAME": "magic0044",
+      "CX": 0,
+      "CY": 0,
+      "INTERVAL": 80,
+      "REPEAT": false,
+      "COLOR_SUB": [128, 64, 0],
+      "SPECIAL_FLAG": 0
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "TYPE": "desert",
+  "NAME": "elem8",
+  "WIDTH": 1,
+  "HEIGHT": 1,
+  "BLOCK": [[[0, 0]], [[1], [1]]],
+  "BREAKABLE": false,
+  "CAN_HIDE": true,
+  "INTERVAL": 100,
+
+  "STAND": {
+      "IMG": [
+        "elem8_stand_0_0.png"
+      ],
+      "CX": [-4],
+      "CY": [-24]
+  },
+
+  "TRIGGER": {
+      "IMG": [
+        "elem8_trigger_0_0.png",
+        "elem8_trigger_0_1.png",
+        "elem8_trigger_0_2.png"
+      ],
+      "CX": [-4, 5, 5],
+      "CY": [-24, -23, -23]
+  }
+
+}

@@ -1,0 +1,16 @@
+{
+  "name": "FireBall",
+  "chs_name": "燃烧傀儡",
+  "character": "Character17001",
+  "blood": 5400,
+  "speed": 3.5,
+  "contact": 85,
+  "defense": 0,
+  "resent_dist": 3,
+  "skills": [
+    {"name": "Skill21006", "init": 2000, "interval": 1000, "max": -1}
+  ],
+  "gifts": [
+    {"name": "item_drop", "possibility": 0.7}
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "JourneyNineTailedFox",
+  "chs_name": "九尾狐",
+  "character": "Pet112",
+  "blood": 25000,
+  "speed": 3,
+  "contact": 2000,
+  "defense": 10500,
+  "resent_dist": 5,
+  "skills": [
+    {"name": "NearAccelerate", "init": 0, "interval": 0, "max": 1},
+    {"name": "BombEscape", "init": 0, "interval": 0, "max": 1},
+    {"name": "ContactStun", "init": 0, "interval": 0, "max": 1}
+  ]
+}

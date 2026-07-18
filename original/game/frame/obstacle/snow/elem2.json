@@ -1,0 +1,30 @@
+{
+  "TYPE": "snow",
+  "NAME": "elem2",
+  "WIDTH": 1,
+  "HEIGHT": 1,
+  "BLOCK": [[[1, 1]], [[1], [1]]],
+  "BREAKABLE": true,
+  "CAN_HIDE": false,
+  "INTERVAL": 100,
+
+  "DIE": {
+      "IMG": [
+        "elem2_die_0_0.png",
+        "elem2_die_0_1.png",
+        "elem2_die_0_2.png",
+        "elem2_die_0_3.png"
+      ],
+      "CX": [-3, -3, -2, -2],
+      "CY": [-12, -12, -6, -6]
+  },
+
+  "STAND": {
+      "IMG": [
+        "elem2_stand_0_0.png"
+      ],
+      "CX": [-3],
+      "CY": [-12]
+  }
+
+}

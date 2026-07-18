@@ -1,0 +1,13 @@
+{
+  "name": "JourneyBlackBird",
+  "chs_name": "黑蝠",
+  "character": "Pet58",
+  "blood": 15000,
+  "speed": 3,
+  "contact": 1500,
+  "defense": 10500,
+  "resent_dist": 4,
+  "skills": [
+    {"name": "BombThrowBlack", "init": 2500, "interval": 8000, "max": -1}
+  ]
+}

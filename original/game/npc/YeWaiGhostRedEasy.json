@@ -1,0 +1,14 @@
+{
+  "name": "GhostRedEasy",
+  "chs_name": "黑暗僧侣",
+  "character": "Character18501",
+  "blood": 48000,
+  "speed": 3,
+  "contact": 600,
+  "defense": 0,
+  "resent_dist": 4,
+  "skills": [
+    {"name": "Skill21025", "init": 3000, "interval": 3000, "max": -1},
+    {"name": "Skill21027", "init": 2000, "interval": 30000, "max": 1}
+  ]
+}

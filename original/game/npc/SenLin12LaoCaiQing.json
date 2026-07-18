@@ -1,0 +1,12 @@
+{
+  "name": "SenLin12LaoCaiQing",
+  "chs_name": "老菜青",
+  "character": "Character18701",
+  "blood": 500,
+  "speed": 2.5,
+  "contact": 10,
+  "defense": 50,
+  "resent_dist": 4,
+  "skills": [
+  ]
+}

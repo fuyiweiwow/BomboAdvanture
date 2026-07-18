@@ -1,0 +1,23 @@
+{
+  "name": "PuppetBossEasy",
+  "chs_name": "虚弱假面腐偶王",
+  "character": "Character17301",
+  "blood": 16000,
+  "speed": 2.7,
+  "contact": 250,
+  "defense": 1000,
+  "resent_dist": 6,
+  "skills": [
+    {"name": "HeiLongHellDragonCharge", "init": 7000, "interval": 36000, "max": -1},
+    {"name": "RevengeDash3s", "init": 0, "interval": 0, "max": 1},
+    {"name": "MiZhiDiSword500", "init": 4000, "interval": 6000, "max": -1},
+    {"name": "LandQuake", "init": 0, "interval": 0, "max": 1},
+    {"name": "HeiLongSkeletonKnightPutThunderTrap", "init": 3000, "interval": 6000, "max": -1}
+  ],
+  "gifts": [
+    {"name": "item_pet_book", "possibility": 0.5},
+    {"name": "item_pet_book", "possibility": 0.5},
+    {"name": "item_pet_card", "possibility": 1},
+    {"name": "item_pet_food", "possibility": 1}
+  ]
+}

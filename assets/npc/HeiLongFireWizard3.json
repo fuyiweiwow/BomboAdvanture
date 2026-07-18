@@ -1,0 +1,15 @@
+{
+  "name": "HeiLongFireWizard3",
+  "chs_name": "火法师",
+  "character": "Character17901",
+  "blood": 10000,
+  "speed": 3,
+  "contact": 600,
+  "defense": 2500,
+  "resent_dist": 5,
+  "skills": [
+    {"name": "HeiLongPutFireTrap", "init": 4000, "interval": 10000, "max": -1},
+    {"name": "HeiLongDistantFire3x3", "init": 5000, "interval": 8000, "max": -1},
+    {"name": "HeiLongDistantFire5x5", "init": 3000, "interval": 20000, "max": -1}
+  ]
+}

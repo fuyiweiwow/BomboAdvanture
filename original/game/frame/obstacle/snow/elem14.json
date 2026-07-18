@@ -1,0 +1,19 @@
+{
+  "TYPE": "snow",
+  "NAME": "elem14",
+  "WIDTH": 4,
+  "HEIGHT": 2,
+  "BLOCK": [[[1, 1, 1], [1, 1, 1], [1, 1, 1], [1, 1, 1]], [[1, 1], [1, 1], [1, 1], [1, 1], [1, 1]]],
+  "BREAKABLE": false,
+  "CAN_HIDE": false,
+  "INTERVAL": 1000,
+
+  "STAND": {
+      "IMG": [
+        "elem14_stand_0_0.png"
+      ],
+      "CX": [-3],
+      "CY": [-37]
+  }
+
+}

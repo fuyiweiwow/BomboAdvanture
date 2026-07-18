@@ -1,0 +1,134 @@
+{
+
+  "basic": {
+    "name": "Journey2",
+    "width": 20,
+    "height": 13,
+    "scroll": [0, 0],
+    "music": "smw_title.ogg",
+    "begin": [1, 12],
+    "finish": [17, 0]
+  },
+
+  "floors": [
+    {
+      "type": "sculpture", "name": "elem1",
+      "squares": [
+        {"x1": 0, "y1": 0, "x2": 19, "y2": 12}
+      ]
+    }
+  ],
+
+  "floor": [
+    {
+      "type": "sculpture", "name": "elem6",
+      "points": [
+        {"x": 8, "y": 5},
+        {"x": 8, "y": 7},
+        {"x": 11, "y": 5},
+        {"x": 11, "y": 7}
+      ]
+    },
+    {
+      "type": "sculpture", "name": "elem7",
+      "points": [
+        {"x": 17, "y": 0}
+      ]
+    }
+  ],
+
+  "obstacles": [
+    {
+      "type": "field", "name": "elem3",
+      "squares": [
+        {"x1": 1, "y1": 2, "x2": 1, "y2": 9},
+        {"x1": 18, "y1": 1, "x2": 18, "y2": 9}
+      ]
+    },
+    {
+      "type": "field", "name": "elem8",
+      "squares": [
+        {"x1": 0, "y1": 1, "x2": 0, "y2": 12},
+        {"x1": 0, "y1": 0, "x2": 16, "y2": 0},
+        {"x1": 2, "y1": 12, "x2": 19, "y2": 12},
+        {"x1": 19, "y1": 0, "x2": 19, "y2": 11}
+      ]
+    },
+    {
+      "type": "sculpture", "name": "elem20",
+      "squares": [
+        {"x1": 4, "y1": 3, "x2": 4, "y2": 9},
+        {"x1": 5, "y1": 3, "x2": 14, "y2": 3},
+        {"x1": 5, "y1": 9, "x2": 14, "y2": 9},
+        {"x1": 15, "y1": 3, "x2": 15, "y2": 9}
+      ]
+    }
+  ],
+
+  "obstacle": [
+    {
+      "type": "field", "name": "elem6",
+      "points": [
+        {"x": 8, "y": 6},
+        {"x": 11, "y": 6}
+      ]
+    },
+    {
+      "type": "field", "name": "elem8",
+      "points": [
+        {"x": 1, "y": 1},
+        {"x": 18, "y": 0},
+        {"x": 18, "y": 11}
+      ]
+    },
+    {
+      "type": "field", "name": "elem9",
+      "points": [
+        {"x": 9, "y": 6},
+        {"x": 10, "y": 6}
+      ]
+    },
+    {
+      "type": "field", "name": "elem12",
+      "points": [
+        {"x": 2, "y": 1}
+      ]
+    },
+    {
+      "type": "field", "name": "elem14",
+      "points": [
+        {"x": 18, "y": 10}
+      ]
+    }
+  ],
+
+  "districts": [
+    {
+      "square": {
+        "x1": 1, "y1": 1, "x2": 18, "y2": 11
+      },
+      "npcs": [
+        {"name": "JourneyLongMaoSmall", "x": 8, "y": 5},
+        {"name": "JourneyLongMaoSmall", "x": 11, "y": 5}
+      ]
+    },
+    {
+      "square": {
+        "x1": 1, "y1": 1, "x2": 18, "y2": 11
+      },
+      "npcs": [
+        {"name": "JourneyLongMaoMedium", "x": 8, "y": 5},
+        {"name": "JourneyLongMaoSmall", "x": 11, "y": 7}
+      ]
+    },
+    {
+      "square": {
+        "x1": 1, "y1": 1, "x2": 18, "y2": 11
+      },
+      "npcs": [
+        {"name": "JourneySmallGhost", "x": 11, "y": 5}
+      ]
+    }
+  ]
+
+}

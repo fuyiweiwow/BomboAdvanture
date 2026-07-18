@@ -1,0 +1,14 @@
+{
+  "name": "SenLin53LiHaiDeShiTouRen",
+  "chs_name": "厉害的石头人",
+  "character": "Character18707",
+  "blood": 32000,
+  "self_damage_blood": 3532,
+  "speed": 2.5,
+  "contact": 1800,
+  "defense": 8000,
+  "resent_dist": 8,
+  "skills": [
+    {"name": "HeiLongDizzy9x9", "init": 3000, "interval": 9000, "max": -1}
+  ]
+}

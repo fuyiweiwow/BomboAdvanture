@@ -1,0 +1,17 @@
+{
+  "name": "IceMonsEasy",
+  "chs_name": "寒冰元素",
+  "character": "Character18201",
+  "blood": 8100,
+  "speed": 3,
+  "contact": 120,
+  "defense": 0,
+  "resent_dist": 3,
+  "skills": [
+    {"name": "Skill21017", "init": 2000, "interval": 10000, "max": -1}
+  ],
+  "gifts": [
+    {"name": "item_pearl", "possibility": 0.6},
+    {"name": "item_bottle", "possibility": 0.6}
+  ]
+}

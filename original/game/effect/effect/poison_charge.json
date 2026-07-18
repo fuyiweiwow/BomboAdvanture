@@ -1,0 +1,23 @@
+{
+  "NAME": "poison_charge",
+  "MAGICS": [
+    {
+      "NAME": "magic0087",
+      "CX": 0,
+      "CY": -10,
+      "INTERVAL": 80,
+      "REPEAT": false,
+      "COLOR_SUB": [128, 0, 128],
+      "SPECIAL_FLAG": -2
+    },
+    {
+      "NAME": "magic0087",
+      "CX": 0,
+      "CY": -10,
+      "INTERVAL": 80,
+      "REPEAT": false,
+      "COLOR_SUB": [255, 192, 255],
+      "SPECIAL_FLAG": -2
+    }
+  ]
+}

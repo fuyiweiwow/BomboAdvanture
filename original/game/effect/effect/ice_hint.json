@@ -1,0 +1,15 @@
+{
+  "NAME": "ice_hint",
+  "MAGICS": [
+    {
+      "NAME": "magic0091",
+      "CX": 0,
+      "CY": 0,
+      "INTERVAL": 100,
+      "REPEAT": true,
+      "MAX_TIME": 1500,
+      "COLOR_SUB": [127, 0, 0],
+      "SPECIAL_FLAG": -2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "FengBaoWanderingIcy_2",
+  "chs_name": "游荡的冰妖",
+  "character": "Character18810",
+  "blood": 1500,
+  "speed": 3,
+  "contact": 200,
+  "defense": 400,
+  "resent_dist": 6,
+  "skills": [
+    {"name": "Skill21005", "init": 2000, "interval": 10000, "max": -1}
+  ]
+}

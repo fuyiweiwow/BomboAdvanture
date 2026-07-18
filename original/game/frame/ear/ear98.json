@@ -1,0 +1,212 @@
+{
+    "NAME": "ear98",
+    "STAND_R": {
+        "IMG": [
+            "ear98_stand_0_0.png",
+            "ear98_stand_0_1.png",
+            "ear98_stand_0_2.png",
+            "ear98_stand_0_3.png",
+            "ear98_stand_0_4.png",
+            "ear98_stand_0_5.png"
+        ],
+        "CX": [
+            8,
+            4,
+            0,
+            0,
+            0,
+            0
+        ],
+        "CY": [
+            19,
+            16,
+            12,
+            11,
+            9,
+            10
+        ]
+    },
+    "STAND_U": {
+        "IMG": [
+            "ear98_stand_1_0.png",
+            "ear98_stand_1_1.png",
+            "ear98_stand_1_2.png",
+            "ear98_stand_1_3.png",
+            "ear98_stand_1_4.png",
+            "ear98_stand_1_5.png"
+        ],
+        "CX": [
+            8,
+            4,
+            0,
+            0,
+            0,
+            0
+        ],
+        "CY": [
+            19,
+            16,
+            12,
+            11,
+            9,
+            10
+        ]
+    },
+    "STAND_L": {
+        "IMG": [
+            "ear98_stand_2_0.png",
+            "ear98_stand_2_1.png",
+            "ear98_stand_2_2.png",
+            "ear98_stand_2_3.png",
+            "ear98_stand_2_4.png",
+            "ear98_stand_2_5.png"
+        ],
+        "CX": [
+            8,
+            4,
+            0,
+            0,
+            0,
+            0
+        ],
+        "CY": [
+            19,
+            16,
+            12,
+            11,
+            9,
+            10
+        ]
+    },
+    "STAND_D": {
+        "IMG": [
+            "ear98_stand_3_0.png",
+            "ear98_stand_3_1.png",
+            "ear98_stand_3_2.png",
+            "ear98_stand_3_3.png",
+            "ear98_stand_3_4.png",
+            "ear98_stand_3_5.png"
+        ],
+        "CX": [
+            8,
+            4,
+            0,
+            0,
+            0,
+            0
+        ],
+        "CY": [
+            19,
+            16,
+            12,
+            11,
+            9,
+            10
+        ]
+    },
+    "R": {
+        "IMG": [
+            "ear98_walk_0_0.png",
+            "ear98_walk_0_1.png",
+            "ear98_walk_0_2.png",
+            "ear98_walk_0_3.png",
+            "ear98_walk_0_4.png",
+            "ear98_walk_0_5.png"
+        ],
+        "CX": [
+            8,
+            4,
+            0,
+            0,
+            0,
+            0
+        ],
+        "CY": [
+            19,
+            16,
+            12,
+            11,
+            9,
+            10
+        ]
+    },
+    "U": {
+        "IMG": [
+            "ear98_walk_1_0.png",
+            "ear98_walk_1_1.png",
+            "ear98_walk_1_2.png",
+            "ear98_walk_1_3.png",
+            "ear98_walk_1_4.png",
+            "ear98_walk_1_5.png"
+        ],
+        "CX": [
+            8,
+            4,
+            0,
+            0,
+            0,
+            0
+        ],
+        "CY": [
+            19,
+            16,
+            12,
+            11,
+            9,
+            10
+        ]
+    },
+    "L": {
+        "IMG": [
+            "ear98_walk_2_0.png",
+            "ear98_walk_2_1.png",
+            "ear98_walk_2_2.png",
+            "ear98_walk_2_3.png",
+            "ear98_walk_2_4.png",
+            "ear98_walk_2_5.png"
+        ],
+        "CX": [
+            8,
+            4,
+            0,
+            0,
+            0,
+            0
+        ],
+        "CY": [
+            19,
+            16,
+            12,
+            11,
+            9,
+            10
+        ]
+    },
+    "D": {
+        "IMG": [
+            "ear98_walk_3_0.png",
+            "ear98_walk_3_1.png",
+            "ear98_walk_3_2.png",
+            "ear98_walk_3_3.png",
+            "ear98_walk_3_4.png",
+            "ear98_walk_3_5.png"
+        ],
+        "CX": [
+            8,
+            4,
+            0,
+            0,
+            0,
+            0
+        ],
+        "CY": [
+            19,
+            16,
+            12,
+            11,
+            9,
+            10
+        ]
+    },
+    "INTERVAL": 200
+}

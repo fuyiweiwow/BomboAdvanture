@@ -1,0 +1,212 @@
+{
+    "NAME": "eye33",
+    "STAND_R": {
+        "IMG": [
+            "eye33_stand_0_0.png",
+            "eye33_stand_0_1.png",
+            "eye33_stand_0_2.png",
+            "eye33_stand_0_3.png",
+            "eye33_stand_0_4.png",
+            "eye33_stand_0_5.png"
+        ],
+        "CX": [
+            30,
+            51,
+            52,
+            30,
+            49,
+            48
+        ],
+        "CY": [
+            2,
+            5,
+            4,
+            2,
+            5,
+            4
+        ]
+    },
+    "STAND_U": {
+        "IMG": [
+            "eye33_stand_1_0.png",
+            "eye33_stand_1_1.png",
+            "eye33_stand_1_2.png",
+            "eye33_stand_1_3.png",
+            "eye33_stand_1_4.png",
+            "eye33_stand_1_5.png"
+        ],
+        "CX": [
+            8,
+            10,
+            10,
+            8,
+            8,
+            6
+        ],
+        "CY": [
+            2,
+            2,
+            1,
+            2,
+            2,
+            1
+        ]
+    },
+    "STAND_L": {
+        "IMG": [
+            "eye33_stand_2_0.png",
+            "eye33_stand_2_1.png",
+            "eye33_stand_2_2.png",
+            "eye33_stand_2_3.png",
+            "eye33_stand_2_4.png",
+            "eye33_stand_2_5.png"
+        ],
+        "CX": [
+            8,
+            3,
+            2,
+            8,
+            5,
+            3
+        ],
+        "CY": [
+            2,
+            5,
+            4,
+            2,
+            5,
+            4
+        ]
+    },
+    "STAND_D": {
+        "IMG": [
+            "eye33_stand_3_0.png",
+            "eye33_stand_3_1.png",
+            "eye33_stand_3_2.png",
+            "eye33_stand_3_3.png",
+            "eye33_stand_3_4.png",
+            "eye33_stand_3_5.png"
+        ],
+        "CX": [
+            8,
+            7,
+            7,
+            8,
+            9,
+            11
+        ],
+        "CY": [
+            2,
+            1,
+            2,
+            2,
+            1,
+            2
+        ]
+    },
+    "R": {
+        "IMG": [
+            "eye33_walk_0_0.png",
+            "eye33_walk_0_1.png",
+            "eye33_walk_0_2.png",
+            "eye33_walk_0_3.png",
+            "eye33_walk_0_4.png",
+            "eye33_walk_0_5.png"
+        ],
+        "CX": [
+            30,
+            51,
+            52,
+            30,
+            49,
+            48
+        ],
+        "CY": [
+            2,
+            5,
+            4,
+            2,
+            5,
+            4
+        ]
+    },
+    "U": {
+        "IMG": [
+            "eye33_walk_1_0.png",
+            "eye33_walk_1_1.png",
+            "eye33_walk_1_2.png",
+            "eye33_walk_1_3.png",
+            "eye33_walk_1_4.png",
+            "eye33_walk_1_5.png"
+        ],
+        "CX": [
+            8,
+            10,
+            10,
+            8,
+            8,
+            6
+        ],
+        "CY": [
+            2,
+            2,
+            1,
+            2,
+            2,
+            1
+        ]
+    },
+    "L": {
+        "IMG": [
+            "eye33_walk_2_0.png",
+            "eye33_walk_2_1.png",
+            "eye33_walk_2_2.png",
+            "eye33_walk_2_3.png",
+            "eye33_walk_2_4.png",
+            "eye33_walk_2_5.png"
+        ],
+        "CX": [
+            8,
+            3,
+            2,
+            8,
+            5,
+            3
+        ],
+        "CY": [
+            2,
+            5,
+            4,
+            2,
+            5,
+            4
+        ]
+    },
+    "D": {
+        "IMG": [
+            "eye33_walk_3_0.png",
+            "eye33_walk_3_1.png",
+            "eye33_walk_3_2.png",
+            "eye33_walk_3_3.png",
+            "eye33_walk_3_4.png",
+            "eye33_walk_3_5.png"
+        ],
+        "CX": [
+            8,
+            7,
+            7,
+            8,
+            9,
+            11
+        ],
+        "CY": [
+            2,
+            1,
+            2,
+            2,
+            1,
+            2
+        ]
+    },
+    "INTERVAL": 200
+}

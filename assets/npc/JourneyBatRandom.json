@@ -1,0 +1,13 @@
+{
+  "name": "JourneyBatRandom",
+  "chs_name": "霰弹蝙蝠",
+  "character": "Pet78",
+  "blood": 21000,
+  "speed": 0,
+  "contact": 2000,
+  "defense": 0,
+  "resent_dist": 20,
+  "skills": [
+    {"name": "BombThrowRainRandom", "init": 8500, "interval": 12000, "max": -1}
+  ]
+}

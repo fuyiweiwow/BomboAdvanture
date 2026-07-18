@@ -1,0 +1,14 @@
+{
+  "name": "HeiLongMagmaMonsBlue",
+  "chs_name": "岩浆兽",
+  "character": "Character18604",
+  "blood": 30000,
+  "self_damage_blood": 3628,
+  "speed": 2.5,
+  "contact": 2000,
+  "defense": 4000,
+  "resent_dist": 7,
+  "skills": [
+    {"name": "HeiLongDizzy9x9", "init": 3000, "interval": 9000, "max": -1}
+  ]
+}

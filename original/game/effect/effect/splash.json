@@ -1,0 +1,23 @@
+{
+  "NAME": "splash",
+  "MAGICS": [
+    {
+      "NAME": "magic0045",
+      "CX": -62,
+      "CY": -80,
+      "INTERVAL": 50,
+      "REPEAT": false,
+      "COLOR_SUB": [255, 0, 0],
+      "ALPHA": [51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 25, 0],
+      "SPECIAL_FLAG": -2
+    },
+    {
+      "NAME": "magic0045",
+      "CX": -62,
+      "CY": -80,
+      "INTERVAL": 50,
+      "REPEAT": false,
+      "SPECIAL_FLAG": -2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "TYPE": "desert",
+  "NAME": "elem7",
+  "WIDTH": 4,
+  "HEIGHT": 3,
+  "BLOCK": [[[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]], [[1, 1, 1], [1, 1, 1], [1, 1, 1], [1, 1, 1], [1, 1, 1]]],
+  "BREAKABLE": false,
+  "CAN_HIDE": false,
+  "INTERVAL": 1000,
+
+  "STAND": {
+      "IMG": [
+        "elem7_stand_0_0.png"
+      ],
+      "CX": [-4],
+      "CY": [-16]
+  }
+
+}

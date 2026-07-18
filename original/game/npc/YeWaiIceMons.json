@@ -1,0 +1,13 @@
+{
+  "name": "IceMons",
+  "chs_name": "深寒元素",
+  "character": "Character18201",
+  "blood": 12000,
+  "speed": 2.8,
+  "contact": 0,
+  "defense": 4000,
+  "resent_dist": 6,
+  "skills": [
+    {"name": "Skill21022", "init": 2000, "interval": 8000, "max": -1}
+  ]
+}

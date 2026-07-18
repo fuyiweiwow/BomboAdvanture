@@ -1,0 +1,19 @@
+{
+  "TYPE": "desert",
+  "NAME": "elem11",
+  "WIDTH": 1,
+  "HEIGHT": 1,
+  "BLOCK": [[[1, 1]], [[1], [1]]],
+  "BREAKABLE": false,
+  "CAN_HIDE": true,
+  "INTERVAL": 1000,
+
+  "STAND": {
+      "IMG": [
+        "elem11_stand_0_0.png"
+      ],
+      "CX": [-2],
+      "CY": [-31]
+  }
+
+}

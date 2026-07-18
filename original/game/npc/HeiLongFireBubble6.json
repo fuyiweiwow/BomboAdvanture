@@ -1,0 +1,14 @@
+{
+  "name": "HeiLongFireBubble6",
+  "chs_name": "火泡泡",
+  "character": "Character17001",
+  "blood": 800,
+  "speed": 3,
+  "contact": 1,
+  "defense": 50,
+  "resent_dist": 4,
+  "skills": [
+    {"name": "HeiLongPutFireTrap", "init": 3000, "interval": 9000, "max": -1},
+    {"name": "HeiLongDistantFire5x5", "init": 10000, "interval": 21000, "max": -1}
+  ]
+}

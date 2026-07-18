@@ -1,0 +1,13 @@
+{
+  "name": "HeiLongPokerCaptain2",
+  "chs_name": "卡牌队长",
+  "character": "Character17401",
+  "blood": 4000,
+  "speed": 3.5,
+  "contact": 0,
+  "defense": 500,
+  "resent_dist": 5,
+  "skills": [
+    {"name": "Skill21069", "init": 3000, "interval": 5000, "max": -1}
+  ]
+}

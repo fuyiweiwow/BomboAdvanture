@@ -1,0 +1,18 @@
+{
+  "name": "IceMonsElite",
+  "chs_name": "冰霜之王",
+  "character": "Character17201",
+  "blood": 8100,
+  "speed": 3,
+  "contact": 120,
+  "defense": 0,
+  "resent_dist": 3,
+  "skills": [
+    {"name": "Skill21019", "init": 5000, "interval": 3000, "max": -1},
+    {"name": "HeiLongDizzy9x9", "init": 28000, "interval": 10000, "max": -1}
+  ],
+  "gifts": [
+    {"name": "item_pet_food", "possibility": 0.8},
+    {"name": "item_pet_book", "possibility": 0.8}
+  ]
+}

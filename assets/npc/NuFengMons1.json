@@ -1,0 +1,13 @@
+{
+  "name": "NuFengMons1",
+  "chs_name": "魔王兵",
+  "character": "Character18804",
+  "blood": 4000,
+  "speed": 3,
+  "contact": 800,
+  "defense": 1200,
+  "resent_dist": 6,
+  "skills": [
+
+  ]
+}

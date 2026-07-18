@@ -1,0 +1,13 @@
+{
+  "name": "SenLin51DaShuRen",
+  "chs_name": "大树人",
+  "character": "Character18706",
+  "blood": 8000,
+  "self_damage_blood": 4556,
+  "speed": 2.5,
+  "contact": 1000,
+  "defense": 1600,
+  "resent_dist": 8,
+  "skills": [
+  ]
+}

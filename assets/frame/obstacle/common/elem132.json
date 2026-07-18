@@ -1,0 +1,31 @@
+{
+  "TYPE": "common",
+  "NAME": "elem132",
+  "WIDTH": 1,
+  "HEIGHT": 1,
+  "BLOCK": [[[0, 0]], [[0], [0]]],
+  "BREAKABLE": false,
+  "CAN_HIDE": false,
+  "SLIDE": [1, 1],
+  "BACKGROUND": true,
+  "INTERVAL": 100,
+
+  "STAND": {
+    "IMG": [
+      "elem132_stand_0_0.png",
+      "elem132_stand_0_1.png",
+      "elem132_stand_0_2.png",
+      "elem132_stand_0_3.png",
+      "elem132_stand_0_4.png",
+      "elem132_stand_0_5.png",
+      "elem132_stand_0_6.png",
+      "elem132_stand_0_7.png",
+      "elem132_stand_0_8.png",
+      "elem132_stand_0_9.png"
+    ],
+
+    "CX": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "CY": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  }
+
+}

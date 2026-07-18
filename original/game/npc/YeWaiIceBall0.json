@@ -1,0 +1,17 @@
+{
+  "name": "IceBall0",
+  "chs_name": "霜冻傀儡",
+  "character": "Character18301",
+  "blood": 5400,
+  "speed": 3.5,
+  "contact": 85,
+  "defense": 0,
+  "resent_dist": 3,
+  "skills": [
+    {"name": "Skill21005", "init": 2000, "interval": 10000, "max": -1}
+  ],
+  "gifts": [
+    {"name": "item_pearl", "possibility": 0.5},
+    {"name": "item_bottle", "possibility": 0.5}
+  ]
+}
