@@ -20,12 +20,7 @@ var grid_damage_duration: int = 500
 var me = null
 var current_level = null
 
-# UI resources
-var _ui_font: Font = null
-var _tex_mask_player: Texture2D = null
-var _tex_life_slice: Texture2D = null
-var _tex_medal: Texture2D = null
-var _tex_icon: Texture2D = null
+var _ui_layer: CanvasLayer = null
 
 var orientations: Dictionary = {}
 var walking_stack: Array = []
@@ -53,7 +48,12 @@ func _ready() -> void:
 	init_game()
 	preload_assets()
 	proceed_game()
-	_load_ui_resources()
+	_ui_layer = CanvasLayer.new()
+	_ui_layer.layer = 128
+	var ui_node = Node2D.new()
+	ui_node.set_script(preload("res://src/main/ui.gd"))
+	_ui_layer.add_child(ui_node)
+	add_child(_ui_layer)
 
 # Per-frame update + rendering driver (replaces Main._process + World._draw).
 func _process(_delta: float) -> void:
@@ -62,12 +62,12 @@ func _process(_delta: float) -> void:
 		current_level.scroll_map()
 		position = Vector2(1.0 - current_level.scroll_x_pos, 21.0 - current_level.scroll_y_pos)
 		queue_redraw()
+		if _ui_layer != null and _ui_layer.get_child_count() > 0:
+			_ui_layer.get_child(0).queue_redraw()
 
 func _draw() -> void:
 	if current_level != null and current_level.has_method("draw_world"):
 		current_level.draw_world(self)
-	draw_set_transform(-position, 0.0, Vector2(1, 1))
-	draw_ui()
 
 func init_game() -> void:
 	var f = FileAccess.open(G.ASSET_ROOT + "config.json", FileAccess.READ)
@@ -104,92 +104,6 @@ func init_keys(keys_root: Dictionary) -> void:
 
 func preload_assets() -> void:
 	pass
-
-func _load_ui_resources() -> void:
-	_ui_font = ThemeDB.fallback_font
-	_tex_mask_player = _load_tex("res://assets/img/ui/game/mask_player.png")
-	_tex_life_slice = _load_tex("res://assets/img/ui/game/img_playerLife.png")
-	_tex_medal = _load_tex("res://assets/img/ui/game/medal_30.png")
-
-func _load_tex(path: String) -> Texture2D:
-	if ResourceLoader.exists(path):
-		return load(path)
-	return null
-
-func _update_icon_texture() -> void:
-	if me == null or me.icon_img == "":
-		_tex_icon = null
-		return
-	var path = "res://assets/img/ui/game/" + me.icon_img + ".png"
-	if ResourceLoader.exists(path):
-		_tex_icon = load(path)
-	else:
-		_tex_icon = null
-
-func draw_ui() -> void:
-	if current_level == null or me == null:
-		return
-	_update_icon_texture()
-	_draw_left_panel()
-	if G.DISPLAY_NPC_BLOOD:
-		_draw_right_panel()
-
-func _draw_left_panel() -> void:
-	# Player icon -- same position as original PlayerIcon (0, 78)
-	if _tex_icon != null:
-		draw_texture(_tex_icon, Vector2(0, 78))
-
-	# HP bar background (mask_player.png) at (0, 120) -- matches original BloodBar
-	if _tex_mask_player != null:
-		draw_texture(_tex_mask_player, Vector2(0, 120))
-
-	# HP number text
-	if _ui_font != null:
-		var hp_str = str(me.remain_blood)
-		draw_string(_ui_font, Vector2(4, 135), hp_str, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0, 1, 1))
-
-	# HP visual bar (img_playerLife.png tiled)
-	if _tex_life_slice != null and me.blood > 0:
-		var ratio = clampf(float(me.remain_blood) / float(me.blood), 0.0, 1.0)
-		var slice_w = _tex_life_slice.get_width()
-		var slice_h = _tex_life_slice.get_height()
-		var max_slices = 90
-		var n = ceili(ratio * max_slices)
-		for i in range(n):
-			draw_texture(_tex_life_slice, Vector2(float(i), 136.0))
-
-	# Medal + player name
-	if _tex_medal != null:
-		draw_texture(_tex_medal, Vector2(0, 142))
-	if _ui_font != null:
-		draw_string(_ui_font, Vector2(26, 144), your_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(1, 1, 1))
-
-func _draw_right_panel() -> void:
-	var npcs = current_level.npcs
-	if npcs.size() == 0:
-		return
-	var panel_x = 580
-	var start_y = 80
-	var entry_h = 24
-	var bar_w = 100.0
-	var bar_h = 6.0
-	for i in range(npcs.size()):
-		var npc = npcs[i]
-		if npc.blood <= 0:
-			continue
-		var y = start_y + i * entry_h
-		# Name
-		if _ui_font != null:
-			draw_string(_ui_font, Vector2(panel_x, y + 10), npc.chs_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(1, 1, 1))
-		# HP bar background
-		var bx = panel_x + 80
-		var by = y + 2
-		draw_rect(Rect2(bx - 1, by - 1, bar_w + 2, bar_h + 2), Color(0, 0, 0, 0.5))
-		draw_rect(Rect2(bx, by, bar_w, bar_h), Color(0.1, 0.1, 0.1, 0.85))
-		# HP bar fill
-		var ratio = clampf(float(npc.remain_blood) / float(npc.blood), 0.0, 1.0)
-		if ratio > 0.0:
-			draw_rect(Rect2(bx, by, bar_w * ratio, bar_h), Color(1.0, 0.2, 0.2))
 
 func proceed_game(is_reset = false) -> void:
 	map_set_at += 1
