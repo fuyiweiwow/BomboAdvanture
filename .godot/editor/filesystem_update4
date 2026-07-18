@@ -1,1 +1,3 @@
 res://src/frame/frame.gd
+res://src/game/sprite/npc.gd
+res://src/game/sprite/player.gd

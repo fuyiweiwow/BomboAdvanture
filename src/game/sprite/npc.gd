@@ -167,7 +167,5 @@ func draw(ci: CanvasItem) -> void:
 		# TODO: draw name card (needs a Font + bg texture)
 		pass
 
-func draw_blood_bar(ci: CanvasItem) -> void:
-	if not G.DISPLAY_NPC_BLOOD:
-		return
-	_draw_hp_bar(ci, Color(1.0, 0.2, 0.2))
+func draw_blood_bar(_ci: CanvasItem) -> void:
+	pass

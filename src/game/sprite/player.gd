@@ -411,7 +411,6 @@ func draw(ci: CanvasItem) -> void:
 	for s in effects_front:
 		if s.has_method("draw"):
 			s.draw(ci)
-	draw_blood_bar(ci)
 
 func _draw_hp_bar(ci: CanvasItem, fill_color: Color) -> void:
 	if blood <= 0:
@@ -425,8 +424,3 @@ func _draw_hp_bar(ci: CanvasItem, fill_color: Color) -> void:
 	ci.draw_rect(Rect2(bar_x, bar_y, bar_w, bar_h), Color(0.1, 0.1, 0.1, 0.85))
 	if ratio > 0.0:
 		ci.draw_rect(Rect2(bar_x, bar_y, bar_w * ratio, bar_h), fill_color)
-
-func draw_blood_bar(ci: CanvasItem) -> void:
-	if state == LOSE:
-		return
-	_draw_hp_bar(ci, Color(0.2, 1.0, 0.2))
