@@ -31,6 +31,7 @@ var orientations: Dictionary = {}
 var walking_stack: Array = []
 var bomb_old: int = 0
 var f6_old: bool = false
+var f7_old: bool = false
 var reset_old: bool = false
 var skills_old: Array = [false, false, false, false, false, false, false]
 var key2idx: Dictionary = {}
@@ -45,6 +46,7 @@ const K_LEFT = KEY_LEFT
 const K_DOWN = KEY_DOWN
 const K_SPACE = KEY_SPACE
 const K_F6 = KEY_F6
+const K_F7 = KEY_F7
 const K_RESET = KEY_0
 
 func _ready() -> void:
@@ -224,6 +226,7 @@ func key_pressed() -> void:
 	player_bomb()
 	player_move()
 	player_f6()
+	player_f7()
 	player_reset()
 	player_skill()
 
@@ -259,6 +262,15 @@ func player_f6() -> void:
 		f6_old = true
 	else:
 		f6_old = false
+
+func player_f7() -> void:
+	if Input.is_key_pressed(K_F7):
+		if f7_old:
+			return
+		G.DISPLAY_NPC_BLOOD = not G.DISPLAY_NPC_BLOOD
+		f7_old = true
+	else:
+		f7_old = false
 
 func player_reset() -> void:
 	if Input.is_key_pressed(cfg_reset):
