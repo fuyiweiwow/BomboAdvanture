@@ -77,7 +77,7 @@ func set_bomb() -> void:
 	if cl.get_bomb_instance(p.x, p.y).size() > 0:
 		return
 	# sound_player.play("bomb")  -- TODO: port sound
-	var b = BombInstance.new(p.x, p.y, cl.bomb_instances, bomb_skin, power, damage, self)
+	var b = BombInstance.new(p.x, p.y, cl.bomb_instances, bomb_skin, power, 999999 if Game.dev_mode else damage, self)
 	if bomb_decoration != "":
 		pass  # TODO: EffectInstance(bomb_decoration, b, ...)
 	remain_bombs -= 1

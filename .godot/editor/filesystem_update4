@@ -1,9 +1,0 @@
-res://src/game/sprite/flame_instance.gd
-res://src/game/sprite/npc.gd
-res://src/game/sprite/player.gd
-res://src/main/ui.gd
-res://src/frame/obstacle_loader.gd
-res://src/game/level/level.gd
-res://src/game/sprite/hero.gd
-res://src/main/game.gd
-res://src/game/sprite/obstacle_instance.gd

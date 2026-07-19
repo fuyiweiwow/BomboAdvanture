@@ -86,6 +86,7 @@ func _return_to_title() -> void:
 	map_set_at = -1
 	dev_mode = false
 	game_complete = false
+	position = Vector2(0, 0)
 	_show_title()
 
 func start_game(dev: bool) -> void:
@@ -99,7 +100,7 @@ func _process(_delta: float) -> void:
 		if current_level != null:
 			current_level.scroll_map()
 			position = Vector2(1.0 - current_level.scroll_x_pos, 21.0 - current_level.scroll_y_pos)
-			queue_redraw()
+	queue_redraw()
 	if _ui_layer != null and _ui_layer.get_child_count() > 0:
 		_ui_layer.get_child(0).queue_redraw()
 
