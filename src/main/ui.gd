@@ -60,7 +60,7 @@ func _draw() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		if Game.current_level != null and Game.me != null:
-			var btn = Rect2(737, 545, 52, 47)
+			var btn = Rect2(742, 545, 52, 47)
 			if btn.has_point(event.position):
 				Game._return_to_title()
 				get_viewport().set_input_as_handled()
@@ -165,7 +165,7 @@ func _draw_skill_bar(me) -> void:
 	if _tex_dlg_bg != null:
 		draw_texture(_tex_dlg_bg, Vector2(619, 537))
 	if _tex_btn_leave != null:
-		draw_texture(_tex_btn_leave, Vector2(737, 545))
+		draw_texture(_tex_btn_leave, Vector2(742, 545))
 	var icon_ox = [164, 217, 270, 323, 376, 429, 484]
 	var icon_oy = -8
 	var mask_ox = [179, 232, 285, 338, 391, 444, 497]
