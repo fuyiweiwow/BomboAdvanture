@@ -1,2 +1,7 @@
 res://src/game/sprite/hero.gd
 res://src/main/game.gd
+res://src/main/ui.gd
+res://assets/frame/bomb/bomb1.json
+res://assets/frame/bomb/bomb2.json
+res://assets/frame/bomb/bomb125.json
+res://original/常见键盘按键常量.txt

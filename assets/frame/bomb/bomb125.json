@@ -1,25 +1,25 @@
 {
-    "NAME": "bomb125",
-    "STAND": {
-        "IMG": [
-            "bomb125_stand_0_0.png",
-            "bomb125_stand_0_1.png",
-            "bomb125_stand_0_2.png",
+	"NAME": "bomb125",
+	"STAND": {
+		"IMG": [
+			"bomb125_stand_0_0.png",
+			"bomb125_stand_0_1.png",
+			"bomb125_stand_0_2.png",
             "bomb125_stand_0_3.png"
-        ],
-        "CX": [
-            2,
-            2,
-            1,
-            0
-        ],
-        "CY": [
-            1,
-            0,
-            1,
-            0
-        ]
-    },
+		],
+		"CX": [
+			2,
+			2,
+			1,
+			0
+		],
+		"CY": [
+			1,
+			0,
+			1,
+			0
+		]
+	},
 
-    "INTERVAL": 250
+	"INTERVAL": 250
 }

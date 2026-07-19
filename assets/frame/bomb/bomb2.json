@@ -3,15 +3,15 @@
   "INTERVAL": 250,
 
   "STAND": {
-      "IMG": [
-        "bomb2_stand_0_0.png",
-        "bomb2_stand_0_1.png",
-        "bomb2_stand_0_2.png",
-        "bomb2_stand_0_3.png",
+	  "IMG": [
+		"bomb2_stand_0_0.png",
+		"bomb2_stand_0_1.png",
+		"bomb2_stand_0_2.png",
+		"bomb2_stand_0_3.png",
         "bomb2_stand_0_4.png"
-      ],
-      "CX": [2, 3, 4, 4, 3],
-      "CY": [16, 11, 7, 7, 11]
+	  ],
+	  "CX": [2, 3, 4, 4, 3],
+	  "CY": [16, 11, 7, 7, 11]
   }
 
 }
