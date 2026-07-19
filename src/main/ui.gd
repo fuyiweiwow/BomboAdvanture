@@ -13,6 +13,7 @@ var _tex_status_bar: Texture2D = null
 var _tex_misc510: Texture2D = null
 var _tex_game_top: Texture2D = null
 var _tex_game_left: Texture2D = null
+var _tex_score_bg: Texture2D = null
 var _tex_btn_leave: Texture2D = null
 var _digit_texes: Array = []
 var _game_over_shown: bool = false
@@ -28,6 +29,7 @@ func _ready() -> void:
 	_tex_misc510 = _load_tex("res://assets/img/ui/game/misc510.png")
 	_tex_game_top = _load_tex("res://assets/img/ui/game/gameTop.png")
 	_tex_game_left = _load_tex("res://assets/img/ui/game/gameLeft.png")
+	_tex_score_bg = _load_tex("res://assets/img/ui/bg/bg_game.png")
 	_tex_btn_leave = _load_tex("res://assets/img/ui/common/btn_leave_0_3.png")
 	for i in range(10):
 		_digit_texes.append(_load_tex("res://assets/img/ui/number/itemNum_0_" + str(i) + ".png"))
@@ -58,7 +60,7 @@ func _draw() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		if Game.current_level != null and Game.me != null:
-			var btn = Rect2(745, 548, 52, 47)
+			var btn = Rect2(735, 535, 52, 47)
 			if btn.has_point(event.position):
 				Game._return_to_title()
 				get_viewport().set_input_as_handled()
@@ -160,10 +162,10 @@ func _draw_skill_bar(me) -> void:
 	draw_texture(_tex_status_bar, Vector2(bar_x, bar_y))
 	if _tex_misc510 != null:
 		draw_texture(_tex_misc510, Vector2(556, bar_y))
-	if _tex_dlg_bg != null:
-		draw_texture(_tex_dlg_bg, Vector2(619, 537))
+	if _tex_score_bg != null:
+		draw_texture(_tex_score_bg, Vector2(600, 0))
 	if _tex_btn_leave != null:
-		draw_texture(_tex_btn_leave, Vector2(745, 548))
+		draw_texture(_tex_btn_leave, Vector2(735, 535))
 	var icon_ox = [164, 217, 270, 323, 376, 429, 484]
 	var icon_oy = -8
 	var mask_ox = [179, 232, 285, 338, 391, 444, 497]
