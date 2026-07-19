@@ -109,12 +109,11 @@ func _draw() -> void:
 		current_level.draw_world(self)
 
 func init_game() -> void:
-	var f = FileAccess.open(G.ASSET_ROOT + "config.json", FileAccess.READ)
-	if f == null:
+	cfg_json = RM.get_json(G.ASSET_ROOT + "config.json")
+	if cfg_json == null:
 		push_error("Game: cannot open " + G.ASSET_ROOT + "config.json")
+		cfg_json = {}
 		return
-	cfg_json = JSON.parse_string(f.get_as_text())
-	f.close()
 	map_set_at = -1
 	game_complete = false
 	G.DISPLAY_NPC_NAME_CARD = bool(cfg_json.get("display_npc_name_card", false))
@@ -128,12 +127,13 @@ func init_game() -> void:
 	grid_damage_duration = int(cfg_json.get("grid_damage_duration", 500))
 	your_name = str(cfg_json.get("your_name", "玩家"))
 	init_keys(cfg_json["keys"])
+	var resource_dir: String = str(cfg_json.get("resource_dir", ""))
+	if resource_dir != "":
+		RM.set_custom_dir(resource_dir)
 	var map_set: String = str(cfg_json.get("map_set", "YongDong"))
-	var ms_path = G.GAME_ROOT + "map_set/" + map_set + ".json"
-	var mf = FileAccess.open(ms_path, FileAccess.READ)
-	if mf != null:
-		map_set_json = JSON.parse_string(mf.get_as_text())
-		mf.close()
+	map_set_json = RM.get_json(G.GAME_ROOT + "map_set/" + map_set + ".json")
+	if map_set_json == null:
+		map_set_json = {}
 
 func init_keys(keys_root: Dictionary) -> void:
 	orientations = {K_RIGHT: "R", K_UP: "U", K_LEFT: "L", K_DOWN: "D"}

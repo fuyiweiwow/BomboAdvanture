@@ -24,6 +24,7 @@ G="*res://src/core/const_game.gd"
 W="*res://src/core/const_window.gd"
 C="*res://src/core/const_color.gd"
 Game="*res://src/main/game.gd"
+RM="*res://src/core/resource_manager.gd"
 
 [display]
 

@@ -15,6 +15,7 @@
   "full_screen": false,
   "allow_preload": true,
   "low_config_mode": false,
+  "resource_dir": "",
   "keys": {
 	"UP": 1073741906,
 	"DOWN": 1073741905,

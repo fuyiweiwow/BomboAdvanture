@@ -10,15 +10,9 @@ static func current_grid(x_pos: float, y_pos: float) -> Vector2i:
 	var y = int(y_pos / G.GAME_SQUARE)
 	return Vector2i(x, y)
 
-# Load & parse a JSON file relative to the project (res://...).
+# Load & parse a JSON file (uses ResourceManager for custom-dir override).
 static func load_json(path: String) -> Variant:
-	var f = FileAccess.open(path, FileAccess.READ)
-	if f == null:
-		push_error("Utils.load_json: cannot open %s" % path)
-		return null
-	var text = f.get_as_text()
-	f.close()
-	return JSON.parse_string(text)
+	return RM.get_json(path)
 
 # (game/algo/blender.py : color_overlay)  -- tint a grayscale mask to `color`.
 # Masked character components (_m) are grayscale and get overlay-blended to the
@@ -43,16 +37,11 @@ static func _overlay_ch(t: int, c: int) -> int:
 		return int(t * (c + (128 - c)) / 128.0)
 	return int(255 - (255 - t) * (255 - c) / 128.0)
 
-# Load a PNG as a Texture2D (uses Godot's resource loader, works on export).
+# Load a PNG as a Texture2D (uses ResourceManager for custom-dir override).
 static func load_texture(path: String) -> Texture2D:
-	var tex = load(path)
-	if tex == null or not tex is Texture2D:
-		push_error("Utils.load_texture: failed to load %s" % path)
-		return null
-	return tex
+	return RM.get_texture(path)
 
 # Load a PNG as an Image for pixel manipulation (color overlay, etc.).
-# Uses texture.get_image() which works on imported textures.
 static func load_image(path: String) -> Image:
 	var tex = load_texture(path)
 	if tex == null:

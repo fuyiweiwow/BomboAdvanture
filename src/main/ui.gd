@@ -42,9 +42,7 @@ func _get_skill_tex(name: String) -> Texture2D:
 	return tex
 
 func _load_tex(path: String) -> Texture2D:
-	if ResourceLoader.exists(path):
-		return load(path)
-	return null
+	return RM.get_texture(path)
 
 func _update_icon() -> void:
 	var me = Game.me
