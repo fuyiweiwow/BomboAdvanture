@@ -212,7 +212,7 @@ func draw(ci: CanvasItem) -> void:
 
 func get_y() -> float:
 	if not obstacle_is_background:
-		return float(y)
+		return float(y) + float(obstacle["HEIGHT"]) - 1.0
 	return 0.0
 
 func uninstall() -> void:
@@ -220,13 +220,23 @@ func uninstall() -> void:
 	for gx in range(obstacle["WIDTH"]):
 		for gy in range(obstacle["HEIGHT"]):
 			obstacle_instances_dict.erase(Vector2i(gx + x, gy + y))
-	for orient in range(2):
+	var n_orient = min(obstacle["BLOCK"].size(), obstacle["BLOCK_FLAME"].size())
+	for orient in range(n_orient):
+		if orient >= cl.block.size() or orient >= cl.block_flame.size():
+			break
 		var brow: Array = obstacle["BLOCK"][orient]
 		var frow: Array = obstacle["BLOCK_FLAME"][orient]
 		for gx in range(brow.size()):
-			for gy in range(brow[gx].size()):
-				cl.block[orient][gx + x][gy + y] -= int(brow[gx][gy])
-				cl.block_flame[orient][gx + x][gy + y] -= int(frow[gx][gy])
+			if gx + x < 0 or gx + x >= cl.block[orient].size():
+				continue
+			var brow_col = brow[gx]
+			var frow_col = frow[gx] if gx < frow.size() else null
+			for gy in range(brow_col.size()):
+				if gy + y < 0 or gy + y >= cl.block[orient][gx + x].size():
+					continue
+				cl.block[orient][gx + x][gy + y] -= int(brow_col[gy])
+				if frow_col != null and gy < frow_col.size():
+					cl.block_flame[orient][gx + x][gy + y] -= int(frow_col[gy])
 	if obstacle.has("SLIDE"):
 		cl.slide_orientation.erase(Vector2i(x, y))
 	cl.recal_npc_paths = true

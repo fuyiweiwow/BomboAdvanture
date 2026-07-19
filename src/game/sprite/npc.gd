@@ -21,6 +21,7 @@ var npc_skill_time: int = 0
 var bomb_skin: Dictionary = {}
 var gifts = null
 var death = null
+var face_texture: Texture2D = null
 
 func _init(npc_name: String, xy: Vector2i, color_: Color = C.CHARACTER_RED):
 	super._init(npc_name, xy, color_)
@@ -59,6 +60,17 @@ func load_npc(npc_name: String, color_: Color) -> void:
 	chase_path = {}
 	npc_time_init = Time.get_ticks_msec()
 	character = load_character(str(npc_json["character"]), color_, {})
+	_extract_face_texture()
+
+func _extract_face_texture() -> void:
+	if not character.has("STAND_D"):
+		return
+	for comp_name in CHARACTER_COMPONENTS["D"]:
+		if character["STAND_D"].has(comp_name) and character["STAND_D"][comp_name].size() > 0:
+			var frame = character["STAND_D"][comp_name][0] as Frame
+			if frame != null and frame.texture != null:
+				face_texture = frame.texture
+				return
 
 func update() -> void:
 	super.update()

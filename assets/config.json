@@ -4,7 +4,7 @@
   "your_character_color": "Red",
   "map_set": "YongDong",
   "display_npc_name_card": true,
-  "display_npc_blood": false,
+  "display_npc_blood": true,
   "music_volume": 0.8,
   "sound_volume": 0.9,
   "frame_rate": 90,

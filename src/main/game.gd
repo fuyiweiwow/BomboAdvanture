@@ -1,9 +1,4 @@
-﻿# res://src/main/game.gd
-# Autoload "Game" -- port of game/control.py (Control).
-# Owns the config, the current Hero (`me`) and the current Level,
-# drives the per-frame update, translates input into player actions,
-# and renders the world (acts as both Main + World from the original design).
-extends Node2D
+﻿extends Node2D
 
 const Hero = preload("res://src/game/sprite/hero.gd")
 const Level = preload("res://src/game/level/level.gd")
@@ -16,9 +11,11 @@ var music_volume: float = 1.0
 var frame_rate: int = 90
 var display_frame_rate: bool = false
 var grid_damage_duration: int = 500
+var dev_mode: bool = false
 
 var me = null
 var current_level = null
+var game_complete: bool = false
 
 var _ui_layer: CanvasLayer = null
 
@@ -34,7 +31,6 @@ var cfg_space: int = 0
 var cfg_f6: int = 0
 var cfg_reset: int = 0
 
-# --- Godot keycodes (KEY_* are global constants) ---
 const K_RIGHT = KEY_RIGHT
 const K_UP = KEY_UP
 const K_LEFT = KEY_LEFT
@@ -47,23 +43,65 @@ const K_RESET = KEY_0
 func _ready() -> void:
 	init_game()
 	preload_assets()
-	proceed_game()
 	_ui_layer = CanvasLayer.new()
 	_ui_layer.layer = 128
 	var ui_node = Node2D.new()
 	ui_node.set_script(preload("res://src/main/ui.gd"))
 	_ui_layer.add_child(ui_node)
 	add_child(_ui_layer)
+	_show_title()
 
-# Per-frame update + rendering driver (replaces Main._process + World._draw).
+var _last_r_state: bool = false
+var _last_t_state: bool = false
+
+func _show_title() -> void:
+	var ts = Control.new()
+	ts.set_script(preload("res://src/main/title_screen.gd"))
+	add_child(ts)
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		if game_complete:
+			if event.keycode == KEY_R:
+				game_complete = false
+				init_game()
+				proceed_game(true)
+				get_viewport().set_input_as_handled()
+			elif event.keycode == KEY_T:
+				game_complete = false
+				_return_to_title()
+				get_viewport().set_input_as_handled()
+		elif current_level != null and me != null and me.state == 1:
+			if event.keycode == KEY_R:
+				init_game()
+				proceed_game(true)
+				get_viewport().set_input_as_handled()
+			elif event.keycode == KEY_T:
+				_return_to_title()
+				get_viewport().set_input_as_handled()
+
+func _return_to_title() -> void:
+	current_level = null
+	me = null
+	map_set_at = -1
+	dev_mode = false
+	game_complete = false
+	_show_title()
+
+func start_game(dev: bool) -> void:
+	dev_mode = dev
+	map_set_at = -1
+	proceed_game()
+
 func _process(_delta: float) -> void:
 	if current_level != null:
 		frame_step()
-		current_level.scroll_map()
-		position = Vector2(1.0 - current_level.scroll_x_pos, 21.0 - current_level.scroll_y_pos)
-		queue_redraw()
-		if _ui_layer != null and _ui_layer.get_child_count() > 0:
-			_ui_layer.get_child(0).queue_redraw()
+		if current_level != null:
+			current_level.scroll_map()
+			position = Vector2(1.0 - current_level.scroll_x_pos, 21.0 - current_level.scroll_y_pos)
+			queue_redraw()
+	if _ui_layer != null and _ui_layer.get_child_count() > 0:
+		_ui_layer.get_child(0).queue_redraw()
 
 func _draw() -> void:
 	if current_level != null and current_level.has_method("draw_world"):
@@ -77,8 +115,9 @@ func init_game() -> void:
 	cfg_json = JSON.parse_string(f.get_as_text())
 	f.close()
 	map_set_at = -1
+	game_complete = false
 	G.DISPLAY_NPC_NAME_CARD = bool(cfg_json.get("display_npc_name_card", false))
-	G.DISPLAY_NPC_BLOOD = bool(cfg_json.get("display_npc_blood", false))
+	G.DISPLAY_NPC_BLOOD = bool(cfg_json.get("display_npc_blood", true))
 	music_volume = float(cfg_json.get("music_volume", 1.0))
 	frame_rate = int(cfg_json.get("frame_rate", 90))
 	G.SOUND_VOLUME = float(cfg_json.get("sound_volume", 1.0))
@@ -107,10 +146,17 @@ func preload_assets() -> void:
 
 func proceed_game(is_reset = false) -> void:
 	map_set_at += 1
+	if map_set_at >= map_set_json["maps"].size():
+		return _on_game_complete()
 	var map_name: String = str(map_set_json["maps"][map_set_at])
 	var hero_name: String = str(cfg_json["your_hero"])
 	var character_color: String = str(cfg_json["your_character_color"])
 	set_level(your_name, map_name, hero_name, character_color, is_reset)
+
+func _on_game_complete() -> void:
+	game_complete = true
+	current_level = null
+	me = null
 
 func set_level(your_name_: String, map_name: String, hero_name: String, character_color: String, is_reset = false) -> void:
 	var character_colors = {
@@ -125,7 +171,6 @@ func set_level(your_name_: String, map_name: String, hero_name: String, characte
 	me = new_me
 	current_level = Level.new(your_name_, map_name, me, grid_damage_duration)
 
-# Per-frame step driven by Main._process.
 func frame_step() -> void:
 	if current_level != null:
 		if current_level.finish_flag:
@@ -202,7 +247,10 @@ func player_skill() -> void:
 		if Input.is_key_pressed(kc):
 			if skills_old[idx]:
 				continue
-			me.use_skill(idx)
+			if dev_mode:
+				me.dev_use_skill(idx)
+			else:
+				me.use_skill(idx)
 			skills_old[idx] = true
 		else:
 			skills_old[idx] = false

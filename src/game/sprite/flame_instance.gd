@@ -60,4 +60,4 @@ func draw(ci: CanvasItem) -> void:
 		return
 	var fridx: int = int(seq[flame_frame_idx - 1])
 	var fr: Frame = flame[fridx]
-	fr.draw(ci, x_pos, y_pos)
+	fr.draw(ci, x_pos - G.HALF_GAME_SQUARE, y_pos - G.HALF_GAME_SQUARE)

@@ -154,11 +154,18 @@ func update() -> void:
 		check_polymorph_time(current_time)
 	if state == LOSE:
 		update_frame_dead(current_time)
+	stimulate_x_y_changed_trigger()
 	update_skills()
 	update_effects()
 	get_damage_frame = false
 	grid_damage(current_time)
 	stimulate_character_frame_trigger()
+	if protected_time > 0:
+		protected_time = maxi(0, protected_time - (current_time - update_time_old))
+		# Blinking effect: 100ms on / 100ms off
+		temporary_alpha = 255 if (current_time / 100) % 2 == 0 else 48
+	else:
+		temporary_alpha = 255
 	update_time_old = current_time
 
 func update_skills() -> void:
@@ -281,6 +288,8 @@ func try_damage(damage_blood: int, _direction: String = "C") -> void:
 		return
 	if damage_blood > defense:
 		real_damage(damage_blood - defense)
+	elif damage_blood > 0:
+		real_damage(1)
 
 func real_damage(damage_blood: int) -> void:
 	remain_blood -= maxi(damage_blood, self_damage_blood)
@@ -291,8 +300,7 @@ func real_damage(damage_blood: int) -> void:
 		die()
 		return
 	if protected_time <= 0:
-		# Protect3s(self, skill_instances) -- TODO: port skill
-		pass
+		protected_time = 3000
 
 func die() -> void:
 	polymorph = 0

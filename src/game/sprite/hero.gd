@@ -161,8 +161,15 @@ func die() -> void:
 	for n in Game.current_level.npcs:
 		n.resentful = false
 
-# Skill dispatch. The ~20 hero skills are ported separately; here we keep the
-# bookkeeping identical and delegate. Unimplemented skills are logged TODO.
+func dev_use_skill(idx: int) -> void:
+	if idx > skill_names.size() - 1:
+		return
+	if state == LOSE and skill_names[idx] != "RevivalCard":
+		return
+	if polymorph > 0:
+		return
+	_execute_skill(idx)
+
 func use_skill(idx: int) -> void:
 	if idx > skill_names.size() - 1:
 		return
@@ -173,12 +180,26 @@ func use_skill(idx: int) -> void:
 	var current_time = Time.get_ticks_msec()
 	if current_time < int(skill_init_times[idx]) or int(skill_remains[idx]) == 0:
 		return
-	var name: String = skill_names[idx]
-	match name:
-		"BloodElixirSmall", "BloodElixirMiddle", "BloodElixirLarge", "PowerElixir", "FriendlyElixir", "MockingElixir", "RevivalCard", "FireworkRed", "FireworkYellow", "FireworkBlue", "FireworkGreen", "FireworkPurple", "FireworkRound", "FireworkHeart":
-			# TODO: port game/skill/hero_skill.py + skill.py
-			pass
-		_:
-			pass
+	_execute_skill(idx)
 	skill_remains[idx] = int(skill_remains[idx]) - 1
 	skill_init_times[idx] = current_time + int(skill_intervals[idx])
+
+func _execute_skill(idx: int) -> void:
+	var name: String = skill_names[idx]
+	match name:
+		"BloodElixirSmall":
+			remain_blood = mini(remain_blood + 800, blood)
+		"BloodElixirMiddle":
+			remain_blood = mini(remain_blood + 1500, blood)
+		"BloodElixirLarge":
+			remain_blood = mini(remain_blood + 3000, blood)
+		"RevivalCard":
+			if state == LOSE:
+				var revive_hp = 1500
+				if skill_params[idx].size() > 0:
+					revive_hp = int(skill_params[idx][0])
+				remain_blood = mini(revive_hp, blood)
+				switch_state(NORMAL)
+				protected_time = 3000
+		_:
+			pass

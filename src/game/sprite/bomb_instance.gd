@@ -276,7 +276,7 @@ static func add_orient(dict: Dictionary, point: Vector2i, orient: String) -> voi
 func draw(ci: CanvasItem) -> void:
 	if state == NORMAL and not bomb.is_empty() and bomb["STAND"].size() > 0:
 		var fr: Frame = bomb["STAND"][bomb_frame_idx]
-		fr.draw(ci, x_pos, y_pos)
+		fr.draw(ci, float(x) * G.GAME_SQUARE - 2.0, float(y) * G.GAME_SQUARE - 10.0)
 	for s in effects_front:
 		if s.has_method("draw"):
 			s.draw(ci)

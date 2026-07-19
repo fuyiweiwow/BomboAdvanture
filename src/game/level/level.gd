@@ -87,8 +87,8 @@ func load_map_json() -> void:
 	me.set_xy(int(map_json["basic"]["begin"][0]), int(map_json["basic"]["begin"][1]))
 	map_x = int(map_json["basic"]["width"])
 	map_y = int(map_json["basic"]["height"])
-	map_x_pos = map_x * G.GAME_SQUARE
-	map_y_pos = map_y * G.GAME_SQUARE
+	map_x_pos = map_x * G.GAME_SQUARE - 1
+	map_y_pos = map_y * G.GAME_SQUARE - 1
 	map_grids = []
 	for gx in range(map_x):
 		for gy in range(map_y):
@@ -282,24 +282,47 @@ func update() -> void:
 func draw_world(ci: CanvasItem) -> void:
 	if floor_texture != null:
 		ci.draw_texture(floor_texture, Vector2(0, 0))
+	_draw_district_boundary(ci)
 	for e in effects_behind:
 		if e.has_method("draw"):
 			e.draw(ci)
 	var seq: Array = []
-	seq.append_array(obstacle_instances_update)
-	seq.append_array(bomb_instances)
-	seq.append_array(flame_instances)
-	seq.append_array(item_instances.values())
-	seq.append_array(npcs)
-	seq.append_array(ghosts)
 	if me != null:
 		seq.append(me)
+	seq.append_array(npcs)
+	seq.append_array(ghosts)
+	seq.append_array(bomb_instances)
+	seq.append_array(obstacle_instances_update)
+	seq.append_array(flame_instances)
+	seq.append_array(item_instances.values())
+	seq.sort_custom(_sort_by_y)
 	for d in seq:
 		if d.has_method("draw"):
 			d.draw(ci)
 	for e in effects_front:
 		if e.has_method("draw"):
 			e.draw(ci)
+
+static func _sort_by_y(a, b) -> bool:
+	return a.get_y() < b.get_y()
+
+func _draw_district_boundary(ci: CanvasItem) -> void:
+	var dg = district_square_grid
+	if dg["x1"] >= dg["x2"] or dg["y1"] >= dg["y2"]:
+		return
+	var mask = Color(0, 0, 0, 0.7)
+	var l = dg["x1"] * G.GAME_SQUARE
+	var r = (dg["x2"] + 1) * G.GAME_SQUARE
+	var t = dg["y1"] * G.GAME_SQUARE
+	var b = (dg["y2"] + 1) * G.GAME_SQUARE
+	if l > 0:
+		ci.draw_rect(Rect2(0, 0, l, map_y_pos), mask)
+	if r < map_x_pos:
+		ci.draw_rect(Rect2(r, 0, map_x_pos - r, map_y_pos), mask)
+	if t > 0:
+		ci.draw_rect(Rect2(l, 0, r - l, t), mask)
+	if b < map_y_pos:
+		ci.draw_rect(Rect2(l, b, r - l, map_y_pos - b), mask)
 
 func update_obstacles_update_list() -> void:
 	obstacle_instances_need_to_update = false
@@ -315,8 +338,11 @@ func update_obstacles_update_list() -> void:
 				obstacle_instances_update.append(obstacle_instances[key])
 
 func pass_map() -> void:
-	if district_all_finished and finish_at.x >= 0:
-		if me.x == finish_at.x and me.y == finish_at.y:
+	if district_all_finished:
+		if finish_at.x >= 0:
+			if me.x == finish_at.x and me.y == finish_at.y:
+				finish_flag = true
+		else:
 			finish_flag = true
 
 func scroll_map() -> void:

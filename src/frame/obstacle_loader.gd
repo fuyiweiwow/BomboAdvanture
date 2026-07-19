@@ -22,16 +22,19 @@ static func get_obstacle(type: String, name: String) -> Dictionary:
 	o["WIDTH"] = width
 	o["HEIGHT"] = height
 	o["BLOCK"] = j.get("BLOCK", [[[0]], [[0]]])
-	var bf = []
-	for orient in range(2):
-		var layer = []
-		for gx in range(width):
-			var col = []
-			for gy in range(height):
-				col.append(0)
-			layer.append(col)
-		bf.append(layer)
-	o["BLOCK_FLAME"] = j.get("BLOCK_FLAME", bf)
+	var bf = j.get("BLOCK_FLAME", null)
+	if bf == null:
+		# Default: copy BLOCK (matching original Python's reference assignment)
+		bf = []
+		for orient in range(2):
+			var layer = []
+			for gx in range(o["BLOCK"][orient].size()):
+				var col = []
+				for gy in range(o["BLOCK"][orient][gx].size()):
+					col.append(o["BLOCK"][orient][gx][gy])
+				layer.append(col)
+			bf.append(layer)
+	o["BLOCK_FLAME"] = bf
 	o["BREAKABLE"] = int(j.get("BREAKABLE", 0))
 	o["CAN_HIDE"] = int(j.get("CAN_HIDE", 0))
 	if j.has("SLIDE"):
