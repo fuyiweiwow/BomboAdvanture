@@ -251,8 +251,8 @@ func _render_preview() -> void:
 
 	_preview_instance = CharacterPreview.new()
 	_preview_instance.set_character(result)
-	_preview_instance.position = Vector2(580, 160)
-	_preview_instance.scale = Vector2(2.5, 2.5)
+	_preview_instance.position = Vector2(610, 220)
+	_preview_instance.scale = Vector2(1.8, 1.8)
 	add_child(_preview_instance)
 
 func _build_action_buttons() -> void:
@@ -307,18 +307,34 @@ func _draw() -> void:
 	var tw = font.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, ts).x
 	draw_string(font, Vector2((win.x - tw) * 0.5, 65), title, HORIZONTAL_ALIGNMENT_LEFT, -1, ts, Color(0.8, 0.9, 1.0))
 
+	var px = 500
+	var py = 100
+	var pw = 300
+	var ph = 400
+	draw_rect(Rect2(px, py, pw, ph), Color(0.14, 0.15, 0.19))
+	draw_rect(Rect2(px, py, pw, ph), Color(0.3, 0.32, 0.38), false, 1.5)
+
 	if _selected_idx >= 0 and _selected_idx < _hero_list.size():
 		var hero = _hero_list[_selected_idx]
 		var name_str = str(hero.get("name", ""))
-		draw_string(font, Vector2(540, 110), name_str, HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(0.9, 0.92, 0.95))
+		draw_string(font, Vector2(px + 20, py + 30), name_str, HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color(0.9, 0.92, 0.95))
 
 		var blood = str(hero.get("blood", 0))
 		var speed = str(hero.get("speed", 0.0))
 		var bomb = str(hero.get("bomb", 0))
 		var power = str(hero.get("power", 0))
 		var damage = str(hero.get("damage", 0))
-		var info = "HP: %s  Speed: %s  Bomb: %s\nPower: %s  Damage: %s" % [blood, speed, bomb, power, damage]
-		draw_string(font, Vector2(540, 140), info, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(0.6, 0.65, 0.7))
+		var lines = [
+			"HP:     %s" % blood,
+			"Bomb:   %s" % bomb,
+			"Speed:  %s" % speed,
+			"Power:  %s" % power,
+			"Damage: %s" % damage,
+		]
+		var sy = 360
+		for line in lines:
+			draw_string(font, Vector2(px + 20, sy), line, HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(0.6, 0.65, 0.7))
+			sy += 22
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not visible:

@@ -161,7 +161,6 @@ static func import_texture(hero_name: String, component: String, source_path: St
 		return {"ok": false, "error": "Cannot write destination"}
 	dst.store_buffer(data)
 	dst.close()
-	ResourceCache.clear(dest)
 	return {"ok": true, "path": dest}
 
 static func delete_texture(hero_name: String, component: String) -> bool:
