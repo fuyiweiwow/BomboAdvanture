@@ -85,7 +85,16 @@ func _init(character_name: String, xy: Vector2i, color_: Color = C.CHARACTER_RED
 	x_old = xy.x
 	y_old = xy.y
 
-func load_character(character_name: String, color_: Color, decorations: Dictionary, is_ghost = false) -> Dictionary:
+func load_character(character_name: String, color_: Color, decorations: Dictionary, is_ghost = false, custom_textures: Dictionary = {}) -> Dictionary:
+	if not custom_textures.is_empty():
+		var t = Time.get_ticks_msec()
+		for component in CHARACTER_COMPONENTS["D"]:
+			character_frame_idxs[component] = 0
+			character_frame_timers[component] = t
+			character_frame_intervals[component] = 200
+			character_frame_intervals_stand[component] = STAND_INTERVAL
+			character_frame_intervals_walk[component] = WALK_INTERVAL
+		return CharacterLoader.get_character("", color_, decorations, is_ghost, custom_textures)
 	var j = Utils.load_json(G.FRAME_ROOT + "character/" + character_name + ".json")
 	if j == null:
 		return {}

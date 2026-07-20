@@ -25,5 +25,10 @@ static func get_bomb(name: String) -> Dictionary:
 		var cx = cxs[i] if i < cxs.size() else 0
 		var cy = cys[i] if i < cys.size() else 0
 		a_bomb["STAND"].append(Frame.new(tex, cx, cy))
+		if tex == null:
+			push_warning("BombLoader: missing texture %s, falling back to bomb1" % path)
+			var fallback = get_bomb("bomb1")
+			_bombs[name] = fallback
+			return fallback
 	_bombs[name] = a_bomb
 	return a_bomb

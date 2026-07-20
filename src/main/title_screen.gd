@@ -1,43 +1,41 @@
 extends Control
 
-var _btn_normal: Button
-var _btn_dev: Button
-var _btn_editor: Button
-
 func _ready() -> void:
-	_btn_normal = Button.new()
-	_btn_normal.text = "Normal Mode"
-	_btn_normal.position = Vector2(280, 260)
-	_btn_normal.size = Vector2(240, 50)
-	_btn_normal.add_theme_font_size_override("font_size", 20)
-	_btn_normal.pressed.connect(_on_normal)
-	add_child(_btn_normal)
+	var btn_select = Button.new()
+	btn_select.text = "Start Game"
+	btn_select.position = Vector2(280, 220)
+	btn_select.size = Vector2(240, 44)
+	btn_select.add_theme_font_size_override("font_size", 18)
+	btn_select.pressed.connect(_on_select)
+	add_child(btn_select)
 
-	_btn_dev = Button.new()
-	_btn_dev.text = "Developer Mode"
-	_btn_dev.position = Vector2(280, 330)
-	_btn_dev.size = Vector2(240, 50)
-	_btn_dev.add_theme_font_size_override("font_size", 20)
-	_btn_dev.pressed.connect(_on_dev)
-	add_child(_btn_dev)
+	var btn_char = Button.new()
+	btn_char.text = "Character Editor"
+	btn_char.position = Vector2(280, 275)
+	btn_char.size = Vector2(240, 44)
+	btn_char.add_theme_font_size_override("font_size", 18)
+	btn_char.pressed.connect(_on_char_editor)
+	add_child(btn_char)
 
-	_btn_editor = Button.new()
-	_btn_editor.text = "Map Editor"
-	_btn_editor.position = Vector2(280, 400)
-	_btn_editor.size = Vector2(240, 50)
-	_btn_editor.add_theme_font_size_override("font_size", 20)
-	_btn_editor.pressed.connect(_on_editor)
-	add_child(_btn_editor)
+	var btn_map = Button.new()
+	btn_map.text = "Map Editor"
+	btn_map.position = Vector2(280, 400)
+	btn_map.size = Vector2(240, 50)
+	btn_map.add_theme_font_size_override("font_size", 20)
+	btn_map.pressed.connect(_on_map_editor)
+	add_child(btn_map)
 
-func _on_normal() -> void:
-	Game.start_game(false)
+func _on_select() -> void:
+	var sel = load("res://src/player_editor/character_select.gd").new()
+	Game.add_child(sel)
 	queue_free()
 
-func _on_dev() -> void:
-	Game.start_game(true)
+func _on_char_editor() -> void:
+	var list = load("res://src/player_editor/character_list.gd").new()
+	Game.add_child(list)
 	queue_free()
 
-func _on_editor() -> void:
+func _on_map_editor() -> void:
 	var editor = load("res://src/editor/map_editor.gd").new()
 	get_tree().root.add_child(editor)
 	queue_free()

@@ -46,7 +46,12 @@ func load_hero(hero_name: String) -> void:
 		skill_remains.append(int(s["max"]))
 		skill_params.append(s.get("params", []))
 	var decorations = load_decorations()
-	character = load_character(str(hero_json["character"]), color, decorations)
+	var use_custom = hero_json.get("use_custom_textures", false)
+	var custom_textures = {}
+	if use_custom:
+		var offsets = hero_json.get("custom_texture_offsets", {})
+		custom_textures = HeroData.build_custom_textures_dict(hero_name, offsets)
+	character = load_character(str(hero_json.get("character", "")), color, decorations, false, custom_textures)
 	if hero_json["decorations"].get("bomb_effect", null) != null:
 		bomb_decoration = str(hero_json["decorations"]["bomb_effect"])
 
