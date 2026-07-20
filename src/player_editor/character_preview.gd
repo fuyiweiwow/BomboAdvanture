@@ -6,9 +6,9 @@ var _orient: String = "D"
 var _frame_idxs: Dictionary = {}
 var _timer: int = 0
 
-func set_character(character: Dictionary) -> void:
+func set_character(character: Dictionary, initial_orient: String = "D") -> void:
 	_character = character
-	_orient = "D"
+	_orient = initial_orient if (_character.has("STAND_" + initial_orient)) else "D"
 	_reset_frames()
 	queue_redraw()
 

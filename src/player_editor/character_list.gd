@@ -40,6 +40,14 @@ func _build_back_button() -> void:
 	btn.pressed.connect(_on_back)
 	add_child(btn)
 
+	var btn_new = Button.new()
+	btn_new.text = "+ New"
+	btn_new.position = Vector2(660, 20)
+	btn_new.size = Vector2(80, 30)
+	btn_new.add_theme_font_size_override("font_size", 15)
+	btn_new.pressed.connect(_on_new_character)
+	add_child(btn_new)
+
 func _build_scroll_buttons() -> void:
 	_btn_up = Button.new()
 	_btn_up.text = "^"
@@ -200,6 +208,27 @@ func _on_scroll_down() -> void:
 func _on_hero_selected(idx: int) -> void:
 	var hero = _hero_list[idx]
 	var editor = load("res://src/player_editor/character_editor.gd").new(hero)
+	editor.set_meta("list_ref", self)
+	var p = get_parent()
+	p.add_child(editor)
+	p.remove_child(self)
+
+func _on_new_character() -> void:
+	var template = {
+		"name": "NewHero",
+		"character": "Character10301",
+		"icon_img": "",
+		"use_custom_textures": false,
+		"decorations": {
+			"disable_foot_and_leg": false, "bomb_skin": "bomb1",
+			"cap": null, "hair": null, "eye": null, "ear": null, "mouth": null,
+			"cladorn": null, "fpack": null, "npack": null, "thadorn": null, "footprint": null,
+			"head_effect": null, "body_effect": null
+		},
+		"blood": 4500, "speed": 5.83333, "bomb": 7, "restore": 700,
+		"power": 3, "damage": 3500, "defense": 0, "skills": []
+	}
+	var editor = load("res://src/player_editor/character_editor.gd").new(template)
 	editor.set_meta("list_ref", self)
 	var p = get_parent()
 	p.add_child(editor)
