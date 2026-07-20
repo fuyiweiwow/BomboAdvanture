@@ -150,22 +150,21 @@ func _draw_right_panel(cl) -> void:
 		i += 1
 
 func _draw_skill_bar(me) -> void:
-	var names = me.skill_names
-	if names.size() == 0:
-		return
-	if _tex_status_bar == null:
-		_tex_status_bar = _load_tex("res://assets/img/ui/game/statusBar.png")
-	if _tex_status_bar == null:
-		return
 	var bar_x = 0
 	var bar_y = 540
-	draw_texture(_tex_status_bar, Vector2(bar_x, bar_y))
+	if _tex_status_bar == null:
+		_tex_status_bar = _load_tex("res://assets/img/ui/game/statusBar.png")
+	if _tex_status_bar != null:
+		draw_texture(_tex_status_bar, Vector2(bar_x, bar_y))
 	if _tex_misc510 != null:
 		draw_texture(_tex_misc510, Vector2(556, bar_y))
 	if _tex_dlg_bg != null:
 		draw_texture(_tex_dlg_bg, Vector2(619, 537))
 	if _tex_btn_leave != null:
 		draw_texture(_tex_btn_leave, Vector2(732, 545))
+	var names = me.skill_names
+	if names.size() == 0:
+		return
 	var icon_ox = [164, 217, 270, 323, 376, 429, 484]
 	var icon_oy = -8
 	var mask_ox = [179, 232, 285, 338, 391, 444, 497]
