@@ -13,6 +13,8 @@ var _colors_container: Node
 var _skills_container: Node
 var _decos_container: Node
 var _fields_node: Node
+var _custom_tex_container: Node
+var _use_custom_tex: bool = false
 
 const DECO_CATEGORIES = ["cap", "hair", "eye", "ear", "mouth", "cladorn", "fpack", "npack", "thadorn", "footprint"]
 
@@ -36,6 +38,9 @@ func _ready() -> void:
 	add_child(_skills_container)
 	_decos_container = Node.new()
 	add_child(_decos_container)
+	_custom_tex_container = Node.new()
+	add_child(_custom_tex_container)
+	_use_custom_tex = _hero.get("use_custom_textures", false)
 	_rebuild_ui()
 
 	_build_dir_hint()
@@ -118,6 +123,7 @@ func _rebuild_ui() -> void:
 	_build_fields()
 	_build_skills()
 	_build_decorations()
+	_build_custom_texture_ui()
 	_render_preview()
 
 func _build_fields() -> void:
@@ -490,15 +496,27 @@ func _render_preview() -> void:
 	if _preview_instance != null:
 		_preview_instance.queue_free()
 		_preview_instance = null
-	var char_name = str(_hero.get("character", ""))
-	if char_name == "":
-		return
-	var decorations = _load_decorations()
-	var result = CharacterLoader.get_character(char_name, _current_color, decorations)
-	if result.is_empty():
-		return
-	_preview_instance = CharacterPreview.new()
-	_preview_instance.set_character(result)
+	var hero_name = str(_hero.get("name", ""))
+	var custom_textures = {}
+	if _use_custom_tex and hero_name != "":
+		var offsets = _hero.get("custom_texture_offsets", {})
+		custom_textures = HeroData.build_custom_textures_dict(hero_name, offsets)
+	if custom_textures.is_empty():
+		var char_name = str(_hero.get("character", ""))
+		if char_name == "":
+			return
+		var decorations = _load_decorations()
+		var result = CharacterLoader.get_character(char_name, _current_color, decorations)
+		if result.is_empty():
+			return
+		_preview_instance = CharacterPreview.new()
+		_preview_instance.set_character(result)
+	else:
+		var result = CharacterLoader.get_character("", _current_color, {}, false, custom_textures)
+		if result.is_empty():
+			return
+		_preview_instance = CharacterPreview.new()
+		_preview_instance.set_character(result)
 	_preview_instance.position = Vector2(680, 230)
 	_preview_instance.scale = Vector2(2.0, 2.0)
 	add_child(_preview_instance)
@@ -522,9 +540,10 @@ func _on_save() -> void:
 	if not _hero.has("name") or str(_hero["name"]).strip_edges() == "":
 		_show_notice("Name cannot be empty!", Color(1, 0.3, 0.3))
 		return
-	if not _hero.has("character") or str(_hero["character"]).strip_edges() == "":
-		_show_notice("Character frame is missing!", Color(1, 0.3, 0.3))
-		return
+	if not _use_custom_tex:
+		if not _hero.has("character") or str(_hero["character"]).strip_edges() == "":
+			_show_notice("Character frame is missing!", Color(1, 0.3, 0.3))
+			return
 	if HeroData.save_hero(_hero):
 		_dirty = false
 		_hero["_src"] = "custom"
@@ -551,10 +570,12 @@ func _on_restore() -> void:
 	_rebuild_ui()
 
 func _on_new_character() -> void:
+	var use_custom = _use_custom_tex
 	var template = {
 		"name": "NewHero",
-		"character": "Character10301",
+		"character": "" if use_custom else "Character10301",
 		"icon_img": "",
+		"use_custom_textures": use_custom,
 		"decorations": {
 			"disable_foot_and_leg": false, "bomb_skin": "bomb1",
 			"cap": null, "hair": null, "eye": null, "ear": null, "mouth": null,
@@ -564,6 +585,8 @@ func _on_new_character() -> void:
 		"blood": 4500, "speed": 5.83333, "bomb": 7, "restore": 700,
 		"power": 3, "damage": 3500, "defense": 0, "skills": []
 	}
+	if use_custom:
+		template["custom_texture_offsets"] = {}
 	_hero = template
 	_dirty = true
 	_rebuild_ui()
@@ -579,6 +602,150 @@ func _show_notice(msg: String, color: Color) -> void:
 	await get_tree().create_timer(1.5).timeout
 	if is_inside_tree():
 		notice.queue_free()
+
+func _build_custom_texture_ui() -> void:
+	_clear_container(_custom_tex_container)
+	var x_label = 380
+	var y_start = 420
+
+	var lb = Label.new()
+	lb.text = "Custom Textures"
+	lb.position = Vector2(x_label, y_start)
+	lb.size = Vector2(200, 24)
+	lb.add_theme_font_size_override("font_size", 17)
+	lb.add_theme_color_override("font_color", Color(0.85, 0.87, 0.9))
+	_custom_tex_container.add_child(lb)
+
+	var toggle = CheckBox.new()
+	toggle.text = "Use Custom Textures"
+	toggle.button_pressed = _use_custom_tex
+	toggle.position = Vector2(x_label + 140, y_start)
+	toggle.size = Vector2(180, 24)
+	toggle.add_theme_font_size_override("font_size", 14)
+	toggle.toggled.connect(_on_toggle_custom_tex)
+	_custom_tex_container.add_child(toggle)
+
+	if not _use_custom_tex:
+		return
+
+	var hero_name = str(_hero.get("name", ""))
+	var offsets = _hero.get("custom_texture_offsets", {})
+	var line_h = 28
+
+	for i in HeroData.CUSTOM_TEX_COMPONENTS.size():
+		var comp = HeroData.CUSTOM_TEX_COMPONENTS[i]
+		var y = y_start + 30 + i * line_h
+
+		var lb_c = Label.new()
+		lb_c.text = comp
+		lb_c.position = Vector2(x_label + 10, y)
+		lb_c.size = Vector2(70, 22)
+		lb_c.add_theme_font_size_override("font_size", 14)
+		lb_c.add_theme_color_override("font_color", Color(0.7, 0.75, 0.8))
+		_custom_tex_container.add_child(lb_c)
+
+		var has_tex = false
+		if hero_name != "" and HeroData.has_custom_texture(hero_name, comp):
+			has_tex = true
+
+		var btn_import = Button.new()
+		btn_import.text = "Clear" if has_tex else "Import"
+		btn_import.position = Vector2(x_label + 90, y)
+		btn_import.size = Vector2(70, 22)
+		btn_import.add_theme_font_size_override("font_size", 12)
+		btn_import.pressed.connect(_on_tex_btn_clicked.bind(comp, btn_import))
+		_custom_tex_container.add_child(btn_import)
+
+		var lb_cx = Label.new()
+		lb_cx.text = "Cx"
+		lb_cx.position = Vector2(x_label + 168, y)
+		lb_cx.size = Vector2(20, 22)
+		lb_cx.add_theme_font_size_override("font_size", 11)
+		lb_cx.add_theme_color_override("font_color", Color(0.6, 0.65, 0.7))
+		_custom_tex_container.add_child(lb_cx)
+
+		var sb_cx = SpinBox.new()
+		sb_cx.min_value = -200
+		sb_cx.max_value = 200
+		sb_cx.step = 1
+		var cur_cx = offsets.get(comp, {}).get("cx", 0)
+		sb_cx.value = cur_cx
+		sb_cx.position = Vector2(x_label + 186, y)
+		sb_cx.size = Vector2(56, 22)
+		sb_cx.add_theme_font_size_override("font_size", 12)
+		sb_cx.value_changed.connect(_on_offset_changed.bind(comp, "cx"))
+		sb_cx.editable = has_tex
+		_custom_tex_container.add_child(sb_cx)
+
+		var lb_cy = Label.new()
+		lb_cy.text = "Cy"
+		lb_cy.position = Vector2(x_label + 248, y)
+		lb_cy.size = Vector2(20, 22)
+		lb_cy.add_theme_font_size_override("font_size", 11)
+		lb_cy.add_theme_color_override("font_color", Color(0.6, 0.65, 0.7))
+		_custom_tex_container.add_child(lb_cy)
+
+		var sb_cy = SpinBox.new()
+		sb_cy.min_value = -200
+		sb_cy.max_value = 200
+		sb_cy.step = 1
+		var cur_cy = offsets.get(comp, {}).get("cy", 0)
+		sb_cy.value = cur_cy
+		sb_cy.position = Vector2(x_label + 266, y)
+		sb_cy.size = Vector2(56, 22)
+		sb_cy.add_theme_font_size_override("font_size", 12)
+		sb_cy.value_changed.connect(_on_offset_changed.bind(comp, "cy"))
+		sb_cy.editable = has_tex
+		_custom_tex_container.add_child(sb_cy)
+
+func _on_toggle_custom_tex(toggled: bool) -> void:
+	_use_custom_tex = toggled
+	_hero["use_custom_textures"] = toggled
+	_dirty = true
+	_rebuild_ui()
+
+func _on_tex_btn_clicked(component: String, btn: Button) -> void:
+	var hero_name = str(_hero.get("name", ""))
+	if btn.text == "Import":
+		if hero_name == "":
+			_show_notice("Save hero first before importing textures!", Color(1, 0.3, 0.3))
+			return
+		var fd = FileDialog.new()
+		fd.title = "Import " + component + " texture"
+		fd.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+		fd.add_filter("*.png", "PNG Images")
+		fd.use_native_dialog = true
+		fd.file_selected.connect(func(path): _on_texture_imported(path, component, btn))
+		add_child(fd)
+		fd.popup_centered()
+	else:
+		HeroData.delete_texture(hero_name, component)
+		btn.text = "Import"
+		_dirty = true
+		_render_preview()
+		_show_notice(component + " cleared", Color(0.8, 0.8, 0.3))
+
+func _on_texture_imported(path: String, component: String, btn: Button) -> void:
+	var hero_name = str(_hero.get("name", ""))
+	if hero_name == "":
+		return
+	var result = HeroData.import_texture(hero_name, component, path)
+	if result.ok:
+		btn.text = "Clear"
+		_dirty = true
+		_render_preview()
+		_show_notice(component + " imported!", Color(0.3, 1, 0.3))
+	else:
+		_show_notice("Import failed: " + result.error, Color(1, 0.3, 0.3))
+
+func _on_offset_changed(value: float, comp: String, axis: String) -> void:
+	if not _hero.has("custom_texture_offsets"):
+		_hero["custom_texture_offsets"] = {}
+	if not _hero["custom_texture_offsets"].has(comp):
+		_hero["custom_texture_offsets"][comp] = {}
+	_hero["custom_texture_offsets"][comp][axis] = int(value)
+	_dirty = true
+	_render_preview()
 
 func _on_back() -> void:
 	if _dirty:

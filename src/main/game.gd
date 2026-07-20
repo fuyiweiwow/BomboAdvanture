@@ -16,6 +16,8 @@ var dev_mode: bool = false
 var me = null
 var current_level = null
 var game_complete: bool = false
+var selected_hero: String = ""
+var selected_color: String = ""
 
 var _ui_layer: CanvasLayer = null
 
@@ -86,6 +88,8 @@ func _return_to_title() -> void:
 	map_set_at = -1
 	dev_mode = false
 	game_complete = false
+	selected_hero = ""
+	selected_color = ""
 	position = Vector2(0, 0)
 	_show_title()
 
@@ -150,8 +154,8 @@ func proceed_game(is_reset = false) -> void:
 	if map_set_at >= map_set_json["maps"].size():
 		return _on_game_complete()
 	var map_name: String = str(map_set_json["maps"][map_set_at])
-	var hero_name: String = str(cfg_json["your_hero"])
-	var character_color: String = str(cfg_json["your_character_color"])
+	var hero_name: String = selected_hero if selected_hero != "" else str(cfg_json["your_hero"])
+	var character_color: String = selected_color if selected_color != "" else str(cfg_json["your_character_color"])
 	set_level(your_name, map_name, hero_name, character_color, is_reset)
 
 func _on_game_complete() -> void:

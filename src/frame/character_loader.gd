@@ -19,7 +19,12 @@ static var _cache = {}
 # Build (and cache) the character frame dictionary.
 # Returns a Dictionary: { "NAME":String, "STAND_R":{...}, ... } where each
 # orientation holds "Cx","Cy" and component-name -> Array[Frame].
-static func get_character(character_name: String, color: Color, decorations: Dictionary, is_ghost = false) -> Dictionary:
+# If custom_textures is non-empty, skip the frame JSON and build from
+# imported PNG textures (each component = single static frame).
+static func get_character(character_name: String, color: Color, decorations: Dictionary, is_ghost = false, custom_textures: Dictionary = {}) -> Dictionary:
+	if not custom_textures.is_empty():
+		return _build_custom_character(custom_textures, is_ghost)
+
 	var key = character_name + ("_ghost" if is_ghost else "")
 	if not _cache.has(key):
 		_cache[key] = {}
@@ -35,6 +40,37 @@ static func get_character(character_name: String, color: Color, decorations: Dic
 
 	var result = load_color(j, color, decorations, is_ghost)
 	_cache[key][color_key] = result
+	return result
+
+# Build a minimal character dictionary from custom imported textures.
+# Each component is a single static frame reused across all orientations.
+static func _build_custom_character(custom_textures: Dictionary, is_ghost: bool) -> Dictionary:
+	var result = {}
+	result["NAME"] = "CustomCharacter"
+	var comp_to_custom = {"Body": "body", "Foot": "foot", "Leg": "leg", "Cloth": "cloth", "Cladorn": "cladorn", "Face": "face", "Hair": "hair", "Eye": "eye", "Ear": "ear", "Mouth": "mouth", "Cap": "cap", "Fhadorn": "fhadorn", "Npack": "npack", "Fpack": "fpack", "Thadorn": "thadorn"}
+	for orient in CHARACTER_ORIENTS:
+		result[orient] = {}
+		result[orient]["Cx"] = 0
+		result[orient]["Cy"] = 0
+		var orient_key = orient.replace("STAND_", "")
+		var draw_order = CHARACTER_COMPONENTS.get(orient_key, CHARACTER_COMPONENTS["D"])
+		for comp_key in draw_order:
+			var custom_key = comp_to_custom.get(comp_key, "")
+			if custom_key == "" or not custom_textures.has(custom_key):
+				continue
+			var ct = custom_textures[custom_key]
+			var tex = Utils.load_texture(str(ct["path"]))
+			if tex == null:
+				continue
+			if is_ghost:
+				var img = tex.get_image()
+				if img != null:
+					img.convert(Image.FORMAT_RGBA8)
+					var data = img.get_data()
+					for pi in range(0, data.size(), 4):
+						data[pi + 3] = data[pi + 3] / 2
+					tex = ImageTexture.create_from_image(Image.create_from_data(img.get_width(), img.get_height(), false, Image.FORMAT_RGBA8, data))
+			result[orient][comp_key] = [Frame.new(tex, int(ct.get("cx", 0)), int(ct.get("cy", 0)))]
 	return result
 
 # (game/frame/character.py : load_color)

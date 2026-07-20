@@ -3,6 +3,8 @@ extends RefCounted
 
 const HERO_DIR = "res://assets/hero/"
 const CUSTOM_DIR = "res://assets/hero_custom/"
+const CUSTOM_TEX_DIR = "res://assets/custom_textures/"
+const CUSTOM_TEX_COMPONENTS = ["body", "foot", "leg", "cloth", "face", "hair", "eye", "ear", "mouth", "cap", "npack", "cladorn", "fpack", "thadorn", "fhadorn"]
 
 static func list_heroes() -> Array:
 	var all: Dictionary = {}
@@ -120,4 +122,85 @@ static func list_bomb_skins() -> Array:
 		fname = dir.get_next()
 	dir.list_dir_end()
 	result.sort()
+	return result
+
+static func get_custom_tex_dir(hero_name: String) -> String:
+	return CUSTOM_TEX_DIR + hero_name + "/"
+
+static func ensure_custom_tex_dir(hero_name: String) -> bool:
+	var dir = DirAccess.open(CUSTOM_TEX_DIR)
+	if dir == null:
+		dir = DirAccess.open("res://assets/")
+		if dir == null:
+			return false
+		dir.make_dir("custom_textures")
+	var sub = get_custom_tex_dir(hero_name)
+	if not DirAccess.dir_exists_absolute(sub):
+		dir = DirAccess.open(CUSTOM_TEX_DIR)
+		if dir == null:
+			return false
+		dir.make_dir(hero_name)
+	return DirAccess.dir_exists_absolute(sub)
+
+static func import_texture(hero_name: String, component: String, source_path: String) -> Dictionary:
+	if not component in CUSTOM_TEX_COMPONENTS:
+		return {"ok": false, "error": "Unknown component: " + component}
+	if not ResourceLoader.exists(source_path):
+		return {"ok": false, "error": "Source file not found: " + source_path}
+	if not ensure_custom_tex_dir(hero_name):
+		return {"ok": false, "error": "Cannot create texture directory"}
+	var ext = source_path.get_extension()
+	var dest = get_custom_tex_dir(hero_name) + component + "." + ext
+	var src = FileAccess.open(source_path, FileAccess.READ)
+	if src == null:
+		return {"ok": false, "error": "Cannot read source file"}
+	var data = src.get_buffer(src.get_length())
+	src.close()
+	var dst = FileAccess.open(dest, FileAccess.WRITE)
+	if dst == null:
+		return {"ok": false, "error": "Cannot write destination"}
+	dst.store_buffer(data)
+	dst.close()
+	ResourceCache.clear(dest)
+	return {"ok": true, "path": dest}
+
+static func delete_texture(hero_name: String, component: String) -> bool:
+	if not component in CUSTOM_TEX_COMPONENTS:
+		return false
+	var dir = DirAccess.open(get_custom_tex_dir(hero_name))
+	if dir == null:
+		return false
+	var files = dir.get_files()
+	for f in files:
+		var base = f.get_basename()
+		if base == component:
+			dir.remove(f)
+			return true
+	return false
+
+static func get_texture_path(hero_name: String, component: String) -> String:
+	var dir = DirAccess.open(get_custom_tex_dir(hero_name))
+	if dir == null:
+		return ""
+	var files = dir.get_files()
+	for f in files:
+		var base = f.get_basename()
+		if base == component:
+			return get_custom_tex_dir(hero_name) + f
+	return ""
+
+static func has_custom_texture(hero_name: String, component: String) -> bool:
+	var p = get_texture_path(hero_name, component)
+	return p != "" and ResourceLoader.exists(p)
+
+static func build_custom_textures_dict(hero_name: String, offsets: Dictionary) -> Dictionary:
+	var result = {}
+	for comp in CUSTOM_TEX_COMPONENTS:
+		var p = get_texture_path(hero_name, comp)
+		if p != "" and ResourceLoader.exists(p):
+			result[comp] = {
+				"path": p,
+				"cx": offsets.get(comp, {}).get("cx", 0),
+				"cy": offsets.get(comp, {}).get("cy", 0),
+			}
 	return result
