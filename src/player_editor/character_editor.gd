@@ -772,7 +772,7 @@ func _on_new_character() -> void:
 	var use_custom = _use_custom_tex
 	var template = {
 		"name": "NewHero",
-		"character": "" if use_custom else "Character10301",
+		"character": "" if use_custom else "CharacterBlank",
 		"icon_img": "",
 		"use_custom_textures": use_custom,
 		"decorations": {

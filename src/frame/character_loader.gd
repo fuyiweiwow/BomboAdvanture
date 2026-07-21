@@ -112,27 +112,37 @@ static func load_component_frames(comp: Dictionary, component: String, color: Co
 	var cys: Array = comp.get("CY", [])
 	var type_folder = component.replace("_m", "").to_lower()
 	for i in imgs.size():
-		var tex = Utils.load_texture(G.RES_IMG_ROOT + type_folder + "/" + str(imgs[i]))
+		var filename := str(imgs[i])
+		var tex: Texture2D = AtlasLoader.get_texture(type_folder, filename, component, color, is_ghost)
+		if tex == null:
+			tex = _load_fallback(type_folder, filename, component, color, is_ghost)
 		if tex == null:
 			continue
-		var masked = CHARACTER_COMPONENTS_MASKED.has(component)
-		if masked and not is_ghost:
-			var img = Utils.load_image(G.RES_IMG_ROOT + type_folder + "/" + str(imgs[i]))
-			if img != null:
-				var tinted = Utils.color_overlay(img, color)
-				if tinted != null:
-					tex = ImageTexture.create_from_image(tinted)
-		elif is_ghost:
-			var img = Utils.load_image(G.RES_IMG_ROOT + type_folder + "/" + str(imgs[i]))
-			if img != null:
-				img.set_data(img.get_width(), img.get_height(), false, Image.FORMAT_RGBA8, img.get_data())
-				# half alpha ghost
-				for py in img.get_height():
-					for px in img.get_width():
-						var p = img.get_pixel(px, py)
-						img.set_pixel(px, py, Color(p.r, p.g, p.b, p.a * 0.5))
-				tex = ImageTexture.create_from_image(img)
 		var cx = cxs[i] if i < cxs.size() else 0
 		var cy = cys[i] if i < cys.size() else 0
 		frames.append(Frame.new(tex, cx, cy))
 	return frames
+
+# Fallback when an atlas is not available — load individual PNG and apply
+# colour/ghost effects the old way.
+static func _load_fallback(type_folder: String, filename: String, component: String, color: Color, is_ghost: bool) -> Texture2D:
+	var path := G.RES_IMG_ROOT + type_folder + "/" + filename
+	var tex := Utils.load_texture(path)
+	if tex == null:
+		return null
+	var masked := CHARACTER_COMPONENTS_MASKED.has(component)
+	if masked and not is_ghost:
+		var img := Utils.load_image(path)
+		if img != null:
+			var tinted := Utils.color_overlay(img, color)
+			if tinted != null:
+				tex = ImageTexture.create_from_image(tinted)
+	elif is_ghost:
+		var img := Utils.load_image(path)
+		if img != null:
+			img.convert(Image.FORMAT_RGBA8)
+			var data := img.get_data()
+			for pi in range(0, data.size(), 4):
+				data[pi + 3] = data[pi + 3] / 2
+			tex = ImageTexture.create_from_image(Image.create_from_data(img.get_width(), img.get_height(), false, Image.FORMAT_RGBA8, data))
+	return tex
