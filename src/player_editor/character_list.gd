@@ -216,7 +216,7 @@ func _on_hero_selected(idx: int) -> void:
 func _on_new_character() -> void:
 	var template = {
 		"name": "NewHero",
-		"character": "Character10301",
+		"character": "CharacterBlank",
 		"icon_img": "",
 		"use_custom_textures": false,
 		"decorations": {
