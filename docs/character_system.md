@@ -134,7 +134,17 @@ godot --path <项目路径> --script res://src/tools/sprite_sheet_packer.gd
 | `src/frame/atlas_loader.gd` | 图集纹理运行时加载 |
 | `src/frame/character_preview.gd` | 角色预览渲染 |
 | `src/tools/sprite_sheet_packer.gd` | 图集打包工具 |
-| `src/player_editor/character_editor.gd` | 编辑器主界面 |
+| `src/player_editor/character_editor.gd` | 编辑器主逻辑（~300行） |
+| `src/player_editor/character_editor_ui.gd` | 编辑器 UI 构建 + 事件处理（~476行） |
 | `src/player_editor/character_list.gd` | 角色列表管理 |
 | `src/player_editor/character_select.gd` | 英雄选择界面 |
 | `assets/frame/character/CharacterBlank.json` | 素体角色定义 |
+
+---
+
+## 5. 开发原则
+
+### 单文件行数限制
+- 单个 `.gd` 文件不得超过 **500 行**
+- 超限的文件应当进行合理的抽象和业务拆分
+- 拆分方式：将不同职责的代码提取到独立的 `class_name` 文件中，通过静方法或组合调用
