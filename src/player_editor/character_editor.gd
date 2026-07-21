@@ -149,27 +149,12 @@ func _render_preview() -> void:
 		_preview_instance.queue_free()
 		_preview_instance = null
 
-	var hero_name = str(_hero.get("name", ""))
-	var custom_textures = {}
-	if _use_custom_tex and hero_name != "":
-		var offsets = _hero.get("custom_texture_offsets", {})
-		custom_textures = HeroData.build_custom_textures_dict(hero_name, offsets)
-
-	var result = {}
-	if not custom_textures.is_empty():
-		result = CharacterLoader.get_character("", _current_color, {}, false, custom_textures)
-	else:
-		var char_name = str(_hero.get("character", ""))
-		if char_name == "":
-			return
-		var decorations = _load_decorations()
-		result = CharacterLoader.get_character(char_name, _current_color, decorations)
-
+	var result = CharacterGenerator.generate_from_hero(_hero, _current_color)
 	if result.is_empty():
 		return
 
 	_preview_instance = CharacterPreview.new()
-	_preview_instance.set_character(result, _preview_orient)
+	_preview_instance.set_character(result, _preview_orient, _current_color)
 
 	var area_x = 500
 	var area_y = 80
@@ -180,21 +165,6 @@ func _render_preview() -> void:
 	_preview_instance.position = _preview_base_pos
 	_preview_instance.scale = Vector2(2.0, 2.0)
 	add_child(_preview_instance)
-
-func _load_decorations() -> Dictionary:
-	var deco: Dictionary = {}
-	var deco_data = _hero.get("decorations", {})
-	for component in DECO_CATEGORIES:
-		var name = deco_data.get(component, null)
-		if name == null:
-			continue
-		if component == "footprint":
-			continue
-		var path = G.FRAME_ROOT + component + "/" + str(name) + ".json"
-		var j = Utils.load_json(path)
-		if j != null:
-			deco[component.capitalize()] = j
-	return deco
 
 func _on_save() -> void:
 	if not _hero.has("name") or str(_hero["name"]).strip_edges() == "":

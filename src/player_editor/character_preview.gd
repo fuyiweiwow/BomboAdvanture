@@ -7,6 +7,7 @@ var _frame_idxs: Dictionary = {}
 var _timer: int = 0
 var _anim_interval: int = 200
 var _moving: bool = false
+var _tint_color: Color = Color.WHITE
 
 var _bomb_active: bool = false
 var _bomb_frames: Array = []
@@ -26,11 +27,12 @@ var _flame_timer: int = 0
 func _orient_key() -> String:
 	return _orient if _moving else "STAND_" + _orient
 
-func set_character(character: Dictionary, initial_orient: String = "D") -> void:
+func set_character(character: Dictionary, initial_orient: String = "D", tint_color: Color = Color.WHITE) -> void:
 	_character = character
 	_orient = initial_orient if (_character.has("STAND_" + initial_orient)) else "D"
 	_moving = false
 	_anim_interval = _character.get("INTERVAL", 200)
+	_tint_color = tint_color
 	_reset_frames()
 	_cancel_bomb()
 	queue_redraw()
@@ -172,7 +174,7 @@ func _draw() -> void:
 		if _character.has(key):
 			var cx = _character[key].get("Cx", 0)
 			var cy = _character[key].get("Cy", 0)
-			for component in Player.CHARACTER_COMPONENTS[_orient]:
+			for component in LayerConfig.draw_order[_orient]:
 				if not _character[key].has(component):
 					continue
 				var frames: Array = _character[key][component]
@@ -182,7 +184,7 @@ func _draw() -> void:
 				if idx >= frames.size():
 					idx = 0
 				var fr: Frame = frames[idx]
-				fr.draw(self, cx, cy)
+				fr.draw(self, cx, cy, _tint_color)
 
 	if _bomb_active and _bomb_frames.size() > 0:
 		var idx = clampi(_bomb_frame_idx, 0, _bomb_frames.size() - 1)

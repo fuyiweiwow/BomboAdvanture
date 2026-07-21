@@ -1,0 +1,10 @@
+{
+  "eye_sub_components": ["Eye_Eyeball", "Eye_Iris", "Eye_Pupil", "Eye_Highlight"],
+  "draw_order": {
+    "R": ["Body", "Foot", "Leg", "Cloth", "Cladorn", "Face", "Hair", "Eye_Eyeball", "Eye_Iris", "Eye_Pupil", "Eye_Highlight", "Ear", "Mouth", "Cap", "Fhadorn", "Npack", "Fpack", "Thadorn"],
+    "U": ["Body", "Foot", "Leg", "Cloth", "Cladorn", "Face", "Eye_Eyeball", "Eye_Iris", "Eye_Pupil", "Eye_Highlight", "Ear", "Mouth", "Hair", "Cap", "Fhadorn", "Npack", "Fpack", "Thadorn"],
+    "L": ["Thadorn", "Body", "Foot", "Leg", "Cloth", "Cladorn", "Npack", "Face", "Hair", "Eye_Eyeball", "Eye_Iris", "Eye_Pupil", "Eye_Highlight", "Ear", "Mouth", "Cap", "Fhadorn", "Fpack"],
+    "D": ["Fpack", "Npack", "Body", "Foot", "Leg", "Cloth", "Cladorn", "Face", "Hair", "Eye_Eyeball", "Eye_Iris", "Eye_Pupil", "Eye_Highlight", "Ear", "Mouth", "Cap", "Fhadorn", "Thadorn"]
+  },
+  "decoration_categories": ["Cap", "Hair", "Eye", "Eye_Eyeball", "Eye_Iris", "Eye_Pupil", "Eye_Highlight", "Ear", "Mouth", "Cladorn", "Fpack", "Npack", "Thadorn", "Footprint"]
+}
