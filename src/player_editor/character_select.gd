@@ -279,21 +279,8 @@ func _render_preview() -> void:
 	if hero_name == "":
 		return
 
-	var char_name = str(hero.get("character", ""))
 	var color = C.CHARACTER_RED
-	var use_custom = hero.get("use_custom_textures", false)
-	var custom_textures = {}
-
-	if use_custom:
-		var offsets = hero.get("custom_texture_offsets", {})
-		custom_textures = HeroData.build_custom_textures_dict(hero_name, offsets)
-
-	var result = {}
-	if not custom_textures.is_empty():
-		result = CharacterLoader.get_character("", Color.WHITE, {}, false, custom_textures)
-	elif char_name != "":
-		result = CharacterLoader.get_character(char_name, color, {})
-
+	var result = CharacterGenerator.generate_from_hero(hero, color)
 	if result.is_empty():
 		return
 

@@ -14,7 +14,7 @@ var damage: int = 0
 var remain_bombs: int = 0
 var bomb_time_old: int = 0
 
-const DECORATION_CATEGORIES = ["cap", "hair", "eye", "ear", "mouth", "cladorn", "fpack", "npack", "thadorn", "footprint"]
+const DECORATION_CATEGORIES = ["cap", "hair", "eye", "eye_eyeball", "eye_iris", "eye_pupil", "eye_highlight", "ear", "mouth", "cladorn", "fpack", "npack", "thadorn", "footprint"]
 
 func _init(hero_name: String, xy: Vector2i, color_: Color = C.CHARACTER_RED):
 	super._init(hero_name, xy, color_)
@@ -67,8 +67,14 @@ func load_decorations() -> Dictionary:
 		var path = G.FRAME_ROOT + component + "/" + str(name) + ".json"
 		var j = Utils.load_json(path)
 		if j != null:
-			decorations[component.capitalize()] = j
+			decorations[_capitalize_key(component)] = j
 	return decorations
+
+static func _capitalize_key(component: String) -> String:
+	var parts = component.split("_")
+	for i in parts.size():
+		parts[i] = parts[i].capitalize()
+	return "_".join(parts)
 
 func set_bomb() -> void:
 	if state != NORMAL:

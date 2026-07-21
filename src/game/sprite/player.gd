@@ -12,11 +12,12 @@ const STAND_INTERVAL = 200
 const WALK_INTERVAL = 100
 
 # CHARACTER_COMPONENTS order (game/frame/character.py) -- used for draw order.
+# No _m variants — tinting is applied at draw time via modulate Color.
 const CHARACTER_COMPONENTS = {
-	"R": ["Body", "Body_m", "Foot", "Leg", "Leg_m", "Cloth", "Cloth_m", "Cladorn", "Face", "Hair", "Hair_m", "Eye", "Ear", "Mouth", "Cap", "Cap_m", "Fhadorn", "Npack", "Npack_m", "Fpack", "Thadorn"],
-	"U": ["Body", "Body_m", "Foot", "Leg", "Leg_m", "Cloth", "Cloth_m", "Cladorn", "Face", "Eye", "Ear", "Mouth", "Hair", "Hair_m", "Cap", "Cap_m", "Fhadorn", "Npack", "Npack_m", "Fpack", "Thadorn"],
-	"L": ["Thadorn", "Body", "Body_m", "Foot", "Leg", "Leg_m", "Cloth", "Cloth_m", "Cladorn", "Npack", "Npack_m", "Face", "Hair", "Hair_m", "Eye", "Ear", "Mouth", "Cap", "Cap_m", "Fhadorn", "Fpack"],
-	"D": ["Fpack", "Npack", "Npack_m", "Body", "Body_m", "Foot", "Leg", "Leg_m", "Cloth", "Cloth_m", "Cladorn", "Face", "Hair", "Hair_m", "Eye", "Ear", "Mouth", "Cap", "Cap_m", "Fhadorn", "Thadorn"],
+	"R": ["Body", "Foot", "Leg", "Cloth", "Cladorn", "Face", "Hair", "Eye_Eyeball", "Eye_Iris", "Eye_Pupil", "Eye_Highlight", "Ear", "Mouth", "Cap", "Fhadorn", "Npack", "Fpack", "Thadorn"],
+	"U": ["Body", "Foot", "Leg", "Cloth", "Cladorn", "Face", "Eye_Eyeball", "Eye_Iris", "Eye_Pupil", "Eye_Highlight", "Ear", "Mouth", "Hair", "Cap", "Fhadorn", "Npack", "Fpack", "Thadorn"],
+	"L": ["Thadorn", "Body", "Foot", "Leg", "Cloth", "Cladorn", "Npack", "Face", "Hair", "Eye_Eyeball", "Eye_Iris", "Eye_Pupil", "Eye_Highlight", "Ear", "Mouth", "Cap", "Fhadorn", "Fpack"],
+	"D": ["Fpack", "Npack", "Body", "Foot", "Leg", "Cloth", "Cladorn", "Face", "Hair", "Eye_Eyeball", "Eye_Iris", "Eye_Pupil", "Eye_Highlight", "Ear", "Mouth", "Cap", "Fhadorn", "Thadorn"],
 }
 
 var color: Color = C.CHARACTER_RED
@@ -393,15 +394,18 @@ func get_y() -> float:
 	return float(y) + 0.1
 
 # (player.draw) -- composited onto a CanvasItem (the main area).
+# Tinting is applied at draw time via modulate Color instead of CPU pixel ops.
 func draw(ci: CanvasItem) -> void:
 	hidden = if_hide()
 	if hidden:
 		return
-	var alpha = float(temporary_alpha) / 255.0
+	var blink_alpha = float(temporary_alpha) / 255.0
 	for s in effects_behind:
 		if s.has_method("draw"):
 			s.draw(ci)
 	if state == NORMAL:
+		var modulate := color
+		modulate.a = blink_alpha
 		for component in CHARACTER_COMPONENTS[orientation]:
 			if not character.has(STAND + orientation):
 				continue
@@ -415,8 +419,10 @@ func draw(ci: CanvasItem) -> void:
 				idx = 0
 				character_frame_idxs[component] = 0
 			var fr: Frame = frames[idx]
-			fr.draw(ci, x_pos + cx, y_pos + cy, alpha)
+			fr.draw(ci, x_pos + cx, y_pos + cy, modulate)
 	elif state == LOSE and character.has("LOSE"):
+		var modulate := color
+		modulate.a = blink_alpha
 		for component in CHARACTER_COMPONENTS[orientation]:
 			if not character["LOSE"].has(component):
 				continue
@@ -424,7 +430,7 @@ func draw(ci: CanvasItem) -> void:
 			if frames.is_empty():
 				continue
 			var fr: Frame = frames[character_frame_idxs[component]]
-			fr.draw(ci, x_pos + cx, y_pos + cy, alpha)
+			fr.draw(ci, x_pos + cx, y_pos + cy, modulate)
 	for s in effects_front:
 		if s.has_method("draw"):
 			s.draw(ci)

@@ -1,0 +1,211 @@
+{
+	"NAME": "eye_eyeball",
+	"STAND_R": {
+		"IMG": [
+			"eye_eyeball_stand_0_0.png",
+			"eye_eyeball_stand_0_1.png",
+			"eye_eyeball_stand_0_2.png",
+			"eye_eyeball_stand_0_3.png",
+			"eye_eyeball_stand_0_4.png",
+			"eye_eyeball_stand_0_5.png"
+		],
+		"CX": [
+			30.0,
+			51.0,
+			52.0,
+			30.0,
+			49.0,
+			48.0
+		],
+		"CY": [
+			2.0,
+			5.0,
+			4.0,
+			2.0,
+			5.0,
+			4.0
+		]
+	},
+	"STAND_U": {
+		"IMG": [
+			"eye_eyeball_stand_1_0.png",
+			"eye_eyeball_stand_1_1.png",
+			"eye_eyeball_stand_1_2.png",
+			"eye_eyeball_stand_1_3.png",
+			"eye_eyeball_stand_1_4.png",
+			"eye_eyeball_stand_1_5.png"
+		],
+		"CX": [
+			8.0,
+			10.0,
+			10.0,
+			8.0,
+			8.0,
+			6.0
+		],
+		"CY": [
+			2.0,
+			2.0,
+			1.0,
+			2.0,
+			2.0,
+			1.0
+		]
+	},
+	"STAND_L": {
+		"IMG": [
+			"eye_eyeball_stand_2_0.png",
+			"eye_eyeball_stand_2_1.png",
+			"eye_eyeball_stand_2_2.png",
+			"eye_eyeball_stand_2_3.png",
+			"eye_eyeball_stand_2_4.png",
+			"eye_eyeball_stand_2_5.png"
+		],
+		"CX": [
+			8.0,
+			3.0,
+			2.0,
+			8.0,
+			5.0,
+			3.0
+		],
+		"CY": [
+			2.0,
+			5.0,
+			4.0,
+			2.0,
+			5.0,
+			4.0
+		]
+	},
+	"STAND_D": {
+		"IMG": [
+			"eye_eyeball_stand_3_0.png",
+			"eye_eyeball_stand_3_1.png",
+			"eye_eyeball_stand_3_2.png",
+			"eye_eyeball_stand_3_3.png",
+			"eye_eyeball_stand_3_4.png",
+			"eye_eyeball_stand_3_5.png"
+		],
+		"CX": [
+			8.0,
+			7.0,
+			7.0,
+			8.0,
+			9.0,
+			11.0
+		],
+		"CY": [
+			2.0,
+			1.0,
+			2.0,
+			2.0,
+			1.0,
+			2.0
+		]
+	},
+	"R": {
+		"IMG": [
+			"eye_eyeball_walk_0_0.png",
+			"eye_eyeball_walk_0_1.png",
+			"eye_eyeball_walk_0_2.png",
+			"eye_eyeball_walk_0_3.png",
+			"eye_eyeball_walk_0_4.png",
+			"eye_eyeball_walk_0_5.png"
+		],
+		"CX": [
+			30.0,
+			51.0,
+			52.0,
+			30.0,
+			49.0,
+			48.0
+		],
+		"CY": [
+			2.0,
+			5.0,
+			4.0,
+			2.0,
+			5.0,
+			4.0
+		]
+	},
+	"U": {
+		"IMG": [
+			"eye_eyeball_walk_1_0.png",
+			"eye_eyeball_walk_1_1.png",
+			"eye_eyeball_walk_1_2.png",
+			"eye_eyeball_walk_1_3.png",
+			"eye_eyeball_walk_1_4.png",
+			"eye_eyeball_walk_1_5.png"
+		],
+		"CX": [
+			8.0,
+			10.0,
+			10.0,
+			8.0,
+			8.0,
+			6.0
+		],
+		"CY": [
+			2.0,
+			2.0,
+			1.0,
+			2.0,
+			2.0,
+			1.0
+		]
+	},
+	"L": {
+		"IMG": [
+			"eye_eyeball_walk_2_0.png",
+			"eye_eyeball_walk_2_1.png",
+			"eye_eyeball_walk_2_2.png",
+			"eye_eyeball_walk_2_3.png",
+			"eye_eyeball_walk_2_4.png",
+			"eye_eyeball_walk_2_5.png"
+		],
+		"CX": [
+			8.0,
+			3.0,
+			2.0,
+			8.0,
+			5.0,
+			3.0
+		],
+		"CY": [
+			2.0,
+			5.0,
+			4.0,
+			2.0,
+			5.0,
+			4.0
+		]
+	},
+	"D": {
+		"IMG": [
+			"eye_eyeball_walk_3_0.png",
+			"eye_eyeball_walk_3_1.png",
+			"eye_eyeball_walk_3_2.png",
+			"eye_eyeball_walk_3_3.png",
+			"eye_eyeball_walk_3_4.png",
+			"eye_eyeball_walk_3_5.png"
+		],
+		"CX": [
+			8.0,
+			7.0,
+			7.0,
+			8.0,
+			9.0,
+			11.0
+		],
+		"CY": [
+			2.0,
+			1.0,
+			2.0,
+			2.0,
+			1.0,
+			2.0
+		]
+	}
+}
