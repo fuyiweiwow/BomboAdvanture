@@ -177,16 +177,6 @@ func _make_card(hero: Dictionary, idx: int, y_pos: int) -> Control:
 	name_lb.mouse_filter = Control.MOUSE_FILTER_PASS
 	card.add_child(name_lb)
 
-	if hero.get("_src", "origin") == "custom":
-		var tag = Label.new()
-		tag.text = "[custom]"
-		tag.position = Vector2(ICON_W + 24 + mini(name_lb.get_minimum_size().x, label_w) + 8, 16)
-		tag.size = Vector2(70, 22)
-		tag.add_theme_font_size_override("font_size", 12)
-		tag.add_theme_color_override("font_color", Color(0.3, 1, 0.3))
-		tag.mouse_filter = Control.MOUSE_FILTER_PASS
-		card.add_child(tag)
-
 	var blood = str(hero.get("blood", 0))
 	var speed = str(hero.get("speed", 0.0))
 	var bomb = str(hero.get("bomb", 0))
@@ -276,11 +266,7 @@ func _draw() -> void:
 	var tw = font.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, ts).x
 	draw_string(font, Vector2((win.x - tw) * 0.5, 50), title, HORIZONTAL_ALIGNMENT_LEFT, -1, ts, Color(0.8, 0.9, 1.0))
 
-	var custom_count = 0
-	for h in _hero_list:
-		if h.get("_src", "origin") == "custom":
-			custom_count += 1
-	var sub = "%d characters  |  %d customized" % [_hero_list.size(), custom_count]
+	var sub = "%d characters" % _hero_list.size()
 	var ss = 15
 	draw_string(font, Vector2((win.x - font.get_string_size(sub, HORIZONTAL_ALIGNMENT_LEFT, -1, ss).x) * 0.5, 75), sub, HORIZONTAL_ALIGNMENT_LEFT, -1, ss, Color(0.6, 0.6, 0.6))
 

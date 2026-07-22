@@ -419,7 +419,7 @@ func draw(ci: CanvasItem) -> void:
 				idx = 0
 				character_frame_idxs[component] = 0
 			var fr: Frame = frames[idx]
-			var comp_color: Color = comp_colors.get(component, color)
+			var comp_color: Color = comp_colors.get(component, Color.WHITE)
 			comp_color.a = blink_alpha
 			fr.draw(ci, x_pos + cx, y_pos + cy, comp_color)
 	elif state == LOSE and character.has("LOSE"):
@@ -430,7 +430,7 @@ func draw(ci: CanvasItem) -> void:
 			if frames.is_empty():
 				continue
 			var fr: Frame = frames[character_frame_idxs[component]]
-			var comp_color: Color = comp_colors.get(component, color)
+			var comp_color: Color = comp_colors.get(component, Color.WHITE)
 			comp_color.a = blink_alpha
 			fr.draw(ci, x_pos + cx, y_pos + cy, comp_color)
 	for s in effects_front:

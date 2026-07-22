@@ -11,7 +11,10 @@ static func get_bomb(name: String) -> Dictionary:
 		return _bombs[name]
 	var j = Utils.load_json(G.FRAME_ROOT + "bomb/" + name + ".json")
 	if j == null:
-		return {}
+		push_warning("BombLoader: missing JSON for %s, falling back to bomb1" % name)
+		var fallback = get_bomb("bomb1")
+		_bombs[name] = fallback
+		return fallback
 	var a_bomb = {}
 	a_bomb["INTERVAL"] = j.get("INTERVAL", 300)
 	a_bomb["STAND"] = []

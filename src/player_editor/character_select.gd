@@ -6,14 +6,12 @@ var _selected_idx: int = -1
 var _preview_instance = null
 
 var _scroll_offset: int = 0
-var _custom_start: int = 0
 const VISIBLE_COUNT = 4
 const CARD_H = 80
 const CARD_W = 360
 const CARD_X = 80
 const CARD_Y_START = 120
 const CARD_GAP = 6
-const SEP_H = 24
 
 var _btn_up: Button
 var _btn_down: Button
@@ -23,16 +21,6 @@ func _ready() -> void:
 	_update_size()
 	get_viewport().size_changed.connect(_update_size)
 	_hero_list = HeroData.list_heroes()
-	_hero_list.sort_custom(func(a, b):
-		var sa = 0 if a.get("_src", "origin") == "origin" else 1
-		var sb = 0 if b.get("_src", "origin") == "origin" else 1
-		if sa != sb: return sa < sb
-		return a["name"] < b["name"])
-	_custom_start = _hero_list.size()
-	for i in _hero_list.size():
-		if _hero_list[i].get("_src", "origin") == "custom":
-			_custom_start = i
-			break
 	_build_back_button()
 	_build_title()
 	_build_scroll_buttons()
@@ -88,12 +76,6 @@ func _build_cards() -> void:
 	var draw_idx = 0
 	for i in range(start, end):
 		var y = CARD_Y_START + draw_idx * (CARD_H + CARD_GAP)
-		if i == _custom_start and _custom_start < _hero_list.size():
-			var sep = _make_separator(y)
-			_card_nodes.append(sep)
-			_scroll_container.add_child(sep)
-			draw_idx += 1
-			y = CARD_Y_START + draw_idx * (CARD_H + CARD_GAP)
 		var hero = _hero_list[i]
 		var card = _make_card(hero, i, y)
 		_card_nodes.append(card)
@@ -184,16 +166,6 @@ func _make_card(hero: Dictionary, idx: int, y_pos: int) -> Control:
 	name_lb.mouse_filter = Control.MOUSE_FILTER_PASS
 	card.add_child(name_lb)
 
-	if hero.get("_src", "origin") == "custom":
-		var tag = Label.new()
-		tag.text = "[custom]"
-		tag.position = Vector2(64 + name_lb.get_minimum_size().x + 6, 10)
-		tag.size = Vector2(60, 20)
-		tag.add_theme_font_size_override("font_size", 11)
-		tag.add_theme_color_override("font_color", Color(0.3, 1, 0.3))
-		tag.mouse_filter = Control.MOUSE_FILTER_PASS
-		card.add_child(tag)
-
 	var blood = str(hero.get("blood", 0))
 	var speed = str(hero.get("speed", 0.0))
 	var bomb = str(hero.get("bomb", 0))
@@ -229,37 +201,11 @@ func _select_hero(idx: int) -> void:
 	_highlight_selected()
 	_render_preview()
 
-func _make_separator(y_pos: int) -> Control:
-	var sep = Control.new()
-	sep.position = Vector2(CARD_X, y_pos)
-	sep.size = Vector2(CARD_W, SEP_H)
-	sep.mouse_filter = Control.MOUSE_FILTER_PASS
-
-	var line = ColorRect.new()
-	line.color = Color(0.25, 0.27, 0.32)
-	line.position = Vector2(0, SEP_H * 0.5 - 1)
-	line.size = Vector2(CARD_W, 1)
-	sep.add_child(line)
-
-	var lb = Label.new()
-	lb.text = "────  Custom Characters  ────"
-	lb.position = Vector2(0, 0)
-	lb.size = Vector2(CARD_W, SEP_H)
-	lb.add_theme_font_size_override("font_size", 12)
-	lb.add_theme_color_override("font_color", Color(0.4, 0.45, 0.5))
-	lb.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	lb.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	sep.add_child(lb)
-
-	return sep
-
 func _highlight_selected() -> void:
 	var start = _scroll_offset
 	var end = mini(start + VISIBLE_COUNT, _hero_list.size())
 	var ci = 0
 	for i in range(start, end):
-		if i == _custom_start and _custom_start < _hero_list.size():
-			ci += 1
 		if ci < _card_nodes.size():
 			var card = _card_nodes[ci]
 			var border = card.get_meta("border") if card.has_meta("border") else null
@@ -353,10 +299,7 @@ func _draw() -> void:
 	if _selected_idx >= 0 and _selected_idx < _hero_list.size():
 		var hero = _hero_list[_selected_idx]
 		var name_str = str(hero.get("name", ""))
-		var is_custom = hero.get("_src", "origin") == "custom"
 		draw_string(font, Vector2(px + 20, py + 30), name_str, HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color(0.9, 0.92, 0.95))
-		if is_custom:
-			draw_string(font, Vector2(px + 160, py + 30), "[custom]", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.3, 1, 0.3))
 
 		var blood = str(hero.get("blood", 0))
 		var speed = str(hero.get("speed", 0.0))

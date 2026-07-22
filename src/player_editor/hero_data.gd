@@ -8,53 +8,38 @@ const CUSTOM_TEX_COMPONENTS = ["body", "foot", "leg", "cloth", "face", "hair", "
 
 static func list_heroes() -> Array:
 	var all: Dictionary = {}
-	var dir = DirAccess.open(HERO_DIR)
-	if dir:
-		dir.list_dir_begin()
-		var fname = dir.get_next()
-		while fname != "":
-			if fname.ends_with(".json"):
-				var name = fname.trim_suffix(".json")
-				all[name] = HERO_DIR + fname
-			fname = dir.get_next()
-		dir.list_dir_end()
-
-	dir = DirAccess.open(CUSTOM_DIR)
-	if dir:
-		dir.list_dir_begin()
-		var fname = dir.get_next()
-		while fname != "":
-			if fname.ends_with(".json"):
-				var name = fname.trim_suffix(".json")
-				all[name] = CUSTOM_DIR + fname
-			fname = dir.get_next()
-		dir.list_dir_end()
+	for dir_path in [HERO_DIR, CUSTOM_DIR]:
+		var dir = DirAccess.open(dir_path)
+		if dir:
+			dir.list_dir_begin()
+			var fname = dir.get_next()
+			while fname != "":
+				if fname.ends_with(".json"):
+					var name = fname.trim_suffix(".json")
+					if not all.has(name):
+						all[name] = dir_path + fname
+				fname = dir.get_next()
+			dir.list_dir_end()
 
 	var result: Array = []
 	for name in all.keys():
 		var path = all[name]
 		var j = Utils.load_json(path)
 		if j != null and j.has("name"):
-			j["_src"] = "custom" if path.begins_with(CUSTOM_DIR) else "origin"
 			j["_path"] = path
 			result.append(j)
 	result.sort_custom(func(a, b): return a["name"] < b["name"])
 	return result
 
 static func load_hero(hero_name: String) -> Dictionary:
-	var custom_path = CUSTOM_DIR + hero_name + ".json"
-	if FileAccess.file_exists(custom_path):
-		var j = Utils.load_json(custom_path)
-		if j != null:
-			j["_src"] = "custom"
-			j["_path"] = custom_path
-			return j
-	var origin_path = HERO_DIR + hero_name + ".json"
-	var j = Utils.load_json(origin_path)
-	if j != null:
-		j["_src"] = "origin"
-		j["_path"] = origin_path
-	return j
+	for dir_path in [CUSTOM_DIR, HERO_DIR]:
+		var path = dir_path + hero_name + ".json"
+		if FileAccess.file_exists(path):
+			var j = Utils.load_json(path)
+			if j != null:
+				j["_path"] = path
+				return j
+	return {}
 
 static func hero_exists(hero_name: String) -> bool:
 	return FileAccess.file_exists(HERO_DIR + hero_name + ".json") or FileAccess.file_exists(CUSTOM_DIR + hero_name + ".json")

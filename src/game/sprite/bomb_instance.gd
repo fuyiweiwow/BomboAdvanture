@@ -85,7 +85,7 @@ func update_pos(current_time: int) -> void:
 		x = g.x; y = g.y
 
 func update_frame(current_time: int) -> void:
-	if state == NORMAL and current_time - bomb_timer > int(bomb["INTERVAL"]):
+	if state == NORMAL and not bomb.is_empty() and current_time - bomb_timer > int(bomb.get("INTERVAL", 300)):
 		var lEN = bomb["STAND"].size()
 		bomb_frame_idx = (bomb_frame_idx + 1) % lEN
 		cx = bomb["STAND"][bomb_frame_idx].cx

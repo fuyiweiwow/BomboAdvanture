@@ -62,13 +62,12 @@ func _build_top_bar() -> void:
 	_btn_save.pressed.connect(_on_save)
 	add_child(_btn_save)
 
-	if _hero.get("_src", "origin") == "custom":
-		_btn_reset = Button.new()
-		_btn_reset.text = "Restore Defaults"
-		_btn_reset.size = Vector2(140, 30)
-		_btn_reset.add_theme_font_size_override("font_size", 14)
-		_btn_reset.pressed.connect(_on_restore)
-		add_child(_btn_reset)
+	_btn_reset = Button.new()
+	_btn_reset.text = "Restore Defaults"
+	_btn_reset.size = Vector2(140, 30)
+	_btn_reset.add_theme_font_size_override("font_size", 14)
+	_btn_reset.pressed.connect(_on_restore)
+	add_child(_btn_reset)
 
 	_btn_new = Button.new()
 	_btn_new.text = "+ New"
@@ -180,7 +179,6 @@ func _on_save() -> void:
 		return
 	if HeroData.save_hero(_hero):
 		_dirty = false
-		_hero["_src"] = "custom"
 		_show_notice("Saved!", Color(0.3, 1, 0.3))
 		await get_tree().create_timer(0.5).timeout
 		_do_quit()
