@@ -322,7 +322,8 @@ func _start_game(dev: bool) -> void:
 	if hero_name == "":
 		return
 	Game.selected_hero = hero_name
-	Game.start_game(dev)
+	var level_sel = load("res://src/level_editor/level_select.gd").new()
+	Game.add_child(level_sel)
 	queue_free()
 
 func _on_back() -> void:

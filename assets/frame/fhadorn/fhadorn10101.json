@@ -1,0 +1,151 @@
+{
+    "NAME": "fhadorn10101",
+    "STAND_R": {
+        "IMG": [
+            "fhadorn10101_stand_0_0.png"
+        ],
+        "CX": [
+            33
+        ],
+        "CY": [
+            38
+        ]
+    },
+    "STAND_U": {
+        "IMG": [
+            "fhadorn10101_stand_1_0.png"
+        ],
+        "CX": [
+            34
+        ],
+        "CY": [
+            50
+        ]
+    },
+    "STAND_L": {
+        "IMG": [
+            "fhadorn10101_stand_2_0.png"
+        ],
+        "CX": [
+            34
+        ],
+        "CY": [
+            38
+        ]
+    },
+    "STAND_D": {
+        "IMG": [
+            "fhadorn10101_stand_3_0.png"
+        ],
+        "CX": [
+            34
+        ],
+        "CY": [
+            39
+        ]
+    },
+    "R": {
+        "IMG": [
+            "fhadorn10101_walk_0_0.png",
+            "fhadorn10101_walk_0_1.png",
+            "fhadorn10101_walk_0_2.png",
+            "fhadorn10101_walk_0_3.png",
+            "fhadorn10101_walk_0_4.png",
+            "fhadorn10101_walk_0_5.png"
+        ],
+        "CX": [
+            33,
+            33,
+            33,
+            33,
+            33,
+            33
+        ],
+        "CY": [
+            38,
+            38,
+            38,
+            38,
+            38,
+            38
+        ]
+    },
+    "U": {
+        "IMG": [
+            "fhadorn10101_walk_1_0.png",
+            "fhadorn10101_walk_1_1.png",
+            "fhadorn10101_walk_1_2.png",
+            "fhadorn10101_walk_1_3.png",
+            "fhadorn10101_walk_1_4.png",
+            "fhadorn10101_walk_1_5.png"
+        ],
+        "CX": [
+            34,
+            34,
+            34,
+            34,
+            34,
+            36
+        ],
+        "CY": [
+            50,
+            50,
+            50,
+            50,
+            50,
+            50
+        ]
+    },
+    "L": {
+        "IMG": [
+            "fhadorn10101_walk_2_0.png",
+            "fhadorn10101_walk_2_1.png",
+            "fhadorn10101_walk_2_2.png",
+            "fhadorn10101_walk_2_3.png",
+            "fhadorn10101_walk_2_4.png",
+            "fhadorn10101_walk_2_5.png"
+        ],
+        "CX": [
+            34,
+            33,
+            32,
+            34,
+            34,
+            34
+        ],
+        "CY": [
+            38,
+            38,
+            38,
+            38,
+            38,
+            38
+        ]
+    },
+    "D": {
+        "IMG": [
+            "fhadorn10101_walk_3_0.png",
+            "fhadorn10101_walk_3_1.png",
+            "fhadorn10101_walk_3_2.png",
+            "fhadorn10101_walk_3_3.png",
+            "fhadorn10101_walk_3_4.png",
+            "fhadorn10101_walk_3_5.png"
+        ],
+        "CX": [
+            34,
+            34,
+            34,
+            34,
+            34,
+            34
+        ],
+        "CY": [
+            39,
+            39,
+            39,
+            39,
+            39,
+            39
+        ]
+    }
+}

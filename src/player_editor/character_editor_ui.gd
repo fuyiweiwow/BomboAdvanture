@@ -36,17 +36,7 @@ func add_field(vb: VBoxContainer, label: String, input: Control, label_w: int = 
 	hb.add_child(input)
 	vb.add_child(hb)
 
-func build_basic_tab(vb: VBoxContainer) -> void:
-	clear_container(vb)
-	var margin = MarginContainer.new()
-	margin.add_theme_constant_override("margin_left", 8)
-	margin.add_theme_constant_override("margin_top", 6)
-	margin.add_theme_constant_override("margin_right", 8)
-
-	var inner = VBoxContainer.new()
-	inner.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	inner.add_theme_constant_override("separation", 6)
-
+func _build_basic_fields(inner: VBoxContainer) -> void:
 	var stat_fields = [
 		["Name", "name", 0],
 		["Blood", "blood", 0],
@@ -57,101 +47,48 @@ func build_basic_tab(vb: VBoxContainer) -> void:
 		["Damage", "damage", 0],
 		["Defense", "defense", 0],
 	]
-
 	for f in stat_fields:
 		if f[0] == "Name":
 			var le = LineEdit.new()
 			le.text = str(_editor._hero.get(f[1], ""))
-			le.add_theme_font_size_override("font_size", 15)
+			le.add_theme_font_size_override("font_size", 14)
 			le.text_changed.connect(_editor._on_field_changed.bind(f[1]))
-			add_field(inner, f[0], le, 130)
+			add_field(inner, f[0], le, 110)
 		elif f[2] == 1:
 			var sb = SpinBox.new()
 			sb.min_value = 0
 			sb.max_value = 999.999
 			sb.step = 0.01
 			sb.value = float(_editor._hero.get(f[1], 0))
-			sb.add_theme_font_size_override("font_size", 15)
+			sb.add_theme_font_size_override("font_size", 14)
 			sb.value_changed.connect(_editor._on_float_changed.bind(f[1]))
-			add_field(inner, f[0], sb, 130)
+			add_field(inner, f[0], sb, 110)
 		else:
 			var sb = SpinBox.new()
 			sb.min_value = 0
 			sb.max_value = 99999
 			sb.step = 1
 			sb.value = int(_editor._hero.get(f[1], 0))
-			sb.add_theme_font_size_override("font_size", 15)
+			sb.add_theme_font_size_override("font_size", 14)
 			sb.value_changed.connect(_editor._on_int_changed.bind(f[1]))
-			add_field(inner, f[0], sb, 130)
+			add_field(inner, f[0], sb, 110)
 
 	var hb_bomb = HBoxContainer.new()
 	hb_bomb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var lb_bomb = Label.new()
 	lb_bomb.text = "Bomb Skin:"
-	lb_bomb.custom_minimum_size = Vector2(130, 24)
-	lb_bomb.add_theme_font_size_override("font_size", 15)
+	lb_bomb.custom_minimum_size = Vector2(110, 24)
+	lb_bomb.add_theme_font_size_override("font_size", 14)
 	lb_bomb.add_theme_color_override("font_color", Color(0.85, 0.87, 0.9))
 	hb_bomb.add_child(lb_bomb)
-
 	_editor._btn_bomb = Button.new()
 	var current_bomb = _editor._hero.get("decorations", {}).get("bomb_skin", "")
 	_editor._btn_bomb.text = "none" if current_bomb == "" else current_bomb
 	_editor._btn_bomb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_editor._btn_bomb.add_theme_font_size_override("font_size", 14)
+	_editor._btn_bomb.add_theme_font_size_override("font_size", 13)
 	_editor._btn_bomb.pressed.connect(_on_pick_bomb_skin.bind(_editor._btn_bomb))
 	hb_bomb.add_child(_editor._btn_bomb)
 	inner.add_child(hb_bomb)
-
-	var hb_color = HBoxContainer.new()
-	hb_color.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var lb_color = Label.new()
-	lb_color.text = "Color:"
-	lb_color.custom_minimum_size = Vector2(130, 24)
-	lb_color.add_theme_font_size_override("font_size", 15)
-	lb_color.add_theme_color_override("font_color", Color(0.85, 0.87, 0.9))
-	hb_color.add_child(lb_color)
-
-	_editor._color_swatch_container = HBoxContainer.new()
-	_editor._color_swatch_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_editor._color_swatch_container.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	hb_color.add_child(_editor._color_swatch_container)
-	fill_swatches()
-
-	inner.add_child(hb_color)
-	margin.add_child(inner)
-	vb.add_child(margin)
-
-func fill_swatches() -> void:
-	clear_container(_editor._color_swatch_container)
-	var cw = 26
-	for i in _editor._color_list.size():
-		var cbtn = ColorRect.new()
-		cbtn.color = _editor._color_list[i]
-		cbtn.custom_minimum_size = Vector2(cw, cw)
-		cbtn.mouse_filter = Control.MOUSE_FILTER_STOP
-		cbtn.gui_input.connect(_on_color_click.bind(i))
-
-		var border = ColorRect.new()
-		border.color = Color(0, 0, 0, 0.7) if i != _editor._color_idx else Color(1, 1, 1)
-		border.size = Vector2(cw + 2, cw + 2)
-		border.mouse_filter = Control.MOUSE_FILTER_PASS
-
-		var ctn = Control.new()
-		ctn.custom_minimum_size = Vector2(cw + 4, cw + 4)
-		border.position = Vector2(0, 0)
-		ctn.add_child(border)
-		cbtn.position = Vector2(1, 1)
-		cbtn.size = Vector2(cw, cw)
-		ctn.add_child(cbtn)
-		_editor._color_swatch_container.add_child(ctn)
-
-func _on_color_click(event: InputEvent, idx: int) -> void:
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		_editor._color_idx = idx
-		_editor._current_color = _editor._color_list[idx]
-		fill_swatches()
-		_editor._render_preview()
-		_editor._dirty = true
 
 func _on_pick_bomb_skin(btn: Button) -> void:
 	var skins = HeroData.list_bomb_skins()
@@ -175,84 +112,262 @@ func _apply_bomb_skin(skin: String, btn: Button) -> void:
 	btn.text = skin if skin != "" else "none"
 	_editor._dirty = true
 
+var _deco_selected_cat: String = ""
+var _deco_color_map = {"body":"Body","foot":"Foot","leg":"Leg","cloth":"Cloth","face":"Face","hair":"Hair","cap":"Cap","ear":"Ear","fpack":"Fpack","npack":"Npack","thadorn":"Thadorn"}
+var _deco_skip = ["footprint", "eye_eyeball", "eye_iris", "eye_pupil", "eye_highlight"]
+
 func build_deco_tab(vb: VBoxContainer) -> void:
 	clear_container(vb)
+	vb.size_flags_vertical = Control.SIZE_EXPAND_FILL
+
+	var hb = HBoxContainer.new()
+	hb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hb.size_flags_vertical = Control.SIZE_EXPAND_FILL
+
+	var left_sc = ScrollContainer.new()
+	left_sc.custom_minimum_size = Vector2(60, 0)
+	left_sc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	var left_vb = VBoxContainer.new()
+	left_vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	left_vb.add_theme_constant_override("separation", 1)
+
+	if _deco_selected_cat == "":
+		_deco_selected_cat = _first_valid_cat()
+
+	var basic_btn = Button.new()
+	basic_btn.text = "Basic"
+	basic_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	basic_btn.flat = true
+	basic_btn.add_theme_font_size_override("font_size", 10)
+	basic_btn.custom_minimum_size = Vector2(0, 24)
+	if _deco_selected_cat == "basic":
+		var hl = StyleBoxFlat.new()
+		hl.bg_color = Color(0.2, 0.22, 0.26)
+		hl.border_width_left = 2
+		hl.border_color = Color(0.3, 0.8, 0.3)
+		basic_btn.add_theme_stylebox_override("normal", hl)
+		basic_btn.add_theme_stylebox_override("hover", hl)
+		basic_btn.add_theme_stylebox_override("pressed", hl)
+	basic_btn.pressed.connect(_on_deco_cat_select.bind("basic"))
+	left_vb.add_child(basic_btn)
+
+	var part_sep = HSeparator.new()
+	part_sep.custom_minimum_size = Vector2(0, 2)
+	left_vb.add_child(part_sep)
+
+	for cat in _editor.DECO_CATEGORIES:
+		if cat in _deco_skip:
+			continue
+		var valid = HeroData.list_valid_decorations(cat)
+		if valid.is_empty():
+			continue
+		var btn = Button.new()
+		btn.text = cat.capitalize()
+		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		btn.flat = true
+		btn.add_theme_font_size_override("font_size", 9)
+		btn.custom_minimum_size = Vector2(0, 22)
+		if cat == _deco_selected_cat:
+			var hl = StyleBoxFlat.new()
+			hl.bg_color = Color(0.2, 0.22, 0.26)
+			hl.border_width_left = 2
+			hl.border_color = Color(0.3, 0.8, 0.3)
+			btn.add_theme_stylebox_override("normal", hl)
+			btn.add_theme_stylebox_override("hover", hl)
+			btn.add_theme_stylebox_override("pressed", hl)
+		btn.pressed.connect(_on_deco_cat_select.bind(cat))
+		left_vb.add_child(btn)
+
+	left_sc.add_child(left_vb)
+	hb.add_child(left_sc)
+
+	var sep = VSeparator.new()
+	sep.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	hb.add_child(sep)
+
+	var right_sc = ScrollContainer.new()
+	right_sc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	right_sc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	var right_vb = VBoxContainer.new()
+	right_vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	right_vb.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	right_vb.add_theme_constant_override("separation", 6)
+
+	if _deco_selected_cat == "basic":
+		_build_basic_panel(right_vb)
+	elif _deco_selected_cat != "":
+		_build_gallery_panel(right_vb, _deco_selected_cat)
+
+	right_sc.add_child(right_vb)
+	hb.add_child(right_sc)
+	vb.add_child(hb)
+
+func _build_basic_panel(right_vb: VBoxContainer) -> void:
 	var margin = MarginContainer.new()
 	margin.add_theme_constant_override("margin_left", 8)
-	margin.add_theme_constant_override("margin_top", 6)
+	margin.add_theme_constant_override("margin_top", 4)
 	margin.add_theme_constant_override("margin_right", 8)
-
 	var inner = VBoxContainer.new()
 	inner.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	inner.add_theme_constant_override("separation", 6)
-
-	var deco_data = _editor._hero.get("decorations", {})
-
-	for i in _editor.DECO_CATEGORIES.size():
-		var cat = _editor.DECO_CATEGORIES[i]
-		var val = deco_data.get(cat, null)
-		var display = str(val) if val != null else "-"
-
-		var hb = HBoxContainer.new()
-		hb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-
-		var lb_cat = Label.new()
-		lb_cat.text = cat
-		lb_cat.custom_minimum_size = Vector2(100, 24)
-		lb_cat.add_theme_font_size_override("font_size", 14)
-		lb_cat.add_theme_color_override("font_color", Color(0.7, 0.75, 0.8))
-		hb.add_child(lb_cat)
-
-		var btn_val = Button.new()
-		btn_val.text = display
-		btn_val.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		btn_val.add_theme_font_size_override("font_size", 13)
-		btn_val.pressed.connect(_on_pick_decoration.bind(cat, btn_val))
-		hb.add_child(btn_val)
-
-		var btn_clr = Button.new()
-		btn_clr.text = "x"
-		btn_clr.custom_minimum_size = Vector2(26, 24)
-		btn_clr.add_theme_font_size_override("font_size", 12)
-		btn_clr.add_theme_color_override("font_color", Color(1, 0.5, 0.5))
-		btn_clr.pressed.connect(_clear_decoration.bind(cat, btn_val))
-		hb.add_child(btn_clr)
-
-		inner.add_child(hb)
-
+	inner.add_theme_constant_override("separation", 4)
+	_build_basic_fields(inner)
 	margin.add_child(inner)
-	vb.add_child(margin)
+	right_vb.add_child(margin)
 
-func _on_pick_decoration(category: String, btn: Button) -> void:
-	var items = HeroData.list_decorations(category)
-	var menu = PopupMenu.new()
-	menu.add_item("[none]")
-	menu.set_item_metadata(0, null)
-	for item in items:
-		var id = menu.get_item_count()
-		menu.add_item(item, id)
-		menu.set_item_metadata(id, item)
-	var cat = category
-	menu.id_pressed.connect(func(id):
-		var val = menu.get_item_metadata(id) if id > 0 else null
-		_apply_decoration(cat, val, btn))
-	_editor.add_child(menu)
-	menu.position = _editor.get_viewport().get_mouse_position()
-	menu.popup()
+func _first_valid_cat() -> String:
+	for cat in _editor.DECO_CATEGORIES:
+		if cat in _deco_skip:
+			continue
+		var valid = HeroData.list_valid_decorations(cat)
+		if not valid.is_empty():
+			return cat
+	return ""
 
-func _apply_decoration(category: String, value, btn: Button) -> void:
+func _build_gallery_panel(vb: VBoxContainer, cat: String) -> void:
+	var valid = HeroData.list_valid_decorations(cat)
+	if valid.is_empty():
+		var empty_lb = Label.new()
+		empty_lb.text = "No valid variants found"
+		empty_lb.add_theme_color_override("font_color", Color(0.5, 0.55, 0.6))
+		vb.add_child(empty_lb)
+		return
+
+	var header = Label.new()
+	header.text = "Variant Gallery"
+	header.add_theme_font_size_override("font_size", 10)
+	header.add_theme_color_override("font_color", Color(0.6, 0.65, 0.7))
+	vb.add_child(header)
+
+	var grid = GridContainer.new()
+	grid.columns = 4
+	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	grid.add_theme_constant_override("h_separation", 3)
+	grid.add_theme_constant_override("v_separation", 3)
+
+	var current_val = _editor._hero.get("decorations", {}).get(cat, null)
+	for v in valid:
+		grid.add_child(_make_gallery_item(cat, v, v == current_val))
+
+	vb.add_child(grid)
+
+	if _deco_color_map.has(cat):
+		vb.add_child(HSeparator.new())
+		_make_color_row(vb, cat, _deco_color_map[cat])
+
+func _on_deco_cat_select(cat: String) -> void:
+	_deco_selected_cat = cat
+	build_deco_tab(_editor._tab_deco)
+
+func _make_gallery_item(category: String, variant: String, selected: bool) -> PanelContainer:
+	var panel = PanelContainer.new()
+	panel.custom_minimum_size = Vector2(56, 62)
+	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	panel.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	var style = StyleBoxFlat.new()
+	style.bg_color = Color(0.2, 0.22, 0.26) if selected else Color(0.1, 0.11, 0.14)
+	style.border_width_left = 1 if selected else 0
+	style.border_width_top = 1 if selected else 0
+	style.border_width_right = 1 if selected else 0
+	style.border_width_bottom = 1 if selected else 0
+	style.border_color = Color(0.3, 0.8, 0.3)
+	style.corner_radius_top_left = 3
+	style.corner_radius_top_right = 3
+	style.corner_radius_bottom_left = 3
+	style.corner_radius_bottom_right = 3
+	panel.add_theme_stylebox_override("panel", style)
+
+	var vb = VBoxContainer.new()
+	vb.alignment = BoxContainer.ALIGNMENT_CENTER
+	vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vb.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.add_child(vb)
+
+	var tr = TextureRect.new()
+	tr.texture = HeroData.get_variant_thumbnail(category, variant)
+	tr.custom_minimum_size = Vector2(36, 36)
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	tr.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	vb.add_child(tr)
+
+	var lb = Label.new()
+	lb.text = variant
+	lb.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lb.add_theme_font_size_override("font_size", 7)
+	lb.add_theme_color_override("font_color", Color(0.7, 0.75, 0.8))
+	lb.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	vb.add_child(lb)
+
+	panel.gui_input.connect(func(event):
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			_on_gallery_select(category, variant))
+	return panel
+
+func _make_color_row(inner: VBoxContainer, cat: String, comp_name: String) -> void:
+	var existing = _editor._hero.get("colors", {})
+
+	var color_row = HBoxContainer.new()
+	color_row.alignment = BoxContainer.ALIGNMENT_CENTER
+
+	var color_lb = Label.new()
+	color_lb.text = "Color:"
+	color_lb.add_theme_font_size_override("font_size", 10)
+	color_lb.add_theme_color_override("font_color", Color(0.7, 0.75, 0.8))
+	color_row.add_child(color_lb)
+
+	var current = null
+	if existing.has(comp_name):
+		var val = existing[comp_name]
+		if val is Array:
+			current = Color(val[0], val[1], val[2], val[3]) if val.size() >= 4 else Color(val[0], val[1], val[2])
+
+	var picker = ColorPickerButton.new()
+	picker.color = current if current != null else Color.WHITE
+	picker.custom_minimum_size = Vector2(28, 18)
+	picker.color_changed.connect(_on_gallery_color_changed.bind(comp_name))
+	color_row.add_child(picker)
+
+	var clear_btn = Button.new()
+	clear_btn.text = "X"
+	clear_btn.custom_minimum_size = Vector2(18, 18)
+	clear_btn.add_theme_font_size_override("font_size", 9)
+	clear_btn.add_theme_color_override("font_color", Color(1, 0.4, 0.4))
+	clear_btn.pressed.connect(_on_gallery_color_clear.bind(comp_name, picker))
+	color_row.add_child(clear_btn)
+
+	var st = Label.new()
+	st.text = "custom" if current != null else "default"
+	st.add_theme_color_override("font_color", Color(0.4, 0.8, 0.4) if current != null else Color(0.5, 0.55, 0.6))
+	st.add_theme_font_size_override("font_size", 9)
+	color_row.add_child(st)
+
+	inner.add_child(color_row)
+
+func _on_gallery_select(category: String, variant: String) -> void:
 	if not _editor._hero.has("decorations"):
 		_editor._hero["decorations"] = {}
-	_editor._hero["decorations"][category] = value
-	btn.text = str(value) if value != null else "-"
+	var current = _editor._hero["decorations"].get(category, null)
+	if current == variant:
+		_editor._hero["decorations"][category] = null
+	else:
+		_editor._hero["decorations"][category] = variant
+	_editor._dirty = true
+	_editor._render_preview()
+	build_deco_tab(_editor._tab_deco)
+
+func _on_gallery_color_changed(c: Color, comp_name: String) -> void:
+	if not _editor._hero.has("colors"):
+		_editor._hero["colors"] = {}
+	_editor._hero["colors"][comp_name] = [c.r, c.g, c.b, c.a]
 	_editor._dirty = true
 	_editor._render_preview()
 
-func _clear_decoration(category: String, btn: Button) -> void:
-	if not _editor._hero.has("decorations"):
-		_editor._hero["decorations"] = {}
-	_editor._hero["decorations"][category] = null
-	btn.text = "-"
+func _on_gallery_color_clear(comp_name: String, picker: ColorPickerButton) -> void:
+	var colors = _editor._hero.get("colors", {})
+	colors.erase(comp_name)
+	_editor._hero["colors"] = colors
+	picker.color = Color.WHITE
 	_editor._dirty = true
 	_editor._render_preview()
 
@@ -388,162 +503,3 @@ func _on_delete_skill(idx: int) -> void:
 	skills.remove_at(idx)
 	_editor._dirty = true
 	build_skills_tab(_editor._tab_skills)
-
-func build_tex_tab(vb: VBoxContainer) -> void:
-	clear_container(vb)
-	var margin = MarginContainer.new()
-	margin.add_theme_constant_override("margin_left", 8)
-	margin.add_theme_constant_override("margin_top", 6)
-	margin.add_theme_constant_override("margin_right", 8)
-
-	var inner = VBoxContainer.new()
-	inner.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	inner.add_theme_constant_override("separation", 6)
-
-	var toggle = HBoxContainer.new()
-	var lb_toggle = Label.new()
-	lb_toggle.text = "Use Custom Textures:"
-	lb_toggle.add_theme_font_size_override("font_size", 14)
-	lb_toggle.add_theme_color_override("font_color", Color(0.85, 0.87, 0.9))
-	toggle.add_child(lb_toggle)
-
-	var cb = CheckBox.new()
-	cb.button_pressed = _editor._use_custom_tex
-	cb.toggled.connect(_on_toggle_custom_tex)
-	toggle.add_child(cb)
-	inner.add_child(toggle)
-
-	if not _editor._use_custom_tex:
-		margin.add_child(inner)
-		vb.add_child(margin)
-		return
-
-	inner.add_child(HSeparator.new())
-
-	var hero_name = str(_editor._hero.get("name", ""))
-	var offsets = _editor._hero.get("custom_texture_offsets", {})
-
-	var header = HBoxContainer.new()
-	var hname = Label.new()
-	hname.text = "Component"
-	hname.custom_minimum_size = Vector2(100, 24)
-	hname.add_theme_font_size_override("font_size", 13)
-	hname.add_theme_color_override("font_color", Color(0.6, 0.65, 0.7))
-	header.add_child(hname)
-	var haction = Label.new()
-	haction.text = "Action"
-	haction.custom_minimum_size = Vector2(80, 24)
-	haction.add_theme_font_size_override("font_size", 13)
-	haction.add_theme_color_override("font_color", Color(0.6, 0.65, 0.7))
-	header.add_child(haction)
-	var hcx = Label.new()
-	hcx.text = "Cx"
-	hcx.custom_minimum_size = Vector2(60, 24)
-	hcx.add_theme_font_size_override("font_size", 13)
-	hcx.add_theme_color_override("font_color", Color(0.6, 0.65, 0.7))
-	header.add_child(hcx)
-	var hcy = Label.new()
-	hcy.text = "Cy"
-	hcy.custom_minimum_size = Vector2(60, 24)
-	hcy.add_theme_font_size_override("font_size", 13)
-	hcy.add_theme_color_override("font_color", Color(0.6, 0.65, 0.7))
-	header.add_child(hcy)
-	inner.add_child(header)
-
-	for comp in HeroData.CUSTOM_TEX_COMPONENTS:
-		var hb = HBoxContainer.new()
-		hb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-
-		var lb_c = Label.new()
-		lb_c.text = comp
-		lb_c.custom_minimum_size = Vector2(100, 24)
-		lb_c.add_theme_font_size_override("font_size", 13)
-		lb_c.add_theme_color_override("font_color", Color(0.7, 0.75, 0.8))
-		hb.add_child(lb_c)
-
-		var has_tex = false
-		if hero_name != "" and HeroData.has_custom_texture(hero_name, comp):
-			has_tex = true
-
-		var btn_import = Button.new()
-		btn_import.text = "Clear" if has_tex else "Import"
-		btn_import.custom_minimum_size = Vector2(70, 24)
-		btn_import.add_theme_font_size_override("font_size", 11)
-		btn_import.pressed.connect(_on_tex_btn_clicked.bind(comp, btn_import))
-		hb.add_child(btn_import)
-
-		var sb_cx = SpinBox.new()
-		sb_cx.min_value = -200
-		sb_cx.max_value = 200
-		sb_cx.step = 1
-		sb_cx.value = offsets.get(comp, {}).get("cx", 0)
-		sb_cx.custom_minimum_size = Vector2(60, 24)
-		sb_cx.add_theme_font_size_override("font_size", 12)
-		sb_cx.value_changed.connect(_on_offset_changed.bind(comp, "cx"))
-		sb_cx.editable = has_tex
-		hb.add_child(sb_cx)
-
-		var sb_cy = SpinBox.new()
-		sb_cy.min_value = -200
-		sb_cy.max_value = 200
-		sb_cy.step = 1
-		sb_cy.value = offsets.get(comp, {}).get("cy", 0)
-		sb_cy.custom_minimum_size = Vector2(60, 24)
-		sb_cy.add_theme_font_size_override("font_size", 12)
-		sb_cy.value_changed.connect(_on_offset_changed.bind(comp, "cy"))
-		sb_cy.editable = has_tex
-		hb.add_child(sb_cy)
-
-		inner.add_child(hb)
-
-	margin.add_child(inner)
-	vb.add_child(margin)
-
-func _on_toggle_custom_tex(toggled: bool) -> void:
-	_editor._use_custom_tex = toggled
-	_editor._hero["use_custom_textures"] = toggled
-	_editor._dirty = true
-	_editor._rebuild_ui()
-
-func _on_tex_btn_clicked(component: String, btn: Button) -> void:
-	var hero_name = str(_editor._hero.get("name", ""))
-	if btn.text == "Import":
-		if hero_name == "":
-			_editor._show_notice("Save hero first before importing textures!", Color(1, 0.3, 0.3))
-			return
-		var fd = FileDialog.new()
-		fd.title = "Import " + component + " texture"
-		fd.file_mode = FileDialog.FILE_MODE_OPEN_FILE
-		fd.add_filter("*.png", "PNG Images")
-		fd.use_native_dialog = true
-		fd.file_selected.connect(func(path): _on_texture_imported(path, component, btn))
-		_editor.add_child(fd)
-		fd.popup_centered()
-	else:
-		HeroData.delete_texture(hero_name, component)
-		btn.text = "Import"
-		_editor._dirty = true
-		_editor._render_preview()
-		_editor._show_notice(component + " cleared", Color(0.8, 0.8, 0.3))
-
-func _on_texture_imported(path: String, component: String, btn: Button) -> void:
-	var hero_name = str(_editor._hero.get("name", ""))
-	if hero_name == "":
-		return
-	var result = HeroData.import_texture(hero_name, component, path)
-	if result.ok:
-		btn.text = "Clear"
-		_editor._dirty = true
-		_editor._render_preview()
-		_editor._show_notice(component + " imported!", Color(0.3, 1, 0.3))
-	else:
-		_editor._show_notice("Import failed: " + result.error, Color(1, 0.3, 0.3))
-
-func _on_offset_changed(value: float, comp: String, axis: String) -> void:
-	if not _editor._hero.has("custom_texture_offsets"):
-		_editor._hero["custom_texture_offsets"] = {}
-	if not _editor._hero["custom_texture_offsets"].has(comp):
-		_editor._hero["custom_texture_offsets"][comp] = {}
-	_editor._hero["custom_texture_offsets"][comp][axis] = int(value)
-	_editor._dirty = true
-	_editor._render_preview()

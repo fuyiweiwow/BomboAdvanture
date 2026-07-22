@@ -1,0 +1,151 @@
+{
+    "NAME": "foot1",
+    "STAND_R": {
+        "IMG": [
+            "foot1_stand_0_0.png"
+        ],
+        "CX": [
+            45
+        ],
+        "CY": [
+            75
+        ]
+    },
+    "STAND_U": {
+        "IMG": [
+            "foot1_stand_1_0.png"
+        ],
+        "CX": [
+            42
+        ],
+        "CY": [
+            73
+        ]
+    },
+    "STAND_L": {
+        "IMG": [
+            "foot1_stand_2_0.png"
+        ],
+        "CX": [
+            44
+        ],
+        "CY": [
+            75
+        ]
+    },
+    "STAND_D": {
+        "IMG": [
+            "foot1_stand_3_0.png"
+        ],
+        "CX": [
+            42
+        ],
+        "CY": [
+            73
+        ]
+    },
+    "R": {
+        "IMG": [
+            "foot1_walk_0_0.png",
+            "foot1_walk_0_1.png",
+            "foot1_walk_0_2.png",
+            "foot1_walk_0_3.png",
+            "foot1_walk_0_4.png",
+            "foot1_walk_0_5.png"
+        ],
+        "CX": [
+            45,
+            40,
+            39,
+            45,
+            40,
+            39
+        ],
+        "CY": [
+            75,
+            73,
+            72,
+            75,
+            72,
+            72
+        ]
+    },
+    "U": {
+        "IMG": [
+            "foot1_walk_1_0_42_73.png",
+            "foot1_walk_1_1_42_73.png",
+            "foot1_walk_1_2_42_73.png",
+            "foot1_walk_1_3_42_73.png",
+            "foot1_walk_1_4_42_73.png",
+            "foot1_walk_1_5_42_73.png"
+        ],
+        "CX": [
+            42,
+            42,
+            42,
+            42,
+            42,
+            42
+        ],
+        "CY": [
+            73,
+            73,
+            73,
+            73,
+            73,
+            73
+        ]
+    },
+    "L": {
+        "IMG": [
+            "foot1_walk_2_0_44_75.png",
+            "foot1_walk_2_1_39_74.png",
+            "foot1_walk_2_2_40_72.png",
+            "foot1_walk_2_3_44_75.png",
+            "foot1_walk_2_4_39_72.png",
+            "foot1_walk_2_5_39_72.png"
+        ],
+        "CX": [
+            44,
+            39,
+            40,
+            44,
+            39,
+            39
+        ],
+        "CY": [
+            75,
+            73,
+            72,
+            75,
+            72,
+            72
+        ]
+    },
+    "D": {
+        "IMG": [
+            "foot1_walk_3_0_42_73.png",
+            "foot1_walk_3_1_42_73.png",
+            "foot1_walk_3_2_42_73.png",
+            "foot1_walk_3_3_42_73.png",
+            "foot1_walk_3_4_42_73.png",
+            "foot1_walk_3_5_42_73.png"
+        ],
+        "CX": [
+            42,
+            42,
+            42,
+            42,
+            42,
+            42
+        ],
+        "CY": [
+            73,
+            73,
+            73,
+            73,
+            73,
+            73
+        ]
+    }
+}

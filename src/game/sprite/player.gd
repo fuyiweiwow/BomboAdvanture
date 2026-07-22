@@ -86,7 +86,7 @@ func _init(character_name: String, xy: Vector2i, color_: Color = C.CHARACTER_RED
 	x_old = xy.x
 	y_old = xy.y
 
-func load_character(character_name: String, color_: Color, decorations: Dictionary, is_ghost = false, custom_textures: Dictionary = {}) -> Dictionary:
+func load_character(character_name: String, color_: Color, decorations: Dictionary, is_ghost = false, custom_textures: Dictionary = {}, component_colors: Dictionary = {}) -> Dictionary:
 	if not custom_textures.is_empty():
 		var t = Time.get_ticks_msec()
 		for component in CHARACTER_COMPONENTS["D"]:
@@ -95,7 +95,7 @@ func load_character(character_name: String, color_: Color, decorations: Dictiona
 			character_frame_intervals[component] = 200
 			character_frame_intervals_stand[component] = STAND_INTERVAL
 			character_frame_intervals_walk[component] = WALK_INTERVAL
-		return CharacterLoader.get_character("", color_, decorations, is_ghost, custom_textures)
+		return CharacterLoader.get_character("", color_, decorations, is_ghost, custom_textures, component_colors)
 	var j = Utils.load_json(G.FRAME_ROOT + "character/" + character_name + ".json")
 	if j == null:
 		return {}
@@ -108,7 +108,7 @@ func load_character(character_name: String, color_: Color, decorations: Dictiona
 		character_frame_intervals_walk[component] = WALK_INTERVAL
 		if decorations.has(component):
 			character_frame_intervals[component] = decorations[component].get("INTERVAL", 200)
-	return CharacterLoader.get_character(character_name, color_, decorations, is_ghost)
+	return CharacterLoader.get_character(character_name, color_, decorations, is_ghost, {}, component_colors)
 
 func align_xy() -> void:
 	set_xy(x, y)
@@ -395,17 +395,17 @@ func get_y() -> float:
 
 # (player.draw) -- composited onto a CanvasItem (the main area).
 # Tinting is applied at draw time via modulate Color instead of CPU pixel ops.
+# Per-component colors from character["COLORS"] override the global color.
 func draw(ci: CanvasItem) -> void:
 	hidden = if_hide()
 	if hidden:
 		return
 	var blink_alpha = float(temporary_alpha) / 255.0
+	var comp_colors: Dictionary = character.get("COLORS", {})
 	for s in effects_behind:
 		if s.has_method("draw"):
 			s.draw(ci)
 	if state == NORMAL:
-		var modulate := color
-		modulate.a = blink_alpha
 		for component in CHARACTER_COMPONENTS[orientation]:
 			if not character.has(STAND + orientation):
 				continue
@@ -419,10 +419,10 @@ func draw(ci: CanvasItem) -> void:
 				idx = 0
 				character_frame_idxs[component] = 0
 			var fr: Frame = frames[idx]
-			fr.draw(ci, x_pos + cx, y_pos + cy, modulate)
+			var comp_color: Color = comp_colors.get(component, color)
+			comp_color.a = blink_alpha
+			fr.draw(ci, x_pos + cx, y_pos + cy, comp_color)
 	elif state == LOSE and character.has("LOSE"):
-		var modulate := color
-		modulate.a = blink_alpha
 		for component in CHARACTER_COMPONENTS[orientation]:
 			if not character["LOSE"].has(component):
 				continue
@@ -430,7 +430,9 @@ func draw(ci: CanvasItem) -> void:
 			if frames.is_empty():
 				continue
 			var fr: Frame = frames[character_frame_idxs[component]]
-			fr.draw(ci, x_pos + cx, y_pos + cy, modulate)
+			var comp_color: Color = comp_colors.get(component, color)
+			comp_color.a = blink_alpha
+			fr.draw(ci, x_pos + cx, y_pos + cy, comp_color)
 	for s in effects_front:
 		if s.has_method("draw"):
 			s.draw(ci)

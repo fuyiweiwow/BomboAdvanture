@@ -1,0 +1,151 @@
+{
+    "NAME": "cloth10301",
+    "STAND_R": {
+        "IMG": [
+            "cloth10301_stand_0_0.png"
+        ],
+        "CX": [
+            39
+        ],
+        "CY": [
+            60
+        ]
+    },
+    "STAND_U": {
+        "IMG": [
+            "cloth10301_stand_1_0.png"
+        ],
+        "CX": [
+            37
+        ],
+        "CY": [
+            60
+        ]
+    },
+    "STAND_L": {
+        "IMG": [
+            "cloth10301_stand_2_0.png"
+        ],
+        "CX": [
+            35
+        ],
+        "CY": [
+            60
+        ]
+    },
+    "STAND_D": {
+        "IMG": [
+            "cloth10301_stand_3_0.png"
+        ],
+        "CX": [
+            37
+        ],
+        "CY": [
+            60
+        ]
+    },
+    "R": {
+        "IMG": [
+            "cloth10301_walk_0_0.png",
+            "cloth10301_walk_0_1.png",
+            "cloth10301_walk_0_2.png",
+            "cloth10301_walk_0_3.png",
+            "cloth10301_walk_0_4.png",
+            "cloth10301_walk_0_5.png"
+        ],
+        "CX": [
+            39,
+            39,
+            38,
+            39,
+            38,
+            38
+        ],
+        "CY": [
+            60,
+            60,
+            60,
+            60,
+            60,
+            60
+        ]
+    },
+    "U": {
+        "IMG": [
+            "cloth10301_walk_1_0.png",
+            "cloth10301_walk_1_1.png",
+            "cloth10301_walk_1_2.png",
+            "cloth10301_walk_1_3.png",
+            "cloth10301_walk_1_4.png",
+            "cloth10301_walk_1_5.png"
+        ],
+        "CX": [
+            37,
+            37,
+            37,
+            37,
+            37,
+            39
+        ],
+        "CY": [
+            60,
+            60,
+            60,
+            60,
+            60,
+            60
+        ]
+    },
+    "L": {
+        "IMG": [
+            "cloth10301_walk_2_0.png",
+            "cloth10301_walk_2_1.png",
+            "cloth10301_walk_2_2.png",
+            "cloth10301_walk_2_3.png",
+            "cloth10301_walk_2_4.png",
+            "cloth10301_walk_2_5.png"
+        ],
+        "CX": [
+            35,
+            35,
+            35,
+            35,
+            35,
+            35
+        ],
+        "CY": [
+            60,
+            60,
+            60,
+            60,
+            60,
+            60
+        ]
+    },
+    "D": {
+        "IMG": [
+            "cloth10301_walk_3_0.png",
+            "cloth10301_walk_3_1.png",
+            "cloth10301_walk_3_2.png",
+            "cloth10301_walk_3_3.png",
+            "cloth10301_walk_3_4.png",
+            "cloth10301_walk_3_5.png"
+        ],
+        "CX": [
+            37,
+            37,
+            39,
+            37,
+            37,
+            39
+        ],
+        "CY": [
+            60,
+            60,
+            60,
+            60,
+            60,
+            60
+        ]
+    }
+}

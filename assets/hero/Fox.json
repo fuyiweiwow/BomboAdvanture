@@ -2,6 +2,19 @@
   "name": "Fox",
   "character": "Character10301",
   "icon_img": "icon_xq",
+  "colors": {
+    "Body": [0.85, 0.35, 0.1],
+    "Foot": [0.25, 0.15, 0.05],
+    "Leg": [0.7, 0.3, 0.08],
+    "Cloth": [0.15, 0.4, 0.7],
+    "Face": [1.0, 0.85, 0.6],
+    "Hair": [0.9, 0.4, 0.12],
+    "Ear": [0.85, 0.35, 0.1],
+    "Cap": [0.75, 0.55, 0.25],
+    "Thadorn": [0.55, 0.35, 0.15],
+    "Npack": [0.45, 0.3, 0.15],
+    "Fpack": [0.45, 0.3, 0.15]
+  },
   "decorations": {
     "disable_foot_and_leg": false,
     "bomb_skin": "bomb310",

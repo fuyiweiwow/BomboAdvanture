@@ -6,5 +6,5 @@
     "L": ["Thadorn", "Body", "Foot", "Leg", "Cloth", "Cladorn", "Npack", "Face", "Hair", "Eye_Eyeball", "Eye_Iris", "Eye_Pupil", "Eye_Highlight", "Ear", "Mouth", "Cap", "Fhadorn", "Fpack"],
     "D": ["Fpack", "Npack", "Body", "Foot", "Leg", "Cloth", "Cladorn", "Face", "Hair", "Eye_Eyeball", "Eye_Iris", "Eye_Pupil", "Eye_Highlight", "Ear", "Mouth", "Cap", "Fhadorn", "Thadorn"]
   },
-  "decoration_categories": ["Cap", "Hair", "Eye", "Eye_Eyeball", "Eye_Iris", "Eye_Pupil", "Eye_Highlight", "Ear", "Mouth", "Cladorn", "Fpack", "Npack", "Thadorn", "Footprint"]
+  "decoration_categories": ["Body", "Foot", "Leg", "Cloth", "Face", "Cap", "Hair", "Eye", "Eye_Eyeball", "Eye_Iris", "Eye_Pupil", "Eye_Highlight", "Ear", "Mouth", "Cladorn", "Fhadorn", "Fpack", "Npack", "Thadorn", "Footprint"]
 }

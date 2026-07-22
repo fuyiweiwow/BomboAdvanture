@@ -3,7 +3,8 @@ extends SceneTree
 
 # Generates placeholder colored-ellipse PNGs + frame JSONs for:
 #   1. Eye sub-components (eye_eyeball, eye_iris, eye_pupil, eye_highlight)
-#   2. Decoration PNGs referenced by existing frame JSONs but missing on disk
+#   2. Main eye decoration (eye33)
+#   3. All decoration categories whose frame JSONs reference missing PNGs
 #
 # Usage: godot --path <project> --script res://src/tools/generate_placeholders.gd
 # Then:  godot --path <project> --script res://src/tools/sprite_sheet_packer.gd
@@ -23,7 +24,7 @@ var _generated_count = 0
 func _initialize() -> void:
 	print("=== Placeholder Generator ===")
 	_generate_eye_sub_components()
-	_generate_missing_deco_pngs()
+	_generate_all_missing_deco_pngs()
 	print("Done. %d placeholder files generated." % _generated_count)
 	print("Now run: godot --path <project> --script res://src/tools/sprite_sheet_packer.gd")
 	quit()
@@ -116,32 +117,48 @@ func _generate_placeholder_set(sub_folder: String, ref: Dictionary) -> void:
 		print("  Frame JSON: %s" % json_path)
 
 
-func _generate_missing_deco_pngs() -> void:
-	var pairs = [
-		["cap", "cap719"],
-		["ear", "ear33"],
-		["mouth", "mouth33"],
-		["npack", "npack33"],
-		["thadorn", "thadorn33"],
-	]
-	for pair in pairs:
-		var cat = pair[0]
-		var json_name = pair[1]
-		var j = _load_json(FRAME_ROOT + cat + "/" + json_name + ".json")
-		if j == null:
-			continue
+func _generate_all_missing_deco_pngs() -> void:
+	var categories = ["ear", "mouth", "cladorn", "fpack", "thadorn", "eye"]
+	var category_colors = {
+		"ear": Color(0.9, 0.6, 0.3, 0.8),
+		"mouth": Color(0.9, 0.2, 0.2, 0.8),
+		"cladorn": Color(0.3, 0.7, 0.9, 0.8),
+		"fpack": Color(0.2, 0.8, 0.3, 0.8),
+		"thadorn": Color(0.7, 0.3, 0.9, 0.8),
+		"eye": Color(0.8, 0.8, 0.2, 0.8),
+	}
+
+	for cat in categories:
+		var frame_dir = FRAME_ROOT + cat + "/"
 		var img_dir = IMG_ROOT + cat + "/"
+
+		var dir = DirAccess.open(frame_dir)
+		if dir == null:
+			continue
+
+		var da = DirAccess.open("res://")
+		if da:
+			da.make_dir_recursive("assets/img/" + cat)
+
 		var collected = {}
-		for orient in j:
-			if not (orient is String):
+		for fname in dir.get_files():
+			if not fname.ends_with(".json"):
 				continue
-			if j[orient] is Dictionary and j[orient].has("IMG"):
-				for fn in j[orient]["IMG"]:
-					collected[str(fn)] = true
+			var j = _load_json(frame_dir + fname)
+			if j == null:
+				continue
+			for orient in j:
+				if not (orient is String):
+					continue
+				if j[orient] is Dictionary and j[orient].has("IMG"):
+					for fn in j[orient]["IMG"]:
+						collected[str(fn)] = true
+
+		var color = category_colors.get(cat, Color(0.5, 0.3, 0.8, 0.6))
 		for fn in collected:
 			var png_path = img_dir + fn
 			if not FileAccess.file_exists(png_path):
-				_generate_ellipse_png(png_path, 32, 32, Color(0.5, 0.3, 0.8, 0.6))
+				_generate_ellipse_png(png_path, 48, 48, color)
 				_generated_count += 1
 
 

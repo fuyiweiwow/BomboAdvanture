@@ -109,6 +109,58 @@ static func list_decorations(category: String) -> Array:
 	result.sort()
 	return result
 
+static func variant_has_texture(category: String, variant: String) -> bool:
+	var path = G.FRAME_ROOT + category + "/" + variant + ".json"
+	var j = Utils.load_json(path)
+	if j == null:
+		return false
+	var orents = ["STAND_D", "D", "STAND_R", "R", "STAND_U", "U", "STAND_L", "L"]
+	for o in orents:
+		if j.has(o) and j[o].has("IMG") and j[o]["IMG"].size() > 0:
+			var fn = str(j[o]["IMG"][0])
+			if AtlasLoader.get_texture(category, fn) != null:
+				return true
+			if ResourceLoader.exists(G.RES_IMG_ROOT + category + "/" + fn):
+				return true
+	return false
+
+static func list_valid_decorations(category: String) -> Array:
+	var all = list_decorations(category)
+	var result = []
+	for v in all:
+		if not variant_has_texture(category, v):
+			continue
+		if not _is_playable_variant(v):
+			continue
+		result.append(v)
+	return result
+
+# Filter out monster-only variants (IDs >= 15000) from decoration galleries
+static func _is_playable_variant(variant: String) -> bool:
+	var n = 0
+	for i in variant.length():
+		if variant[i].is_valid_int():
+			n = int(variant.substr(i))
+			break
+	return n < 15000
+
+static func get_variant_thumbnail(category: String, variant: String):
+	var path = G.FRAME_ROOT + category + "/" + variant + ".json"
+	var j = Utils.load_json(path)
+	if j == null:
+		return null
+	var orents = ["STAND_D", "D", "STAND_R", "R", "STAND_U", "U", "STAND_L", "L"]
+	for o in orents:
+		if j.has(o) and j[o].has("IMG") and j[o]["IMG"].size() > 0:
+			var fn = str(j[o]["IMG"][0])
+			var tex = AtlasLoader.get_texture(category, fn)
+			if tex != null:
+				return tex
+			tex = Utils.load_texture(G.RES_IMG_ROOT + category + "/" + fn)
+			if tex != null:
+				return tex
+	return null
+
 static func list_bomb_skins() -> Array:
 	var dir = DirAccess.open(G.FRAME_ROOT + "bomb/")
 	if dir == null:

@@ -15,6 +15,8 @@ const ICON_W = 64
 var _btn_up: Button
 var _btn_down: Button
 var _scroll_container: Node
+var _card_w: int = 680
+var _card_x: int = 60
 
 func _ready() -> void:
 	_update_size()
@@ -24,51 +26,71 @@ func _ready() -> void:
 	_build_scroll_buttons()
 	_scroll_container = Node.new()
 	add_child(_scroll_container)
-	_build_cards()
+	_rebuild_cards()
 
 func _update_size() -> void:
 	var win = get_viewport_rect().size
 	size = win
 	position = Vector2(0, 0)
+	_card_w = mini(680, int(win.x) - 80)
+	_card_x = maxi(20, (int(win.x) - _card_w) / 2)
+	_reposition_buttons(win.x)
+	_reposition_scroll_buttons()
+	_rebuild_cards()
+
+var _btn_back: Button
+var _btn_new_hero: Button
 
 func _build_back_button() -> void:
-	var btn = Button.new()
-	btn.text = "< Back"
-	btn.position = Vector2(20, 20)
-	btn.size = Vector2(100, 30)
-	btn.add_theme_font_size_override("font_size", 16)
-	btn.pressed.connect(_on_back)
-	add_child(btn)
+	_btn_back = Button.new()
+	_btn_back.text = "< Back"
+	_btn_back.size = Vector2(100, 30)
+	_btn_back.position = Vector2(20, 20)
+	_btn_back.add_theme_font_size_override("font_size", 16)
+	_btn_back.pressed.connect(_on_back)
+	add_child(_btn_back)
 
-	var btn_new = Button.new()
-	btn_new.text = "+ New"
-	btn_new.position = Vector2(660, 20)
-	btn_new.size = Vector2(80, 30)
-	btn_new.add_theme_font_size_override("font_size", 15)
-	btn_new.pressed.connect(_on_new_character)
-	add_child(btn_new)
+	_btn_new_hero = Button.new()
+	_btn_new_hero.text = "+ New"
+	_btn_new_hero.size = Vector2(80, 30)
+	_btn_new_hero.position = Vector2(120, 20)
+	_btn_new_hero.add_theme_font_size_override("font_size", 15)
+	_btn_new_hero.pressed.connect(_on_new_character)
+	add_child(_btn_new_hero)
+
+func _reposition_buttons(win_w: float) -> void:
+	if _btn_back != null:
+		_btn_back.position = Vector2(20, 20)
+	if _btn_new_hero != null:
+		_btn_new_hero.position = Vector2(win_w - 100, 20)
 
 func _build_scroll_buttons() -> void:
 	_btn_up = Button.new()
 	_btn_up.text = "^"
-	_btn_up.position = Vector2(380, 88)
 	_btn_up.size = Vector2(40, 20)
 	_btn_up.add_theme_font_size_override("font_size", 16)
 	_btn_up.pressed.connect(_on_scroll_up)
 	_btn_up.visible = false
 	add_child(_btn_up)
 
-	var down_y = CARD_Y_START + VISIBLE_COUNT * (CARD_H + CARD_GAP)
 	_btn_down = Button.new()
 	_btn_down.text = "v"
-	_btn_down.position = Vector2(380, down_y)
 	_btn_down.size = Vector2(40, 20)
 	_btn_down.add_theme_font_size_override("font_size", 16)
 	_btn_down.pressed.connect(_on_scroll_down)
 	_btn_down.visible = false
 	add_child(_btn_down)
+	_reposition_scroll_buttons()
 
-func _build_cards() -> void:
+func _reposition_scroll_buttons() -> void:
+	if _btn_up == null:
+		return
+	var arrow_x = _card_x + _card_w / 2 - 20
+	_btn_up.position = Vector2(arrow_x, CARD_Y_START - 22)
+	var down_y = CARD_Y_START + VISIBLE_COUNT * (CARD_H + CARD_GAP)
+	_btn_down.position = Vector2(arrow_x, down_y)
+
+func _rebuild_cards() -> void:
 	_clear_cards()
 	var start = _scroll_offset
 	var end = mini(start + VISIBLE_COUNT, _hero_list.size())
@@ -78,8 +100,10 @@ func _build_cards() -> void:
 		_card_nodes.append(card)
 		_scroll_container.add_child(card)
 
-	_btn_up.visible = _scroll_offset > 0
-	_btn_down.visible = _scroll_offset + VISIBLE_COUNT < _hero_list.size()
+	if _btn_up != null:
+		_btn_up.visible = _scroll_offset > 0
+	if _btn_down != null:
+		_btn_down.visible = _scroll_offset + VISIBLE_COUNT < _hero_list.size()
 
 func _clear_cards() -> void:
 	for c in _card_nodes:
@@ -89,8 +113,8 @@ func _clear_cards() -> void:
 
 func _make_card(hero: Dictionary, idx: int, y_pos: int) -> Control:
 	var card = Control.new()
-	card.position = Vector2(CARD_X, y_pos)
-	card.size = Vector2(CARD_W, CARD_H)
+	card.position = Vector2(_card_x, y_pos)
+	card.size = Vector2(_card_w, CARD_H)
 	card.mouse_filter = Control.MOUSE_FILTER_STOP
 	card.gui_input.connect(_on_card_click.bind(idx, card))
 	card.mouse_entered.connect(func(): _on_card_hover(card, true))
@@ -99,7 +123,7 @@ func _make_card(hero: Dictionary, idx: int, y_pos: int) -> Control:
 	var border = ColorRect.new()
 	border.color = Color(0.3, 0.32, 0.38)
 	border.position = Vector2(0, 0)
-	border.size = Vector2(CARD_W, CARD_H)
+	border.size = Vector2(_card_w, CARD_H)
 	border.mouse_filter = Control.MOUSE_FILTER_PASS
 	card.set_meta("border", border)
 	card.add_child(border)
@@ -107,7 +131,7 @@ func _make_card(hero: Dictionary, idx: int, y_pos: int) -> Control:
 	var inner = ColorRect.new()
 	inner.color = Color(0.17, 0.18, 0.22)
 	inner.position = Vector2(1, 1)
-	inner.size = Vector2(CARD_W - 2, CARD_H - 2)
+	inner.size = Vector2(_card_w - 2, CARD_H - 2)
 	inner.mouse_filter = Control.MOUSE_FILTER_PASS
 	card.add_child(inner)
 
@@ -143,10 +167,11 @@ func _make_card(hero: Dictionary, idx: int, y_pos: int) -> Control:
 	first.mouse_filter = Control.MOUSE_FILTER_PASS
 	card.add_child(first)
 
+	var label_w = _card_w - ICON_W - 34
 	var name_lb = Label.new()
 	name_lb.text = name_str
 	name_lb.position = Vector2(ICON_W + 24, 14)
-	name_lb.size = Vector2(350, 28)
+	name_lb.size = Vector2(mini(350, label_w), 28)
 	name_lb.add_theme_font_size_override("font_size", 20)
 	name_lb.add_theme_color_override("font_color", Color(0.9, 0.92, 0.95))
 	name_lb.mouse_filter = Control.MOUSE_FILTER_PASS
@@ -155,7 +180,7 @@ func _make_card(hero: Dictionary, idx: int, y_pos: int) -> Control:
 	if hero.get("_src", "origin") == "custom":
 		var tag = Label.new()
 		tag.text = "[custom]"
-		tag.position = Vector2(ICON_W + 24 + name_lb.get_minimum_size().x + 8, 16)
+		tag.position = Vector2(ICON_W + 24 + mini(name_lb.get_minimum_size().x, label_w) + 8, 16)
 		tag.size = Vector2(70, 22)
 		tag.add_theme_font_size_override("font_size", 12)
 		tag.add_theme_color_override("font_color", Color(0.3, 1, 0.3))
@@ -169,7 +194,7 @@ func _make_card(hero: Dictionary, idx: int, y_pos: int) -> Control:
 	var stat_lb = Label.new()
 	stat_lb.text = "HP: %s   Bomb: %s   Speed: %s" % [blood, bomb, speed]
 	stat_lb.position = Vector2(ICON_W + 24, 46)
-	stat_lb.size = Vector2(380, 22)
+	stat_lb.size = Vector2(mini(380, label_w), 22)
 	stat_lb.add_theme_font_size_override("font_size", 14)
 	stat_lb.add_theme_color_override("font_color", Color(0.6, 0.65, 0.7))
 	stat_lb.mouse_filter = Control.MOUSE_FILTER_PASS
@@ -198,12 +223,12 @@ func _on_card_hover(card: Control, hovered: bool) -> void:
 func _on_scroll_up() -> void:
 	if _scroll_offset > 0:
 		_scroll_offset -= 1
-		_build_cards()
+		_rebuild_cards()
 
 func _on_scroll_down() -> void:
 	if _scroll_offset + VISIBLE_COUNT < _hero_list.size():
 		_scroll_offset += 1
-		_build_cards()
+		_rebuild_cards()
 
 func _on_hero_selected(idx: int) -> void:
 	var hero = _hero_list[idx]
@@ -218,11 +243,11 @@ func _on_new_character() -> void:
 		"name": "NewHero",
 		"character": "CharacterBlank",
 		"icon_img": "",
-		"use_custom_textures": false,
 		"decorations": {
 			"disable_foot_and_leg": false, "bomb_skin": "bomb1",
+			"body": "body1", "foot": "foot1",
 			"cap": null, "hair": null, "eye": null, "ear": null, "mouth": null,
-			"cladorn": null, "fpack": null, "npack": null, "thadorn": null, "footprint": null,
+			"cladorn": null, "fhadorn": null, "fpack": null, "npack": null, "thadorn": null, "footprint": null,
 			"head_effect": null, "body_effect": null
 		},
 		"blood": 4500, "speed": 5.83333, "bomb": 7, "restore": 700,
