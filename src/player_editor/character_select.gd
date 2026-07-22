@@ -1,5 +1,7 @@
 extends Control
 
+const LEVEL_SESSION := preload("res://src/level/level_session.gd")
+
 var _hero_list: Array = []
 var _card_nodes: Array = []
 var _selected_idx: int = -1
@@ -326,9 +328,13 @@ func _start_game(dev: bool) -> void:
 	queue_free()
 
 func _on_back() -> void:
-	var ts = Control.new()
-	ts.set_script(preload("res://src/main/title_screen.gd"))
-	Game.add_child(ts)
+	if LEVEL_SESSION.has_selected_level():
+		var world_map = load("res://src/main/world_map.gd").new()
+		Game.add_child(world_map)
+	else:
+		var ts = Control.new()
+		ts.set_script(preload("res://src/main/title_screen.gd"))
+		Game.add_child(ts)
 	queue_free()
 
 func _draw() -> void:

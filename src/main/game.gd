@@ -2,6 +2,8 @@
 
 const Hero = preload("res://src/game/sprite/hero.gd")
 const Level = preload("res://src/game/level/level.gd")
+const LEVEL_SESSION = preload("res://src/level/level_session.gd")
+const LEVEL_PROGRESS_REPOSITORY = preload("res://src/level/level_progress_repository.gd")
 
 var cfg_json: Dictionary = {}
 var your_name: String = ""
@@ -12,6 +14,7 @@ var frame_rate: int = 90
 var display_frame_rate: bool = false
 var grid_damage_duration: int = 500
 var dev_mode: bool = false
+var selected_level_profile: Dictionary = {}
 
 var me = null
 var current_level = null
@@ -51,7 +54,7 @@ func _ready() -> void:
 	ui_node.set_script(preload("res://src/main/ui.gd"))
 	_ui_layer.add_child(ui_node)
 	add_child(_ui_layer)
-	_show_title()
+	call_deferred("_show_title")
 
 var _last_r_state: bool = false
 var _last_t_state: bool = false
@@ -59,7 +62,12 @@ var _last_t_state: bool = false
 func _show_title() -> void:
 	var ts = Control.new()
 	ts.set_script(preload("res://src/main/title_screen.gd"))
-	add_child(ts)
+	_add_screen(ts)
+
+func _add_screen(screen: Node) -> void:
+	if screen is Control:
+		(screen as Control).set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	get_tree().root.call_deferred("add_child", screen)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
@@ -90,12 +98,15 @@ func _return_to_title() -> void:
 	game_complete = false
 	selected_hero = ""
 	selected_color = ""
+	selected_level_profile = {}
+	LEVEL_SESSION.clear()
 	position = Vector2(0, 0)
 	_show_title()
 
 func start_game(dev: bool) -> void:
 	dev_mode = dev
 	map_set_at = -1
+	_apply_level_session()
 	proceed_game()
 
 func _process(_delta: float) -> void:
@@ -138,6 +149,18 @@ func init_game() -> void:
 	map_set_json = RM.get_json(G.GAME_ROOT + "map_set/" + map_set + ".json")
 	if map_set_json == null:
 		map_set_json = {}
+	selected_level_profile = {}
+
+func _apply_level_session() -> void:
+	selected_level_profile = {}
+	if not LEVEL_SESSION.has_selected_level():
+		return
+	var profile = LEVEL_SESSION.current_profile()
+	var map_name = str(profile.get("map_name", ""))
+	if map_name == "":
+		return
+	selected_level_profile = profile
+	map_set_json = {"maps": [map_name]}
 
 func init_keys(keys_root: Dictionary) -> void:
 	orientations = {K_RIGHT: "R", K_UP: "U", K_LEFT: "L", K_DOWN: "D"}
@@ -150,6 +173,8 @@ func preload_assets() -> void:
 	pass
 
 func proceed_game(is_reset = false) -> void:
+	if not map_set_json.has("maps") or not map_set_json["maps"] is Array or map_set_json["maps"].is_empty():
+		return _on_game_complete()
 	map_set_at += 1
 	if map_set_at >= map_set_json["maps"].size():
 		return _on_game_complete()
@@ -179,10 +204,20 @@ func set_level(your_name_: String, map_name: String, hero_name: String, characte
 func frame_step() -> void:
 	if current_level != null:
 		if current_level.finish_flag:
-			proceed_game()
+			if not selected_level_profile.is_empty():
+				_complete_selected_level()
+				_on_game_complete()
+			else:
+				proceed_game()
 		else:
 			current_level.update()
 	key_pressed()
+
+func _complete_selected_level() -> void:
+	var level_id = str(selected_level_profile.get("id", ""))
+	if level_id != "":
+		var progress_repository = LEVEL_PROGRESS_REPOSITORY.new()
+		progress_repository.complete_level(level_id)
 
 func key_pressed() -> void:
 	if me == null:
