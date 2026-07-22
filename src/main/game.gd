@@ -2,6 +2,7 @@
 
 const Hero = preload("res://src/game/sprite/hero.gd")
 const Level = preload("res://src/game/level/level.gd")
+const LevelData = preload("res://src/level_editor/level_data.gd")
 
 var cfg_json: Dictionary = {}
 var your_name: String = ""
@@ -18,6 +19,8 @@ var current_level = null
 var game_complete: bool = false
 var selected_hero: String = ""
 var selected_color: String = ""
+var selected_level: String = ""
+var level_json: Dictionary = {}
 
 var _ui_layer: CanvasLayer = null
 
@@ -90,6 +93,8 @@ func _return_to_title() -> void:
 	game_complete = false
 	selected_hero = ""
 	selected_color = ""
+	selected_level = ""
+	level_json = {}
 	position = Vector2(0, 0)
 	_show_title()
 
@@ -151,12 +156,32 @@ func preload_assets() -> void:
 
 func proceed_game(is_reset = false) -> void:
 	map_set_at += 1
-	if map_set_at >= map_set_json["maps"].size():
-		return _on_game_complete()
-	var map_name: String = str(map_set_json["maps"][map_set_at])
-	var hero_name: String = selected_hero if selected_hero != "" else str(cfg_json["your_hero"])
-	var character_color: String = selected_color if selected_color != "" else str(cfg_json["your_character_color"])
-	set_level(your_name, map_name, hero_name, character_color, is_reset)
+	if selected_level != "":
+		if level_json.is_empty():
+			level_json = LevelData.load_level(selected_level)
+		if map_set_at >= level_json.get("maps", []).size():
+			return _on_game_complete()
+		var map_entry = level_json["maps"][map_set_at]
+		var map_name: String
+		if map_entry.get("type") == "predefined":
+			map_name = str(map_entry.get("map_id", ""))
+		else:
+			map_name = _generate_procedural_map(map_entry)
+		if map_name == "":
+			return _on_game_complete()
+		var hero_name: String = selected_hero if selected_hero != "" else str(cfg_json["your_hero"])
+		var character_color: String = selected_color if selected_color != "" else str(cfg_json["your_character_color"])
+		set_level(your_name, map_name, hero_name, character_color, is_reset)
+	else:
+		if map_set_at >= map_set_json["maps"].size():
+			return _on_game_complete()
+		var map_name: String = str(map_set_json["maps"][map_set_at])
+		var hero_name: String = selected_hero if selected_hero != "" else str(cfg_json["your_hero"])
+		var character_color: String = selected_color if selected_color != "" else str(cfg_json["your_character_color"])
+		set_level(your_name, map_name, hero_name, character_color, is_reset)
+
+func _generate_procedural_map(map_entry: Dictionary) -> String:
+	return ""
 
 func _on_game_complete() -> void:
 	game_complete = true
