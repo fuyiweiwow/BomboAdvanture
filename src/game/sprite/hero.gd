@@ -46,12 +46,8 @@ func load_hero(hero_name: String) -> void:
 		skill_remains.append(int(s["max"]))
 		skill_params.append(s.get("params", []))
 	var decorations = load_decorations()
-	var use_custom = hero_json.get("use_custom_textures", false)
-	var custom_textures = {}
-	if use_custom:
-		var offsets = hero_json.get("custom_texture_offsets", {})
-		custom_textures = HeroData.build_custom_textures_dict(hero_name, offsets)
-	character = load_character(str(hero_json.get("character", "")), color, decorations, false, custom_textures)
+	var component_colors: Dictionary = _build_component_colors()
+	character = load_character(str(hero_json.get("character", "")), color, decorations, false, {}, component_colors)
 	if hero_json["decorations"].get("bomb_effect", null) != null:
 		bomb_decoration = str(hero_json["decorations"]["bomb_effect"])
 
@@ -75,6 +71,20 @@ static func _capitalize_key(component: String) -> String:
 	for i in parts.size():
 		parts[i] = parts[i].capitalize()
 	return "_".join(parts)
+
+func _build_component_colors() -> Dictionary:
+	var result: Dictionary = {}
+	var colors_data = hero_json.get("colors", {})
+	for comp_name in colors_data:
+		var val = colors_data[comp_name]
+		if val is Array:
+			if val.size() >= 4:
+				result[comp_name] = Color(val[0], val[1], val[2], val[3])
+			else:
+				result[comp_name] = Color(val[0], val[1], val[2])
+		elif val is Color:
+			result[comp_name] = val
+	return result
 
 func set_bomb() -> void:
 	if state != NORMAL:

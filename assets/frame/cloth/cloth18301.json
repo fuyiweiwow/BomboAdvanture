@@ -1,0 +1,211 @@
+{
+    "NAME": "cloth18301",
+    "STAND_R": {
+        "IMG": [
+            "cloth18301_stand_0_0.png",
+            "cloth18301_stand_0_1.png",
+            "cloth18301_stand_0_2.png",
+            "cloth18301_stand_0_3.png",
+            "cloth18301_stand_0_4.png",
+            "cloth18301_stand_0_5.png"
+        ],
+        "CX": [
+            26,
+            20,
+            25,
+            26,
+            20,
+            25
+        ],
+        "CY": [
+            32,
+            33,
+            31,
+            32,
+            33,
+            31
+        ]
+    },
+    "STAND_U": {
+        "IMG": [
+            "cloth18301_stand_0_0.png",
+            "cloth18301_stand_0_1.png",
+            "cloth18301_stand_0_2.png",
+            "cloth18301_stand_0_3.png",
+            "cloth18301_stand_0_4.png",
+            "cloth18301_stand_0_5.png"
+        ],
+        "CX": [
+            26,
+            20,
+            25,
+            26,
+            20,
+            25
+        ],
+        "CY": [
+            32,
+            33,
+            31,
+            32,
+            33,
+            31
+        ]
+    },
+    "STAND_L": {
+        "IMG": [
+            "cloth18301_stand_0_0.png",
+            "cloth18301_stand_0_1.png",
+            "cloth18301_stand_0_2.png",
+            "cloth18301_stand_0_3.png",
+            "cloth18301_stand_0_4.png",
+            "cloth18301_stand_0_5.png"
+        ],
+        "CX": [
+            26,
+            20,
+            25,
+            26,
+            20,
+            25
+        ],
+        "CY": [
+            32,
+            33,
+            31,
+            32,
+            33,
+            31
+        ]
+    },
+    "STAND_D": {
+        "IMG": [
+            "cloth18301_stand_0_0.png",
+            "cloth18301_stand_0_1.png",
+            "cloth18301_stand_0_2.png",
+            "cloth18301_stand_0_3.png",
+            "cloth18301_stand_0_4.png",
+            "cloth18301_stand_0_5.png"
+        ],
+        "CX": [
+            26,
+            20,
+            25,
+            26,
+            20,
+            25
+        ],
+        "CY": [
+            32,
+            33,
+            31,
+            32,
+            33,
+            31
+        ]
+    },
+    "R": {
+        "IMG": [
+            "cloth18301_walk_0_0.png",
+            "cloth18301_walk_0_1.png",
+            "cloth18301_walk_0_2.png",
+            "cloth18301_walk_0_3.png",
+            "cloth18301_walk_0_4.png",
+            "cloth18301_walk_0_5.png"
+        ],
+        "CX": [
+            25,
+            23,
+            26,
+            25,
+            23,
+            26
+        ],
+        "CY": [
+            32,
+            33,
+            31,
+            32,
+            33,
+            31
+        ]
+    },
+    "U": {
+        "IMG": [
+            "cloth18301_walk_1_0.png",
+            "cloth18301_walk_1_1.png",
+            "cloth18301_walk_1_2.png",
+            "cloth18301_walk_1_3.png",
+            "cloth18301_walk_1_4.png",
+            "cloth18301_walk_1_5.png"
+        ],
+        "CX": [
+            26,
+            20,
+            25,
+            26,
+            20,
+            25
+        ],
+        "CY": [
+            32,
+            33,
+            31,
+            32,
+            33,
+            31
+        ]
+    },
+    "L": {
+        "IMG": [
+            "cloth18301_walk_2_0.png",
+            "cloth18301_walk_2_1.png",
+            "cloth18301_walk_2_2.png",
+            "cloth18301_walk_2_3.png",
+            "cloth18301_walk_2_4.png",
+            "cloth18301_walk_2_5.png"
+        ],
+        "CX": [
+            26,
+            20,
+            25,
+            26,
+            20,
+            25
+        ],
+        "CY": [
+            32,
+            33,
+            31,
+            32,
+            33,
+            31
+        ]
+    },
+    "D": {
+        "IMG": [
+            "cloth18301_walk_3_0.png",
+            "cloth18301_walk_3_1.png",
+            "cloth18301_walk_3_2.png",
+            "cloth18301_walk_3_3.png",
+            "cloth18301_walk_3_4.png",
+            "cloth18301_walk_3_5.png"
+        ],
+        "CX": [
+            26,
+            20,
+            25,
+            26,
+            20,
+            25
+        ],
+        "CY": [
+            32,
+            33,
+            31,
+            32,
+            33,
+            31
+        ]
+    }
+}

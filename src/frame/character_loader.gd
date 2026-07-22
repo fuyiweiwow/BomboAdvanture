@@ -24,13 +24,19 @@ static var _cache = {}
 #
 # `color` is kept for API compatibility but no longer used internally —
 # tinting is handled at draw time by the caller via modulate Color.
-static func get_character(character_name: String, color: Color, decorations: Dictionary, is_ghost = false, custom_textures: Dictionary = {}) -> Dictionary:
+# `component_colors` is an optional map of component_name -> Color for
+# per-part tinting; stored under result["COLORS"].
+static func get_character(character_name: String, color: Color, decorations: Dictionary, is_ghost = false, custom_textures: Dictionary = {}, component_colors: Dictionary = {}) -> Dictionary:
 	if not custom_textures.is_empty():
-		return _build_custom_character(custom_textures)
+		var r = _build_custom_character(custom_textures)
+		r["COLORS"] = component_colors
+		return r
 
-	var key = character_name
-	if _cache.has(key):
-		return _cache[key]
+	if decorations.is_empty() and custom_textures.is_empty():
+		if _cache.has(character_name):
+			var r = _cache[character_name].duplicate()
+			r["COLORS"] = component_colors
+			return r
 
 	var path = G.FRAME_ROOT + "character/" + character_name + ".json"
 	var j = Utils.load_json(path)
@@ -39,7 +45,11 @@ static func get_character(character_name: String, color: Color, decorations: Dic
 		return {}
 
 	var result = load_color(j, decorations)
-	_cache[key] = result
+	result["COLORS"] = component_colors
+
+	if decorations.is_empty() and custom_textures.is_empty():
+		_cache[character_name] = result
+
 	return result
 
 # Build a minimal character dictionary from custom imported textures.
@@ -93,7 +103,26 @@ static func load_color(character_json: Dictionary, decorations: Dictionary) -> D
 				a_color[orient][component] = load_component_frames(decorations[component][orient], component)
 		if decorations.has("Eye"):
 			_expand_eye_sub_components(a_color, orient)
+		_fill_body_defaults(a_color, orient)
 	return a_color
+
+# Fill in default body parts for any component still missing after
+# character JSON + decorations.  This ensures all body parts render
+# even for characters that lack the component in their original JSON.
+static func _fill_body_defaults(a_color: Dictionary, orient: String) -> void:
+	var defaults = {"Body": "body1", "Foot": "foot1"}
+	for component in LayerConfig.decoration_categories:
+		if a_color[orient].has(component) and not a_color[orient][component].is_empty():
+			continue
+		if not defaults.has(component):
+			continue
+		var cat_lower = component.to_lower()
+		var default_name = defaults[component]
+		var default_path = G.FRAME_ROOT + cat_lower + "/" + default_name + ".json"
+		var default_j = Utils.load_json(default_path)
+		if default_j == null or not default_j.has(orient):
+			continue
+		a_color[orient][component] = load_component_frames(default_j[orient], component)
 
 # When "Eye" decoration is present, expand it into sub-components
 # (Eye_Eyeball → Eye_Highlight) using their own frame JSONs.

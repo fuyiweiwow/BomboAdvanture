@@ -174,6 +174,7 @@ func _draw() -> void:
 		if _character.has(key):
 			var cx = _character[key].get("Cx", 0)
 			var cy = _character[key].get("Cy", 0)
+			var comp_colors: Dictionary = _character.get("COLORS", {})
 			for component in LayerConfig.draw_order[_orient]:
 				if not _character[key].has(component):
 					continue
@@ -184,7 +185,7 @@ func _draw() -> void:
 				if idx >= frames.size():
 					idx = 0
 				var fr: Frame = frames[idx]
-				fr.draw(self, cx, cy, _tint_color)
+				fr.draw(self, cx, cy, comp_colors.get(component, _tint_color))
 
 	if _bomb_active and _bomb_frames.size() > 0:
 		var idx = clampi(_bomb_frame_idx, 0, _bomb_frames.size() - 1)

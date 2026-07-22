@@ -25,4 +25,4 @@ static func _default_draw_order() -> Dictionary:
 	}
 
 static func _default_decoration_categories() -> Array:
-	return ["Cap", "Hair", "Eye", "Eye_Eyeball", "Eye_Iris", "Eye_Pupil", "Eye_Highlight", "Ear", "Mouth", "Cladorn", "Fpack", "Npack", "Thadorn", "Footprint"]
+	return ["Body", "Foot", "Leg", "Cloth", "Face", "Cap", "Hair", "Eye", "Eye_Eyeball", "Eye_Iris", "Eye_Pupil", "Eye_Highlight", "Ear", "Mouth", "Cladorn", "Fhadorn", "Fpack", "Npack", "Thadorn", "Footprint"]

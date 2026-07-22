@@ -1,0 +1,151 @@
+{
+    "NAME": "hair10201",
+    "STAND_R": {
+        "IMG": [
+            "hair10201_stand_0_0.png"
+        ],
+        "CX": [
+            18
+        ],
+        "CY": [
+            24
+        ]
+    },
+    "STAND_U": {
+        "IMG": [
+            "hair10201_stand_1_0.png"
+        ],
+        "CX": [
+            28
+        ],
+        "CY": [
+            23
+        ]
+    },
+    "STAND_L": {
+        "IMG": [
+            "hair10201_stand_2_0.png"
+        ],
+        "CX": [
+            32
+        ],
+        "CY": [
+            24
+        ]
+    },
+    "STAND_D": {
+        "IMG": [
+            "hair10201_stand_3_0.png"
+        ],
+        "CX": [
+            28
+        ],
+        "CY": [
+            23
+        ]
+    },
+    "R": {
+        "IMG": [
+            "hair10201_walk_0_0.png",
+            "hair10201_walk_0_1.png",
+            "hair10201_walk_0_2.png",
+            "hair10201_walk_0_3.png",
+            "hair10201_walk_0_4.png",
+            "hair10201_walk_0_5.png"
+        ],
+        "CX": [
+            18,
+            19,
+            20,
+            18,
+            18,
+            18
+        ],
+        "CY": [
+            24,
+            24,
+            24,
+            24,
+            24,
+            24
+        ]
+    },
+    "U": {
+        "IMG": [
+            "hair10201_walk_1_0.png",
+            "hair10201_walk_1_1.png",
+            "hair10201_walk_1_2.png",
+            "hair10201_walk_1_3.png",
+            "hair10201_walk_1_4.png",
+            "hair10201_walk_1_5.png"
+        ],
+        "CX": [
+            28,
+            27,
+            26,
+            28,
+            29,
+            30
+        ],
+        "CY": [
+            23,
+            23,
+            23,
+            23,
+            23,
+            23
+        ]
+    },
+    "L": {
+        "IMG": [
+            "hair10201_walk_2_0.png",
+            "hair10201_walk_2_1.png",
+            "hair10201_walk_2_2.png",
+            "hair10201_walk_2_3.png",
+            "hair10201_walk_2_4.png",
+            "hair10201_walk_2_5.png"
+        ],
+        "CX": [
+            32,
+            32,
+            32,
+            32,
+            32,
+            32
+        ],
+        "CY": [
+            24,
+            24,
+            24,
+            24,
+            24,
+            24
+        ]
+    },
+    "D": {
+        "IMG": [
+            "hair10201_walk_3_0.png",
+            "hair10201_walk_3_1.png",
+            "hair10201_walk_3_2.png",
+            "hair10201_walk_3_3.png",
+            "hair10201_walk_3_4.png",
+            "hair10201_walk_3_5.png"
+        ],
+        "CX": [
+            28,
+            28,
+            28,
+            28,
+            28,
+            28
+        ],
+        "CY": [
+            23,
+            23,
+            23,
+            23,
+            23,
+            23
+        ]
+    }
+}

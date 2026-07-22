@@ -1,0 +1,151 @@
+{
+    "NAME": "face10101",
+    "STAND_R": {
+        "IMG": [
+            "face10101_stand_0_0.png"
+        ],
+        "CX": [
+            33
+        ],
+        "CY": [
+            29
+        ]
+    },
+    "STAND_U": {
+        "IMG": [
+            "face10101_stand_1_0.png"
+        ],
+        "CX": [
+            32
+        ],
+        "CY": [
+            28
+        ]
+    },
+    "STAND_L": {
+        "IMG": [
+            "face10101_stand_2_0.png"
+        ],
+        "CX": [
+            34
+        ],
+        "CY": [
+            29
+        ]
+    },
+    "STAND_D": {
+        "IMG": [
+            "face10101_stand_3_0.png"
+        ],
+        "CX": [
+            32
+        ],
+        "CY": [
+            28
+        ]
+    },
+    "R": {
+        "IMG": [
+            "face10101_walk_0_0.png",
+            "face10101_walk_0_1.png",
+            "face10101_walk_0_2.png",
+            "face10101_walk_0_3.png",
+            "face10101_walk_0_4.png",
+            "face10101_walk_0_5.png"
+        ],
+        "CX": [
+            33,
+            33,
+            33,
+            33,
+            33,
+            33
+        ],
+        "CY": [
+            29,
+            29,
+            29,
+            29,
+            29,
+            29
+        ]
+    },
+    "U": {
+        "IMG": [
+            "face10101_walk_1_0.png",
+            "face10101_walk_1_1.png",
+            "face10101_walk_1_2.png",
+            "face10101_walk_1_3.png",
+            "face10101_walk_1_4.png",
+            "face10101_walk_1_5.png"
+        ],
+        "CX": [
+            32,
+            33,
+            34,
+            32,
+            32,
+            33
+        ],
+        "CY": [
+            28,
+            28,
+            28,
+            28,
+            28,
+            28
+        ]
+    },
+    "L": {
+        "IMG": [
+            "face10101_walk_2_0.png",
+            "face10101_walk_2_1.png",
+            "face10101_walk_2_2.png",
+            "face10101_walk_2_3.png",
+            "face10101_walk_2_4.png",
+            "face10101_walk_2_5.png"
+        ],
+        "CX": [
+            34,
+            34,
+            34,
+            34,
+            34,
+            34
+        ],
+        "CY": [
+            29,
+            29,
+            29,
+            29,
+            29,
+            29
+        ]
+    },
+    "D": {
+        "IMG": [
+            "face10101_walk_3_0.png",
+            "face10101_walk_3_1.png",
+            "face10101_walk_3_2.png",
+            "face10101_walk_3_3.png",
+            "face10101_walk_3_4.png",
+            "face10101_walk_3_5.png"
+        ],
+        "CX": [
+            32,
+            33,
+            34,
+            32,
+            32,
+            33
+        ],
+        "CY": [
+            28,
+            28,
+            28,
+            28,
+            28,
+            28
+        ]
+    }
+}
