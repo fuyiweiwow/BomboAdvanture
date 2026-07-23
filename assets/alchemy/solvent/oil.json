@@ -1,0 +1,7 @@
+{
+	"id": "oil",
+	"name": "Oil",
+	"chs_name": "炼油",
+	"concentration_dilution": 0.8,
+	"element_affinity": { "fire": 0.3 }
+}

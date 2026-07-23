@@ -1,0 +1,7 @@
+{
+	"id": "water",
+	"name": "Water",
+	"chs_name": "清水",
+	"concentration_dilution": 0.5,
+	"element_affinity": {}
+}

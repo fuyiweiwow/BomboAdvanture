@@ -1,0 +1,22 @@
+{
+	"id": "fire_flower",
+	"name": "Fire Flower",
+	"chs_name": "火花",
+	"type": "material",
+	"rarity": "uncommon",
+	"description": "蕴含火元素的花朵",
+	"frame": "item1",
+	"buy_price": 30,
+	"sell_price": 15,
+	"stackable": true,
+	"max_stack": 99,
+	"effects": {},
+	"color": [1, 0.5, 0],
+	"alchemy": {
+		"grindable": true,
+		"max_grind": 4,
+		"element": { "fire": 0.8 },
+		"solvent_compat": ["water", "oil"],
+		"rarity_level": 2
+	}
+}
