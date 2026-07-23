@@ -6,64 +6,61 @@ var _btn_map: Button
 var _btn_level: Button
 
 func _ready() -> void:
-	_btn_select = Button.new()
-	_btn_select.text = "Start Game"
-	_btn_select.size = Vector2(240, 44)
-	_btn_select.add_theme_font_size_override("font_size", 18)
-	_btn_select.pressed.connect(_on_select)
-	add_child(_btn_select)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	mouse_filter = MOUSE_FILTER_STOP
+	_build()
 
-	_btn_char = Button.new()
-	_btn_char.text = "Character Editor"
-	_btn_char.size = Vector2(240, 44)
-	_btn_char.add_theme_font_size_override("font_size", 18)
-	_btn_char.pressed.connect(_on_char_editor)
-	add_child(_btn_char)
+func _build() -> void:
+	var bg = ColorRect.new()
+	bg.color = Color(0.035, 0.055, 0.075)
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	bg.mouse_filter = MOUSE_FILTER_IGNORE
+	add_child(bg)
 
-	_btn_level = Button.new()
-	_btn_level.text = "Level Editor"
-	_btn_level.size = Vector2(240, 44)
-	_btn_level.add_theme_font_size_override("font_size", 18)
-	_btn_level.pressed.connect(_on_level_editor)
-	add_child(_btn_level)
+	var center = CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(center)
 
-	_btn_map = Button.new()
-	_btn_map.text = "Map Editor"
-	_btn_map.size = Vector2(240, 50)
-	_btn_map.add_theme_font_size_override("font_size", 20)
-	_btn_map.pressed.connect(_on_map_editor)
-	add_child(_btn_map)
+	var panel = VBoxContainer.new()
+	panel.custom_minimum_size = Vector2(320, 300)
+	panel.add_theme_constant_override("separation", 14)
+	center.add_child(panel)
 
-	_reposition()
-	get_viewport().size_changed.connect(_reposition)
+	var title = Label.new()
+	title.text = "BOMBO ADVENTURE"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 34)
+	title.add_theme_color_override("font_color", Color(1.0, 0.80, 0.26))
+	panel.add_child(title)
 
-func _reposition() -> void:
-	var win = get_viewport_rect().size
-	var cx = win.x * 0.5
-	var cy = win.y * 0.5
-	_btn_select.position = Vector2(cx - 120, cy - 60)
-	_btn_char.position = Vector2(cx - 120, cy - 10)
-	_btn_level.position = Vector2(cx - 120, cy + 40)
-	_btn_map.position = Vector2(cx - 120, cy + 100)
+	panel.add_child(_spacer(10))
+	panel.add_child(_make_menu_button("Start Game", _on_select))
+	panel.add_child(_make_menu_button("Character Editor", _on_char_editor))
+	panel.add_child(_make_menu_button("Level Editor", _on_level_editor))
+	panel.add_child(_make_menu_button("Map Editor", _on_map_editor))
 
-func _draw() -> void:
-	var win = get_viewport_rect().size
-	draw_rect(Rect2(0, 0, win.x, win.y), Color(0.1, 0.1, 0.15))
-	var title = "QQTPVE"
-	var font = ThemeDB.fallback_font
-	if font != null:
-		var ts = 36
-		var tw = font.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, ts).x
-		draw_string(font, Vector2((win.x - tw) * 0.5, win.y * 0.5 - 100), title, HORIZONTAL_ALIGNMENT_LEFT, -1, ts, Color(0.8, 0.9, 1.0))
+func _make_menu_button(text: String, fn: Callable) -> Button:
+	var button = Button.new()
+	button.text = text
+	button.custom_minimum_size = Vector2(280, 48)
+	button.size_flags_horizontal = SIZE_EXPAND_FILL
+	button.add_theme_font_size_override("font_size", 19)
+	button.pressed.connect(fn)
+	return button
+
+func _spacer(height: float) -> Control:
+	var spacer = Control.new()
+	spacer.custom_minimum_size.y = height
+	return spacer
 
 func _on_select() -> void:
-	var sel = load("res://src/player_editor/character_select.gd").new()
-	Game.add_child(sel)
+	var world_map = load("res://src/main/world_map.gd").new()
+	_add_screen(world_map)
 	queue_free()
 
 func _on_char_editor() -> void:
 	var list = load("res://src/player_editor/character_list.gd").new()
-	Game.add_child(list)
+	_add_screen(list)
 	queue_free()
 
 func _on_level_editor() -> void:
@@ -73,5 +70,10 @@ func _on_level_editor() -> void:
 
 func _on_map_editor() -> void:
 	var editor = load("res://src/editor/map_editor.gd").new()
-	get_tree().root.add_child(editor)
+	_add_screen(editor)
 	queue_free()
+
+func _add_screen(node: Node) -> void:
+	if node is Control:
+		(node as Control).set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	get_tree().root.add_child(node)
