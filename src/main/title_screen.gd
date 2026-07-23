@@ -22,7 +22,7 @@ func _build() -> void:
 	add_child(center)
 
 	var panel = VBoxContainer.new()
-	panel.custom_minimum_size = Vector2(320, 500)
+	panel.custom_minimum_size = Vector2(320, 550)
 	panel.add_theme_constant_override("separation", 14)
 	center.add_child(panel)
 
@@ -43,6 +43,7 @@ func _build() -> void:
 	panel.add_child(_make_menu_button("Recipe Editor", _on_recipe_editor))
 	panel.add_child(_make_menu_button("Alchemy Test", _on_alchemy_test))
 	panel.add_child(_make_menu_button("Combat Sandbox", _on_combat_sandbox))
+	panel.add_child(_make_menu_button("Tournament", _on_tournament))
 	panel.add_child(_spacer(6))
 	panel.add_child(_make_menu_button("Level Editor", _on_level_editor))
 	panel.add_child(_make_menu_button("Map Editor", _on_map_editor))
@@ -109,6 +110,11 @@ func _on_alchemy_test() -> void:
 func _on_combat_sandbox() -> void:
 	var sb = load("res://src/alchemy/combat_sandbox.gd").new()
 	_add_screen(sb)
+	queue_free()
+
+func _on_tournament() -> void:
+	var t = load("res://src/tournament/tournament.gd").new()
+	_add_screen(t)
 	queue_free()
 
 func _add_screen(node: Node) -> void:
