@@ -1,0 +1,41 @@
+{
+	"basic": {
+		"name": "sandbox_arena",
+		"width": 21,
+		"height": 15,
+		"scroll": [0, 0],
+		"music": "",
+		"begin": [1, 1],
+		"finish": [-1, -1]
+	},
+	"floors": [
+		{
+			"type": "exploration", "name": "elem220",
+			"squares": [ {"x1": 0, "y1": 0, "x2": 20, "y2": 14} ]
+		}
+	],
+	"floor": [],
+	"obstacles": [
+		{
+			"type": "exploration", "name": "elem212",
+			"squares": [
+				{"x1": 0, "y1": 0, "x2": 20, "y2": 0},
+				{"x1": 0, "y1": 14, "x2": 20, "y2": 14},
+				{"x1": 0, "y1": 0, "x2": 0, "y2": 14},
+				{"x1": 20, "y1": 0, "x2": 20, "y2": 14}
+			]
+		}
+	],
+	"obstacle": [
+		{
+			"type": "exploration", "name": "elem213",
+			"points": []
+		}
+	],
+	"districts": [
+		{
+			"squares": [{"x1": 0, "y1": 0, "x2": 20, "y2": 14}],
+			"npcs": []
+		}
+	]
+}
