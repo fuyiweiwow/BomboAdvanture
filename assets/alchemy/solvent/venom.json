@@ -1,0 +1,7 @@
+{
+	"id": "venom",
+	"name": "Venom Extract",
+	"chs_name": "毒液精华",
+	"concentration_dilution": 0.6,
+	"element_affinity": { "poison": 0.5 }
+}

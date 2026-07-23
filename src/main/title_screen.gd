@@ -22,7 +22,7 @@ func _build() -> void:
 	add_child(center)
 
 	var panel = VBoxContainer.new()
-	panel.custom_minimum_size = Vector2(320, 350)
+	panel.custom_minimum_size = Vector2(320, 500)
 	panel.add_theme_constant_override("separation", 14)
 	center.add_child(panel)
 
@@ -38,6 +38,11 @@ func _build() -> void:
 	panel.add_child(_make_menu_button("Character Editor", _on_char_editor))
 	panel.add_child(_make_menu_button("Monster Editor", _on_monster_editor))
 	panel.add_child(_make_menu_button("Item Editor", _on_item_editor))
+	panel.add_child(_spacer(6))
+	panel.add_child(_make_menu_button("Alchemy Lab", _on_alchemy))
+	panel.add_child(_make_menu_button("Recipe Editor", _on_recipe_editor))
+	panel.add_child(_make_menu_button("Alchemy Test", _on_alchemy_test))
+	panel.add_child(_spacer(6))
 	panel.add_child(_make_menu_button("Level Editor", _on_level_editor))
 	panel.add_child(_make_menu_button("Map Editor", _on_map_editor))
 
@@ -83,6 +88,21 @@ func _on_item_editor() -> void:
 func _on_map_editor() -> void:
 	var editor = load("res://src/editor/map_editor.gd").new()
 	_add_screen(editor)
+	queue_free()
+
+func _on_alchemy() -> void:
+	var lab = load("res://src/alchemy/alchemy_lab.gd").new()
+	_add_screen(lab)
+	queue_free()
+
+func _on_recipe_editor() -> void:
+	var editor = load("res://src/alchemy/recipe_editor/recipe_editor.gd").new()
+	_add_screen(editor)
+	queue_free()
+
+func _on_alchemy_test() -> void:
+	var test = load("res://src/alchemy/alchemy_test.gd").new()
+	_add_screen(test)
 	queue_free()
 
 func _add_screen(node: Node) -> void:

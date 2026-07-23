@@ -11,5 +11,12 @@
 	"stackable": true,
 	"max_stack": 99,
 	"effects": {},
-	"color": [0.4, 0.2, 0.4]
+	"color": [0.4, 0.2, 0.4],
+	"alchemy": {
+		"grindable": true,
+		"max_grind": 3,
+		"element": { "dark": 0.5, "air": 0.2 },
+		"solvent_compat": ["oil", "venom"],
+		"rarity_level": 2
+	}
 }

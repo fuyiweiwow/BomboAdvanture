@@ -1,0 +1,22 @@
+{
+	"id": "ice_crystal",
+	"name": "Ice Crystal",
+	"chs_name": "冰晶",
+	"type": "material",
+	"rarity": "uncommon",
+	"description": "蕴含冰元素的结晶",
+	"frame": "item3",
+	"buy_price": 30,
+	"sell_price": 15,
+	"stackable": true,
+	"max_stack": 99,
+	"effects": {},
+	"color": [0.3, 0.7, 1],
+	"alchemy": {
+		"grindable": true,
+		"max_grind": 6,
+		"element": { "ice": 0.7, "water": 0.2 },
+		"solvent_compat": ["water"],
+		"rarity_level": 2
+	}
+}
