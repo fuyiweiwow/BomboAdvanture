@@ -294,8 +294,16 @@ func _test_recipe(recipe_id: String) -> void:
 		grinds[did] = target_g
 		total_grind += target_g
 
-	var solvent = recipe.get("condition", {}).get("solvent", "water")
-	var brew_result = DATA.brew(materials, solvent, grinds, _recipes, 5)
+	var solvent_cond = recipe.get("condition", {}).get("solvent", { "water": { "min_amount": 0.1 } })
+	var solvents_arr = []
+	if solvent_cond is Dictionary:
+		for sid in solvent_cond:
+			var req = solvent_cond[sid]
+			var amt = req.get("min_amount", 0.3) if req is Dictionary else 0.3
+			solvents_arr.append({ "id": sid, "amount": amt })
+	elif solvent_cond is String:
+		solvents_arr.append({ "id": solvent_cond, "amount": 1.0 })
+	var brew_result = DATA.brew(materials, solvents_arr, grinds, _recipes, 5)
 
 	var success = brew_result.get("success", false)
 	var reason = ""

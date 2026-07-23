@@ -65,8 +65,8 @@ func _init_sandbox() -> void:
 	_hero.gold = 0
 	_level = Level.new("Sandbox", "sandbox_arena", _hero, 500)
 	Game.me = _hero
-	# Sandbox owns the level loop; prevent Game._process from double-updating
-	Game.current_level = null
+	Game.current_level = _level
+	Game.sandbox_mode = true
 	_paused = true
 	_config_open = true
 	_update_hero_stat_ui()
@@ -527,7 +527,7 @@ func _place_breakables() -> void:
 	if obs == null: return
 	for x in range(2, 19, 2):
 		for y in range(2, 13, 2):
-			var key = str(x) + "," + str(y)
+			var key = Vector2i(x, y)
 			if _level.obstacle_instances.has(key):
 				continue
 			ObstacleInstance.new(x, y, _level.obstacle_instances, obs)
@@ -538,7 +538,7 @@ func _clear_breakables() -> void:
 	if _level == null: return
 	for key in _level.obstacle_instances.keys():
 		var oi = _level.obstacle_instances[key]
-		if oi.obstacle_json.get("name", "") == "elem213":
+		if oi.obstacle.get("name", "") == "elem213":
 			_level.obstacle_instances.erase(key)
 	_level.obstacle_instances_need_to_update = true
 	_show_toast("清除可炸方块")
@@ -550,7 +550,6 @@ func _reset_sandbox() -> void:
 	_hero = null
 	_level = null
 	Game.me = null
-	Game.current_level = null
 	_init_sandbox()
 	_show_toast("沙盒已重置")
 
@@ -584,6 +583,7 @@ func _show_toast(msg: String) -> void:
 func _on_back() -> void:
 	Game.me = null
 	Game.current_level = null
+	Game.sandbox_mode = false
 	_paused = true
 	var ts = Control.new()
 	ts.set_script(preload("res://src/main/title_screen.gd"))
@@ -597,3 +597,4 @@ func _notification(what: int) -> void:
 			Game.me = null
 		if Game.current_level == _level:
 			Game.current_level = null
+			Game.sandbox_mode = false

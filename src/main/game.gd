@@ -20,6 +20,7 @@ var selected_level_profile: Dictionary = {}
 var me = null
 var current_level = null
 var game_complete: bool = false
+var sandbox_mode: bool = false
 var selected_hero: String = ""
 var selected_color: String = ""
 var selected_level: String = ""
@@ -73,6 +74,8 @@ func _add_screen(screen: Node) -> void:
 	get_tree().root.call_deferred("add_child", screen)
 
 func _unhandled_input(event: InputEvent) -> void:
+	if sandbox_mode:
+		return
 	if event is InputEventKey and event.pressed and not event.echo:
 		if game_complete:
 			if event.keycode == KEY_R:
@@ -115,7 +118,7 @@ func start_game(dev: bool) -> void:
 	proceed_game()
 
 func _process(_delta: float) -> void:
-	if current_level != null:
+	if current_level != null and not sandbox_mode:
 		frame_step()
 		if current_level != null:
 			current_level.scroll_map()
@@ -125,7 +128,7 @@ func _process(_delta: float) -> void:
 		_ui_layer.get_child(0).queue_redraw()
 
 func _draw() -> void:
-	if current_level != null and current_level.has_method("draw_world"):
+	if current_level != null and not sandbox_mode and current_level.has_method("draw_world"):
 		current_level.draw_world(self)
 
 func init_game() -> void:

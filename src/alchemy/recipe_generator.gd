@@ -46,11 +46,20 @@ static func generate_recipe(quality: String, existing_ids: Array = []) -> Dictio
 		"max": snapped(conc, 0.1)
 	}
 
+	var heat_range = {
+		"min": snapped(randf() * 0.5, 0.05),
+		"max": snapped(0.5 + randf() * 0.5, 0.05)
+	}
+
+	var solvent_cond = {}
+	solvent_cond[solvent] = { "min_amount": snapped(0.3 + randf() * 0.7, 0.1) }
+
 	var condition = {
-		"solvent": solvent,
+		"solvent": solvent_cond,
 		"granularity": granularity,
 		"concentration": concentration,
-		"element": elements
+		"element": elements,
+		"heat": heat_range
 	}
 
 	var effect_template = _generate_effects(quality, used_elems, target_score)
@@ -198,11 +207,36 @@ static func _quality_color(quality: String) -> Array:
 		"legendary": return [1.0, 0.6, 0.0]
 	return [1.0, 1.0, 1.0]
 
+static func estimate_rarity_score(recipe: Dictionary) -> int:
+	var score = 0
+	var cond = recipe.get("condition", {})
+	var ce = cond.get("element", {})
+	for ek in ce:
+		var ev = ce[ek]
+		if ev.has("min"):
+			score += int(ev["min"] * 10)
+	if cond.has("concentration"):
+		var c = cond["concentration"]
+		if c.has("max"):
+			score += int(c["max"] * 5)
+	if cond.has("heat"):
+		var h = cond["heat"]
+		var range_width = h.get("max", 1.0) - h.get("min", 0.0)
+		score += maxi(0, 5 - int(range_width * 10))
+	return score
+
+static func rarity_from_score(score: int) -> String:
+	if score >= 45: return "legendary"
+	if score >= 26: return "epic"
+	if score >= 13: return "rare"
+	if score >= 6: return "uncommon"
+	return "common"
+
 static func _capitalize(s: String) -> String:
 	if s.is_empty(): return s
 	return s[0].to_upper() + s.substr(1)
 
-static func generate_from_params(params: Dictionary, solvent_id: String, existing_recipes: Array = []) -> Dictionary:
+static func generate_from_params(params: Dictionary, existing_recipes: Array = []) -> Dictionary:
 	var existing_ids = []
 	for r in existing_recipes:
 		if r.has("id"):
@@ -224,14 +258,26 @@ static func generate_from_params(params: Dictionary, solvent_id: String, existin
 	var pg = params.get("granularity", 0)
 	var pc = params.get("concentration", 0.5)
 
+	var ph = params.get("heat", 0.5)
+	var solv_cond = {}
+	var ps = params.get("solvent_list", {})
+	for sid in ps:
+		solv_cond[sid] = { "min_amount": snapped(maxf(ps[sid] * 0.5, 0.1), 0.1) }
+	if solv_cond.is_empty():
+		solv_cond = { "water": { "min_amount": 0.1 } }
+
 	var condition = {
-		"solvent": solvent_id,
+		"solvent": solv_cond,
 		"granularity": {
 			"max": snapped(pg * 1.5 + 0.5, 0.5)
 		},
 		"concentration": {
 			"min": snapped(pc * 0.4, 0.1),
 			"max": snapped(pc * 1.5 + 0.5, 0.1)
+		},
+		"heat": {
+			"min": snapped(maxf(ph - 0.3, 0.0), 0.05),
+			"max": snapped(minf(ph + 0.3, 1.0), 0.05)
 		},
 		"element": {}
 	}

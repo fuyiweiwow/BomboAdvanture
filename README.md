@@ -63,7 +63,7 @@
 
 ## 四、技术栈
 
-- **引擎**: Godot 4.6.2 Mono
+- **引擎**: Godot 4.7
 - **语言**: GDScript
 - **组件系统**: 基于 Atlas 的部位独立换装（body / face / cloth / hair / leg / cap / eye / ear / mouth / cladorn / fpack / npack / thadorn / footprint）
 - **数据格式**: JSON（角色、地图、关卡、帧动画）

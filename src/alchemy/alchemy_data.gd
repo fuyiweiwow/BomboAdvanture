@@ -40,15 +40,20 @@ static func list_solvents() -> Array:
 	result.sort()
 	return result
 
-static func calculate_params(ingredients: Array, solvent_id: String, grinds: Dictionary) -> Dictionary:
+static func calculate_params(ingredients: Array, solvents: Array, grinds: Dictionary, heat_level: float = 0.5) -> Dictionary:
 	var total_element = {}
 	var total_concentration = 0.0
 	var total_weight = 0.0
 	var weighted_granularity = 0.0
+	var heat_match_sum = 0.0
+	var heat_weight = 0.0
 
-	var solvent = get_solvent(solvent_id)
-	var s_dilution = solvent.get("concentration_dilution", 0.5)
-	var s_element = solvent.get("element_affinity", {})
+	# accumulate solvent amounts
+	var solvent_totals = {}
+	for se in solvents:
+		var sid = se.get("id", "")
+		var amt = se.get("amount", 1.0)
+		solvent_totals[sid] = solvent_totals.get(sid, 0.0) + amt
 
 	for entry in ingredients:
 		var item_data = entry.get("data", {})
@@ -61,23 +66,54 @@ static func calculate_params(ingredients: Array, solvent_id: String, grinds: Dic
 		var elem = alch.get("element", {})
 		var conc = alch.get("concentration", 0.3)
 
+		# heat affinity match (0.0 = perfect, higher = worse)
+		var ha = alch.get("heat_affinity", {})
+		var heat_penalty = 0.0
+		if not ha.is_empty():
+			var hmin = ha.get("min", 0.0)
+			var hmax = ha.get("max", 1.0)
+			if heat_level < hmin:
+				heat_penalty = hmin - heat_level
+			elif heat_level > hmax:
+				heat_penalty = heat_level - hmax
+		var heat_factor = maxf(0.0, 1.0 - heat_penalty * 2.0)
+
 		for i in range(count):
 			var g_factor = 1.0 + actual_gr * 0.15
-			var e_factor = conc * g_factor
+			var e_factor = conc * g_factor * heat_factor
+
+			# combined solvent dilution from all solvents
+			var dilution = 1.0
+			for sid in solvent_totals:
+				var sd = get_solvent(sid)
+				var d = sd.get("concentration_dilution", 0.5)
+				var amt = solvent_totals[sid]
+				dilution *= (1.0 - (1.0 - d) * minf(amt, 1.0))
 
 			for ek in elem:
-				total_element[ek] = total_element.get(ek, 0.0) + elem[ek] * e_factor * s_dilution
+				total_element[ek] = total_element.get(ek, 0.0) + elem[ek] * e_factor * dilution
 
 			total_concentration += e_factor
 			total_weight += e_factor
 			weighted_granularity += actual_gr * e_factor
+			heat_match_sum += heat_factor * e_factor
+			heat_weight += e_factor
 
-	for ek in s_element:
-		total_element[ek] = total_element.get(ek, 0.0) + s_element[ek] * s_dilution
+	# apply solvent element affinity
+	for sid in solvent_totals:
+		var sd = get_solvent(sid)
+		var se = sd.get("element_affinity", {})
+		var amt = solvent_totals[sid]
+		for ek in se:
+			total_element[ek] = total_element.get(ek, 0.0) + se[ek] * minf(amt, 1.0)
 
 	var avg_granularity = 0.0
 	if total_weight > 0:
 		avg_granularity = weighted_granularity / total_weight
+
+	var avg_heat_match = 1.0
+	if heat_weight > 0:
+		avg_heat_match = heat_match_sum / heat_weight
 
 	var max_elem = 0.0
 	for ek in total_element:
@@ -88,11 +124,19 @@ static func calculate_params(ingredients: Array, solvent_id: String, grinds: Dic
 		for ek in total_element:
 			total_element[ek] /= max_elem
 
+	# snapshot used solvents for recipe condition
+	var solvent_snap = {}
+	for sid in solvent_totals:
+		solvent_snap[sid] = snapped(solvent_totals[sid], 0.1)
+
 	return {
 		"element": total_element,
 		"granularity": avg_granularity,
 		"concentration": total_concentration,
-		"solvent": solvent_id
+		"solvent": solvent_snap,
+		"solvent_list": solvent_totals,
+		"heat": heat_level,
+		"heat_match": avg_heat_match
 	}
 
 static func match_recipe(params: Dictionary, recipe: Dictionary) -> bool:
@@ -100,8 +144,19 @@ static func match_recipe(params: Dictionary, recipe: Dictionary) -> bool:
 	if cond.is_empty():
 		return false
 
-	if cond.has("solvent") and str(cond["solvent"]) != params["solvent"]:
-		return false
+	if cond.has("solvent"):
+		var required = cond["solvent"]
+		var p_solvents = params.get("solvent_list", {})
+		if required is String:
+			# old format: single solvent ID
+			if not p_solvents.has(required):
+				return false
+		elif required is Dictionary:
+			# dict format: { "water": { "min_amount": 0.3 }, ... }
+			for sid in required:
+				var req_amt = required[sid].get("min_amount", 0.1) if required[sid] is Dictionary else 0.1
+				if p_solvents.get(sid, 0.0) < req_amt:
+					return false
 
 	if cond.has("granularity"):
 		var g = cond["granularity"]
@@ -124,6 +179,12 @@ static func match_recipe(params: Dictionary, recipe: Dictionary) -> bool:
 			if ev.has("min") and pv < ev["min"]: return false
 			if ev.has("max") and pv > ev["max"]: return false
 
+	if cond.has("heat"):
+		var hc = cond["heat"]
+		var ph = params.get("heat", 0.5)
+		if hc.has("min") and ph < hc["min"]: return false
+		if hc.has("max") and ph > hc["max"]: return false
+
 	return true
 
 static func _params_look_valid(params: Dictionary) -> bool:
@@ -136,8 +197,8 @@ static func _params_look_valid(params: Dictionary) -> bool:
 			return true
 	return false
 
-static func brew(ingredients: Array, solvent_id: String, grinds: Dictionary, owned_recipes: Array, brew_level: int) -> Dictionary:
-	var params = calculate_params(ingredients, solvent_id, grinds)
+static func brew(ingredients: Array, solvents: Array, grinds: Dictionary, owned_recipes: Array, brew_level: int, heat_level: float = 0.5) -> Dictionary:
+	var params = calculate_params(ingredients, solvents, grinds, heat_level)
 
 	var matched_recipe = null
 	var matched_id = ""
@@ -149,18 +210,19 @@ static func brew(ingredients: Array, solvent_id: String, grinds: Dictionary, own
 
 	var discovered = false
 	if matched_recipe == null and _params_look_valid(params):
-		var new_recipe = RecipeGenerator.generate_from_params(params, solvent_id, owned_recipes)
+		var new_recipe = RecipeGenerator.generate_from_params(params, owned_recipes)
 		if not new_recipe.is_empty():
 			matched_recipe = new_recipe
 			matched_id = str(new_recipe.get("id", ""))
 			discovered = true
 
 	if matched_recipe == null:
-		var fail_severity = 1 + int(params["concentration"] / 2.0)
+		var heat_penalty = int((1.0 - params.get("heat_match", 1.0)) * 3)
+		var fail_severity = clampi(1 + int(params["concentration"] / 2.0) + heat_penalty, 1, 3)
 		return {
 			"success": false,
 			"params": params,
-			"fail_severity": clampi(fail_severity, 1, 3)
+			"fail_severity": fail_severity
 		}
 
 	var max_rarity = 0
@@ -170,7 +232,8 @@ static func brew(ingredients: Array, solvent_id: String, grinds: Dictionary, own
 		if rl > max_rarity:
 			max_rarity = rl
 
-	var fail_chance = maxf(0.0, 0.05 * max_rarity - 0.02 * brew_level)
+	var hm = params.get("heat_match", 1.0)
+	var fail_chance = maxf(0.0, 0.05 * max_rarity - 0.02 * brew_level + 0.3 * (1.0 - hm))
 	if randf() < fail_chance:
 		return {
 			"success": false,
@@ -187,23 +250,4 @@ static func brew(ingredients: Array, solvent_id: String, grinds: Dictionary, own
 		"discovered": discovered
 	}
 
-static func estimate_rarity_score(recipe: Dictionary) -> int:
-	var score = 0
-	var cond = recipe.get("condition", {})
-	var ce = cond.get("element", {})
-	for ek in ce:
-		var ev = ce[ek]
-		if ev.has("min"):
-			score += int(ev["min"] * 10)
-	if cond.has("concentration"):
-		var c = cond["concentration"]
-		if c.has("max"):
-			score += int(c["max"] * 5)
-	return score
 
-static func rarity_from_score(score: int) -> String:
-	if score >= 45: return "legendary"
-	if score >= 26: return "epic"
-	if score >= 13: return "rare"
-	if score >= 6: return "uncommon"
-	return "common"
