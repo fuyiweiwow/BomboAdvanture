@@ -177,9 +177,30 @@ func frame_loop() -> void:
 	if state == DYING:
 		switch_state(DEAD)
 		uninstall()
+		if obstacle.get("BREAKABLE", false) and obstacle.get("HP", 1) <= 0:
+			_drop_loot()
 		Game.current_level.obstacle_instances_need_to_update = true
 	if state == TRIGGERING:
 		switch_state(NORMAL)
+
+func _drop_loot() -> void:
+	var cl = Game.current_level
+	var roll = randi() % 100
+	var item_id = ""
+	if roll < 5:
+		item_id = "iron_key"
+	elif roll < 20:
+		item_id = "blue_herb"
+	elif roll < 45:
+		item_id = "red_herb"
+	elif roll < 85:
+		item_id = "gold_coin"
+	if item_id == "":
+		return
+	var item_data = ItemData.load_item(item_id)
+	if item_data.is_empty():
+		return
+	ItemInstance.new(x, y, cl.item_instances, item_data)
 
 func switch_state(new_state: int) -> void:
 	if state == DYING and new_state != DEAD:

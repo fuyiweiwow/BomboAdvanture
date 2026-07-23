@@ -1,0 +1,15 @@
+{
+	"id": "gold_coin",
+	"name": "Gold Coin",
+	"chs_name": "金币",
+	"type": "material",
+	"rarity": "common",
+	"description": "通用货币",
+	"frame": "item1",
+	"buy_price": 0,
+	"sell_price": 0,
+	"stackable": true,
+	"max_stack": 9999,
+	"effects": {},
+	"color": [1, 0.84, 0.0]
+}

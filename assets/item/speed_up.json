@@ -1,0 +1,15 @@
+{
+	"id": "speed_up",
+	"name": "Speed Up",
+	"chs_name": "速度+",
+	"type": "weapon",
+	"rarity": "uncommon",
+	"description": "移动速度 +0.3",
+	"frame": "item3",
+	"buy_price": 200,
+	"sell_price": 100,
+	"stackable": true,
+	"max_stack": 1,
+	"effects": {},
+	"color": [0.2, 0.8, 0.2]
+}

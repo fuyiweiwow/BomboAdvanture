@@ -1,0 +1,15 @@
+{
+	"id": "hp_potion_small",
+	"name": "Small HP Potion",
+	"chs_name": "小红药水",
+	"type": "potion",
+	"rarity": "common",
+	"description": "回复 500 点生命值",
+	"frame": "item1",
+	"buy_price": 50,
+	"sell_price": 25,
+	"stackable": true,
+	"max_stack": 99,
+	"effects": { "heal_hp": 500 },
+	"color": [1, 0.2, 0.2]
+}

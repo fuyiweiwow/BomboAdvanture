@@ -106,6 +106,8 @@ func _draw_left_panel(me) -> void:
 			i += 1
 	if _tex_medal != null:
 		draw_texture(_tex_medal, Vector2(0, 142))
+	if _ui_font != null and me != null:
+		draw_string(_ui_font, Vector2(4, 158), "Gold: " + str(me.gold), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1, 0.84, 0.0))
 
 func _draw_right_panel(cl) -> void:
 	var npcs = cl.npcs

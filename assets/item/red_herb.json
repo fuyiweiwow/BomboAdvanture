@@ -1,0 +1,15 @@
+{
+	"id": "red_herb",
+	"name": "Red Herb",
+	"chs_name": "红草",
+	"type": "material",
+	"rarity": "common",
+	"description": "炼药材料",
+	"frame": "item2",
+	"buy_price": 10,
+	"sell_price": 5,
+	"stackable": true,
+	"max_stack": 99,
+	"effects": {},
+	"color": [1, 0.3, 0.3]
+}

@@ -1,0 +1,15 @@
+{
+	"id": "iron_key",
+	"name": "Iron Key",
+	"chs_name": "铁钥匙",
+	"type": "key",
+	"rarity": "common",
+	"description": "开启普通锁门",
+	"frame": "item1",
+	"buy_price": 100,
+	"sell_price": 50,
+	"stackable": true,
+	"max_stack": 10,
+	"effects": {},
+	"color": [0.7, 0.7, 0.8]
+}

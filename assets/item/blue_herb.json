@@ -1,0 +1,15 @@
+{
+	"id": "blue_herb",
+	"name": "Blue Herb",
+	"chs_name": "蓝草",
+	"type": "material",
+	"rarity": "common",
+	"description": "炼药材料",
+	"frame": "item2",
+	"buy_price": 10,
+	"sell_price": 5,
+	"stackable": true,
+	"max_stack": 99,
+	"effects": {},
+	"color": [0.3, 0.5, 1]
+}

@@ -180,9 +180,39 @@ func contact_damage() -> void:
 	if me.x == x and me.y == y:
 		me.try_damage(contact, "C")
 
+func _apply_item_effect(_data: Dictionary) -> void:
+	pass
+
 func die() -> void:
 	super.die()
-	# TODO: gene_gifts / gene_ghost (item + ghost spawning)
+	gene_gifts()
+
+func gene_gifts() -> void:
+	if gifts == null or gifts.is_empty():
+		return
+	var cl = Game.current_level
+	for gift in gifts:
+		var id = str(gift.get("id", ""))
+		if id == "":
+			continue
+		var weight = int(gift.get("weight", 0))
+		if weight <= 0:
+			continue
+		if randi() % 100 >= weight:
+			continue
+		var min_count = int(gift.get("min", 1))
+		var max_count = int(gift.get("max", 1))
+		var count = min_count + randi() % maxi(1, max_count - min_count + 1)
+		var item_data = ItemData.load_item(id)
+		if item_data.is_empty():
+			continue
+		for _i in range(count):
+			var drop_x = x + randi() % 3 - 1
+			var drop_y = y + randi() % 3 - 1
+			if cl.block[0][drop_x][drop_y] > 0 or cl.obstacle_instances.has(Vector2i(drop_x, drop_y)):
+				drop_x = x
+				drop_y = y
+			ItemInstance.new(drop_x, drop_y, cl.item_instances, item_data)
 
 func try_using_skills() -> void:
 	if not resentful and not mocking or friendly:

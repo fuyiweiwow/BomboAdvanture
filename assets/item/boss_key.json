@@ -1,0 +1,15 @@
+{
+	"id": "boss_key",
+	"name": "Boss Key",
+	"chs_name": "Boss钥匙",
+	"type": "key",
+	"rarity": "rare",
+	"description": "开启Boss锁门",
+	"frame": "item3",
+	"buy_price": 0,
+	"sell_price": 0,
+	"stackable": false,
+	"max_stack": 1,
+	"effects": {},
+	"color": [1, 0.7, 0.1]
+}

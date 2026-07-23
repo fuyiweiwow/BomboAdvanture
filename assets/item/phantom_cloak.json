@@ -1,0 +1,15 @@
+{
+	"id": "phantom_cloak",
+	"name": "Phantom Cloak",
+	"chs_name": "幽灵披风",
+	"type": "armor",
+	"rarity": "epic",
+	"description": "15 秒内可穿墙穿过敌人",
+	"frame": "item3",
+	"buy_price": 0,
+	"sell_price": 0,
+	"stackable": false,
+	"max_stack": 1,
+	"effects": { "buff_id": "phantom", "buff_duration": 15000 },
+	"color": [0.7, 0.2, 0.8]
+}

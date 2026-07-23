@@ -1,0 +1,15 @@
+{
+	"id": "slime_goo",
+	"name": "Slime Goo",
+	"chs_name": "史莱姆粘液",
+	"type": "material",
+	"rarity": "common",
+	"description": "史莱姆掉落的粘液",
+	"frame": "item2",
+	"buy_price": 15,
+	"sell_price": 8,
+	"stackable": true,
+	"max_stack": 99,
+	"effects": {},
+	"color": [0.2, 0.7, 0.3]
+}

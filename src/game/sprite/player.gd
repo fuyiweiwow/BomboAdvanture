@@ -35,10 +35,17 @@ var motion_changed: bool = false
 var blood: int = 0
 var self_damage_blood: int = 0
 var speed: float = 0.0
+var base_speed: float = 0.0
 var defense: int = 0
+var base_defense: int = 0
 var protected_time: int = 0
 var remain_blood: int = 0
 var district_locked: bool = false
+
+var gold: int = 0
+var keys: Dictionary = {}
+var items: Dictionary = {}
+var buffs: Dictionary = {}
 
 var slow: int = 0
 var slow_begin: int = 0
@@ -272,13 +279,10 @@ func if_obstacle_trigger() -> void:
 			an_obstacle.trigger()
 
 func if_take_item() -> bool:
-	if not x_y_changed_trigger:
-		return false
-	var key = Vector2i(x, y)
-	if Game.current_level.item_instances.has(key):
-		Game.current_level.item_instances[key].player_get(self)
-		return true
 	return false
+
+func _apply_item_effect(data: Dictionary) -> void:
+	pass
 
 func grid_damage(current_time: int) -> void:
 	var point = Vector2i(x, y)

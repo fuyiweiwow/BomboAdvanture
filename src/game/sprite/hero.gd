@@ -32,11 +32,17 @@ func load_hero(hero_name: String) -> void:
 	icon_img = str(hero_json["icon_img"])
 	blood = int(hero_json["blood"])
 	speed = float(hero_json["speed"]) * G.GAME_SQUARE / 1000.0
+	base_speed = speed
 	bomb = int(hero_json["bomb"])
 	power = int(hero_json["power"])
 	restore = int(hero_json["restore"])
 	damage = int(hero_json["damage"])
 	defense = int(hero_json["defense"])
+	base_defense = defense
+	gold = 0
+	keys = {}
+	items = {}
+	buffs = {}
 	remain_blood = blood
 	remain_bombs = bomb
 	for s in hero_json["skills"]:
@@ -109,6 +115,77 @@ func update() -> void:
 	var current_time = Time.get_ticks_msec()
 	time_restore_a_bomb(current_time)
 	check_district_lock()
+	update_buffs(current_time)
+
+func add_remain_bomb(n: int) -> void:
+	remain_bombs = mini(remain_bombs + n, bomb)
+
+func set_power(n: int) -> void:
+	power = n
+
+func update_buffs(current_time: int) -> void:
+	var expired: Array = []
+	for bname in buffs:
+		if current_time >= buffs[bname]:
+			expired.append(bname)
+	for bname in expired:
+		buffs.erase(bname)
+		if bname == "phantom":
+			wall_walking = false
+
+func if_take_item() -> bool:
+	if not x_y_changed_trigger:
+		return false
+	var key = Vector2i(x, y)
+	if Game.current_level.item_instances.has(key):
+		Game.current_level.item_instances[key].player_get(self)
+		return true
+	return false
+
+func _apply_item_effect(data: Dictionary) -> void:
+	var item_id = str(data.get("id", ""))
+	var item_type = str(data.get("type", ""))
+	var effects = data.get("effects", {})
+
+	if item_id == "gold_coin":
+		gold += 1
+		return
+
+	if item_type == "key":
+		keys[item_id] = keys.get(item_id, 0) + 1
+		return
+
+	if item_type == "material":
+		items[item_id] = items.get(item_id, 0) + 1
+		return
+
+	if effects.is_empty():
+		return
+
+	if effects.has("heal_hp"):
+		var heal_amt = int(effects["heal_hp"])
+		remain_blood = mini(blood, remain_blood + heal_amt)
+
+	if effects.has("defense"):
+		base_defense += int(effects["defense"])
+		defense = base_defense
+
+	if item_id == "bomb_up":
+		add_remain_bomb(1)
+
+	if item_id == "power_up":
+		set_power(power + 1)
+
+	if item_id == "speed_up":
+		base_speed += 0.3
+		speed = base_speed
+
+	if effects.has("buff_id"):
+		var buff_name = str(effects["buff_id"])
+		var duration = int(effects.get("buff_duration", 10000))
+		buffs[buff_name] = Time.get_ticks_msec() + duration
+		if buff_name == "phantom":
+			wall_walking = true
 
 func stimulate_x_y_changed_trigger() -> void:
 	super.stimulate_x_y_changed_trigger()

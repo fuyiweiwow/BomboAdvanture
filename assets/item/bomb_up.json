@@ -1,0 +1,15 @@
+{
+	"id": "bomb_up",
+	"name": "Bomb Up",
+	"chs_name": "炸弹+",
+	"type": "weapon",
+	"rarity": "uncommon",
+	"description": "炸弹上限 +1",
+	"frame": "item3",
+	"buy_price": 200,
+	"sell_price": 100,
+	"stackable": true,
+	"max_stack": 1,
+	"effects": {},
+	"color": [1, 0.5, 0.0]
+}

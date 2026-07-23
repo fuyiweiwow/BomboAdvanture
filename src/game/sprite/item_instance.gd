@@ -9,16 +9,24 @@ const NORMAL = 0
 
 var item_instances_dict: Dictionary = {}
 var item: Dictionary = {}
+var item_data: Dictionary = {}
 var state: int = NORMAL
 var item_timer: int = 0
 var item_frame_idx: int = 0
 var cx: int = 0
 var cy: int = 0
+var _tint: Color = Color.WHITE
 
-func _init(nx: int, ny: int, item_instances_dict_: Dictionary, item_: Dictionary):
+func _init(nx: int, ny: int, item_instances_dict_: Dictionary, item_data_: Dictionary):
 	super._init(nx, ny)
 	item_instances_dict = item_instances_dict_
-	item = item_
+	item_data = item_data_
+	item = ItemLoader.get_item(str(item_data_.get("frame", "item1")))
+	if item.is_empty():
+		item = ItemLoader.get_item("item1")
+	var c = item_data_.get("color", null)
+	if c is Array and c.size() >= 3:
+		_tint = Color(c[0], c[1], c[2])
 	state = NORMAL
 	item_timer = 0
 	item_frame_idx = 0
@@ -77,9 +85,11 @@ func if_hide() -> bool:
 		return true
 	return false
 
-func player_get(_p) -> void:
+func player_get(p) -> void:
 	if state == DYING or state == DEAD:
 		return
+	if p != null and p.has_method("_apply_item_effect"):
+		p._apply_item_effect(item_data)
 	var next_state = DYING if item.has("DIE") else DEAD
 	switch_state(next_state)
 
@@ -102,4 +112,4 @@ func draw(ci: CanvasItem) -> void:
 		return
 	var idx = item_frame_idx if item_frame_idx >= 0 else 0
 	var fr: Frame = item[category][idx]
-	fr.draw(ci, x_pos, y_pos)
+	fr.draw(ci, x_pos, y_pos, _tint)

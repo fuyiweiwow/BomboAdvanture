@@ -1,0 +1,15 @@
+{
+	"id": "power_up",
+	"name": "Power Up",
+	"chs_name": "范围+",
+	"type": "weapon",
+	"rarity": "uncommon",
+	"description": "炸弹爆炸范围 +1",
+	"frame": "item3",
+	"buy_price": 200,
+	"sell_price": 100,
+	"stackable": true,
+	"max_stack": 1,
+	"effects": {},
+	"color": [1, 0.2, 0.0]
+}

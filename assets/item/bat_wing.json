@@ -1,0 +1,15 @@
+{
+	"id": "bat_wing",
+	"name": "Bat Wing",
+	"chs_name": "蝙蝠翅膀",
+	"type": "material",
+	"rarity": "common",
+	"description": "蝙蝠掉落的翅膀",
+	"frame": "item2",
+	"buy_price": 15,
+	"sell_price": 8,
+	"stackable": true,
+	"max_stack": 99,
+	"effects": {},
+	"color": [0.4, 0.2, 0.4]
+}
