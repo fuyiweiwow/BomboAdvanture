@@ -42,6 +42,7 @@ func _build() -> void:
 	panel.add_child(_make_menu_button("Alchemy Lab", _on_alchemy))
 	panel.add_child(_make_menu_button("Recipe Editor", _on_recipe_editor))
 	panel.add_child(_make_menu_button("Alchemy Test", _on_alchemy_test))
+	panel.add_child(_make_menu_button("Combat Sandbox", _on_combat_sandbox))
 	panel.add_child(_spacer(6))
 	panel.add_child(_make_menu_button("Level Editor", _on_level_editor))
 	panel.add_child(_make_menu_button("Map Editor", _on_map_editor))
@@ -103,6 +104,11 @@ func _on_recipe_editor() -> void:
 func _on_alchemy_test() -> void:
 	var test = load("res://src/alchemy/alchemy_test.gd").new()
 	_add_screen(test)
+	queue_free()
+
+func _on_combat_sandbox() -> void:
+	var sb = load("res://src/alchemy/combat_sandbox.gd").new()
+	_add_screen(sb)
 	queue_free()
 
 func _add_screen(node: Node) -> void:
