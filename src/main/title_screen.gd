@@ -22,7 +22,7 @@ func _build() -> void:
 	add_child(center)
 
 	var panel = VBoxContainer.new()
-	panel.custom_minimum_size = Vector2(320, 300)
+	panel.custom_minimum_size = Vector2(320, 350)
 	panel.add_theme_constant_override("separation", 14)
 	center.add_child(panel)
 
@@ -36,6 +36,8 @@ func _build() -> void:
 	panel.add_child(_spacer(10))
 	panel.add_child(_make_menu_button("Start Game", _on_select))
 	panel.add_child(_make_menu_button("Character Editor", _on_char_editor))
+	panel.add_child(_make_menu_button("Monster Editor", _on_monster_editor))
+	panel.add_child(_make_menu_button("Item Editor", _on_item_editor))
 	panel.add_child(_make_menu_button("Level Editor", _on_level_editor))
 	panel.add_child(_make_menu_button("Map Editor", _on_map_editor))
 
@@ -65,7 +67,17 @@ func _on_char_editor() -> void:
 
 func _on_level_editor() -> void:
 	var list = load("res://src/level_editor/level_list.gd").new()
-	Game.add_child(list)
+	_add_screen(list)
+	queue_free()
+
+func _on_monster_editor() -> void:
+	var list = load("res://src/monster_editor/monster_list.gd").new()
+	_add_screen(list)
+	queue_free()
+
+func _on_item_editor() -> void:
+	var list = load("res://src/item_editor/item_list.gd").new()
+	_add_screen(list)
 	queue_free()
 
 func _on_map_editor() -> void:

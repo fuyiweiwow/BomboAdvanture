@@ -53,7 +53,7 @@ func _refresh_available_maps() -> void:
 
 func _on_back() -> void:
 	var list = load("res://src/level_editor/level_list.gd").new()
-	Game.add_child(list)
+	get_tree().root.add_child(list)
 	queue_free()
 
 func _on_save() -> void:

@@ -271,17 +271,17 @@ func _start_game(dev: bool) -> void:
 		return
 	Game.selected_hero = hero_name
 	var level_sel = load("res://src/level_editor/level_select.gd").new()
-	Game.add_child(level_sel)
+	get_tree().root.add_child(level_sel)
 	queue_free()
 
 func _on_back() -> void:
 	if LEVEL_SESSION.has_selected_level():
 		var world_map = load("res://src/main/world_map.gd").new()
-		Game.add_child(world_map)
+		get_tree().root.add_child(world_map)
 	else:
 		var ts = Control.new()
 		ts.set_script(preload("res://src/main/title_screen.gd"))
-		Game.add_child(ts)
+		get_tree().root.add_child(ts)
 	queue_free()
 
 func _draw() -> void:

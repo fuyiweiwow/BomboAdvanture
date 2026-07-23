@@ -180,18 +180,18 @@ func _open_editor(idx: int) -> void:
 	editor.set_level_name(level.get("name", ""))
 	var is_compat = level.get("_src") == "compat"
 	editor.set_read_only(is_compat)
-	Game.add_child(editor)
+	get_tree().root.add_child(editor)
 	queue_free()
 
 func _on_back() -> void:
 	var ts = Control.new()
 	ts.set_script(preload("res://src/main/title_screen.gd"))
-	Game.add_child(ts)
+	get_tree().root.add_child(ts)
 	queue_free()
 
 func _on_new() -> void:
 	var editor = load("res://src/level_editor/level_editor.gd").new()
-	Game.add_child(editor)
+	get_tree().root.add_child(editor)
 	queue_free()
 
 func _draw() -> void:

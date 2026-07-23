@@ -2,8 +2,9 @@ class_name CharacterGenerator
 extends RefCounted
 
 static func generate(character_name: String, color: Color, decorations: Dictionary,
-		custom_textures: Dictionary = {}, component_colors: Dictionary = {}) -> Dictionary:
-	return CharacterLoader.get_character(character_name, color, decorations, false, custom_textures, component_colors)
+		custom_textures: Dictionary = {}, component_colors: Dictionary = {},
+		fill_body_defaults := true) -> Dictionary:
+	return CharacterLoader.get_character(character_name, color, decorations, false, custom_textures, component_colors, fill_body_defaults)
 
 static func generate_from_hero(hero: Dictionary, color: Color) -> Dictionary:
 	var char_name: String = str(hero.get("character", ""))

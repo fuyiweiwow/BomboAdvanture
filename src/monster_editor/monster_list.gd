@@ -1,16 +1,16 @@
 extends Control
 
-var _hero_list: Array = []
+var _monster_list: Array = []
 var _card_nodes: Array = []
 var _scroll_offset: int = 0
 
 const VISIBLE_COUNT = 5
-const CARD_H = 90
+const CARD_H = 80
 const CARD_W = 680
 const CARD_X = 60
 const CARD_Y_START = 110
 const CARD_GAP = 8
-const ICON_W = 64
+const ICON_W = 50
 
 var _btn_up: Button
 var _btn_down: Button
@@ -21,7 +21,7 @@ var _card_x: int = 60
 func _ready() -> void:
 	_update_size()
 	get_viewport().size_changed.connect(_update_size)
-	_hero_list = HeroData.list_heroes()
+	_monster_list = MonsterData.list_monsters()
 	_build_back_button()
 	_build_scroll_buttons()
 	_scroll_container = Node.new()
@@ -39,7 +39,7 @@ func _update_size() -> void:
 	_rebuild_cards()
 
 var _btn_back: Button
-var _btn_new_hero: Button
+var _btn_new: Button
 
 func _build_back_button() -> void:
 	_btn_back = Button.new()
@@ -50,19 +50,19 @@ func _build_back_button() -> void:
 	_btn_back.pressed.connect(_on_back)
 	add_child(_btn_back)
 
-	_btn_new_hero = Button.new()
-	_btn_new_hero.text = "+ New"
-	_btn_new_hero.size = Vector2(80, 30)
-	_btn_new_hero.position = Vector2(120, 20)
-	_btn_new_hero.add_theme_font_size_override("font_size", 15)
-	_btn_new_hero.pressed.connect(_on_new_character)
-	add_child(_btn_new_hero)
+	_btn_new = Button.new()
+	_btn_new.text = "+ New"
+	_btn_new.size = Vector2(80, 30)
+	_btn_new.position = Vector2(120, 20)
+	_btn_new.add_theme_font_size_override("font_size", 15)
+	_btn_new.pressed.connect(_on_new_monster)
+	add_child(_btn_new)
 
 func _reposition_buttons(win_w: float) -> void:
 	if _btn_back != null:
 		_btn_back.position = Vector2(20, 20)
-	if _btn_new_hero != null:
-		_btn_new_hero.position = Vector2(win_w - 100, 20)
+	if _btn_new != null:
+		_btn_new.position = Vector2(win_w - 100, 20)
 
 func _build_scroll_buttons() -> void:
 	_btn_up = Button.new()
@@ -93,17 +93,17 @@ func _reposition_scroll_buttons() -> void:
 func _rebuild_cards() -> void:
 	_clear_cards()
 	var start = _scroll_offset
-	var end = mini(start + VISIBLE_COUNT, _hero_list.size())
+	var end = mini(start + VISIBLE_COUNT, _monster_list.size())
 	for i in range(start, end):
-		var hero = _hero_list[i]
-		var card = _make_card(hero, i, CARD_Y_START + (i - start) * (CARD_H + CARD_GAP))
+		var monster = _monster_list[i]
+		var card = _make_card(monster, i, CARD_Y_START + (i - start) * (CARD_H + CARD_GAP))
 		_card_nodes.append(card)
 		_scroll_container.add_child(card)
 
 	if _btn_up != null:
 		_btn_up.visible = _scroll_offset > 0
 	if _btn_down != null:
-		_btn_down.visible = _scroll_offset + VISIBLE_COUNT < _hero_list.size()
+		_btn_down.visible = _scroll_offset + VISIBLE_COUNT < _monster_list.size()
 
 func _clear_cards() -> void:
 	for c in _card_nodes:
@@ -111,7 +111,7 @@ func _clear_cards() -> void:
 		c.queue_free()
 	_card_nodes.clear()
 
-func _make_card(hero: Dictionary, idx: int, y_pos: int) -> Control:
+func _make_card(monster: Dictionary, idx: int, y_pos: int) -> Control:
 	var card = Control.new()
 	card.position = Vector2(_card_x, y_pos)
 	card.size = Vector2(_card_w, CARD_H)
@@ -135,32 +135,22 @@ func _make_card(hero: Dictionary, idx: int, y_pos: int) -> Control:
 	inner.mouse_filter = Control.MOUSE_FILTER_PASS
 	card.add_child(inner)
 
-	var name_str = str(hero.get("name", "?"))
-	var icon = str(hero.get("icon_img", ""))
-	var icon_path = "res://assets/img/ui/game/" + icon + ".png"
+	var name_str = str(monster.get("name", "?"))
+	var chs = str(monster.get("chs_name", ""))
+	var char_frame = str(monster.get("character", ""))
 
 	var icon_rect = ColorRect.new()
 	icon_rect.position = Vector2(10, 10)
 	icon_rect.size = Vector2(ICON_W, CARD_H - 20)
-	icon_rect.color = _get_hero_color(idx)
+	icon_rect.color = _get_card_color(idx)
 	icon_rect.mouse_filter = Control.MOUSE_FILTER_PASS
 	card.add_child(icon_rect)
-
-	if icon != "" and ResourceLoader.exists(icon_path):
-		var tex = TextureRect.new()
-		tex.texture = load(icon_path)
-		tex.expand_mode = TextureRect.EXPAND_KEEP_SIZE
-		tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		tex.position = Vector2(10, 10)
-		tex.size = Vector2(ICON_W, CARD_H - 20)
-		tex.mouse_filter = Control.MOUSE_FILTER_PASS
-		card.add_child(tex)
 
 	var first = Label.new()
 	first.text = name_str.left(1).to_upper()
 	first.position = Vector2(10, 10)
 	first.size = Vector2(ICON_W, CARD_H - 20)
-	first.add_theme_font_size_override("font_size", 26)
+	first.add_theme_font_size_override("font_size", 22)
 	first.add_theme_color_override("font_color", Color(1, 1, 1, 0.35))
 	first.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	first.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -169,41 +159,40 @@ func _make_card(hero: Dictionary, idx: int, y_pos: int) -> Control:
 
 	var label_w = _card_w - ICON_W - 34
 	var name_lb = Label.new()
-	name_lb.text = name_str
-	name_lb.position = Vector2(ICON_W + 24, 14)
-	name_lb.size = Vector2(mini(350, label_w), 28)
-	name_lb.add_theme_font_size_override("font_size", 20)
+	name_lb.text = name_str + ("  (" + chs + ")" if chs != "" else "")
+	name_lb.position = Vector2(ICON_W + 24, 10)
+	name_lb.size = Vector2(mini(350, label_w), 24)
+	name_lb.add_theme_font_size_override("font_size", 18)
 	name_lb.add_theme_color_override("font_color", Color(0.9, 0.92, 0.95))
 	name_lb.mouse_filter = Control.MOUSE_FILTER_PASS
 	card.add_child(name_lb)
 
-	var blood = str(hero.get("blood", 0))
-	var speed = str(hero.get("speed", 0.0))
-	var bomb = str(hero.get("bomb", 0))
+	var blood = str(monster.get("blood", 0))
+	var speed = str(monster.get("speed", 0.0))
+	var contact = str(monster.get("contact", 0))
+	var boss = " [BOSS]" if monster.get("boss_mode", false) else ""
 
 	var stat_lb = Label.new()
-	stat_lb.text = "HP: %s   Bomb: %s   Speed: %s" % [blood, bomb, speed]
-	stat_lb.position = Vector2(ICON_W + 24, 46)
-	stat_lb.size = Vector2(mini(380, label_w), 22)
-	stat_lb.add_theme_font_size_override("font_size", 14)
+	stat_lb.text = "HP: %s  Contact: %s  Speed: %s  Frame: %s%s" % [blood, contact, speed, char_frame, boss]
+	stat_lb.position = Vector2(ICON_W + 24, 40)
+	stat_lb.size = Vector2(mini(450, label_w), 22)
+	stat_lb.add_theme_font_size_override("font_size", 13)
 	stat_lb.add_theme_color_override("font_color", Color(0.6, 0.65, 0.7))
 	stat_lb.mouse_filter = Control.MOUSE_FILTER_PASS
 	card.add_child(stat_lb)
 
 	return card
 
-func _get_hero_color(idx: int) -> Color:
+func _get_card_color(idx: int) -> Color:
 	var palette = [
-		Color(0.25, 0.3, 0.45), Color(0.35, 0.25, 0.4), Color(0.3, 0.4, 0.3),
-		Color(0.4, 0.3, 0.25), Color(0.3, 0.35, 0.4), Color(0.4, 0.25, 0.3),
-		Color(0.25, 0.35, 0.4), Color(0.35, 0.3, 0.35), Color(0.3, 0.35, 0.3),
-		Color(0.35, 0.3, 0.4), Color(0.3, 0.4, 0.35),
+		Color(0.4, 0.2, 0.2), Color(0.3, 0.2, 0.35), Color(0.2, 0.3, 0.35),
+		Color(0.35, 0.25, 0.2), Color(0.3, 0.3, 0.25), Color(0.35, 0.2, 0.25),
 	]
 	return palette[idx % palette.size()]
 
 func _on_card_click(event: InputEvent, idx: int, _card: Control) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		_on_hero_selected(idx)
+		_on_monster_selected(idx)
 
 func _on_card_hover(card: Control, hovered: bool) -> void:
 	var border = card.get_meta("border") if card.has_meta("border") else null
@@ -216,34 +205,29 @@ func _on_scroll_up() -> void:
 		_rebuild_cards()
 
 func _on_scroll_down() -> void:
-	if _scroll_offset + VISIBLE_COUNT < _hero_list.size():
+	if _scroll_offset + VISIBLE_COUNT < _monster_list.size():
 		_scroll_offset += 1
 		_rebuild_cards()
 
-func _on_hero_selected(idx: int) -> void:
-	var hero = _hero_list[idx]
-	var editor = load("res://src/player_editor/character_editor.gd").new(hero)
+func _on_monster_selected(idx: int) -> void:
+	var monster = _monster_list[idx]
+	var editor = load("res://src/monster_editor/monster_editor.gd").new(monster)
 	editor.set_meta("list_ref", self)
 	var p = get_parent()
 	p.add_child(editor)
 	p.remove_child(self)
 
-func _on_new_character() -> void:
+func _on_new_monster() -> void:
 	var template = {
-		"name": "NewHero",
+		"name": "NewMonster",
+		"chs_name": "",
 		"character": "CharacterBlank",
-		"icon_img": "",
-		"decorations": {
-			"disable_foot_and_leg": false, "bomb_skin": "bomb1",
-			"body": "body1", "foot": "foot1",
-			"cap": null, "hair": null, "eye": null, "ear": null, "mouth": null,
-			"cladorn": null, "fhadorn": null, "fpack": null, "npack": null, "thadorn": null, "footprint": null,
-			"head_effect": null, "body_effect": null
-		},
-		"blood": 4500, "speed": 5.83333, "bomb": 7, "restore": 700,
-		"power": 3, "damage": 3500, "defense": 0, "skills": []
+		"blood": 5000, "speed": 0, "contact": 500, "defense": 0, "resent_dist": 8,
+		"boss_mode": false, "self_damage_blood": 0,
+		"bomb_skin": "bomb1", "skills": [],
+		"decorations": {}, "colors": {},
 	}
-	var editor = load("res://src/player_editor/character_editor.gd").new(template)
+	var editor = load("res://src/monster_editor/monster_editor.gd").new(template)
 	editor.set_meta("list_ref", self)
 	var p = get_parent()
 	p.add_child(editor)
@@ -252,6 +236,7 @@ func _on_new_character() -> void:
 func _on_back() -> void:
 	var ts = Control.new()
 	ts.set_script(preload("res://src/main/title_screen.gd"))
+	ts.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	get_tree().root.add_child(ts)
 	queue_free()
 
@@ -261,12 +246,11 @@ func _draw() -> void:
 	var font = ThemeDB.fallback_font
 	if font == null:
 		return
-	var title = "Character Editor"
+	var title = "Monster Editor"
 	var ts = 28
 	var tw = font.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, ts).x
 	draw_string(font, Vector2((win.x - tw) * 0.5, 50), title, HORIZONTAL_ALIGNMENT_LEFT, -1, ts, Color(0.8, 0.9, 1.0))
-
-	var sub = "%d characters" % _hero_list.size()
+	var sub = "%d monsters" % _monster_list.size()
 	var ss = 15
 	draw_string(font, Vector2((win.x - font.get_string_size(sub, HORIZONTAL_ALIGNMENT_LEFT, -1, ss).x) * 0.5, 75), sub, HORIZONTAL_ALIGNMENT_LEFT, -1, ss, Color(0.6, 0.6, 0.6))
 

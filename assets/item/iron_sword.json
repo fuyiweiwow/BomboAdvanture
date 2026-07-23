@@ -1,0 +1,17 @@
+{
+	"id": "iron_sword",
+	"name": "Iron Sword",
+	"chs_name": "铁剑",
+	"type": "weapon",
+	"rarity": "common",
+	"description": "A basic iron sword. Better than nothing.",
+	"frame": "item1",
+	"buy_price": 100,
+	"sell_price": 50,
+	"stackable": false,
+	"max_stack": 1,
+	"effects": {
+		"attack": 5,
+		"speed": 1.0
+	}
+}

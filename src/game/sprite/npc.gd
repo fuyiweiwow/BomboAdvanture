@@ -59,7 +59,9 @@ func load_npc(npc_name: String, color_: Color) -> void:
 	remain_blood = blood
 	chase_path = {}
 	npc_time_init = Time.get_ticks_msec()
-	character = load_character(str(npc_json["character"]), color_, {})
+	var decorations = _load_decorations()
+	var component_colors = _build_component_colors()
+	character = load_character(str(npc_json["character"]), color_, decorations, false, {}, component_colors)
 	_extract_face_texture()
 
 func _extract_face_texture() -> void:
@@ -71,6 +73,43 @@ func _extract_face_texture() -> void:
 			if frame != null and frame.texture != null:
 				face_texture = frame.texture
 				return
+
+func _load_decorations() -> Dictionary:
+	var decorations: Dictionary = {}
+	if not npc_json.has("decorations"):
+		return decorations
+	for component in Hero.DECORATION_CATEGORIES:
+		var name = npc_json["decorations"].get(component, null)
+		if name == null:
+			continue
+		if component == "footprint":
+			allow_footprint = true
+			continue
+		var path = G.FRAME_ROOT + component + "/" + str(name) + ".json"
+		var j = Utils.load_json(path)
+		if j != null:
+			decorations[_capitalize_key(component)] = j
+	return decorations
+
+func _capitalize_key(component: String) -> String:
+	var parts = component.split("_")
+	for i in parts.size():
+		parts[i] = parts[i].capitalize()
+	return "_".join(parts)
+
+func _build_component_colors() -> Dictionary:
+	var result: Dictionary = {}
+	var colors_data = npc_json.get("colors", {})
+	for comp_name in colors_data:
+		var val = colors_data[comp_name]
+		if val is Array:
+			if val.size() >= 4:
+				result[comp_name] = Color(val[0], val[1], val[2], val[3])
+			else:
+				result[comp_name] = Color(val[0], val[1], val[2])
+		elif val is Color:
+			result[comp_name] = val
+	return result
 
 func update() -> void:
 	super.update()

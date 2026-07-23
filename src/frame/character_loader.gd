@@ -26,13 +26,13 @@ static var _cache = {}
 # tinting is handled at draw time by the caller via modulate Color.
 # `component_colors` is an optional map of component_name -> Color for
 # per-part tinting; stored under result["COLORS"].
-static func get_character(character_name: String, color: Color, decorations: Dictionary, is_ghost = false, custom_textures: Dictionary = {}, component_colors: Dictionary = {}) -> Dictionary:
+static func get_character(character_name: String, color: Color, decorations: Dictionary, is_ghost = false, custom_textures: Dictionary = {}, component_colors: Dictionary = {}, fill_body_defaults := true) -> Dictionary:
 	if not custom_textures.is_empty():
 		var r = _build_custom_character(custom_textures)
 		r["COLORS"] = component_colors
 		return r
 
-	if decorations.is_empty() and custom_textures.is_empty():
+	if decorations.is_empty() and custom_textures.is_empty() and fill_body_defaults:
 		if _cache.has(character_name):
 			var r = _cache[character_name].duplicate()
 			r["COLORS"] = component_colors
@@ -44,10 +44,10 @@ static func get_character(character_name: String, color: Color, decorations: Dic
 		push_error("CharacterLoader: missing %s" % path)
 		return {}
 
-	var result = load_color(j, decorations)
+	var result = load_color(j, decorations, fill_body_defaults)
 	result["COLORS"] = component_colors
 
-	if decorations.is_empty() and custom_textures.is_empty():
+	if decorations.is_empty() and custom_textures.is_empty() and fill_body_defaults:
 		_cache[character_name] = result
 
 	return result
@@ -76,7 +76,7 @@ static func _build_custom_character(custom_textures: Dictionary) -> Dictionary:
 	return result
 
 # (game/frame/character.py : load_color)
-static func load_color(character_json: Dictionary, decorations: Dictionary) -> Dictionary:
+static func load_color(character_json: Dictionary, decorations: Dictionary, fill_body_defaults := true) -> Dictionary:
 	var a_color = {}
 	a_color["NAME"] = character_json.get("NAME", "")
 	var draw_order := LayerConfig.draw_order
@@ -103,7 +103,8 @@ static func load_color(character_json: Dictionary, decorations: Dictionary) -> D
 				a_color[orient][component] = load_component_frames(decorations[component][orient], component)
 		if decorations.has("Eye"):
 			_expand_eye_sub_components(a_color, orient)
-		_fill_body_defaults(a_color, orient)
+		if fill_body_defaults:
+			_fill_body_defaults(a_color, orient)
 	return a_color
 
 # Fill in default body parts for any component still missing after
