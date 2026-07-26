@@ -1,0 +1,53 @@
+{
+  "factors": {
+    "brow": {
+      "curve": 0,
+      "style": "thin",
+      "thickness": 1
+    },
+    "ear": {
+      "length": 4,
+      "outer_spread": 2,
+      "tip_raise": 3,
+      "type": "elf"
+    },
+    "eye": {
+      "iris": "blue",
+      "pupil_offset": [
+        0,
+        0
+      ],
+      "scale_x": 0.75,
+      "scale_y": 0.8,
+      "size": "small"
+    }
+  },
+  "generator_version": "face_factor_generator_v1",
+  "parser_version": "face_factor_parser_v1",
+  "prompt": "细眉、小眼、精灵耳",
+  "resolved_factors": {
+    "brow": {
+      "curve": 0,
+      "style": "thin",
+      "thickness": 1
+    },
+    "ear": {
+      "length": 4,
+      "outer_spread": 2,
+      "tip_raise": 3,
+      "type": "elf"
+    },
+    "eye": {
+      "iris": "blue",
+      "pupil_offset": [
+        0,
+        0
+      ],
+      "scale_x": 0.75,
+      "scale_y": 0.8,
+      "size": "small"
+    }
+  },
+  "seed": 20260726,
+  "warnings": []
+}

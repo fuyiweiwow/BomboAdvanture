@@ -1,0 +1,18 @@
+{
+  "face_shape": "reference_human",
+  "presets": [
+    "natural",
+    "gentle",
+    "focused",
+    "bold"
+  ],
+  "races": [
+    "human",
+    "elf",
+    "orc"
+  ],
+  "texture_size": {
+    "height": 68,
+    "width": 72
+  }
+}

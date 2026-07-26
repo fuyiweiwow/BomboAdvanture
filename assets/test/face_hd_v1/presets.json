@@ -1,0 +1,108 @@
+{
+  "dot_eye_note": "small_dot_eye remains an optional random factor and is not a default preset",
+  "logical_size": {
+    "height": 34,
+    "width": 36
+  },
+  "pixel_scale": 2,
+  "presets": {
+    "bold": {
+      "brow": {
+        "curve": 0,
+        "style": "bold",
+        "thickness": 3
+      },
+      "eye": {
+        "iris": "blue",
+        "pupil_offset": [
+          0,
+          0
+        ],
+        "scale_x": 1.15,
+        "scale_y": 1.12,
+        "size": "large"
+      }
+    },
+    "focused": {
+      "brow": {
+        "curve": -1,
+        "style": "focused",
+        "thickness": 1
+      },
+      "eye": {
+        "iris": "blue",
+        "pupil_offset": [
+          0,
+          0
+        ],
+        "scale_x": 0.9,
+        "scale_y": 0.78,
+        "size": "narrow"
+      }
+    },
+    "gentle": {
+      "brow": {
+        "curve": 1,
+        "style": "gentle",
+        "thickness": 1
+      },
+      "eye": {
+        "iris": "blue",
+        "pupil_offset": [
+          0,
+          0
+        ],
+        "scale_x": 1.05,
+        "scale_y": 1.1,
+        "size": "round"
+      }
+    },
+    "natural": {
+      "brow": {
+        "curve": 0,
+        "style": "natural",
+        "thickness": 2
+      },
+      "eye": {
+        "iris": "blue",
+        "pupil_offset": [
+          0,
+          0
+        ],
+        "scale_x": 1.0,
+        "scale_y": 1.0,
+        "size": "normal"
+      }
+    }
+  },
+  "races": {
+    "elf": {
+      "length": 6,
+      "outer_spread": 2,
+      "placement": "side",
+      "style": "rounded",
+      "tip_raise": 4,
+      "type": "elf"
+    },
+    "human": {
+      "length": 2,
+      "outer_spread": 1,
+      "placement": "side",
+      "style": "rounded",
+      "tip_raise": 1,
+      "type": "human"
+    },
+    "orc": {
+      "length": 7,
+      "outer_spread": 3,
+      "placement": "top",
+      "style": "rounded",
+      "tip_raise": 7,
+      "type": "orc"
+    }
+  },
+  "texture_size": {
+    "height": 68,
+    "width": 72
+  }
+}

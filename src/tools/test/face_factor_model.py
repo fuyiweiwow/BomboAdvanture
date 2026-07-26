@@ -96,3 +96,20 @@ def parse_prompt(prompt: str, seed: int) -> ParsedPrompt:
         factors=factors,
         warnings=warnings,
     )
+
+
+def resolve_seed_variant(factors: dict[str, dict], seed: int) -> dict[str, dict]:
+    """Resolve small deterministic shape variations without changing factor categories."""
+    resolved = copy.deepcopy(factors)
+    offset = (int(seed) % 3) - 1
+
+    brow = resolved["brow"]
+    brow["curve"] = max(-2, min(2, int(brow.get("curve", 0)) + offset))
+
+    eye = resolved["eye"]
+    eye["scale_x"] = round(max(0.5, min(1.2, float(eye.get("scale_x", 1.0)) + offset * 0.05)), 2)
+    eye["scale_y"] = round(max(0.5, min(1.2, float(eye.get("scale_y", 1.0)) - offset * 0.05)), 2)
+
+    ear = resolved["ear"]
+    ear["outer_spread"] = max(0, min(6, int(ear.get("outer_spread", 0)) + (int(seed) % 2)))
+    return resolved

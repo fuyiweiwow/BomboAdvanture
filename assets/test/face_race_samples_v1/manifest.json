@@ -1,0 +1,107 @@
+{
+  "generator_version": "race_face_samples_v1",
+  "races": [
+    "human",
+    "elf",
+    "orc"
+  ],
+  "sample_count": 3,
+  "samples": {
+    "elf": {
+      "factors": {
+        "brow": {
+          "curve": 0,
+          "style": "normal",
+          "thickness": 2
+        },
+        "ear": {
+          "length": 4,
+          "outer_spread": 1,
+          "tip_raise": 3,
+          "type": "elf"
+        },
+        "eye": {
+          "iris": "blue",
+          "pupil_offset": [
+            0,
+            0
+          ],
+          "scale_x": 1.0,
+          "scale_y": 1.0,
+          "size": "normal"
+        }
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      },
+      "source": "assets/test/face_bases_v1/male/base/face10101_stand_D_0.png",
+      "warnings": []
+    },
+    "human": {
+      "factors": {
+        "brow": {
+          "curve": 0,
+          "style": "normal",
+          "thickness": 2
+        },
+        "ear": {
+          "length": 0,
+          "outer_spread": 0,
+          "tip_raise": 0,
+          "type": "human"
+        },
+        "eye": {
+          "iris": "blue",
+          "pupil_offset": [
+            0,
+            0
+          ],
+          "scale_x": 1.0,
+          "scale_y": 1.0,
+          "size": "normal"
+        }
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      },
+      "source": "assets/test/face_bases_v1/male/base/face10101_stand_D_0.png",
+      "warnings": []
+    },
+    "orc": {
+      "factors": {
+        "brow": {
+          "curve": 0,
+          "style": "normal",
+          "thickness": 2
+        },
+        "ear": {
+          "length": 3,
+          "outer_spread": 0,
+          "placement": "top",
+          "tip_raise": 3,
+          "type": "orc"
+        },
+        "eye": {
+          "iris": "blue",
+          "pupil_offset": [
+            0,
+            0
+          ],
+          "scale_x": 1.0,
+          "scale_y": 1.0,
+          "size": "normal"
+        }
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      },
+      "source": "assets/test/face_bases_v1/male/base/face10101_stand_D_0.png",
+      "warnings": []
+    }
+  },
+  "seed": 20260726,
+  "source": "assets/test/face_bases_v1/male/base/face10101_stand_D_0.png"
+}

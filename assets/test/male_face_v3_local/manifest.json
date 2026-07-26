@@ -1,0 +1,43 @@
+{
+  "pipeline": "local_face_components_v1",
+  "face_id": "face10101",
+  "annotations": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\test\\male_face_v2\\annotations.json",
+  "source_dir": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face",
+  "seed": 20260726,
+  "coordinate_contract": "Every PNG uses the original face frame pixel origin; CX/CY are 0.",
+  "composition_order": [
+    "base",
+    "eye_eyeball",
+    "eye_iris",
+    "eye_pupil",
+    "eye_highlight",
+    "brow",
+    "ear"
+  ],
+  "variants": [
+    {
+      "id": "variant_01",
+      "label": "soft_blue_open",
+      "seed": 20260726,
+      "eye_mode": "open",
+      "stats": {
+        "frames": 28,
+        "repaired": 1224,
+        "ear_transparent": 1617,
+        "feature_pixels": 2845
+      }
+    },
+    {
+      "id": "variant_02",
+      "label": "amber_half_lid",
+      "seed": 20261735,
+      "eye_mode": "half_lid",
+      "stats": {
+        "frames": 28,
+        "repaired": 1224,
+        "ear_transparent": 1617,
+        "feature_pixels": 2845
+      }
+    }
+  ]
+}

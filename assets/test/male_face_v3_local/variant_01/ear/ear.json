@@ -1,0 +1,152 @@
+{
+  "NAME": "ear",
+  "INTERVAL": 100,
+  "STAND_R": {
+    "IMG": [
+      "face10101_stand_R_0.png"
+    ],
+    "CX": [
+      0
+    ],
+    "CY": [
+      0
+    ]
+  },
+  "R": {
+    "IMG": [
+      "face10101_walk_R_0.png",
+      "face10101_walk_R_1.png",
+      "face10101_walk_R_2.png",
+      "face10101_walk_R_3.png",
+      "face10101_walk_R_4.png",
+      "face10101_walk_R_5.png"
+    ],
+    "CX": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "CY": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "STAND_U": {
+    "IMG": [
+      "face10101_stand_U_0.png"
+    ],
+    "CX": [
+      0
+    ],
+    "CY": [
+      0
+    ]
+  },
+  "U": {
+    "IMG": [
+      "face10101_walk_U_0.png",
+      "face10101_walk_U_1.png",
+      "face10101_walk_U_2.png",
+      "face10101_walk_U_3.png",
+      "face10101_walk_U_4.png",
+      "face10101_walk_U_5.png"
+    ],
+    "CX": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "CY": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "STAND_L": {
+    "IMG": [
+      "face10101_stand_L_0.png"
+    ],
+    "CX": [
+      0
+    ],
+    "CY": [
+      0
+    ]
+  },
+  "L": {
+    "IMG": [
+      "face10101_walk_L_0.png",
+      "face10101_walk_L_1.png",
+      "face10101_walk_L_2.png",
+      "face10101_walk_L_3.png",
+      "face10101_walk_L_4.png",
+      "face10101_walk_L_5.png"
+    ],
+    "CX": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "CY": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "STAND_D": {
+    "IMG": [
+      "face10101_stand_D_0.png"
+    ],
+    "CX": [
+      0
+    ],
+    "CY": [
+      0
+    ]
+  },
+  "D": {
+    "IMG": [
+      "face10101_walk_D_0.png",
+      "face10101_walk_D_1.png",
+      "face10101_walk_D_2.png",
+      "face10101_walk_D_3.png",
+      "face10101_walk_D_4.png",
+      "face10101_walk_D_5.png"
+    ],
+    "CX": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "CY": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+}

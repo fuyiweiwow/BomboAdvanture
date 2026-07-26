@@ -1,0 +1,1426 @@
+{
+  "faces": [
+    "male",
+    "female"
+  ],
+  "frame_count": {
+    "female": 28,
+    "male": 28
+  },
+  "generator_version": "face_factor_generator_v1",
+  "prompt": "细眉、小眼、精灵耳",
+  "roles": {
+    "female": {
+      "frame_count": 28,
+      "frames": [
+        {
+          "composite": "female/composite/Face10701_stand_D_0.png",
+          "coverage": {
+            "brow_pixels": 16,
+            "ear_pixels": 104,
+            "eye_pixels": 26,
+            "socket_covered": 129,
+            "socket_expected": 129
+          },
+          "direction": "D",
+          "file": "Face10701_stand_D_0.png",
+          "layers": {
+            "brow": "female/brow/Face10701_stand_D_0.png",
+            "ear": "female/ear/Face10701_stand_D_0.png",
+            "eye": "female/eye/Face10701_stand_D_0.png",
+            "socket_cover": "female/socket_cover/Face10701_stand_D_0.png"
+          },
+          "logical_index": 0,
+          "size": {
+            "height": 34,
+            "width": 36
+          },
+          "source": "female/base/Face10701_stand_D_0.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_walk_D_0.png",
+          "coverage": {
+            "brow_pixels": 16,
+            "ear_pixels": 104,
+            "eye_pixels": 26,
+            "socket_covered": 128,
+            "socket_expected": 128
+          },
+          "direction": "D",
+          "file": "Face10701_walk_D_0.png",
+          "layers": {
+            "brow": "female/brow/Face10701_walk_D_0.png",
+            "ear": "female/ear/Face10701_walk_D_0.png",
+            "eye": "female/eye/Face10701_walk_D_0.png",
+            "socket_cover": "female/socket_cover/Face10701_walk_D_0.png"
+          },
+          "logical_index": 0,
+          "size": {
+            "height": 34,
+            "width": 36
+          },
+          "source": "female/base/Face10701_walk_D_0.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_walk_D_1.png",
+          "coverage": {
+            "brow_pixels": 16,
+            "ear_pixels": 104,
+            "eye_pixels": 26,
+            "socket_covered": 119,
+            "socket_expected": 119
+          },
+          "direction": "D",
+          "file": "Face10701_walk_D_1.png",
+          "layers": {
+            "brow": "female/brow/Face10701_walk_D_1.png",
+            "ear": "female/ear/Face10701_walk_D_1.png",
+            "eye": "female/eye/Face10701_walk_D_1.png",
+            "socket_cover": "female/socket_cover/Face10701_walk_D_1.png"
+          },
+          "logical_index": 1,
+          "size": {
+            "height": 34,
+            "width": 35
+          },
+          "source": "female/base/Face10701_walk_D_1.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_walk_D_2.png",
+          "coverage": {
+            "brow_pixels": 16,
+            "ear_pixels": 104,
+            "eye_pixels": 26,
+            "socket_covered": 111,
+            "socket_expected": 111
+          },
+          "direction": "D",
+          "file": "Face10701_walk_D_2.png",
+          "layers": {
+            "brow": "female/brow/Face10701_walk_D_2.png",
+            "ear": "female/ear/Face10701_walk_D_2.png",
+            "eye": "female/eye/Face10701_walk_D_2.png",
+            "socket_cover": "female/socket_cover/Face10701_walk_D_2.png"
+          },
+          "logical_index": 2,
+          "size": {
+            "height": 34,
+            "width": 33
+          },
+          "source": "female/base/Face10701_walk_D_2.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_walk_D_3.png",
+          "coverage": {
+            "brow_pixels": 16,
+            "ear_pixels": 104,
+            "eye_pixels": 26,
+            "socket_covered": 128,
+            "socket_expected": 128
+          },
+          "direction": "D",
+          "file": "Face10701_walk_D_3.png",
+          "layers": {
+            "brow": "female/brow/Face10701_walk_D_3.png",
+            "ear": "female/ear/Face10701_walk_D_3.png",
+            "eye": "female/eye/Face10701_walk_D_3.png",
+            "socket_cover": "female/socket_cover/Face10701_walk_D_3.png"
+          },
+          "logical_index": 3,
+          "size": {
+            "height": 34,
+            "width": 36
+          },
+          "source": "female/base/Face10701_walk_D_3.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_walk_D_4.png",
+          "coverage": {
+            "brow_pixels": 16,
+            "ear_pixels": 104,
+            "eye_pixels": 26,
+            "socket_covered": 126,
+            "socket_expected": 126
+          },
+          "direction": "D",
+          "file": "Face10701_walk_D_4.png",
+          "layers": {
+            "brow": "female/brow/Face10701_walk_D_4.png",
+            "ear": "female/ear/Face10701_walk_D_4.png",
+            "eye": "female/eye/Face10701_walk_D_4.png",
+            "socket_cover": "female/socket_cover/Face10701_walk_D_4.png"
+          },
+          "logical_index": 4,
+          "size": {
+            "height": 34,
+            "width": 35
+          },
+          "source": "female/base/Face10701_walk_D_4.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_walk_D_5.png",
+          "coverage": {
+            "brow_pixels": 16,
+            "ear_pixels": 104,
+            "eye_pixels": 26,
+            "socket_covered": 114,
+            "socket_expected": 114
+          },
+          "direction": "D",
+          "file": "Face10701_walk_D_5.png",
+          "layers": {
+            "brow": "female/brow/Face10701_walk_D_5.png",
+            "ear": "female/ear/Face10701_walk_D_5.png",
+            "eye": "female/eye/Face10701_walk_D_5.png",
+            "socket_cover": "female/socket_cover/Face10701_walk_D_5.png"
+          },
+          "logical_index": 5,
+          "size": {
+            "height": 34,
+            "width": 33
+          },
+          "source": "female/base/Face10701_walk_D_5.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_stand_L_0.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 135,
+            "eye_pixels": 12,
+            "socket_covered": 81,
+            "socket_expected": 81
+          },
+          "direction": "L",
+          "file": "Face10701_stand_L_0.png",
+          "layers": {
+            "brow": "female/brow/Face10701_stand_L_0.png",
+            "ear": "female/ear/Face10701_stand_L_0.png",
+            "eye": "female/eye/Face10701_stand_L_0.png",
+            "socket_cover": "female/socket_cover/Face10701_stand_L_0.png"
+          },
+          "logical_index": 0,
+          "size": {
+            "height": 33,
+            "width": 32
+          },
+          "source": "female/base/Face10701_stand_L_0.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_walk_L_0.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 135,
+            "eye_pixels": 12,
+            "socket_covered": 82,
+            "socket_expected": 82
+          },
+          "direction": "L",
+          "file": "Face10701_walk_L_0.png",
+          "layers": {
+            "brow": "female/brow/Face10701_walk_L_0.png",
+            "ear": "female/ear/Face10701_walk_L_0.png",
+            "eye": "female/eye/Face10701_walk_L_0.png",
+            "socket_cover": "female/socket_cover/Face10701_walk_L_0.png"
+          },
+          "logical_index": 0,
+          "size": {
+            "height": 33,
+            "width": 32
+          },
+          "source": "female/base/Face10701_walk_L_0.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_walk_L_1.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 135,
+            "eye_pixels": 12,
+            "socket_covered": 77,
+            "socket_expected": 77
+          },
+          "direction": "L",
+          "file": "Face10701_walk_L_1.png",
+          "layers": {
+            "brow": "female/brow/Face10701_walk_L_1.png",
+            "ear": "female/ear/Face10701_walk_L_1.png",
+            "eye": "female/eye/Face10701_walk_L_1.png",
+            "socket_cover": "female/socket_cover/Face10701_walk_L_1.png"
+          },
+          "logical_index": 1,
+          "size": {
+            "height": 33,
+            "width": 32
+          },
+          "source": "female/base/Face10701_walk_L_1.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_walk_L_2.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 135,
+            "eye_pixels": 12,
+            "socket_covered": 78,
+            "socket_expected": 78
+          },
+          "direction": "L",
+          "file": "Face10701_walk_L_2.png",
+          "layers": {
+            "brow": "female/brow/Face10701_walk_L_2.png",
+            "ear": "female/ear/Face10701_walk_L_2.png",
+            "eye": "female/eye/Face10701_walk_L_2.png",
+            "socket_cover": "female/socket_cover/Face10701_walk_L_2.png"
+          },
+          "logical_index": 2,
+          "size": {
+            "height": 33,
+            "width": 32
+          },
+          "source": "female/base/Face10701_walk_L_2.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_walk_L_3.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 135,
+            "eye_pixels": 12,
+            "socket_covered": 71,
+            "socket_expected": 71
+          },
+          "direction": "L",
+          "file": "Face10701_walk_L_3.png",
+          "layers": {
+            "brow": "female/brow/Face10701_walk_L_3.png",
+            "ear": "female/ear/Face10701_walk_L_3.png",
+            "eye": "female/eye/Face10701_walk_L_3.png",
+            "socket_cover": "female/socket_cover/Face10701_walk_L_3.png"
+          },
+          "logical_index": 3,
+          "size": {
+            "height": 33,
+            "width": 32
+          },
+          "source": "female/base/Face10701_walk_L_3.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_walk_L_4.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 135,
+            "eye_pixels": 12,
+            "socket_covered": 84,
+            "socket_expected": 84
+          },
+          "direction": "L",
+          "file": "Face10701_walk_L_4.png",
+          "layers": {
+            "brow": "female/brow/Face10701_walk_L_4.png",
+            "ear": "female/ear/Face10701_walk_L_4.png",
+            "eye": "female/eye/Face10701_walk_L_4.png",
+            "socket_cover": "female/socket_cover/Face10701_walk_L_4.png"
+          },
+          "logical_index": 4,
+          "size": {
+            "height": 33,
+            "width": 32
+          },
+          "source": "female/base/Face10701_walk_L_4.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_walk_L_5.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 135,
+            "eye_pixels": 12,
+            "socket_covered": 85,
+            "socket_expected": 85
+          },
+          "direction": "L",
+          "file": "Face10701_walk_L_5.png",
+          "layers": {
+            "brow": "female/brow/Face10701_walk_L_5.png",
+            "ear": "female/ear/Face10701_walk_L_5.png",
+            "eye": "female/eye/Face10701_walk_L_5.png",
+            "socket_cover": "female/socket_cover/Face10701_walk_L_5.png"
+          },
+          "logical_index": 5,
+          "size": {
+            "height": 33,
+            "width": 32
+          },
+          "source": "female/base/Face10701_walk_L_5.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_stand_R_0.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 68,
+            "eye_pixels": 12,
+            "socket_covered": 76,
+            "socket_expected": 76
+          },
+          "direction": "R",
+          "file": "Face10701_stand_R_0.png",
+          "layers": {
+            "brow": "female/brow/Face10701_stand_R_0.png",
+            "ear": "female/ear/Face10701_stand_R_0.png",
+            "eye": "female/eye/Face10701_stand_R_0.png",
+            "socket_cover": "female/socket_cover/Face10701_stand_R_0.png"
+          },
+          "logical_index": 0,
+          "size": {
+            "height": 33,
+            "width": 32
+          },
+          "source": "female/base/Face10701_stand_R_0.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_walk_R_0.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 68,
+            "eye_pixels": 12,
+            "socket_covered": 75,
+            "socket_expected": 75
+          },
+          "direction": "R",
+          "file": "Face10701_walk_R_0.png",
+          "layers": {
+            "brow": "female/brow/Face10701_walk_R_0.png",
+            "ear": "female/ear/Face10701_walk_R_0.png",
+            "eye": "female/eye/Face10701_walk_R_0.png",
+            "socket_cover": "female/socket_cover/Face10701_walk_R_0.png"
+          },
+          "logical_index": 0,
+          "size": {
+            "height": 33,
+            "width": 32
+          },
+          "source": "female/base/Face10701_walk_R_0.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_walk_R_1.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 68,
+            "eye_pixels": 12,
+            "socket_covered": 74,
+            "socket_expected": 74
+          },
+          "direction": "R",
+          "file": "Face10701_walk_R_1.png",
+          "layers": {
+            "brow": "female/brow/Face10701_walk_R_1.png",
+            "ear": "female/ear/Face10701_walk_R_1.png",
+            "eye": "female/eye/Face10701_walk_R_1.png",
+            "socket_cover": "female/socket_cover/Face10701_walk_R_1.png"
+          },
+          "logical_index": 1,
+          "size": {
+            "height": 33,
+            "width": 32
+          },
+          "source": "female/base/Face10701_walk_R_1.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_walk_R_2.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 68,
+            "eye_pixels": 12,
+            "socket_covered": 69,
+            "socket_expected": 69
+          },
+          "direction": "R",
+          "file": "Face10701_walk_R_2.png",
+          "layers": {
+            "brow": "female/brow/Face10701_walk_R_2.png",
+            "ear": "female/ear/Face10701_walk_R_2.png",
+            "eye": "female/eye/Face10701_walk_R_2.png",
+            "socket_cover": "female/socket_cover/Face10701_walk_R_2.png"
+          },
+          "logical_index": 2,
+          "size": {
+            "height": 33,
+            "width": 32
+          },
+          "source": "female/base/Face10701_walk_R_2.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_walk_R_3.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 68,
+            "eye_pixels": 12,
+            "socket_covered": 63,
+            "socket_expected": 63
+          },
+          "direction": "R",
+          "file": "Face10701_walk_R_3.png",
+          "layers": {
+            "brow": "female/brow/Face10701_walk_R_3.png",
+            "ear": "female/ear/Face10701_walk_R_3.png",
+            "eye": "female/eye/Face10701_walk_R_3.png",
+            "socket_cover": "female/socket_cover/Face10701_walk_R_3.png"
+          },
+          "logical_index": 3,
+          "size": {
+            "height": 33,
+            "width": 32
+          },
+          "source": "female/base/Face10701_walk_R_3.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_walk_R_4.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 68,
+            "eye_pixels": 12,
+            "socket_covered": 77,
+            "socket_expected": 77
+          },
+          "direction": "R",
+          "file": "Face10701_walk_R_4.png",
+          "layers": {
+            "brow": "female/brow/Face10701_walk_R_4.png",
+            "ear": "female/ear/Face10701_walk_R_4.png",
+            "eye": "female/eye/Face10701_walk_R_4.png",
+            "socket_cover": "female/socket_cover/Face10701_walk_R_4.png"
+          },
+          "logical_index": 4,
+          "size": {
+            "height": 33,
+            "width": 32
+          },
+          "source": "female/base/Face10701_walk_R_4.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_walk_R_5.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 68,
+            "eye_pixels": 12,
+            "socket_covered": 76,
+            "socket_expected": 76
+          },
+          "direction": "R",
+          "file": "Face10701_walk_R_5.png",
+          "layers": {
+            "brow": "female/brow/Face10701_walk_R_5.png",
+            "ear": "female/ear/Face10701_walk_R_5.png",
+            "eye": "female/eye/Face10701_walk_R_5.png",
+            "socket_cover": "female/socket_cover/Face10701_walk_R_5.png"
+          },
+          "logical_index": 5,
+          "size": {
+            "height": 33,
+            "width": 32
+          },
+          "source": "female/base/Face10701_walk_R_5.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_stand_U_0.png",
+          "coverage": {
+            "brow_pixels": 0,
+            "ear_pixels": 104,
+            "eye_pixels": 0,
+            "socket_covered": 0,
+            "socket_expected": 0
+          },
+          "direction": "U",
+          "file": "Face10701_stand_U_0.png",
+          "layers": {
+            "brow": "female/brow/Face10701_stand_U_0.png",
+            "ear": "female/ear/Face10701_stand_U_0.png",
+            "eye": "female/eye/Face10701_stand_U_0.png",
+            "socket_cover": "female/socket_cover/Face10701_stand_U_0.png"
+          },
+          "logical_index": 0,
+          "size": {
+            "height": 34,
+            "width": 36
+          },
+          "source": "female/base/Face10701_stand_U_0.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_walk_U_0.png",
+          "coverage": {
+            "brow_pixels": 0,
+            "ear_pixels": 104,
+            "eye_pixels": 0,
+            "socket_covered": 0,
+            "socket_expected": 0
+          },
+          "direction": "U",
+          "file": "Face10701_walk_U_0.png",
+          "layers": {
+            "brow": "female/brow/Face10701_walk_U_0.png",
+            "ear": "female/ear/Face10701_walk_U_0.png",
+            "eye": "female/eye/Face10701_walk_U_0.png",
+            "socket_cover": "female/socket_cover/Face10701_walk_U_0.png"
+          },
+          "logical_index": 0,
+          "size": {
+            "height": 34,
+            "width": 36
+          },
+          "source": "female/base/Face10701_walk_U_0.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_walk_U_1.png",
+          "coverage": {
+            "brow_pixels": 0,
+            "ear_pixels": 104,
+            "eye_pixels": 0,
+            "socket_covered": 0,
+            "socket_expected": 0
+          },
+          "direction": "U",
+          "file": "Face10701_walk_U_1.png",
+          "layers": {
+            "brow": "female/brow/Face10701_walk_U_1.png",
+            "ear": "female/ear/Face10701_walk_U_1.png",
+            "eye": "female/eye/Face10701_walk_U_1.png",
+            "socket_cover": "female/socket_cover/Face10701_walk_U_1.png"
+          },
+          "logical_index": 1,
+          "size": {
+            "height": 34,
+            "width": 34
+          },
+          "source": "female/base/Face10701_walk_U_1.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_walk_U_2.png",
+          "coverage": {
+            "brow_pixels": 0,
+            "ear_pixels": 104,
+            "eye_pixels": 0,
+            "socket_covered": 0,
+            "socket_expected": 0
+          },
+          "direction": "U",
+          "file": "Face10701_walk_U_2.png",
+          "layers": {
+            "brow": "female/brow/Face10701_walk_U_2.png",
+            "ear": "female/ear/Face10701_walk_U_2.png",
+            "eye": "female/eye/Face10701_walk_U_2.png",
+            "socket_cover": "female/socket_cover/Face10701_walk_U_2.png"
+          },
+          "logical_index": 2,
+          "size": {
+            "height": 34,
+            "width": 32
+          },
+          "source": "female/base/Face10701_walk_U_2.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_walk_U_3.png",
+          "coverage": {
+            "brow_pixels": 0,
+            "ear_pixels": 104,
+            "eye_pixels": 0,
+            "socket_covered": 0,
+            "socket_expected": 0
+          },
+          "direction": "U",
+          "file": "Face10701_walk_U_3.png",
+          "layers": {
+            "brow": "female/brow/Face10701_walk_U_3.png",
+            "ear": "female/ear/Face10701_walk_U_3.png",
+            "eye": "female/eye/Face10701_walk_U_3.png",
+            "socket_cover": "female/socket_cover/Face10701_walk_U_3.png"
+          },
+          "logical_index": 3,
+          "size": {
+            "height": 34,
+            "width": 36
+          },
+          "source": "female/base/Face10701_walk_U_3.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_walk_U_4.png",
+          "coverage": {
+            "brow_pixels": 0,
+            "ear_pixels": 104,
+            "eye_pixels": 0,
+            "socket_covered": 0,
+            "socket_expected": 0
+          },
+          "direction": "U",
+          "file": "Face10701_walk_U_4.png",
+          "layers": {
+            "brow": "female/brow/Face10701_walk_U_4.png",
+            "ear": "female/ear/Face10701_walk_U_4.png",
+            "eye": "female/eye/Face10701_walk_U_4.png",
+            "socket_cover": "female/socket_cover/Face10701_walk_U_4.png"
+          },
+          "logical_index": 4,
+          "size": {
+            "height": 34,
+            "width": 34
+          },
+          "source": "female/base/Face10701_walk_U_4.png",
+          "warnings": []
+        },
+        {
+          "composite": "female/composite/Face10701_walk_U_5.png",
+          "coverage": {
+            "brow_pixels": 0,
+            "ear_pixels": 104,
+            "eye_pixels": 0,
+            "socket_covered": 0,
+            "socket_expected": 0
+          },
+          "direction": "U",
+          "file": "Face10701_walk_U_5.png",
+          "layers": {
+            "brow": "female/brow/Face10701_walk_U_5.png",
+            "ear": "female/ear/Face10701_walk_U_5.png",
+            "eye": "female/eye/Face10701_walk_U_5.png",
+            "socket_cover": "female/socket_cover/Face10701_walk_U_5.png"
+          },
+          "logical_index": 5,
+          "size": {
+            "height": 34,
+            "width": 32
+          },
+          "source": "female/base/Face10701_walk_U_5.png",
+          "warnings": []
+        }
+      ]
+    },
+    "male": {
+      "frame_count": 28,
+      "frames": [
+        {
+          "composite": "male/composite/face10101_stand_D_0.png",
+          "coverage": {
+            "brow_pixels": 16,
+            "ear_pixels": 104,
+            "eye_pixels": 26,
+            "socket_covered": 129,
+            "socket_expected": 129
+          },
+          "direction": "D",
+          "file": "face10101_stand_D_0.png",
+          "layers": {
+            "brow": "male/brow/face10101_stand_D_0.png",
+            "ear": "male/ear/face10101_stand_D_0.png",
+            "eye": "male/eye/face10101_stand_D_0.png",
+            "socket_cover": "male/socket_cover/face10101_stand_D_0.png"
+          },
+          "logical_index": 0,
+          "size": {
+            "height": 34,
+            "width": 36
+          },
+          "source": "male/base/face10101_stand_D_0.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_walk_D_0.png",
+          "coverage": {
+            "brow_pixels": 16,
+            "ear_pixels": 104,
+            "eye_pixels": 26,
+            "socket_covered": 128,
+            "socket_expected": 128
+          },
+          "direction": "D",
+          "file": "face10101_walk_D_0.png",
+          "layers": {
+            "brow": "male/brow/face10101_walk_D_0.png",
+            "ear": "male/ear/face10101_walk_D_0.png",
+            "eye": "male/eye/face10101_walk_D_0.png",
+            "socket_cover": "male/socket_cover/face10101_walk_D_0.png"
+          },
+          "logical_index": 0,
+          "size": {
+            "height": 34,
+            "width": 36
+          },
+          "source": "male/base/face10101_walk_D_0.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_walk_D_1.png",
+          "coverage": {
+            "brow_pixels": 16,
+            "ear_pixels": 104,
+            "eye_pixels": 26,
+            "socket_covered": 119,
+            "socket_expected": 119
+          },
+          "direction": "D",
+          "file": "face10101_walk_D_1.png",
+          "layers": {
+            "brow": "male/brow/face10101_walk_D_1.png",
+            "ear": "male/ear/face10101_walk_D_1.png",
+            "eye": "male/eye/face10101_walk_D_1.png",
+            "socket_cover": "male/socket_cover/face10101_walk_D_1.png"
+          },
+          "logical_index": 1,
+          "size": {
+            "height": 34,
+            "width": 35
+          },
+          "source": "male/base/face10101_walk_D_1.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_walk_D_2.png",
+          "coverage": {
+            "brow_pixels": 16,
+            "ear_pixels": 104,
+            "eye_pixels": 26,
+            "socket_covered": 111,
+            "socket_expected": 111
+          },
+          "direction": "D",
+          "file": "face10101_walk_D_2.png",
+          "layers": {
+            "brow": "male/brow/face10101_walk_D_2.png",
+            "ear": "male/ear/face10101_walk_D_2.png",
+            "eye": "male/eye/face10101_walk_D_2.png",
+            "socket_cover": "male/socket_cover/face10101_walk_D_2.png"
+          },
+          "logical_index": 2,
+          "size": {
+            "height": 34,
+            "width": 33
+          },
+          "source": "male/base/face10101_walk_D_2.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_walk_D_3.png",
+          "coverage": {
+            "brow_pixels": 16,
+            "ear_pixels": 104,
+            "eye_pixels": 26,
+            "socket_covered": 128,
+            "socket_expected": 128
+          },
+          "direction": "D",
+          "file": "face10101_walk_D_3.png",
+          "layers": {
+            "brow": "male/brow/face10101_walk_D_3.png",
+            "ear": "male/ear/face10101_walk_D_3.png",
+            "eye": "male/eye/face10101_walk_D_3.png",
+            "socket_cover": "male/socket_cover/face10101_walk_D_3.png"
+          },
+          "logical_index": 3,
+          "size": {
+            "height": 34,
+            "width": 36
+          },
+          "source": "male/base/face10101_walk_D_3.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_walk_D_4.png",
+          "coverage": {
+            "brow_pixels": 16,
+            "ear_pixels": 104,
+            "eye_pixels": 26,
+            "socket_covered": 126,
+            "socket_expected": 126
+          },
+          "direction": "D",
+          "file": "face10101_walk_D_4.png",
+          "layers": {
+            "brow": "male/brow/face10101_walk_D_4.png",
+            "ear": "male/ear/face10101_walk_D_4.png",
+            "eye": "male/eye/face10101_walk_D_4.png",
+            "socket_cover": "male/socket_cover/face10101_walk_D_4.png"
+          },
+          "logical_index": 4,
+          "size": {
+            "height": 34,
+            "width": 35
+          },
+          "source": "male/base/face10101_walk_D_4.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_walk_D_5.png",
+          "coverage": {
+            "brow_pixels": 16,
+            "ear_pixels": 104,
+            "eye_pixels": 26,
+            "socket_covered": 114,
+            "socket_expected": 114
+          },
+          "direction": "D",
+          "file": "face10101_walk_D_5.png",
+          "layers": {
+            "brow": "male/brow/face10101_walk_D_5.png",
+            "ear": "male/ear/face10101_walk_D_5.png",
+            "eye": "male/eye/face10101_walk_D_5.png",
+            "socket_cover": "male/socket_cover/face10101_walk_D_5.png"
+          },
+          "logical_index": 5,
+          "size": {
+            "height": 34,
+            "width": 33
+          },
+          "source": "male/base/face10101_walk_D_5.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_stand_L_0.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 135,
+            "eye_pixels": 12,
+            "socket_covered": 84,
+            "socket_expected": 84
+          },
+          "direction": "L",
+          "file": "face10101_stand_L_0.png",
+          "layers": {
+            "brow": "male/brow/face10101_stand_L_0.png",
+            "ear": "male/ear/face10101_stand_L_0.png",
+            "eye": "male/eye/face10101_stand_L_0.png",
+            "socket_cover": "male/socket_cover/face10101_stand_L_0.png"
+          },
+          "logical_index": 0,
+          "size": {
+            "height": 33,
+            "width": 33
+          },
+          "source": "male/base/face10101_stand_L_0.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_walk_L_0.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 135,
+            "eye_pixels": 12,
+            "socket_covered": 85,
+            "socket_expected": 85
+          },
+          "direction": "L",
+          "file": "face10101_walk_L_0.png",
+          "layers": {
+            "brow": "male/brow/face10101_walk_L_0.png",
+            "ear": "male/ear/face10101_walk_L_0.png",
+            "eye": "male/eye/face10101_walk_L_0.png",
+            "socket_cover": "male/socket_cover/face10101_walk_L_0.png"
+          },
+          "logical_index": 0,
+          "size": {
+            "height": 33,
+            "width": 33
+          },
+          "source": "male/base/face10101_walk_L_0.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_walk_L_1.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 135,
+            "eye_pixels": 12,
+            "socket_covered": 79,
+            "socket_expected": 79
+          },
+          "direction": "L",
+          "file": "face10101_walk_L_1.png",
+          "layers": {
+            "brow": "male/brow/face10101_walk_L_1.png",
+            "ear": "male/ear/face10101_walk_L_1.png",
+            "eye": "male/eye/face10101_walk_L_1.png",
+            "socket_cover": "male/socket_cover/face10101_walk_L_1.png"
+          },
+          "logical_index": 1,
+          "size": {
+            "height": 33,
+            "width": 33
+          },
+          "source": "male/base/face10101_walk_L_1.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_walk_L_2.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 135,
+            "eye_pixels": 12,
+            "socket_covered": 78,
+            "socket_expected": 78
+          },
+          "direction": "L",
+          "file": "face10101_walk_L_2.png",
+          "layers": {
+            "brow": "male/brow/face10101_walk_L_2.png",
+            "ear": "male/ear/face10101_walk_L_2.png",
+            "eye": "male/eye/face10101_walk_L_2.png",
+            "socket_cover": "male/socket_cover/face10101_walk_L_2.png"
+          },
+          "logical_index": 2,
+          "size": {
+            "height": 33,
+            "width": 33
+          },
+          "source": "male/base/face10101_walk_L_2.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_walk_L_3.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 135,
+            "eye_pixels": 12,
+            "socket_covered": 73,
+            "socket_expected": 73
+          },
+          "direction": "L",
+          "file": "face10101_walk_L_3.png",
+          "layers": {
+            "brow": "male/brow/face10101_walk_L_3.png",
+            "ear": "male/ear/face10101_walk_L_3.png",
+            "eye": "male/eye/face10101_walk_L_3.png",
+            "socket_cover": "male/socket_cover/face10101_walk_L_3.png"
+          },
+          "logical_index": 3,
+          "size": {
+            "height": 33,
+            "width": 33
+          },
+          "source": "male/base/face10101_walk_L_3.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_walk_L_4.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 135,
+            "eye_pixels": 12,
+            "socket_covered": 90,
+            "socket_expected": 90
+          },
+          "direction": "L",
+          "file": "face10101_walk_L_4.png",
+          "layers": {
+            "brow": "male/brow/face10101_walk_L_4.png",
+            "ear": "male/ear/face10101_walk_L_4.png",
+            "eye": "male/eye/face10101_walk_L_4.png",
+            "socket_cover": "male/socket_cover/face10101_walk_L_4.png"
+          },
+          "logical_index": 4,
+          "size": {
+            "height": 33,
+            "width": 33
+          },
+          "source": "male/base/face10101_walk_L_4.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_walk_L_5.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 135,
+            "eye_pixels": 12,
+            "socket_covered": 92,
+            "socket_expected": 92
+          },
+          "direction": "L",
+          "file": "face10101_walk_L_5.png",
+          "layers": {
+            "brow": "male/brow/face10101_walk_L_5.png",
+            "ear": "male/ear/face10101_walk_L_5.png",
+            "eye": "male/eye/face10101_walk_L_5.png",
+            "socket_cover": "male/socket_cover/face10101_walk_L_5.png"
+          },
+          "logical_index": 5,
+          "size": {
+            "height": 33,
+            "width": 33
+          },
+          "source": "male/base/face10101_walk_L_5.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_stand_R_0.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 68,
+            "eye_pixels": 12,
+            "socket_covered": 80,
+            "socket_expected": 80
+          },
+          "direction": "R",
+          "file": "face10101_stand_R_0.png",
+          "layers": {
+            "brow": "male/brow/face10101_stand_R_0.png",
+            "ear": "male/ear/face10101_stand_R_0.png",
+            "eye": "male/eye/face10101_stand_R_0.png",
+            "socket_cover": "male/socket_cover/face10101_stand_R_0.png"
+          },
+          "logical_index": 0,
+          "size": {
+            "height": 33,
+            "width": 33
+          },
+          "source": "male/base/face10101_stand_R_0.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_walk_R_0.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 68,
+            "eye_pixels": 12,
+            "socket_covered": 79,
+            "socket_expected": 79
+          },
+          "direction": "R",
+          "file": "face10101_walk_R_0.png",
+          "layers": {
+            "brow": "male/brow/face10101_walk_R_0.png",
+            "ear": "male/ear/face10101_walk_R_0.png",
+            "eye": "male/eye/face10101_walk_R_0.png",
+            "socket_cover": "male/socket_cover/face10101_walk_R_0.png"
+          },
+          "logical_index": 0,
+          "size": {
+            "height": 33,
+            "width": 33
+          },
+          "source": "male/base/face10101_walk_R_0.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_walk_R_1.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 68,
+            "eye_pixels": 12,
+            "socket_covered": 77,
+            "socket_expected": 77
+          },
+          "direction": "R",
+          "file": "face10101_walk_R_1.png",
+          "layers": {
+            "brow": "male/brow/face10101_walk_R_1.png",
+            "ear": "male/ear/face10101_walk_R_1.png",
+            "eye": "male/eye/face10101_walk_R_1.png",
+            "socket_cover": "male/socket_cover/face10101_walk_R_1.png"
+          },
+          "logical_index": 1,
+          "size": {
+            "height": 33,
+            "width": 33
+          },
+          "source": "male/base/face10101_walk_R_1.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_walk_R_2.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 68,
+            "eye_pixels": 12,
+            "socket_covered": 76,
+            "socket_expected": 76
+          },
+          "direction": "R",
+          "file": "face10101_walk_R_2.png",
+          "layers": {
+            "brow": "male/brow/face10101_walk_R_2.png",
+            "ear": "male/ear/face10101_walk_R_2.png",
+            "eye": "male/eye/face10101_walk_R_2.png",
+            "socket_cover": "male/socket_cover/face10101_walk_R_2.png"
+          },
+          "logical_index": 2,
+          "size": {
+            "height": 33,
+            "width": 33
+          },
+          "source": "male/base/face10101_walk_R_2.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_walk_R_3.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 68,
+            "eye_pixels": 12,
+            "socket_covered": 66,
+            "socket_expected": 66
+          },
+          "direction": "R",
+          "file": "face10101_walk_R_3.png",
+          "layers": {
+            "brow": "male/brow/face10101_walk_R_3.png",
+            "ear": "male/ear/face10101_walk_R_3.png",
+            "eye": "male/eye/face10101_walk_R_3.png",
+            "socket_cover": "male/socket_cover/face10101_walk_R_3.png"
+          },
+          "logical_index": 3,
+          "size": {
+            "height": 33,
+            "width": 33
+          },
+          "source": "male/base/face10101_walk_R_3.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_walk_R_4.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 68,
+            "eye_pixels": 12,
+            "socket_covered": 79,
+            "socket_expected": 79
+          },
+          "direction": "R",
+          "file": "face10101_walk_R_4.png",
+          "layers": {
+            "brow": "male/brow/face10101_walk_R_4.png",
+            "ear": "male/ear/face10101_walk_R_4.png",
+            "eye": "male/eye/face10101_walk_R_4.png",
+            "socket_cover": "male/socket_cover/face10101_walk_R_4.png"
+          },
+          "logical_index": 4,
+          "size": {
+            "height": 33,
+            "width": 33
+          },
+          "source": "male/base/face10101_walk_R_4.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_walk_R_5.png",
+          "coverage": {
+            "brow_pixels": 7,
+            "ear_pixels": 68,
+            "eye_pixels": 12,
+            "socket_covered": 75,
+            "socket_expected": 75
+          },
+          "direction": "R",
+          "file": "face10101_walk_R_5.png",
+          "layers": {
+            "brow": "male/brow/face10101_walk_R_5.png",
+            "ear": "male/ear/face10101_walk_R_5.png",
+            "eye": "male/eye/face10101_walk_R_5.png",
+            "socket_cover": "male/socket_cover/face10101_walk_R_5.png"
+          },
+          "logical_index": 5,
+          "size": {
+            "height": 33,
+            "width": 33
+          },
+          "source": "male/base/face10101_walk_R_5.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_stand_U_0.png",
+          "coverage": {
+            "brow_pixels": 0,
+            "ear_pixels": 104,
+            "eye_pixels": 0,
+            "socket_covered": 0,
+            "socket_expected": 0
+          },
+          "direction": "U",
+          "file": "face10101_stand_U_0.png",
+          "layers": {
+            "brow": "male/brow/face10101_stand_U_0.png",
+            "ear": "male/ear/face10101_stand_U_0.png",
+            "eye": "male/eye/face10101_stand_U_0.png",
+            "socket_cover": "male/socket_cover/face10101_stand_U_0.png"
+          },
+          "logical_index": 0,
+          "size": {
+            "height": 34,
+            "width": 36
+          },
+          "source": "male/base/face10101_stand_U_0.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_walk_U_0.png",
+          "coverage": {
+            "brow_pixels": 0,
+            "ear_pixels": 104,
+            "eye_pixels": 0,
+            "socket_covered": 0,
+            "socket_expected": 0
+          },
+          "direction": "U",
+          "file": "face10101_walk_U_0.png",
+          "layers": {
+            "brow": "male/brow/face10101_walk_U_0.png",
+            "ear": "male/ear/face10101_walk_U_0.png",
+            "eye": "male/eye/face10101_walk_U_0.png",
+            "socket_cover": "male/socket_cover/face10101_walk_U_0.png"
+          },
+          "logical_index": 0,
+          "size": {
+            "height": 34,
+            "width": 36
+          },
+          "source": "male/base/face10101_walk_U_0.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_walk_U_1.png",
+          "coverage": {
+            "brow_pixels": 0,
+            "ear_pixels": 104,
+            "eye_pixels": 0,
+            "socket_covered": 0,
+            "socket_expected": 0
+          },
+          "direction": "U",
+          "file": "face10101_walk_U_1.png",
+          "layers": {
+            "brow": "male/brow/face10101_walk_U_1.png",
+            "ear": "male/ear/face10101_walk_U_1.png",
+            "eye": "male/eye/face10101_walk_U_1.png",
+            "socket_cover": "male/socket_cover/face10101_walk_U_1.png"
+          },
+          "logical_index": 1,
+          "size": {
+            "height": 34,
+            "width": 34
+          },
+          "source": "male/base/face10101_walk_U_1.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_walk_U_2.png",
+          "coverage": {
+            "brow_pixels": 0,
+            "ear_pixels": 104,
+            "eye_pixels": 0,
+            "socket_covered": 0,
+            "socket_expected": 0
+          },
+          "direction": "U",
+          "file": "face10101_walk_U_2.png",
+          "layers": {
+            "brow": "male/brow/face10101_walk_U_2.png",
+            "ear": "male/ear/face10101_walk_U_2.png",
+            "eye": "male/eye/face10101_walk_U_2.png",
+            "socket_cover": "male/socket_cover/face10101_walk_U_2.png"
+          },
+          "logical_index": 2,
+          "size": {
+            "height": 34,
+            "width": 32
+          },
+          "source": "male/base/face10101_walk_U_2.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_walk_U_3.png",
+          "coverage": {
+            "brow_pixels": 0,
+            "ear_pixels": 104,
+            "eye_pixels": 0,
+            "socket_covered": 0,
+            "socket_expected": 0
+          },
+          "direction": "U",
+          "file": "face10101_walk_U_3.png",
+          "layers": {
+            "brow": "male/brow/face10101_walk_U_3.png",
+            "ear": "male/ear/face10101_walk_U_3.png",
+            "eye": "male/eye/face10101_walk_U_3.png",
+            "socket_cover": "male/socket_cover/face10101_walk_U_3.png"
+          },
+          "logical_index": 3,
+          "size": {
+            "height": 34,
+            "width": 36
+          },
+          "source": "male/base/face10101_walk_U_3.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_walk_U_4.png",
+          "coverage": {
+            "brow_pixels": 0,
+            "ear_pixels": 104,
+            "eye_pixels": 0,
+            "socket_covered": 0,
+            "socket_expected": 0
+          },
+          "direction": "U",
+          "file": "face10101_walk_U_4.png",
+          "layers": {
+            "brow": "male/brow/face10101_walk_U_4.png",
+            "ear": "male/ear/face10101_walk_U_4.png",
+            "eye": "male/eye/face10101_walk_U_4.png",
+            "socket_cover": "male/socket_cover/face10101_walk_U_4.png"
+          },
+          "logical_index": 4,
+          "size": {
+            "height": 34,
+            "width": 35
+          },
+          "source": "male/base/face10101_walk_U_4.png",
+          "warnings": []
+        },
+        {
+          "composite": "male/composite/face10101_walk_U_5.png",
+          "coverage": {
+            "brow_pixels": 0,
+            "ear_pixels": 104,
+            "eye_pixels": 0,
+            "socket_covered": 0,
+            "socket_expected": 0
+          },
+          "direction": "U",
+          "file": "face10101_walk_U_5.png",
+          "layers": {
+            "brow": "male/brow/face10101_walk_U_5.png",
+            "ear": "male/ear/face10101_walk_U_5.png",
+            "eye": "male/eye/face10101_walk_U_5.png",
+            "socket_cover": "male/socket_cover/face10101_walk_U_5.png"
+          },
+          "logical_index": 5,
+          "size": {
+            "height": 34,
+            "width": 33
+          },
+          "source": "male/base/face10101_walk_U_5.png",
+          "warnings": []
+        }
+      ]
+    }
+  },
+  "seed": 20260727,
+  "warnings": []
+}

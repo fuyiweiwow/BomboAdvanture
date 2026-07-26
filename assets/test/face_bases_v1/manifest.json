@@ -1,0 +1,810 @@
+{
+  "pipeline": "face_base_extraction_v1",
+  "ai_used": false,
+  "fill_or_repair_used": false,
+  "source_pixel_policy": "copy source RGBA pixels only; unmarked pixels remain in base",
+  "annotation_file": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\test\\male_face_v2\\annotations.json",
+  "source_dir": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face",
+  "selected_faces": {
+    "male": {
+      "role": "male",
+      "face_id": "face10101",
+      "preserve_blush_in_base": false,
+      "frame_count": 28,
+      "frames": [
+        {
+          "frame": "stand_D_0",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_stand_3_0.png",
+          "size": [
+            36,
+            34
+          ],
+          "source_opaque_pixels": 919,
+          "base_opaque_pixels": 714,
+          "removed_feature_pixels": 206,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "stand_L_0",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_stand_2_0.png",
+          "size": [
+            33,
+            33
+          ],
+          "source_opaque_pixels": 908,
+          "base_opaque_pixels": 829,
+          "removed_feature_pixels": 79,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "stand_R_0",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_stand_0_0.png",
+          "size": [
+            33,
+            33
+          ],
+          "source_opaque_pixels": 908,
+          "base_opaque_pixels": 833,
+          "removed_feature_pixels": 75,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "stand_U_0",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_stand_1_0.png",
+          "size": [
+            36,
+            34
+          ],
+          "source_opaque_pixels": 913,
+          "base_opaque_pixels": 847,
+          "removed_feature_pixels": 67,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_D_0",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_walk_3_0.png",
+          "size": [
+            36,
+            34
+          ],
+          "source_opaque_pixels": 919,
+          "base_opaque_pixels": 715,
+          "removed_feature_pixels": 204,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_D_1",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_walk_3_1.png",
+          "size": [
+            35,
+            34
+          ],
+          "source_opaque_pixels": 918,
+          "base_opaque_pixels": 720,
+          "removed_feature_pixels": 198,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_D_2",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_walk_3_2.png",
+          "size": [
+            33,
+            34
+          ],
+          "source_opaque_pixels": 897,
+          "base_opaque_pixels": 721,
+          "removed_feature_pixels": 177,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_D_3",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_walk_3_3.png",
+          "size": [
+            36,
+            34
+          ],
+          "source_opaque_pixels": 919,
+          "base_opaque_pixels": 715,
+          "removed_feature_pixels": 204,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_D_4",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_walk_3_4.png",
+          "size": [
+            35,
+            34
+          ],
+          "source_opaque_pixels": 914,
+          "base_opaque_pixels": 720,
+          "removed_feature_pixels": 194,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_D_5",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_walk_3_5.png",
+          "size": [
+            33,
+            34
+          ],
+          "source_opaque_pixels": 897,
+          "base_opaque_pixels": 722,
+          "removed_feature_pixels": 176,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_L_0",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_walk_2_0.png",
+          "size": [
+            33,
+            33
+          ],
+          "source_opaque_pixels": 908,
+          "base_opaque_pixels": 828,
+          "removed_feature_pixels": 80,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_L_1",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_walk_2_1.png",
+          "size": [
+            33,
+            33
+          ],
+          "source_opaque_pixels": 908,
+          "base_opaque_pixels": 834,
+          "removed_feature_pixels": 74,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_L_2",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_walk_2_2.png",
+          "size": [
+            33,
+            33
+          ],
+          "source_opaque_pixels": 908,
+          "base_opaque_pixels": 833,
+          "removed_feature_pixels": 75,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_L_3",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_walk_2_3.png",
+          "size": [
+            33,
+            33
+          ],
+          "source_opaque_pixels": 908,
+          "base_opaque_pixels": 840,
+          "removed_feature_pixels": 68,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_L_4",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_walk_2_4.png",
+          "size": [
+            33,
+            33
+          ],
+          "source_opaque_pixels": 908,
+          "base_opaque_pixels": 823,
+          "removed_feature_pixels": 85,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_L_5",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_walk_2_5.png",
+          "size": [
+            33,
+            33
+          ],
+          "source_opaque_pixels": 909,
+          "base_opaque_pixels": 818,
+          "removed_feature_pixels": 93,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_R_0",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_walk_0_0.png",
+          "size": [
+            33,
+            33
+          ],
+          "source_opaque_pixels": 908,
+          "base_opaque_pixels": 834,
+          "removed_feature_pixels": 74,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_R_1",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_walk_0_1.png",
+          "size": [
+            33,
+            33
+          ],
+          "source_opaque_pixels": 908,
+          "base_opaque_pixels": 836,
+          "removed_feature_pixels": 72,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_R_2",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_walk_0_2.png",
+          "size": [
+            33,
+            33
+          ],
+          "source_opaque_pixels": 908,
+          "base_opaque_pixels": 837,
+          "removed_feature_pixels": 71,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_R_3",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_walk_0_3.png",
+          "size": [
+            33,
+            33
+          ],
+          "source_opaque_pixels": 908,
+          "base_opaque_pixels": 847,
+          "removed_feature_pixels": 61,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_R_4",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_walk_0_4.png",
+          "size": [
+            33,
+            33
+          ],
+          "source_opaque_pixels": 908,
+          "base_opaque_pixels": 832,
+          "removed_feature_pixels": 76,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_R_5",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_walk_0_5.png",
+          "size": [
+            33,
+            33
+          ],
+          "source_opaque_pixels": 909,
+          "base_opaque_pixels": 829,
+          "removed_feature_pixels": 82,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_U_0",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_walk_1_0.png",
+          "size": [
+            36,
+            34
+          ],
+          "source_opaque_pixels": 913,
+          "base_opaque_pixels": 847,
+          "removed_feature_pixels": 66,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_U_1",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_walk_1_1.png",
+          "size": [
+            34,
+            34
+          ],
+          "source_opaque_pixels": 897,
+          "base_opaque_pixels": 840,
+          "removed_feature_pixels": 57,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_U_2",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_walk_1_2.png",
+          "size": [
+            32,
+            34
+          ],
+          "source_opaque_pixels": 880,
+          "base_opaque_pixels": 836,
+          "removed_feature_pixels": 44,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_U_3",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_walk_1_3.png",
+          "size": [
+            36,
+            34
+          ],
+          "source_opaque_pixels": 913,
+          "base_opaque_pixels": 847,
+          "removed_feature_pixels": 66,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_U_4",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_walk_1_4.png",
+          "size": [
+            35,
+            34
+          ],
+          "source_opaque_pixels": 905,
+          "base_opaque_pixels": 840,
+          "removed_feature_pixels": 65,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_U_5",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\face10101_walk_1_5.png",
+          "size": [
+            33,
+            34
+          ],
+          "source_opaque_pixels": 891,
+          "base_opaque_pixels": 835,
+          "removed_feature_pixels": 56,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        }
+      ]
+    },
+    "female": {
+      "role": "female",
+      "face_id": "Face10701",
+      "preserve_blush_in_base": true,
+      "frame_count": 28,
+      "frames": [
+        {
+          "frame": "stand_D_0",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_stand_3_0.png",
+          "size": [
+            36,
+            34
+          ],
+          "source_opaque_pixels": 919,
+          "base_opaque_pixels": 714,
+          "removed_feature_pixels": 206,
+          "blush_pixels": 21,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "stand_L_0",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_stand_2_0.png",
+          "size": [
+            32,
+            33
+          ],
+          "source_opaque_pixels": 866,
+          "base_opaque_pixels": 787,
+          "removed_feature_pixels": 79,
+          "blush_pixels": 4,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "stand_R_0",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_stand_0_0.png",
+          "size": [
+            32,
+            33
+          ],
+          "source_opaque_pixels": 866,
+          "base_opaque_pixels": 791,
+          "removed_feature_pixels": 75,
+          "blush_pixels": 4,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "stand_U_0",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_stand_1_0.png",
+          "size": [
+            36,
+            34
+          ],
+          "source_opaque_pixels": 919,
+          "base_opaque_pixels": 853,
+          "removed_feature_pixels": 67,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_D_0",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_walk_3_0.png",
+          "size": [
+            36,
+            34
+          ],
+          "source_opaque_pixels": 919,
+          "base_opaque_pixels": 715,
+          "removed_feature_pixels": 204,
+          "blush_pixels": 22,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_D_1",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_walk_3_1.png",
+          "size": [
+            35,
+            34
+          ],
+          "source_opaque_pixels": 913,
+          "base_opaque_pixels": 715,
+          "removed_feature_pixels": 198,
+          "blush_pixels": 23,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_D_2",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_walk_3_2.png",
+          "size": [
+            33,
+            34
+          ],
+          "source_opaque_pixels": 897,
+          "base_opaque_pixels": 721,
+          "removed_feature_pixels": 177,
+          "blush_pixels": 17,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_D_3",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_walk_3_3.png",
+          "size": [
+            36,
+            34
+          ],
+          "source_opaque_pixels": 919,
+          "base_opaque_pixels": 715,
+          "removed_feature_pixels": 204,
+          "blush_pixels": 18,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_D_4",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_walk_3_4.png",
+          "size": [
+            35,
+            34
+          ],
+          "source_opaque_pixels": 913,
+          "base_opaque_pixels": 719,
+          "removed_feature_pixels": 194,
+          "blush_pixels": 23,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_D_5",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_walk_3_5.png",
+          "size": [
+            33,
+            34
+          ],
+          "source_opaque_pixels": 897,
+          "base_opaque_pixels": 722,
+          "removed_feature_pixels": 176,
+          "blush_pixels": 17,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_L_0",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_walk_2_0.png",
+          "size": [
+            32,
+            33
+          ],
+          "source_opaque_pixels": 866,
+          "base_opaque_pixels": 786,
+          "removed_feature_pixels": 80,
+          "blush_pixels": 4,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_L_1",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_walk_2_1.png",
+          "size": [
+            32,
+            33
+          ],
+          "source_opaque_pixels": 864,
+          "base_opaque_pixels": 790,
+          "removed_feature_pixels": 74,
+          "blush_pixels": 2,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_L_2",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_walk_2_2.png",
+          "size": [
+            32,
+            33
+          ],
+          "source_opaque_pixels": 864,
+          "base_opaque_pixels": 789,
+          "removed_feature_pixels": 75,
+          "blush_pixels": 1,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_L_3",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_walk_2_3.png",
+          "size": [
+            32,
+            33
+          ],
+          "source_opaque_pixels": 864,
+          "base_opaque_pixels": 796,
+          "removed_feature_pixels": 68,
+          "blush_pixels": 1,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_L_4",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_walk_2_4.png",
+          "size": [
+            32,
+            33
+          ],
+          "source_opaque_pixels": 867,
+          "base_opaque_pixels": 782,
+          "removed_feature_pixels": 85,
+          "blush_pixels": 4,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_L_5",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_walk_2_5.png",
+          "size": [
+            32,
+            33
+          ],
+          "source_opaque_pixels": 867,
+          "base_opaque_pixels": 775,
+          "removed_feature_pixels": 93,
+          "blush_pixels": 4,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_R_0",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_walk_0_0.png",
+          "size": [
+            32,
+            33
+          ],
+          "source_opaque_pixels": 866,
+          "base_opaque_pixels": 792,
+          "removed_feature_pixels": 74,
+          "blush_pixels": 4,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_R_1",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_walk_0_1.png",
+          "size": [
+            32,
+            33
+          ],
+          "source_opaque_pixels": 864,
+          "base_opaque_pixels": 792,
+          "removed_feature_pixels": 72,
+          "blush_pixels": 2,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_R_2",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_walk_0_2.png",
+          "size": [
+            32,
+            33
+          ],
+          "source_opaque_pixels": 864,
+          "base_opaque_pixels": 795,
+          "removed_feature_pixels": 71,
+          "blush_pixels": 1,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_R_3",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_walk_0_3.png",
+          "size": [
+            32,
+            33
+          ],
+          "source_opaque_pixels": 864,
+          "base_opaque_pixels": 803,
+          "removed_feature_pixels": 61,
+          "blush_pixels": 1,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_R_4",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_walk_0_4.png",
+          "size": [
+            32,
+            33
+          ],
+          "source_opaque_pixels": 867,
+          "base_opaque_pixels": 791,
+          "removed_feature_pixels": 76,
+          "blush_pixels": 4,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_R_5",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_walk_0_5.png",
+          "size": [
+            32,
+            33
+          ],
+          "source_opaque_pixels": 867,
+          "base_opaque_pixels": 788,
+          "removed_feature_pixels": 82,
+          "blush_pixels": 4,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_U_0",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_walk_1_0.png",
+          "size": [
+            36,
+            34
+          ],
+          "source_opaque_pixels": 919,
+          "base_opaque_pixels": 853,
+          "removed_feature_pixels": 66,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_U_1",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_walk_1_1.png",
+          "size": [
+            34,
+            34
+          ],
+          "source_opaque_pixels": 903,
+          "base_opaque_pixels": 846,
+          "removed_feature_pixels": 57,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_U_2",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_walk_1_2.png",
+          "size": [
+            32,
+            34
+          ],
+          "source_opaque_pixels": 887,
+          "base_opaque_pixels": 843,
+          "removed_feature_pixels": 44,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_U_3",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_walk_1_3.png",
+          "size": [
+            36,
+            34
+          ],
+          "source_opaque_pixels": 919,
+          "base_opaque_pixels": 853,
+          "removed_feature_pixels": 66,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_U_4",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_walk_1_4.png",
+          "size": [
+            34,
+            34
+          ],
+          "source_opaque_pixels": 903,
+          "base_opaque_pixels": 846,
+          "removed_feature_pixels": 65,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        },
+        {
+          "frame": "walk_U_5",
+          "source": "E:\\WorkProject\\Bomb adventure\\BomboAdvanture\\assets\\img\\face\\Face10701_walk_1_5.png",
+          "size": [
+            32,
+            34
+          ],
+          "source_opaque_pixels": 887,
+          "base_opaque_pixels": 839,
+          "removed_feature_pixels": 56,
+          "blush_pixels": 0,
+          "reconstruction_mismatch_pixels": 0,
+          "annotation_present": true
+        }
+      ]
+    }
+  }
+}
