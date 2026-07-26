@@ -1,0 +1,48 @@
+{
+  "base_source": "assets/test/face_bases_v1",
+  "eye_layers": [
+    "eye_geometry",
+    "pupil",
+    "highlight",
+    "eye"
+  ],
+  "frame_count": {
+    "set_a_reference_open": {
+      "female": 28,
+      "male": 28
+    },
+    "set_b_round_open": {
+      "female": 28,
+      "male": 28
+    }
+  },
+  "generator_version": "eye_variant_pipeline_v2",
+  "gpu_required": false,
+  "roles": [
+    "male",
+    "female"
+  ],
+  "size": {
+    "height": 34,
+    "width": 36
+  },
+  "source_reference": "assets/img/face/face10101_*.png",
+  "variant_factors": {
+    "set_a_reference_open": {
+      "eye_scale_x": 1.0,
+      "eye_scale_y": 1.0,
+      "eye_shift_x": 0,
+      "eye_tilt": 0
+    },
+    "set_b_round_open": {
+      "eye_scale_x": 1.1,
+      "eye_scale_y": 1.15,
+      "eye_shift_x": 0,
+      "eye_tilt": 0
+    }
+  },
+  "variants": [
+    "set_a_reference_open",
+    "set_b_round_open"
+  ]
+}

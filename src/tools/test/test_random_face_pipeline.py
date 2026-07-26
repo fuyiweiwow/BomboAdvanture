@@ -90,6 +90,25 @@ class RandomFacePipelineTests(unittest.TestCase):
                     )
                     self.assertLessEqual(abs(left_count - right_count), 4, sample["id"])
 
+                with Image.open(output / sample["id"] / "highlight.png") as image:
+                    image = image.convert("RGBA")
+                    left_highlights = [
+                        x
+                        for y in range(image.height)
+                        for x in range(image.width // 2)
+                        if image.getpixel((x, y))[3] > 0
+                    ]
+                    right_highlights = [
+                        x
+                        for y in range(image.height)
+                        for x in range(image.width // 2, image.width)
+                        if image.getpixel((x, y))[3] > 0
+                    ]
+                    self.assertTrue(left_highlights, sample["id"])
+                    self.assertTrue(right_highlights, sample["id"])
+                    self.assertLessEqual(sum(left_highlights) / len(left_highlights), 11.5, sample["id"])
+                    self.assertLessEqual(sum(right_highlights) / len(right_highlights), 23.5, sample["id"])
+
 
 if __name__ == "__main__":
     unittest.main()

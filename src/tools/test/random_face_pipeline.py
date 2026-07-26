@@ -146,6 +146,65 @@ def _transform_independent_details(
     return result
 
 
+def _complete_missing_highlights(
+    source: Image.Image,
+    highlight_points: set[tuple[int, int]],
+    iris_points: set[tuple[int, int]],
+) -> tuple[Image.Image, set[tuple[int, int]]]:
+    """Fill a missing highlight at the left edge of the target iris."""
+    result = Image.new("RGBA", source.size, (0, 0, 0, 0))
+    result_pixels = result.load()
+    source_pixels = source.load()
+    completed = set(highlight_points)
+    for point in sorted(highlight_points):
+        result_pixels[point] = source_pixels[point]
+
+    has_left_eye = any(x < source.width / 2 for x, _ in iris_points)
+    has_right_eye = any(x >= source.width / 2 for x, _ in iris_points)
+    if not (has_left_eye and has_right_eye):
+        return result, completed
+
+    left_highlights = {point for point in highlight_points if point[0] < source.width / 2}
+    right_highlights = {point for point in highlight_points if point[0] >= source.width / 2}
+    if left_highlights and not right_highlights:
+        source_iris = {point for point in iris_points if point[0] < source.width / 2}
+        target_iris = {point for point in iris_points if point[0] >= source.width / 2}
+        source_points = left_highlights
+    elif right_highlights and not left_highlights:
+        source_iris = {point for point in iris_points if point[0] >= source.width / 2}
+        target_iris = {point for point in iris_points if point[0] < source.width / 2}
+        source_points = right_highlights
+    else:
+        return result, completed
+    if not source_iris or not target_iris:
+        return result, completed
+    source_min_x = min(x for x, _ in source_iris)
+    source_min_y = min(y for _, y in source_iris)
+    target_min_x = min(x for x, _ in target_iris)
+    target_min_y = min(y for _, y in target_iris)
+    for x, y in sorted(source_points):
+        target = (
+            target_min_x + (x - source_min_x),
+            target_min_y + (y - source_min_y),
+        )
+        completed.add(target)
+        result_pixels[target] = source_pixels[x, y]
+    return result, completed
+
+
+def _transform_whole_layer(
+    source: Image.Image,
+    points: set[tuple[int, int]],
+    scale_x: float,
+    scale_y: float,
+    tilt: int,
+    shift_x: int,
+) -> Image.Image:
+    if not points:
+        return Image.new("RGBA", source.size, (0, 0, 0, 0))
+    return _transform_eye(source, points, _center(points), scale_x, scale_y, tilt, shift_x)
+
+
 def _transform_brow(source: Image.Image, curve: int, lift: int, weight: int) -> Image.Image:
     result = Image.new("RGBA", source.size, (0, 0, 0, 0))
     source_pixels = source.load()
@@ -186,9 +245,61 @@ def build_eye_variant_layers(reference, factors: dict[str, float | int]) -> dict
         tilt,
         shift_x,
     )
-    highlight = _transform_independent_details(
+    highlight_source, highlight_points = _complete_missing_highlights(
         reference.layers["eye"],
         reference.raw_masks["highlight"],
+        reference.raw_masks["iris"],
+    )
+    highlight = _transform_independent_details(
+        highlight_source,
+        highlight_points,
+        scale_x,
+        scale_y,
+        tilt,
+        shift_x,
+    )
+    eye = eye_geometry.copy()
+    eye.alpha_composite(pupil)
+    eye.alpha_composite(highlight)
+    return {
+        "eye_geometry": eye_geometry,
+        "pupil": pupil,
+        "highlight": highlight,
+        "eye": eye,
+    }
+
+
+def build_frame_eye_variant_layers(reference, factors: dict[str, float | int]) -> dict[str, Image.Image]:
+    """Transform each frame's original visible eye geometry without forcing symmetry."""
+    geometry_points = set().union(*(reference.raw_masks[name] for name in EYE_GEOMETRY_FIELDS))
+    scale_x = float(factors["eye_scale_x"])
+    scale_y = float(factors["eye_scale_y"])
+    tilt = int(factors.get("eye_tilt", 0))
+    shift_x = int(factors.get("eye_shift_x", 0))
+    eye_geometry = _transform_whole_layer(
+        reference.layers["eye"],
+        geometry_points,
+        scale_x,
+        scale_y,
+        tilt,
+        shift_x,
+    )
+    pupil = _transform_whole_layer(
+        reference.layers["eye"],
+        reference.raw_masks["pupil"],
+        scale_x,
+        scale_y,
+        tilt,
+        shift_x,
+    )
+    highlight_source, highlight_points = _complete_missing_highlights(
+        reference.layers["eye"],
+        reference.raw_masks["highlight"],
+        reference.raw_masks["iris"],
+    )
+    highlight = _transform_whole_layer(
+        highlight_source,
+        highlight_points,
         scale_x,
         scale_y,
         tilt,
@@ -299,8 +410,9 @@ def generate_random_faces(
         "# Controlled random front faces v2\n\n"
         "These samples use the original face pixel structure as a seed. Eye geometry "
         "(sclera, iris, and lash) is transformed once and mirrored so both eyes keep the "
-        "same overall size. Pupils and highlights remain separate layers and may differ "
-        "between sides. All transforms are small nearest-neighbor pixel operations; the "
+        "same overall size. Pupils remain separate and may differ between sides. Highlights "
+        "are kept on the left side of each iris; a missing annotated counterpart is filled "
+        "at the target iris left edge. All transforms are small nearest-neighbor pixel operations; the "
         "face base and human ears remain from face_reference_v2.\n",
         encoding="utf-8",
     )
