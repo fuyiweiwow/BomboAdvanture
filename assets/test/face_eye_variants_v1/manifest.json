@@ -1,0 +1,38 @@
+{
+  "base_source": "assets/test/face_bases_v1",
+  "eye_layers": [
+    "eye_geometry",
+    "pupil",
+    "highlight",
+    "eye"
+  ],
+  "generator_version": "eye_variant_pipeline_v1",
+  "roles": [
+    "male",
+    "female"
+  ],
+  "size": {
+    "height": 34,
+    "width": 36
+  },
+  "source_frame": "stand_D_0",
+  "source_reference": "assets/img/face/face10101_stand_3_0.png",
+  "variant_factors": {
+    "set_a_reference_open": {
+      "eye_scale_x": 1.0,
+      "eye_scale_y": 1.0,
+      "eye_shift_x": 0,
+      "eye_tilt": 0
+    },
+    "set_b_round_open": {
+      "eye_scale_x": 1.1,
+      "eye_scale_y": 1.15,
+      "eye_shift_x": 0,
+      "eye_tilt": 0
+    }
+  },
+  "variants": [
+    "set_a_reference_open",
+    "set_b_round_open"
+  ]
+}

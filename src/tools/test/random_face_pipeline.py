@@ -163,6 +163,48 @@ def _transform_brow(source: Image.Image, curve: int, lift: int, weight: int) -> 
     return result
 
 
+def build_eye_variant_layers(reference, factors: dict[str, float | int]) -> dict[str, Image.Image]:
+    """Build one reference-pixel eye with stable geometry and separate details."""
+    geometry_points = set().union(*(reference.raw_masks[name] for name in EYE_GEOMETRY_FIELDS))
+    scale_x = float(factors["eye_scale_x"])
+    scale_y = float(factors["eye_scale_y"])
+    tilt = int(factors.get("eye_tilt", 0))
+    shift_x = int(factors.get("eye_shift_x", 0))
+    eye_geometry = _transform_mirrored_geometry(
+        reference.layers["eye"],
+        geometry_points,
+        scale_x,
+        scale_y,
+        tilt,
+        shift_x,
+    )
+    pupil = _transform_independent_details(
+        reference.layers["eye"],
+        reference.raw_masks["pupil"],
+        scale_x,
+        scale_y,
+        tilt,
+        shift_x,
+    )
+    highlight = _transform_independent_details(
+        reference.layers["eye"],
+        reference.raw_masks["highlight"],
+        scale_x,
+        scale_y,
+        tilt,
+        shift_x,
+    )
+    eye = eye_geometry.copy()
+    eye.alpha_composite(pupil)
+    eye.alpha_composite(highlight)
+    return {
+        "eye_geometry": eye_geometry,
+        "pupil": pupil,
+        "highlight": highlight,
+        "eye": eye,
+    }
+
+
 def _random_factors(rng: random.Random) -> dict[str, float | int | str]:
     return {
         "eye_scale_x": rng.choice((0.9, 1.0, 1.1)),
@@ -199,37 +241,14 @@ def generate_random_faces(
     sheet = Image.new("RGBA", (tile_size[0] * columns, tile_size[1] * rows), (24, 24, 30, 255))
     samples = []
     factors_list = []
-    geometry_points = set().union(*(reference.raw_masks[name] for name in EYE_GEOMETRY_FIELDS))
 
     for index in range(count):
         factors = _random_factors(rng)
-        eye_geometry = _transform_mirrored_geometry(
-            reference.layers["eye"],
-            geometry_points,
-            float(factors["eye_scale_x"]),
-            float(factors["eye_scale_y"]),
-            int(factors["eye_tilt"]),
-            int(factors["eye_shift_x"]),
-        )
-        pupil = _transform_independent_details(
-            reference.layers["eye"],
-            reference.raw_masks["pupil"],
-            float(factors["eye_scale_x"]),
-            float(factors["eye_scale_y"]),
-            int(factors["eye_tilt"]),
-            int(factors["eye_shift_x"]),
-        )
-        highlight = _transform_independent_details(
-            reference.layers["eye"],
-            reference.raw_masks["highlight"],
-            float(factors["eye_scale_x"]),
-            float(factors["eye_scale_y"]),
-            int(factors["eye_tilt"]),
-            int(factors["eye_shift_x"]),
-        )
-        eye = eye_geometry.copy()
-        eye.alpha_composite(pupil)
-        eye.alpha_composite(highlight)
+        eye_layers = build_eye_variant_layers(reference, factors)
+        eye_geometry = eye_layers["eye_geometry"]
+        pupil = eye_layers["pupil"]
+        highlight = eye_layers["highlight"]
+        eye = eye_layers["eye"]
         brow = _transform_brow(
             reference.layers["brow"],
             int(factors["brow_curve"]),
