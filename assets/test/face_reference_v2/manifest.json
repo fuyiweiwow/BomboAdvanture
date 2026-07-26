@@ -1,0 +1,403 @@
+{
+  "annotation_file": "assets/test/male_face_v2/annotations.json",
+  "frame_count": 28,
+  "frames": {
+    "stand_D_0": {
+      "annotation_present": true,
+      "brow_pixels": 38,
+      "eye_pixels": 91,
+      "normalized_ear_pixels": 94,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 77,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 34,
+        "width": 36
+      },
+      "source": "assets/img/face/face10101_stand_3_0.png"
+    },
+    "stand_L_0": {
+      "annotation_present": true,
+      "brow_pixels": 10,
+      "eye_pixels": 23,
+      "normalized_ear_pixels": 57,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 57,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 33,
+        "width": 33
+      },
+      "source": "assets/img/face/face10101_stand_2_0.png"
+    },
+    "stand_R_0": {
+      "annotation_present": true,
+      "brow_pixels": 8,
+      "eye_pixels": 23,
+      "normalized_ear_pixels": 44,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 44,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 33,
+        "width": 33
+      },
+      "source": "assets/img/face/face10101_stand_0_0.png"
+    },
+    "stand_U_0": {
+      "annotation_present": true,
+      "brow_pixels": 0,
+      "eye_pixels": 0,
+      "normalized_ear_pixels": 67,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 67,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 34,
+        "width": 36
+      },
+      "source": "assets/img/face/face10101_stand_1_0.png"
+    },
+    "walk_D_0": {
+      "annotation_present": true,
+      "brow_pixels": 38,
+      "eye_pixels": 90,
+      "normalized_ear_pixels": 76,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 76,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 34,
+        "width": 36
+      },
+      "source": "assets/img/face/face10101_walk_3_0.png"
+    },
+    "walk_D_1": {
+      "annotation_present": true,
+      "brow_pixels": 35,
+      "eye_pixels": 90,
+      "normalized_ear_pixels": 73,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 73,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 34,
+        "width": 35
+      },
+      "source": "assets/img/face/face10101_walk_3_1.png"
+    },
+    "walk_D_2": {
+      "annotation_present": true,
+      "brow_pixels": 34,
+      "eye_pixels": 81,
+      "normalized_ear_pixels": 64,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 64,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 34,
+        "width": 33
+      },
+      "source": "assets/img/face/face10101_walk_3_2.png"
+    },
+    "walk_D_3": {
+      "annotation_present": true,
+      "brow_pixels": 37,
+      "eye_pixels": 91,
+      "normalized_ear_pixels": 76,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 76,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 34,
+        "width": 36
+      },
+      "source": "assets/img/face/face10101_walk_3_3.png"
+    },
+    "walk_D_4": {
+      "annotation_present": true,
+      "brow_pixels": 35,
+      "eye_pixels": 91,
+      "normalized_ear_pixels": 68,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 68,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 34,
+        "width": 35
+      },
+      "source": "assets/img/face/face10101_walk_3_4.png"
+    },
+    "walk_D_5": {
+      "annotation_present": true,
+      "brow_pixels": 34,
+      "eye_pixels": 80,
+      "normalized_ear_pixels": 62,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 62,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 34,
+        "width": 33
+      },
+      "source": "assets/img/face/face10101_walk_3_5.png"
+    },
+    "walk_L_0": {
+      "annotation_present": true,
+      "brow_pixels": 9,
+      "eye_pixels": 25,
+      "normalized_ear_pixels": 57,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 57,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 33,
+        "width": 33
+      },
+      "source": "assets/img/face/face10101_walk_2_0.png"
+    },
+    "walk_L_1": {
+      "annotation_present": true,
+      "brow_pixels": 7,
+      "eye_pixels": 23,
+      "normalized_ear_pixels": 56,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 56,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 33,
+        "width": 33
+      },
+      "source": "assets/img/face/face10101_walk_2_1.png"
+    },
+    "walk_L_2": {
+      "annotation_present": true,
+      "brow_pixels": 7,
+      "eye_pixels": 23,
+      "normalized_ear_pixels": 57,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 57,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 33,
+        "width": 33
+      },
+      "source": "assets/img/face/face10101_walk_2_2.png"
+    },
+    "walk_L_3": {
+      "annotation_present": true,
+      "brow_pixels": 8,
+      "eye_pixels": 8,
+      "normalized_ear_pixels": 57,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 57,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 33,
+        "width": 33
+      },
+      "source": "assets/img/face/face10101_walk_2_3.png"
+    },
+    "walk_L_4": {
+      "annotation_present": true,
+      "brow_pixels": 10,
+      "eye_pixels": 23,
+      "normalized_ear_pixels": 57,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 57,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 33,
+        "width": 33
+      },
+      "source": "assets/img/face/face10101_walk_2_4.png"
+    },
+    "walk_L_5": {
+      "annotation_present": true,
+      "brow_pixels": 8,
+      "eye_pixels": 31,
+      "normalized_ear_pixels": 57,
+      "normalized_mismatch_pixels": 2,
+      "raw_ear_pixels": 57,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 33,
+        "width": 33
+      },
+      "source": "assets/img/face/face10101_walk_2_5.png"
+    },
+    "walk_R_0": {
+      "annotation_present": true,
+      "brow_pixels": 8,
+      "eye_pixels": 23,
+      "normalized_ear_pixels": 43,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 43,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 33,
+        "width": 33
+      },
+      "source": "assets/img/face/face10101_walk_0_0.png"
+    },
+    "walk_R_1": {
+      "annotation_present": true,
+      "brow_pixels": 7,
+      "eye_pixels": 23,
+      "normalized_ear_pixels": 43,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 43,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 33,
+        "width": 33
+      },
+      "source": "assets/img/face/face10101_walk_0_1.png"
+    },
+    "walk_R_2": {
+      "annotation_present": true,
+      "brow_pixels": 7,
+      "eye_pixels": 23,
+      "normalized_ear_pixels": 43,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 43,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 33,
+        "width": 33
+      },
+      "source": "assets/img/face/face10101_walk_0_2.png"
+    },
+    "walk_R_3": {
+      "annotation_present": true,
+      "brow_pixels": 10,
+      "eye_pixels": 8,
+      "normalized_ear_pixels": 43,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 43,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 33,
+        "width": 33
+      },
+      "source": "assets/img/face/face10101_walk_0_3.png"
+    },
+    "walk_R_4": {
+      "annotation_present": true,
+      "brow_pixels": 10,
+      "eye_pixels": 23,
+      "normalized_ear_pixels": 43,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 43,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 33,
+        "width": 33
+      },
+      "source": "assets/img/face/face10101_walk_0_4.png"
+    },
+    "walk_R_5": {
+      "annotation_present": true,
+      "brow_pixels": 8,
+      "eye_pixels": 31,
+      "normalized_ear_pixels": 43,
+      "normalized_mismatch_pixels": 2,
+      "raw_ear_pixels": 43,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 33,
+        "width": 33
+      },
+      "source": "assets/img/face/face10101_walk_0_5.png"
+    },
+    "walk_U_0": {
+      "annotation_present": true,
+      "brow_pixels": 0,
+      "eye_pixels": 0,
+      "normalized_ear_pixels": 66,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 66,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 34,
+        "width": 36
+      },
+      "source": "assets/img/face/face10101_walk_1_0.png"
+    },
+    "walk_U_1": {
+      "annotation_present": true,
+      "brow_pixels": 0,
+      "eye_pixels": 0,
+      "normalized_ear_pixels": 57,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 57,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 34,
+        "width": 34
+      },
+      "source": "assets/img/face/face10101_walk_1_1.png"
+    },
+    "walk_U_2": {
+      "annotation_present": true,
+      "brow_pixels": 0,
+      "eye_pixels": 0,
+      "normalized_ear_pixels": 44,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 44,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 34,
+        "width": 32
+      },
+      "source": "assets/img/face/face10101_walk_1_2.png"
+    },
+    "walk_U_3": {
+      "annotation_present": true,
+      "brow_pixels": 0,
+      "eye_pixels": 0,
+      "normalized_ear_pixels": 66,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 66,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 34,
+        "width": 36
+      },
+      "source": "assets/img/face/face10101_walk_1_3.png"
+    },
+    "walk_U_4": {
+      "annotation_present": true,
+      "brow_pixels": 0,
+      "eye_pixels": 0,
+      "normalized_ear_pixels": 65,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 65,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 34,
+        "width": 35
+      },
+      "source": "assets/img/face/face10101_walk_1_4.png"
+    },
+    "walk_U_5": {
+      "annotation_present": true,
+      "brow_pixels": 0,
+      "eye_pixels": 0,
+      "normalized_ear_pixels": 56,
+      "normalized_mismatch_pixels": 0,
+      "raw_ear_pixels": 56,
+      "reference_mismatch_pixels": 0,
+      "size": {
+        "height": 34,
+        "width": 33
+      },
+      "source": "assets/img/face/face10101_walk_1_5.png"
+    }
+  },
+  "front_frame": "stand_D_0",
+  "generator_version": "reference_face_pipeline_v1",
+  "reference_mismatch_pixels": 0,
+  "role": "male",
+  "source_face_id": "face10101"
+}
