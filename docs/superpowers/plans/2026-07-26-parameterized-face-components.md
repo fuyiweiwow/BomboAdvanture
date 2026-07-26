@@ -33,50 +33,51 @@
 - [ ] **Step 1: Add a failing parser test for the approved prompt.**
 
 ```python
-from face_factor_model import parse_prompt
+import unittest
+from src.tools.test.face_factor_model import parse_prompt
 
 
-def test_parse_approved_prompt_to_normalized_factors():
-    result = parse_prompt("细眉、小眼、精灵耳", seed=20260726)
+class FaceFactorParserTests(unittest.TestCase):
+    def test_parse_approved_prompt_to_normalized_factors(self):
+        result = parse_prompt("细眉、小眼、精灵耳", seed=20260726)
 
-    assert result.factors["brow"] == {
-        "style": "thin",
-        "thickness": 1,
-        "curve": 0,
-    }
-    assert result.factors["eye"]["size"] == "small"
-    assert result.factors["eye"]["scale_x"] == 0.75
-    assert result.factors["ear"] == {
-        "type": "elf",
-        "length": 4,
-        "tip_raise": 3,
-        "outer_spread": 2,
-    }
-    assert result.seed == 20260726
-    assert result.warnings == []
+        self.assertEqual(result.factors["brow"], {
+            "style": "thin",
+            "thickness": 1,
+            "curve": 0,
+        })
+        self.assertEqual(result.factors["eye"]["size"], "small")
+        self.assertEqual(result.factors["eye"]["scale_x"], 0.75)
+        self.assertEqual(result.factors["ear"], {
+            "type": "elf",
+            "length": 4,
+            "tip_raise": 3,
+            "outer_spread": 2,
+        })
+        self.assertEqual(result.seed, 20260726)
+        self.assertEqual(result.warnings, [])
 ```
 
 - [ ] **Step 2: Add tests for aliases, unknown words, and the deferred crossed-eye factor.**
 
 ```python
-def test_aliases_are_equivalent():
-    assert parse_prompt("细的眉毛,小眼睛,尖耳", seed=1).factors == parse_prompt(
-        "细眉、小眼、精灵耳", seed=1
-    ).factors
+    def test_aliases_are_equivalent(self):
+        self.assertEqual(
+            parse_prompt("细的眉毛,小眼睛,尖耳", seed=1).factors,
+            parse_prompt("细眉、小眼、精灵耳", seed=1).factors,
+        )
 
+    def test_unknown_prompt_words_are_reported_without_changing_defaults(self):
+        result = parse_prompt("细眉、未知装饰", seed=1)
 
-def test_unknown_prompt_words_are_reported_without_changing_defaults():
-    result = parse_prompt("细眉、未知装饰", seed=1)
+        self.assertEqual(result.factors["brow"]["style"], "thin")
+        self.assertEqual(result.warnings, ["未识别提示词: 未知装饰"])
 
-    assert result.factors["brow"]["style"] == "thin"
-    assert result.warnings == ["未识别提示词: 未知装饰"]
+    def test_crossed_eye_is_parsed_but_not_enabled_by_default(self):
+        result = parse_prompt("斗鸡眼", seed=1)
 
-
-def test_crossed_eye_is_parsed_but_not_enabled_by_default():
-    result = parse_prompt("斗鸡眼", seed=1)
-
-    assert result.factors["eye"]["pupil_offset"] == [0, 0]
-    assert result.warnings == ["因子暂未启用: eye.pupil_offset"]
+        self.assertEqual(result.factors["eye"]["pupil_offset"], [0, 0])
+        self.assertEqual(result.warnings, ["因子暂未启用: eye.pupil_offset"])
 ```
 
 - [ ] **Step 3: Run the parser tests and confirm they fail because the model module does not exist.**
@@ -155,28 +156,31 @@ The tests must call real rasterizer functions, not mocks:
 
 ```python
 from PIL import Image
-from face_factor_raster import rasterize_variant, validate_coverage
+from src.tools.test.face_factor_model import parse_prompt
+from src.tools.test.face_factor_raster import rasterize_variant, validate_coverage
 
 
-def test_small_eye_thin_brow_elf_ear_covers_the_feature_socket():
-    base = Image.new("RGBA", (36, 34), (0, 0, 0, 0))
-    factors = parse_prompt("细眉、小眼、精灵耳", seed=1).factors
-    result = rasterize_variant(base, direction="D", factors=factors, seed=1)
+    def test_small_eye_thin_brow_elf_ear_covers_the_feature_socket(self):
+        base = Image.new("RGBA", (36, 34), (0, 0, 0, 0))
+        factors = parse_prompt("细眉、小眼、精灵耳", seed=1).factors
+        result = rasterize_variant(base, direction="D", factors=factors, seed=1)
 
-    assert result.layers["brow"].getbbox() is not None
-    assert result.layers["eye"].getbbox() is not None
-    assert result.layers["ear"].getbbox() is not None
-    assert validate_coverage(result) == []
+        self.assertIsNotNone(result.layers["brow"].getbbox())
+        self.assertIsNotNone(result.layers["eye"].getbbox())
+        self.assertIsNotNone(result.layers["ear"].getbbox())
+        self.assertEqual(validate_coverage(result), [])
 
+    def test_same_seed_produces_identical_layer_bytes(self):
+        base = Image.new("RGBA", (36, 34), (0, 0, 0, 0))
+        factors = parse_prompt("细眉、小眼、精灵耳", seed=99).factors
+        left = rasterize_variant(base, direction="D", factors=factors, seed=99)
+        right = rasterize_variant(base, direction="D", factors=factors, seed=99)
 
-def test_same_seed_produces_identical_layer_bytes():
-    base = Image.new("RGBA", (36, 34), (0, 0, 0, 0))
-    factors = parse_prompt("细眉、小眼、精灵耳", seed=99).factors
-    left = rasterize_variant(base, direction="D", factors=factors, seed=99)
-    right = rasterize_variant(base, direction="D", factors=factors, seed=99)
-
-    for name in ("socket_cover", "brow", "eye", "ear"):
-        assert list(left.layers[name].getdata()) == list(right.layers[name].getdata())
+        for name in ("socket_cover", "brow", "eye", "ear"):
+            self.assertEqual(
+                list(left.layers[name].getdata()),
+                list(right.layers[name].getdata()),
+            )
 ```
 
 - [ ] **Step 2: Run the new raster tests and confirm they fail because the raster module does not exist.**
