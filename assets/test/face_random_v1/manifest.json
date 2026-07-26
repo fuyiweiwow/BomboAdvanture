@@ -1,0 +1,227 @@
+{
+  "factors": [
+    {
+      "brow_curve": 1,
+      "brow_lift": 0,
+      "brow_weight": 0,
+      "ear": "reference",
+      "eye_scale_x": 1.0,
+      "eye_scale_y": 0.85,
+      "eye_shift_x": 0,
+      "eye_tilt": -1
+    },
+    {
+      "brow_curve": -1,
+      "brow_lift": -1,
+      "brow_weight": 1,
+      "ear": "reference",
+      "eye_scale_x": 1.0,
+      "eye_scale_y": 1.15,
+      "eye_shift_x": -1,
+      "eye_tilt": -1
+    },
+    {
+      "brow_curve": -1,
+      "brow_lift": 0,
+      "brow_weight": 1,
+      "ear": "reference",
+      "eye_scale_x": 0.9,
+      "eye_scale_y": 0.85,
+      "eye_shift_x": -1,
+      "eye_tilt": -1
+    },
+    {
+      "brow_curve": -1,
+      "brow_lift": -1,
+      "brow_weight": 0,
+      "ear": "reference",
+      "eye_scale_x": 0.9,
+      "eye_scale_y": 1.15,
+      "eye_shift_x": -1,
+      "eye_tilt": -1
+    },
+    {
+      "brow_curve": 0,
+      "brow_lift": 0,
+      "brow_weight": 1,
+      "ear": "reference",
+      "eye_scale_x": 0.9,
+      "eye_scale_y": 1.05,
+      "eye_shift_x": 0,
+      "eye_tilt": 1
+    },
+    {
+      "brow_curve": 1,
+      "brow_lift": -1,
+      "brow_weight": 0,
+      "ear": "reference",
+      "eye_scale_x": 1.1,
+      "eye_scale_y": 1.0,
+      "eye_shift_x": 0,
+      "eye_tilt": 0
+    },
+    {
+      "brow_curve": -1,
+      "brow_lift": -1,
+      "brow_weight": 0,
+      "ear": "reference",
+      "eye_scale_x": 1.1,
+      "eye_scale_y": 0.85,
+      "eye_shift_x": -1,
+      "eye_tilt": -1
+    },
+    {
+      "brow_curve": 0,
+      "brow_lift": 1,
+      "brow_weight": 1,
+      "ear": "reference",
+      "eye_scale_x": 1.0,
+      "eye_scale_y": 0.95,
+      "eye_shift_x": 0,
+      "eye_tilt": 1
+    }
+  ],
+  "generator_version": "random_face_pipeline_v1",
+  "sample_count": 8,
+  "samples": [
+    {
+      "factors": {
+        "brow_curve": 1,
+        "brow_lift": 0,
+        "brow_weight": 0,
+        "ear": "reference",
+        "eye_scale_x": 1.0,
+        "eye_scale_y": 0.85,
+        "eye_shift_x": 0,
+        "eye_tilt": -1
+      },
+      "id": "face_00",
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    {
+      "factors": {
+        "brow_curve": -1,
+        "brow_lift": -1,
+        "brow_weight": 1,
+        "ear": "reference",
+        "eye_scale_x": 1.0,
+        "eye_scale_y": 1.15,
+        "eye_shift_x": -1,
+        "eye_tilt": -1
+      },
+      "id": "face_01",
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    {
+      "factors": {
+        "brow_curve": -1,
+        "brow_lift": 0,
+        "brow_weight": 1,
+        "ear": "reference",
+        "eye_scale_x": 0.9,
+        "eye_scale_y": 0.85,
+        "eye_shift_x": -1,
+        "eye_tilt": -1
+      },
+      "id": "face_02",
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    {
+      "factors": {
+        "brow_curve": -1,
+        "brow_lift": -1,
+        "brow_weight": 0,
+        "ear": "reference",
+        "eye_scale_x": 0.9,
+        "eye_scale_y": 1.15,
+        "eye_shift_x": -1,
+        "eye_tilt": -1
+      },
+      "id": "face_03",
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    {
+      "factors": {
+        "brow_curve": 0,
+        "brow_lift": 0,
+        "brow_weight": 1,
+        "ear": "reference",
+        "eye_scale_x": 0.9,
+        "eye_scale_y": 1.05,
+        "eye_shift_x": 0,
+        "eye_tilt": 1
+      },
+      "id": "face_04",
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    {
+      "factors": {
+        "brow_curve": 1,
+        "brow_lift": -1,
+        "brow_weight": 0,
+        "ear": "reference",
+        "eye_scale_x": 1.1,
+        "eye_scale_y": 1.0,
+        "eye_shift_x": 0,
+        "eye_tilt": 0
+      },
+      "id": "face_05",
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    {
+      "factors": {
+        "brow_curve": -1,
+        "brow_lift": -1,
+        "brow_weight": 0,
+        "ear": "reference",
+        "eye_scale_x": 1.1,
+        "eye_scale_y": 0.85,
+        "eye_shift_x": -1,
+        "eye_tilt": -1
+      },
+      "id": "face_06",
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    {
+      "factors": {
+        "brow_curve": 0,
+        "brow_lift": 1,
+        "brow_weight": 1,
+        "ear": "reference",
+        "eye_scale_x": 1.0,
+        "eye_scale_y": 0.95,
+        "eye_shift_x": 0,
+        "eye_tilt": 1
+      },
+      "id": "face_07",
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    }
+  ],
+  "seed": 20260727,
+  "source": "assets/img/face/face10101_stand_3_0.png",
+  "source_frame": "stand_D_0"
+}

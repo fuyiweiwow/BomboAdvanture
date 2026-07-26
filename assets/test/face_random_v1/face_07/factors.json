@@ -1,0 +1,10 @@
+{
+  "brow_curve": 0,
+  "brow_lift": 1,
+  "brow_weight": 1,
+  "ear": "reference",
+  "eye_scale_x": 1.0,
+  "eye_scale_y": 0.95,
+  "eye_shift_x": 0,
+  "eye_tilt": 1
+}
