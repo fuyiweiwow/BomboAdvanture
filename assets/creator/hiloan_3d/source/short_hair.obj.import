@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://ctokmjbgf0743"
+path="res://.godot/imported/short_hair.obj-26a9640c5d1265fda9f8fe6bf4d31f53.mesh"
+
+[deps]
+
+files=["res://.godot/imported/short_hair.obj-26a9640c5d1265fda9f8fe6bf4d31f53.mesh"]
+
+source_file="res://assets/creator/hiloan_3d/source/short_hair.obj"
+dest_files=["res://.godot/imported/short_hair.obj-26a9640c5d1265fda9f8fe6bf4d31f53.mesh", "res://.godot/imported/short_hair.obj-26a9640c5d1265fda9f8fe6bf4d31f53.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false
