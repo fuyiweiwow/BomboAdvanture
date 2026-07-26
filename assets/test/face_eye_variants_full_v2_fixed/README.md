@@ -1,0 +1,3 @@
+# Full face eye variant comparison
+
+Each set contains 28 frames for both male and female bases: standing and walking frames in all four directions. The front standing frame uses stable mirrored eye geometry. D-facing motion frames reuse the canonical front eye palette and geometry and move each eye by its annotated iris center. Side-facing frames preserve their visible geometry but use the canonical front palette. Brows on D-facing frames use the same iris-center translation. Back-facing frames keep transparent eye layers. Generation is deterministic CPU-only Pillow processing; no GPU or model runtime is required.

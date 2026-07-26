@@ -1,0 +1,48 @@
+{
+  "base_source": "assets/test/face_bases_v1",
+  "brow_strategy": "D frames use canonical front brows translated by the same iris-center offsets",
+  "eye_layers": [
+    "eye_geometry",
+    "pupil",
+    "highlight",
+    "eye"
+  ],
+  "frame_count": {
+    "set_c_exaggerated": {
+      "female": 28,
+      "male": 28
+    }
+  },
+  "frame_eye_strategy": "D frames use canonical front eye anchored by annotated iris centers; side frames preserve geometry and use the canonical front palette",
+  "generator_version": "eye_variant_pipeline_v3_exaggerated",
+  "gpu_required": false,
+  "roles": [
+    "male",
+    "female"
+  ],
+  "size": {
+    "height": 34,
+    "width": 36
+  },
+  "source_reference": "assets/img/face/face10101_*.png",
+  "style": {
+    "brow": "raised, thick, strongly arched brow",
+    "eye": "larger round open eye with reference-pixel geometry",
+    "highlight": "left side of each iris, never horizontally mirrored"
+  },
+  "variant_factors": {
+    "set_c_exaggerated": {
+      "brow_curve": -3,
+      "brow_lift": -2,
+      "brow_weight": 1,
+      "eye_max_y": 29,
+      "eye_scale_x": 1.25,
+      "eye_scale_y": 1.3,
+      "eye_shift_x": 0,
+      "eye_tilt": 0
+    }
+  },
+  "variants": [
+    "set_c_exaggerated"
+  ]
+}

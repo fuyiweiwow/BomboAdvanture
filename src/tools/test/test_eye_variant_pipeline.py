@@ -123,6 +123,132 @@ class EyeVariantCatalogTests(unittest.TestCase):
                 (output / "set_b_round_open" / "male" / "eye" / "face10101_stand_D_0.png").read_bytes(),
             )
 
+    def test_exaggerated_catalog_is_one_style_for_both_roles(self):
+        from src.tools.test.eye_variant_pipeline import (
+            generate_exaggerated_eye_variants,
+            generate_full_eye_variants,
+        )
+
+        with TemporaryDirectory(prefix="eye_variants_exaggerated_", dir=self.project_root / "assets" / "test") as temp_dir:
+            output = Path(temp_dir)
+            manifest = generate_exaggerated_eye_variants(output)
+            baseline_output = output / "baseline"
+            generate_full_eye_variants(baseline_output)
+
+            self.assertEqual(manifest["variants"], ["set_c_exaggerated"])
+            self.assertEqual(manifest["roles"], ["male", "female"])
+            self.assertEqual(
+                manifest["frame_count"],
+                {"set_c_exaggerated": {"male": 28, "female": 28}},
+            )
+            factors = manifest["variant_factors"]["set_c_exaggerated"]
+            self.assertGreater(factors["eye_scale_x"], 1.1)
+            self.assertGreater(factors["eye_scale_y"], 1.15)
+            self.assertLess(factors["brow_curve"], -1)
+            self.assertEqual(factors["brow_weight"], 1)
+
+            for role, face_id in (("male", "face10101"), ("female", "Face10701")):
+                role_dir = output / "set_c_exaggerated" / role
+                front_name = f"{face_id}_stand_D_0.png"
+                self.assertTrue((role_dir / "preview" / "catalog.png").is_file())
+                self.assertEqual(len(list((role_dir / "composite").glob("*.png"))), 28)
+                self.assertNotEqual(
+                    (role_dir / "eye" / front_name).read_bytes(),
+                    (baseline_output / "set_a_reference_open" / role / "eye" / front_name).read_bytes(),
+                )
+                self.assertNotEqual(
+                    (role_dir / "brow" / front_name).read_bytes(),
+                    (baseline_output / "set_a_reference_open" / role / "brow" / front_name).read_bytes(),
+                )
+
+                with Image.open(role_dir / "highlight" / front_name) as image:
+                    highlights = [
+                        (x, y)
+                        for y in range(image.height)
+                        for x in range(image.width)
+                        if image.getpixel((x, y))[3] > 0
+                    ]
+                    self.assertEqual(
+                        [(10, 25), (11, 25), (22, 25), (23, 25)],
+                        highlights,
+                    )
+
+    def test_exaggerated_motion_frames_reuse_front_palette_and_anchors(self):
+        import json
+
+        from src.tools.test.eye_variant_pipeline import generate_exaggerated_eye_variants
+
+        with TemporaryDirectory(prefix="eye_variants_fixed_", dir=self.project_root / "assets" / "test") as temp_dir:
+            output = Path(temp_dir)
+            generate_exaggerated_eye_variants(output)
+            role_dir = output / "set_c_exaggerated" / "male"
+
+            def points(path):
+                with Image.open(path) as image:
+                    image = image.convert("RGBA")
+                    return {
+                        (x, y)
+                        for y in range(image.height)
+                        for x in range(image.width)
+                        if image.getpixel((x, y))[3] > 0
+                    }
+
+            def colors(path):
+                with Image.open(path) as image:
+                    return {
+                        pixel
+                        for pixel in image.convert("RGBA").get_flattened_data()
+                        if pixel[3] > 0
+                    }
+
+            front_name = "face10101_stand_D_0.png"
+            front_eye_colors = colors(role_dir / "eye" / front_name)
+            with Image.open(role_dir / "eye" / front_name) as image:
+                image = image.convert("RGBA")
+                dark_lower_pixels = [
+                    (x, y)
+                    for y in range(30, image.height)
+                    for x in range(image.width)
+                    if image.getpixel((x, y))[3] > 0 and sum(image.getpixel((x, y))[:3]) < 300
+                ]
+            self.assertFalse(dark_lower_pixels)
+
+            annotations = json.loads(
+                (self.project_root / "assets" / "test" / "male_face_v2" / "annotations.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+
+            def iris_center(frame, left):
+                iris = [
+                    tuple(point)
+                    for point in annotations[frame]["feat"]["iris"]
+                    if (point[0] < 18) == left
+                ]
+                return (
+                    (min(x for x, _ in iris) + max(x for x, _ in iris)) / 2,
+                    (min(y for _, y in iris) + max(y for _, y in iris)) / 2,
+                )
+
+            front_centers = {side: iris_center("stand_D_0", side == "L") for side in ("L", "R")}
+            front_brow_points = points(role_dir / "brow" / front_name)
+            for frame in ("walk_D_0", "walk_D_1", "walk_D_2", "walk_D_4", "walk_D_5"):
+                filename = f"face10101_{frame}.png"
+                motion_colors = colors(role_dir / "eye" / filename)
+                self.assertLessEqual(motion_colors, front_eye_colors, frame)
+
+                expected_brow = set()
+                for side in ("L", "R"):
+                    dx = round(iris_center(frame, side == "L")[0] - front_centers[side][0])
+                    dy = round(iris_center(frame, side == "L")[1] - front_centers[side][1])
+                    side_points = {
+                        (x, y)
+                        for x, y in front_brow_points
+                        if (x < 18) == (side == "L")
+                    }
+                    expected_brow.update((x + dx, y + dy) for x, y in side_points)
+                self.assertEqual(expected_brow, points(role_dir / "brow" / filename), frame)
+
 
 if __name__ == "__main__":
     unittest.main()
