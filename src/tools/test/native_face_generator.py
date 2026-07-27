@@ -12,7 +12,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 
-GENERATOR_VERSION = "native_face_v2"
+GENERATOR_VERSION = "native_face_v3"
 FRAME_WIDTH = 36
 FRAME_HEIGHT = 34
 DIRECTIONS = ("D", "L", "R", "U")
@@ -198,12 +198,12 @@ def _draw_eye(
     dy: int,
 ) -> None:
     cx, cy = center
-    outer = _ellipse_points((cx, cy + dy), 4, 4 if style_index == 0 else 3)
-    iris = _ellipse_points((cx, cy + dy), 2, 2)
-    pupil = _ellipse_points((cx, cy + dy), 1, 1)
+    outer = _ellipse_points((cx, cy + dy), 5, 5)
+    iris = _ellipse_points((cx, cy + dy), 3 if style_index == 0 else 2, 3)
+    pupil = _ellipse_points((cx, cy + dy), 1, 2)
     for point in outer:
         _put(layer, *point, palette.outline)
-    for point in _ellipse_points((cx, cy + dy), 3, 3 if style_index == 0 else 2):
+    for point in _ellipse_points((cx, cy + dy), 4, 4 if style_index == 0 else 3):
         _put(layer, *point, palette.eye_white)
     for point in iris:
         _put(layer, *point, palette.iris)
@@ -240,15 +240,12 @@ def _draw_brow(layer: Image.Image, palette: FacePalette, direction: str, style_i
             curve = 1 if (x - start) in (0, end - start) else 0
             if style_index == 1 and index % 2 == 0:
                 curve = 1 - curve
-            _put(layer, x, 14 + curve + dy, palette.brow)
+            _put(layer, x, 12 + curve + dy, palette.brow)
 
 
 def _draw_mouth(layer: Image.Image, palette: FacePalette, direction: str, dy: int) -> None:
-    if direction == "D":
-        for x, y in ((16, 27), (17, 28), (18, 28), (19, 27)):
-            _put(layer, x, y + dy, palette.mouth)
-    elif direction in ("L", "R"):
-        _put(layer, 18 if direction == "L" else 17, 27 + dy, palette.mouth)
+    # The slot stays available for future cosmetic overlays; the base face has no mouth.
+    return
 
 
 def _mirror_points(points: list[Point]) -> list[Point]:
@@ -313,8 +310,8 @@ def _draw_ear_side(
     angle_offset = {"down": 1, "neutral": 0, "up": -1}[factors["angle"]]
     top = 16 + angle_offset + dy
     bottom = top + height - 1
-    outer = 1
-    inner = outer + width
+    inner = 5
+    outer = inner - width
     outline_points = _ear_polygon(outer, inner, top, bottom, factors["point"])
     if side == "right":
         outline_points = _mirror_points(outline_points)
@@ -381,14 +378,26 @@ def _save_png(image: Image.Image, path: Path) -> None:
     image.save(path, format="PNG", optimize=False, compress_level=9)
 
 
+def _scale_image(image: Image.Image, pixel_scale: int) -> Image.Image:
+    if pixel_scale == 1:
+        return image
+    return image.resize(
+        (FRAME_WIDTH * pixel_scale, FRAME_HEIGHT * pixel_scale),
+        resample=Image.Resampling.NEAREST,
+    )
+
+
 def generate_face_catalog(
     output_dir: Path | str,
     seed: int,
     face_id: str = "face_round_01",
+    pixel_scale: int = 1,
 ) -> dict:
     seed = int(seed)
     if seed < 0:
         raise ValueError("seed must be non-negative")
+    if pixel_scale not in (1, 2):
+        raise ValueError("pixel_scale must be 1 or 2")
     if not FACE_ID_PATTERN.fullmatch(face_id):
         raise ValueError("face_id must contain lowercase letters, digits, and underscores only")
 
@@ -403,6 +412,7 @@ def generate_face_catalog(
         "skin_palette": palette.name,
         "eye_style": "large_round_01" if eye_style == 0 else "large_round_02",
         "brow_style": "soft_arc_01" if eye_style == 0 else "soft_arc_02",
+        "mouth_status": "reserved_decoration_only",
         **ear_factors,
     }
     manifest = {
@@ -411,11 +421,21 @@ def generate_face_catalog(
         "reference_inputs": [],
         "seed": seed,
         "face_id": face_id,
-        "size": {"width": FRAME_WIDTH, "height": FRAME_HEIGHT},
+        "logical_size": {"width": FRAME_WIDTH, "height": FRAME_HEIGHT},
+        "pixel_scale": pixel_scale,
+        "size": {"width": FRAME_WIDTH * pixel_scale, "height": FRAME_HEIGHT * pixel_scale},
         "directions": list(DIRECTIONS),
         "states": list(STATES),
         "frame_count": FRAME_COUNT,
         "layers": list(LAYERS),
+        "slots": {"mouth": "reserved_decoration_only"},
+        "style_contract": {
+            "face_language": "western_fantasy_chibi",
+            "head_coverage": "dominant",
+            "eye_scale": "large",
+            "mouth": "reserved_empty",
+            "rendering": "procedural_pixel_art",
+        },
         "factors": factors,
         "frames": {},
     }
@@ -449,10 +469,13 @@ def generate_face_catalog(
         layers["composite"] = composite
 
         frame_name = f"{face_id}_{state}_{direction}_{frame}.png"
-        frame_record = {"size": {"width": FRAME_WIDTH, "height": FRAME_HEIGHT}, "sha256": {}}
+        frame_record = {
+            "size": {"width": FRAME_WIDTH * pixel_scale, "height": FRAME_HEIGHT * pixel_scale},
+            "sha256": {},
+        }
         for layer_name in LAYERS:
             path = output_root / layer_name / frame_name
-            _save_png(layers[layer_name], path)
+            _save_png(_scale_image(layers[layer_name], pixel_scale), path)
             frame_record["sha256"][layer_name] = _sha256(path)
         manifest["frames"][frame_name] = frame_record
 
@@ -465,15 +488,16 @@ def generate_face_catalog(
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Generate self-owned procedural face components")
-    parser.add_argument("--output-dir", type=Path, default=Path(__file__).resolve().parents[3] / "assets" / "test" / "native_face_v2")
+    parser.add_argument("--output-dir", type=Path, default=Path(__file__).resolve().parents[3] / "assets" / "test" / "native_face_v3")
     parser.add_argument("--seed", type=int, default=20260727)
     parser.add_argument("--face-id", default="face_round_01")
+    parser.add_argument("--pixel-scale", type=int, choices=(1, 2), default=1)
     return parser
 
 
 def main() -> int:
     args = build_parser().parse_args()
-    manifest = generate_face_catalog(args.output_dir, args.seed, args.face_id)
+    manifest = generate_face_catalog(args.output_dir, args.seed, args.face_id, args.pixel_scale)
     print(json.dumps({"output_dir": str(args.output_dir), "frame_count": manifest["frame_count"]}, ensure_ascii=False))
     return 0
 

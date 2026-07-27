@@ -1,0 +1,481 @@
+{
+  "directions": [
+    "D",
+    "L",
+    "R",
+    "U"
+  ],
+  "face_id": "face_round_01",
+  "factors": {
+    "angle": "up",
+    "brow_style": "soft_arc_02",
+    "ear_type": "human",
+    "eye_style": "large_round_02",
+    "head_shape": "round_wide",
+    "inner_color": "soft_coral",
+    "mouth_status": "reserved_decoration_only",
+    "point": "round",
+    "size": "large",
+    "skin_palette": "rose_03",
+    "visibility": "subtle"
+  },
+  "frame_count": 28,
+  "frames": {
+    "face_round_01_stand_D_0.png": {
+      "sha256": {
+        "base": "29c44b454b0d78fe9a755899e8cc01ac2b08324c11be69ae51b41e658177ac46",
+        "brow": "78338ab2f0efbdbf886e85b6d016bd1f8cab7a10d4974d5e02c45e965979f0c2",
+        "composite": "a56c1bfbaea7be75057c9732586bcf44c1e7d1d22fe2dd61f61e8f0888f4e3cc",
+        "ear": "9580efe66245582fb1efa8b76fa4f98f92c16e928c92a55d33c11a21d66d007d",
+        "eye": "574ee413490828b217ca9110c3bfdbfc985c8941324c42bad82a4b11e2e3efa9",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "87df35573e061ebc4bbbc1f6aff179e0a1e996c420ffbfa1329fd295c688f2ae"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_stand_L_0.png": {
+      "sha256": {
+        "base": "29c44b454b0d78fe9a755899e8cc01ac2b08324c11be69ae51b41e658177ac46",
+        "brow": "b1cd56d1be3acfac401dc5fd9043bb56cbc70d6518d695b6c8259b8ab0781c30",
+        "composite": "bdd893c80c471ee8a3636a9f2a9a1828e6e97066042a498e16e0d9e679cd3aa1",
+        "ear": "63086dcd0dd8cb3d912cbea7e49b0f3ddc385e502c0c0718c0c98e6fbaae65c6",
+        "eye": "c8d2b04c50aa53eb12ff0c5fb5dc92a8207c8ed6b84c05d87e9735ae06cecca5",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "374ecb2fbf3f018c237cdc1f7ebcb0a78ecf1a9700695618d860c6717340d3ca"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_stand_R_0.png": {
+      "sha256": {
+        "base": "29c44b454b0d78fe9a755899e8cc01ac2b08324c11be69ae51b41e658177ac46",
+        "brow": "0a683ddff616d2913dc4f005c3df3e450eeabf481c9775ff436d9300409fc298",
+        "composite": "9329f3aeef0d8af6f0c4f7464bc1631895e2f1dd0e2533c7c848d95ad6e13d98",
+        "ear": "e9b9600df5a16f4b9df2d68ffce412d17197eb655583a91c777ac1817b87cf6f",
+        "eye": "ef83affce976e9c5092fc4f1e5e7fe34905e5dbb7300b8aaaee87d28e1954890",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "5381498a7dc4cf9cf679ce9a71124fb8f084014ac1c035c7b8c05c2bef3df547"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_stand_U_0.png": {
+      "sha256": {
+        "base": "e87b908b20d5987efdc8ccf2fcb7c6b14c3e0e77b0b3604817897861fad6f9fd",
+        "brow": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "composite": "14ece0e9817e980680dd502d43f25f27865159f1dd463d3ffc1c0e90d23482e1",
+        "ear": "9580efe66245582fb1efa8b76fa4f98f92c16e928c92a55d33c11a21d66d007d",
+        "eye": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_D_0.png": {
+      "sha256": {
+        "base": "29c44b454b0d78fe9a755899e8cc01ac2b08324c11be69ae51b41e658177ac46",
+        "brow": "78338ab2f0efbdbf886e85b6d016bd1f8cab7a10d4974d5e02c45e965979f0c2",
+        "composite": "a56c1bfbaea7be75057c9732586bcf44c1e7d1d22fe2dd61f61e8f0888f4e3cc",
+        "ear": "9580efe66245582fb1efa8b76fa4f98f92c16e928c92a55d33c11a21d66d007d",
+        "eye": "574ee413490828b217ca9110c3bfdbfc985c8941324c42bad82a4b11e2e3efa9",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "87df35573e061ebc4bbbc1f6aff179e0a1e996c420ffbfa1329fd295c688f2ae"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_D_1.png": {
+      "sha256": {
+        "base": "dfd327823dffb95f11c056f585f46d4557c0722f9314715b6d9a91f6d47fe6c9",
+        "brow": "952c1bf657435601e08541be10ea3dd87b998ee59e2b650b1057361c45317dc3",
+        "composite": "7f0013a0df72fa6941c0fda0ac21261881ae8264598a157864643baba1b90499",
+        "ear": "644114ad8be27885831ca1756b0e888380ca4fb8fc7e603b47cb9b05a335a16e",
+        "eye": "c6f3de7c8185346a9afd3c4a86a2a09f8d044747fa6792604568f9034bc404c1",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "5e9d700a4ff174cf8bbfe5f3c7701b4a85c615d26c03b350557222d5193d3f88"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_D_2.png": {
+      "sha256": {
+        "base": "29c44b454b0d78fe9a755899e8cc01ac2b08324c11be69ae51b41e658177ac46",
+        "brow": "78338ab2f0efbdbf886e85b6d016bd1f8cab7a10d4974d5e02c45e965979f0c2",
+        "composite": "a56c1bfbaea7be75057c9732586bcf44c1e7d1d22fe2dd61f61e8f0888f4e3cc",
+        "ear": "9580efe66245582fb1efa8b76fa4f98f92c16e928c92a55d33c11a21d66d007d",
+        "eye": "574ee413490828b217ca9110c3bfdbfc985c8941324c42bad82a4b11e2e3efa9",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "87df35573e061ebc4bbbc1f6aff179e0a1e996c420ffbfa1329fd295c688f2ae"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_D_3.png": {
+      "sha256": {
+        "base": "107b16b86c4fcac96aa4daccac757fd49d33431d2b8dfcdb1ca6cb6b2f768839",
+        "brow": "de3a3e61bb206714ca6871b52fb640526d4dd55f45955fee9c88c291c60327a4",
+        "composite": "598ff0128ccaba29d7dcadf9f120cb2aed6307269bcaeb258e5cbc0f9e491a03",
+        "ear": "d67bf3bd86d83fa69f1d3944aef8f164f7f1e0801be98d7bef28d553fbfc7ff5",
+        "eye": "83b9b2e08cbf8ed95002cc1a7be295e9f07c944e7185c957843e1321936c11c6",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "ec208b75edfbb92ac96ccb984e453af115d38341e6d85b2c52baa8166b2cd080"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_D_4.png": {
+      "sha256": {
+        "base": "29c44b454b0d78fe9a755899e8cc01ac2b08324c11be69ae51b41e658177ac46",
+        "brow": "78338ab2f0efbdbf886e85b6d016bd1f8cab7a10d4974d5e02c45e965979f0c2",
+        "composite": "a56c1bfbaea7be75057c9732586bcf44c1e7d1d22fe2dd61f61e8f0888f4e3cc",
+        "ear": "9580efe66245582fb1efa8b76fa4f98f92c16e928c92a55d33c11a21d66d007d",
+        "eye": "574ee413490828b217ca9110c3bfdbfc985c8941324c42bad82a4b11e2e3efa9",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "87df35573e061ebc4bbbc1f6aff179e0a1e996c420ffbfa1329fd295c688f2ae"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_D_5.png": {
+      "sha256": {
+        "base": "dfd327823dffb95f11c056f585f46d4557c0722f9314715b6d9a91f6d47fe6c9",
+        "brow": "952c1bf657435601e08541be10ea3dd87b998ee59e2b650b1057361c45317dc3",
+        "composite": "7f0013a0df72fa6941c0fda0ac21261881ae8264598a157864643baba1b90499",
+        "ear": "644114ad8be27885831ca1756b0e888380ca4fb8fc7e603b47cb9b05a335a16e",
+        "eye": "c6f3de7c8185346a9afd3c4a86a2a09f8d044747fa6792604568f9034bc404c1",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "5e9d700a4ff174cf8bbfe5f3c7701b4a85c615d26c03b350557222d5193d3f88"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_L_0.png": {
+      "sha256": {
+        "base": "29c44b454b0d78fe9a755899e8cc01ac2b08324c11be69ae51b41e658177ac46",
+        "brow": "b1cd56d1be3acfac401dc5fd9043bb56cbc70d6518d695b6c8259b8ab0781c30",
+        "composite": "bdd893c80c471ee8a3636a9f2a9a1828e6e97066042a498e16e0d9e679cd3aa1",
+        "ear": "63086dcd0dd8cb3d912cbea7e49b0f3ddc385e502c0c0718c0c98e6fbaae65c6",
+        "eye": "c8d2b04c50aa53eb12ff0c5fb5dc92a8207c8ed6b84c05d87e9735ae06cecca5",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "374ecb2fbf3f018c237cdc1f7ebcb0a78ecf1a9700695618d860c6717340d3ca"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_L_1.png": {
+      "sha256": {
+        "base": "dfd327823dffb95f11c056f585f46d4557c0722f9314715b6d9a91f6d47fe6c9",
+        "brow": "a0115dab2726113e04cd5019cf976000df5b8c1125565d278a7e3ce940b64832",
+        "composite": "457a10912b4939f34e8dad6994115cd9190d606c219250256be0f55405552b9b",
+        "ear": "7fff791f68353f171f405b41da10bd6e25525f80b355f8d6fc4207be5d366e19",
+        "eye": "1bd904129639664fa1ff46644082e4f155953a31042eae8f31ba8240fa75b26f",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "a7bb8ab80cb0bb52a1400ae620d7da36cb9b45ce222dd24e9de87bf488edfe49"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_L_2.png": {
+      "sha256": {
+        "base": "29c44b454b0d78fe9a755899e8cc01ac2b08324c11be69ae51b41e658177ac46",
+        "brow": "b1cd56d1be3acfac401dc5fd9043bb56cbc70d6518d695b6c8259b8ab0781c30",
+        "composite": "bdd893c80c471ee8a3636a9f2a9a1828e6e97066042a498e16e0d9e679cd3aa1",
+        "ear": "63086dcd0dd8cb3d912cbea7e49b0f3ddc385e502c0c0718c0c98e6fbaae65c6",
+        "eye": "c8d2b04c50aa53eb12ff0c5fb5dc92a8207c8ed6b84c05d87e9735ae06cecca5",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "374ecb2fbf3f018c237cdc1f7ebcb0a78ecf1a9700695618d860c6717340d3ca"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_L_3.png": {
+      "sha256": {
+        "base": "107b16b86c4fcac96aa4daccac757fd49d33431d2b8dfcdb1ca6cb6b2f768839",
+        "brow": "dbe1ebcc91414c21536588296ff8a5d754bbe788b1d3b7ade7d379f5eabc9c8f",
+        "composite": "2fd9c568610686ae36081b5910d50ae645989f2461555920cf78b04e991d4e60",
+        "ear": "e67553b10b078b5cb4a26a2e912db90dd8876fdae962085643c0e37ce5087687",
+        "eye": "cf0ddf7acf99590baecd18e7bcca22e9c26c27d4e79c0b45bb2385f4a093b925",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "bd6119c82563ada62028335ee55bd8cc2480d8a17b651c3217db41c3c07f09e7"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_L_4.png": {
+      "sha256": {
+        "base": "29c44b454b0d78fe9a755899e8cc01ac2b08324c11be69ae51b41e658177ac46",
+        "brow": "b1cd56d1be3acfac401dc5fd9043bb56cbc70d6518d695b6c8259b8ab0781c30",
+        "composite": "bdd893c80c471ee8a3636a9f2a9a1828e6e97066042a498e16e0d9e679cd3aa1",
+        "ear": "63086dcd0dd8cb3d912cbea7e49b0f3ddc385e502c0c0718c0c98e6fbaae65c6",
+        "eye": "c8d2b04c50aa53eb12ff0c5fb5dc92a8207c8ed6b84c05d87e9735ae06cecca5",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "374ecb2fbf3f018c237cdc1f7ebcb0a78ecf1a9700695618d860c6717340d3ca"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_L_5.png": {
+      "sha256": {
+        "base": "dfd327823dffb95f11c056f585f46d4557c0722f9314715b6d9a91f6d47fe6c9",
+        "brow": "a0115dab2726113e04cd5019cf976000df5b8c1125565d278a7e3ce940b64832",
+        "composite": "457a10912b4939f34e8dad6994115cd9190d606c219250256be0f55405552b9b",
+        "ear": "7fff791f68353f171f405b41da10bd6e25525f80b355f8d6fc4207be5d366e19",
+        "eye": "1bd904129639664fa1ff46644082e4f155953a31042eae8f31ba8240fa75b26f",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "a7bb8ab80cb0bb52a1400ae620d7da36cb9b45ce222dd24e9de87bf488edfe49"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_R_0.png": {
+      "sha256": {
+        "base": "29c44b454b0d78fe9a755899e8cc01ac2b08324c11be69ae51b41e658177ac46",
+        "brow": "0a683ddff616d2913dc4f005c3df3e450eeabf481c9775ff436d9300409fc298",
+        "composite": "9329f3aeef0d8af6f0c4f7464bc1631895e2f1dd0e2533c7c848d95ad6e13d98",
+        "ear": "e9b9600df5a16f4b9df2d68ffce412d17197eb655583a91c777ac1817b87cf6f",
+        "eye": "ef83affce976e9c5092fc4f1e5e7fe34905e5dbb7300b8aaaee87d28e1954890",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "5381498a7dc4cf9cf679ce9a71124fb8f084014ac1c035c7b8c05c2bef3df547"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_R_1.png": {
+      "sha256": {
+        "base": "dfd327823dffb95f11c056f585f46d4557c0722f9314715b6d9a91f6d47fe6c9",
+        "brow": "3237bf05ed866af4a46b29d513b79dbcf11e79b923441ae5ef7214cf9251451f",
+        "composite": "c038e6dccb9fe205052ef7e133697d294c985fed9219fd69ea7bec08ab3f65e7",
+        "ear": "83270055c8d964acb5bfeb35fe29de2e7bd1c82ba0c5c3c678c39b1662070888",
+        "eye": "9c7c9175c9fb9c3297676582e6516b237eb455b479a41d46461f0f77603e0b4d",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "b19e54dd065b5bf6aabf2aa20716bda4d6c43c29c5a655e50573d73d01c4caf2"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_R_2.png": {
+      "sha256": {
+        "base": "29c44b454b0d78fe9a755899e8cc01ac2b08324c11be69ae51b41e658177ac46",
+        "brow": "0a683ddff616d2913dc4f005c3df3e450eeabf481c9775ff436d9300409fc298",
+        "composite": "9329f3aeef0d8af6f0c4f7464bc1631895e2f1dd0e2533c7c848d95ad6e13d98",
+        "ear": "e9b9600df5a16f4b9df2d68ffce412d17197eb655583a91c777ac1817b87cf6f",
+        "eye": "ef83affce976e9c5092fc4f1e5e7fe34905e5dbb7300b8aaaee87d28e1954890",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "5381498a7dc4cf9cf679ce9a71124fb8f084014ac1c035c7b8c05c2bef3df547"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_R_3.png": {
+      "sha256": {
+        "base": "107b16b86c4fcac96aa4daccac757fd49d33431d2b8dfcdb1ca6cb6b2f768839",
+        "brow": "c70446b3b229b8b4375597817eefd0428a2c44a60556dc79c2f0a7574a9ccf88",
+        "composite": "0312587c9e7efa9fc02c77d0172423b342a02f9bb4fa3843821fefcfa26f5b93",
+        "ear": "2896f5268af63bd2e09f435be5fbaca0ce5ab1eca1aa021b3026f684aa9ddbab",
+        "eye": "a383841e852be1abaa102cea0f8104204ce5e4cee3cf508d714cc9423ce6f293",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "54c1413c722fe58985929d6c64cc259a5c44a2a0dff47d1f8c9f53d883fdccd7"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_R_4.png": {
+      "sha256": {
+        "base": "29c44b454b0d78fe9a755899e8cc01ac2b08324c11be69ae51b41e658177ac46",
+        "brow": "0a683ddff616d2913dc4f005c3df3e450eeabf481c9775ff436d9300409fc298",
+        "composite": "9329f3aeef0d8af6f0c4f7464bc1631895e2f1dd0e2533c7c848d95ad6e13d98",
+        "ear": "e9b9600df5a16f4b9df2d68ffce412d17197eb655583a91c777ac1817b87cf6f",
+        "eye": "ef83affce976e9c5092fc4f1e5e7fe34905e5dbb7300b8aaaee87d28e1954890",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "5381498a7dc4cf9cf679ce9a71124fb8f084014ac1c035c7b8c05c2bef3df547"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_R_5.png": {
+      "sha256": {
+        "base": "dfd327823dffb95f11c056f585f46d4557c0722f9314715b6d9a91f6d47fe6c9",
+        "brow": "3237bf05ed866af4a46b29d513b79dbcf11e79b923441ae5ef7214cf9251451f",
+        "composite": "c038e6dccb9fe205052ef7e133697d294c985fed9219fd69ea7bec08ab3f65e7",
+        "ear": "83270055c8d964acb5bfeb35fe29de2e7bd1c82ba0c5c3c678c39b1662070888",
+        "eye": "9c7c9175c9fb9c3297676582e6516b237eb455b479a41d46461f0f77603e0b4d",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "b19e54dd065b5bf6aabf2aa20716bda4d6c43c29c5a655e50573d73d01c4caf2"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_U_0.png": {
+      "sha256": {
+        "base": "e87b908b20d5987efdc8ccf2fcb7c6b14c3e0e77b0b3604817897861fad6f9fd",
+        "brow": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "composite": "14ece0e9817e980680dd502d43f25f27865159f1dd463d3ffc1c0e90d23482e1",
+        "ear": "9580efe66245582fb1efa8b76fa4f98f92c16e928c92a55d33c11a21d66d007d",
+        "eye": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_U_1.png": {
+      "sha256": {
+        "base": "5dbf5feb8b5fd9fbeb2f6c3a8201651dc8653600488ad514b1db859ec0a0265a",
+        "brow": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "composite": "9614612caf9720dccc80c7755675b3bfdc87d24e9c83932e79f0abe9f1d5aaf9",
+        "ear": "644114ad8be27885831ca1756b0e888380ca4fb8fc7e603b47cb9b05a335a16e",
+        "eye": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_U_2.png": {
+      "sha256": {
+        "base": "e87b908b20d5987efdc8ccf2fcb7c6b14c3e0e77b0b3604817897861fad6f9fd",
+        "brow": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "composite": "14ece0e9817e980680dd502d43f25f27865159f1dd463d3ffc1c0e90d23482e1",
+        "ear": "9580efe66245582fb1efa8b76fa4f98f92c16e928c92a55d33c11a21d66d007d",
+        "eye": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_U_3.png": {
+      "sha256": {
+        "base": "8ec33db3bd62eae91a334cd3ab13467524c97cfdd93afcbbf6049ffe6d08e603",
+        "brow": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "composite": "cb8468a8645f1ba7c336128ec2087fcaf6e1a24c042cc756eae03edefafef07b",
+        "ear": "d67bf3bd86d83fa69f1d3944aef8f164f7f1e0801be98d7bef28d553fbfc7ff5",
+        "eye": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_U_4.png": {
+      "sha256": {
+        "base": "e87b908b20d5987efdc8ccf2fcb7c6b14c3e0e77b0b3604817897861fad6f9fd",
+        "brow": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "composite": "14ece0e9817e980680dd502d43f25f27865159f1dd463d3ffc1c0e90d23482e1",
+        "ear": "9580efe66245582fb1efa8b76fa4f98f92c16e928c92a55d33c11a21d66d007d",
+        "eye": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_U_5.png": {
+      "sha256": {
+        "base": "5dbf5feb8b5fd9fbeb2f6c3a8201651dc8653600488ad514b1db859ec0a0265a",
+        "brow": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "composite": "9614612caf9720dccc80c7755675b3bfdc87d24e9c83932e79f0abe9f1d5aaf9",
+        "ear": "644114ad8be27885831ca1756b0e888380ca4fb8fc7e603b47cb9b05a335a16e",
+        "eye": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    }
+  },
+  "generator_version": "native_face_v3",
+  "layers": [
+    "base",
+    "socket_cover",
+    "eye",
+    "brow",
+    "mouth",
+    "ear",
+    "composite"
+  ],
+  "logical_size": {
+    "height": 34,
+    "width": 36
+  },
+  "pixel_scale": 1,
+  "reference_inputs": [],
+  "seed": 20260727,
+  "size": {
+    "height": 34,
+    "width": 36
+  },
+  "slots": {
+    "mouth": "reserved_decoration_only"
+  },
+  "source": "procedural_local",
+  "states": [
+    "stand",
+    "walk"
+  ],
+  "style_contract": {
+    "eye_scale": "large",
+    "face_language": "western_fantasy_chibi",
+    "head_coverage": "dominant",
+    "mouth": "reserved_empty",
+    "rendering": "procedural_pixel_art"
+  }
+}

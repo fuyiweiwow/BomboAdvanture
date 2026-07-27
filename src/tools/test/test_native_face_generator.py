@@ -45,7 +45,13 @@ class NativeFaceGeneratorTests(unittest.TestCase):
                 self.assertIsNotNone(bbox)
                 self.assertGreaterEqual(bbox[2] - bbox[0], 23)
                 self.assertGreaterEqual(bbox[3] - bbox[1], 11)
-                self.assertGreaterEqual(sum(1 for pixel in eye.getdata() if pixel[3] > 0), 100)
+                eye_pixels = sum(
+                    1
+                    for y in range(eye.height)
+                    for x in range(eye.width)
+                    if eye.getpixel((x, y))[3] > 0
+                )
+                self.assertGreaterEqual(eye_pixels, 100)
             with Image.open(mouth_path) as mouth:
                 self.assertIsNone(mouth.getbbox())
 
