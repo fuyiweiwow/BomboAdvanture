@@ -20,7 +20,7 @@ class NativeFaceGeneratorTests(unittest.TestCase):
 
             self.assertEqual(manifest["source"], "procedural_local")
             self.assertEqual(manifest["frame_count"], FRAME_COUNT)
-            self.assertEqual(manifest["generator_version"], "native_face_v3")
+            self.assertEqual(manifest["generator_version"], "native_face_v4")
             self.assertEqual(set(manifest["layers"]), set(LAYERS))
 
             for layer in LAYERS:
@@ -66,6 +66,33 @@ class NativeFaceGeneratorTests(unittest.TestCase):
                 path = Path(temp_dir) / layer / "face_round_01_stand_D_0.png"
                 with Image.open(path) as image:
                     self.assertEqual(image.size, (72, 68))
+
+    def test_chibi_head_reserves_hair_volume_without_neck(self):
+        with tempfile.TemporaryDirectory(prefix="native_face_v4_head_") as temp_dir:
+            manifest = generate_face_catalog(Path(temp_dir), seed=0)
+
+            self.assertEqual(manifest["factors"]["hair_status"], "reserved_decoration_only")
+            self.assertEqual(manifest["factors"]["neck_status"], "absent")
+            self.assertEqual(manifest["style_contract"]["hair_volume"], "generous_crown")
+            self.assertEqual(manifest["style_contract"]["neck"], "absent")
+            self.assertEqual(manifest["slots"]["hair"]["status"], "reserved_decoration_only")
+            self.assertEqual(manifest["slots"]["hair"]["logical_bounds"], {"x": [3, 32], "y": [0, 13]})
+
+            hair_path = Path(temp_dir) / "hair" / "face_round_01_stand_D_0.png"
+            with Image.open(hair_path) as hair:
+                self.assertIsNone(hair.getbbox())
+
+    def test_large_eyes_keep_vertical_weight_with_mild_horizontal_stretch(self):
+        with tempfile.TemporaryDirectory(prefix="native_face_v4_eye_") as temp_dir:
+            generate_face_catalog(Path(temp_dir), seed=0)
+
+            eye_path = Path(temp_dir) / "eye" / "face_round_01_stand_D_0.png"
+            with Image.open(eye_path) as eye:
+                bbox = eye.getbbox()
+                self.assertIsNotNone(bbox)
+                self.assertGreaterEqual(bbox[2] - bbox[0], 25)
+                self.assertGreaterEqual(bbox[3] - bbox[1], 11)
+                self.assertGreater((bbox[2] - bbox[0]) / (bbox[3] - bbox[1]), 2.15)
 
     def test_same_seed_reproduces_every_layer_byte_for_byte(self):
         with tempfile.TemporaryDirectory(prefix="native_face_repro_a_") as first_dir:
