@@ -20,7 +20,7 @@ class NativeFaceGeneratorTests(unittest.TestCase):
 
             self.assertEqual(manifest["source"], "procedural_local")
             self.assertEqual(manifest["frame_count"], FRAME_COUNT)
-            self.assertEqual(manifest["generator_version"], "native_face_v1")
+            self.assertEqual(manifest["generator_version"], "native_face_v2")
             self.assertEqual(set(manifest["layers"]), set(LAYERS))
 
             for layer in LAYERS:

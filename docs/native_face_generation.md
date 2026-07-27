@@ -12,14 +12,15 @@
 
 ## 运行时契约
 
-第一版使用 `36x34` RGBA 帧作为工程兼容尺寸，但轮廓、插槽、色板和五官布局全部重新设计。输出层为：
+使用 `36x34` RGBA 帧作为工程兼容尺寸，但轮廓、插槽、色板和五官布局全部重新设计。`native_face_v1` 是无耳朵的基线，`native_face_v2` 在同一脸部基底上加入可替换人耳层。输出层为：
 
 ```text
-Base
+Ear
++ Base
 + SocketCover
 + Eye
 + Brow
-+ Ear
++ Mouth
 = Composite
 ```
 
@@ -39,13 +40,19 @@ Base
 
 ```json
 {
-  "generator_version": "native_face_v1",
+  "generator_version": "native_face_v2",
   "seed": 20260727,
   "factors": {
     "head_shape": "round_soft",
     "skin_palette": "coral_01",
     "eye_style": "large_round_01",
-    "brow_style": "soft_arc_01"
+    "brow_style": "soft_arc_01",
+    "ear_type": "human",
+    "size": "medium",
+    "angle": "neutral",
+    "point": "round",
+    "inner_color": "warm_rose",
+    "visibility": "full"
   },
   "source": "procedural_local"
 }
@@ -60,7 +67,8 @@ Base
 - 新资产与已知旧资源不共享文件内容 SHA。
 - 旧参考资源删除或替换后，生成器仍可独立运行。
 
-## 后续耳朵
+## 耳朵阶段结果
 
-耳朵不写入 Base。完成脸部基底后，在同一坐标契约上增加 `size`、`angle`、`point`、`inner_color` 和 `visibility` 因子。先实现人耳，再实现尖耳和兽耳，并为每种类型增加独立的边界和重叠测试。
+耳朵不写入 `Base`。`native_face_v2` 已在同一坐标契约上实现人耳，并记录 `size`、`angle`、`point`、`inner_color` 和 `visibility` 因子。耳朵先绘制，`Base` 再覆盖头部内侧，避免耳朵颜色侵入头部轮廓。
 
+下一步再扩展精灵耳和兽耳，并为每种类型增加独立的边界、遮挡和方向测试。
