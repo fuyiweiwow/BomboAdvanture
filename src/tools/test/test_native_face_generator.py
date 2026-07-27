@@ -78,6 +78,55 @@ class NativeFaceGeneratorTests(unittest.TestCase):
             with Image.open(back_brow) as image:
                 self.assertIsNone(image.getbbox())
 
+    def test_ear_factors_are_recorded_and_visible_ear_is_rendered(self):
+        with tempfile.TemporaryDirectory(prefix="native_face_ears_") as temp_dir:
+            manifest = generate_face_catalog(Path(temp_dir), seed=0)
+
+            factors = manifest["factors"]
+            self.assertEqual(factors["ear_type"], "human")
+            self.assertIn(factors["size"], {"small", "medium", "large"})
+            self.assertIn(factors["angle"], {"down", "neutral", "up"})
+            self.assertIn(factors["point"], {"round", "soft_point", "pointed"})
+            self.assertIn(factors["inner_color"], {"warm_rose", "soft_coral", "deep_pink"})
+            self.assertIn(factors["visibility"], {"full", "subtle", "hidden"})
+
+            ear_path = Path(temp_dir) / "ear" / "face_round_01_stand_D_0.png"
+            with Image.open(ear_path) as image:
+                self.assertIsNotNone(image.getbbox())
+
+    def test_ear_seed_changes_pixels_and_hidden_visibility_is_empty(self):
+        with tempfile.TemporaryDirectory(prefix="native_face_ear_seed_a_") as first_dir:
+            with tempfile.TemporaryDirectory(prefix="native_face_ear_seed_b_") as second_dir:
+                first = generate_face_catalog(Path(first_dir), seed=0)
+                second = generate_face_catalog(Path(second_dir), seed=1)
+
+                self.assertNotEqual(first["factors"]["size"], second["factors"]["size"])
+                first_ear = Path(first_dir) / "ear" / "face_round_01_stand_D_0.png"
+                second_ear = Path(second_dir) / "ear" / "face_round_01_stand_D_0.png"
+                self.assertNotEqual(first_ear.read_bytes(), second_ear.read_bytes())
+
+        with tempfile.TemporaryDirectory(prefix="native_face_ear_hidden_") as temp_dir:
+            manifest = generate_face_catalog(Path(temp_dir), seed=162)
+            self.assertEqual(manifest["factors"]["visibility"], "hidden")
+            ear_path = Path(temp_dir) / "ear" / "face_round_01_stand_D_0.png"
+            with Image.open(ear_path) as image:
+                self.assertIsNone(image.getbbox())
+
+    def test_composite_keeps_head_in_front_of_ear_overlap(self):
+        with tempfile.TemporaryDirectory(prefix="native_face_ear_order_") as temp_dir:
+            generate_face_catalog(Path(temp_dir), seed=0)
+
+            base_path = Path(temp_dir) / "base" / "face_round_01_stand_D_0.png"
+            ear_path = Path(temp_dir) / "ear" / "face_round_01_stand_D_0.png"
+            composite_path = Path(temp_dir) / "composite" / "face_round_01_stand_D_0.png"
+            with Image.open(base_path) as base, Image.open(ear_path) as ear, Image.open(composite_path) as composite:
+                overlap = 0
+                for coordinate in ((x, y) for y in range(34) for x in range(36)):
+                    if base.getpixel(coordinate)[3] and ear.getpixel(coordinate)[3]:
+                        overlap += 1
+                        self.assertEqual(composite.getpixel(coordinate), base.getpixel(coordinate))
+                self.assertGreater(overlap, 0)
+
     def test_manifest_contains_frame_hashes_without_reference_paths(self):
         with tempfile.TemporaryDirectory(prefix="native_face_manifest_") as temp_dir:
             manifest = generate_face_catalog(Path(temp_dir), seed=3)
