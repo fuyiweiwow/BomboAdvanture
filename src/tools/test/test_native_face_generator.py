@@ -20,7 +20,7 @@ class NativeFaceGeneratorTests(unittest.TestCase):
 
             self.assertEqual(manifest["source"], "procedural_local")
             self.assertEqual(manifest["frame_count"], FRAME_COUNT)
-            self.assertEqual(manifest["generator_version"], "native_face_v2")
+            self.assertEqual(manifest["generator_version"], "native_face_v3")
             self.assertEqual(set(manifest["layers"]), set(LAYERS))
 
             for layer in LAYERS:
@@ -29,6 +29,37 @@ class NativeFaceGeneratorTests(unittest.TestCase):
                 with Image.open(files[0]) as image:
                     self.assertEqual(image.size, (36, 34))
                     self.assertEqual(image.mode, "RGBA")
+
+    def test_q_face_keeps_mouth_slot_empty_and_eyes_large(self):
+        with tempfile.TemporaryDirectory(prefix="native_face_v3_style_") as temp_dir:
+            manifest = generate_face_catalog(Path(temp_dir), seed=0)
+
+            self.assertEqual(manifest["factors"]["mouth_status"], "reserved_decoration_only")
+            self.assertEqual(manifest["style_contract"]["face_language"], "western_fantasy_chibi")
+            self.assertEqual(manifest["style_contract"]["eye_scale"], "large")
+
+            eye_path = Path(temp_dir) / "eye" / "face_round_01_stand_D_0.png"
+            mouth_path = Path(temp_dir) / "mouth" / "face_round_01_stand_D_0.png"
+            with Image.open(eye_path) as eye:
+                bbox = eye.getbbox()
+                self.assertIsNotNone(bbox)
+                self.assertGreaterEqual(bbox[2] - bbox[0], 23)
+                self.assertGreaterEqual(bbox[3] - bbox[1], 11)
+                self.assertGreaterEqual(sum(1 for pixel in eye.getdata() if pixel[3] > 0), 100)
+            with Image.open(mouth_path) as mouth:
+                self.assertIsNone(mouth.getbbox())
+
+    def test_hd_output_doubles_logical_pixel_distribution(self):
+        with tempfile.TemporaryDirectory(prefix="native_face_v3_hd_") as temp_dir:
+            manifest = generate_face_catalog(Path(temp_dir), seed=0, pixel_scale=2)
+
+            self.assertEqual(manifest["pixel_scale"], 2)
+            self.assertEqual(manifest["logical_size"], {"width": 36, "height": 34})
+            self.assertEqual(manifest["size"], {"width": 72, "height": 68})
+            for layer in LAYERS:
+                path = Path(temp_dir) / layer / "face_round_01_stand_D_0.png"
+                with Image.open(path) as image:
+                    self.assertEqual(image.size, (72, 68))
 
     def test_same_seed_reproduces_every_layer_byte_for_byte(self):
         with tempfile.TemporaryDirectory(prefix="native_face_repro_a_") as first_dir:
