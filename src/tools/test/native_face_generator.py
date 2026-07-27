@@ -12,12 +12,12 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 
-GENERATOR_VERSION = "native_face_v3"
+GENERATOR_VERSION = "native_face_v4"
 FRAME_WIDTH = 36
 FRAME_HEIGHT = 34
 DIRECTIONS = ("D", "L", "R", "U")
 STATES = ("stand", "walk")
-LAYERS = ("base", "socket_cover", "eye", "brow", "mouth", "ear", "composite")
+LAYERS = ("base", "hair", "socket_cover", "eye", "brow", "mouth", "ear", "composite")
 FRAME_COUNT = len(DIRECTIONS) * (1 + 6)
 FACE_ID_PATTERN = re.compile(r"^[a-z0-9_]+$")
 
@@ -85,7 +85,7 @@ PALETTES = (
 
 HEAD_SHAPES = (
     (
-        (15, 20), (12, 23), (9, 26), (7, 28), (6, 29), (5, 30),
+        (14, 21), (11, 24), (8, 27), (6, 29), (5, 30), (5, 30),
         (5, 30), (5, 30), (5, 30), (5, 30), (5, 30), (5, 30),
         (5, 30), (5, 30), (5, 30), (5, 30), (5, 30), (5, 30),
         (5, 30), (5, 30), (5, 30), (5, 30), (5, 30), (5, 30),
@@ -93,7 +93,7 @@ HEAD_SHAPES = (
         (9, 26), (12, 23), (15, 20), (16, 19),
     ),
     (
-        (14, 21), (11, 24), (8, 27), (7, 28), (6, 29), (5, 30),
+        (13, 22), (10, 25), (8, 27), (6, 29), (5, 30), (5, 30),
         (5, 30), (5, 30), (5, 30), (5, 30), (5, 30), (5, 30),
         (5, 30), (5, 30), (5, 30), (5, 30), (5, 30), (5, 30),
         (5, 30), (5, 30), (5, 30), (5, 30), (5, 30), (5, 30),
@@ -166,11 +166,11 @@ def _draw_head(base: Image.Image, palette: FacePalette, shape_index: int, direct
 
 def _draw_socket_cover(layer: Image.Image, palette: FacePalette, direction: str, dy: int) -> None:
     if direction == "D":
-        rectangles = ((7, 13, 16, 23), (20, 13, 29, 23))
+        rectangles = ((7, 12, 17, 25), (19, 12, 29, 25))
     elif direction == "L":
-        rectangles = ((9, 14, 18, 24),)
+        rectangles = ((9, 13, 19, 25),)
     elif direction == "R":
-        rectangles = ((17, 14, 26, 24),)
+        rectangles = ((17, 13, 27, 25),)
     else:
         rectangles = ()
     draw = ImageDraw.Draw(layer)
@@ -198,12 +198,12 @@ def _draw_eye(
     dy: int,
 ) -> None:
     cx, cy = center
-    outer = _ellipse_points((cx, cy + dy), 5, 5)
+    outer = _ellipse_points((cx, cy + dy), 6, 5)
     iris = _ellipse_points((cx, cy + dy), 3 if style_index == 0 else 2, 3)
     pupil = _ellipse_points((cx, cy + dy), 1, 2)
     for point in outer:
         _put(layer, *point, palette.outline)
-    for point in _ellipse_points((cx, cy + dy), 4, 4 if style_index == 0 else 3):
+    for point in _ellipse_points((cx, cy + dy), 5, 4 if style_index == 0 else 3):
         _put(layer, *point, palette.eye_white)
     for point in iris:
         _put(layer, *point, palette.iris)
@@ -413,6 +413,8 @@ def generate_face_catalog(
         "eye_style": "large_round_01" if eye_style == 0 else "large_round_02",
         "brow_style": "soft_arc_01" if eye_style == 0 else "soft_arc_02",
         "mouth_status": "reserved_decoration_only",
+        "hair_status": "reserved_decoration_only",
+        "neck_status": "absent",
         **ear_factors,
     }
     manifest = {
@@ -428,12 +430,21 @@ def generate_face_catalog(
         "states": list(STATES),
         "frame_count": FRAME_COUNT,
         "layers": list(LAYERS),
-        "slots": {"mouth": "reserved_decoration_only"},
+        "slots": {
+            "hair": {
+                "status": "reserved_decoration_only",
+                "logical_bounds": {"x": [3, 32], "y": [0, 13]},
+            },
+            "mouth": "reserved_decoration_only",
+        },
         "style_contract": {
             "face_language": "western_fantasy_chibi",
             "head_coverage": "dominant",
             "eye_scale": "large",
+            "eye_orientation": "vertical_with_mild_horizontal_stretch",
+            "hair_volume": "generous_crown",
             "mouth": "reserved_empty",
+            "neck": "absent",
             "rendering": "procedural_pixel_art",
         },
         "factors": factors,
@@ -443,6 +454,7 @@ def generate_face_catalog(
     for state, direction, frame in _frame_names():
         dy = _frame_shift(state, frame)
         base = _blank()
+        hair = _blank()
         socket_cover = _blank()
         eye = _blank()
         brow = _blank()
@@ -457,6 +469,7 @@ def generate_face_catalog(
 
         layers = {
             "base": base,
+            "hair": hair,
             "socket_cover": socket_cover,
             "eye": eye,
             "brow": brow,
@@ -464,7 +477,7 @@ def generate_face_catalog(
             "ear": ear,
         }
         composite = _blank()
-        for layer_name in ("ear", "base", "socket_cover", "eye", "brow", "mouth"):
+        for layer_name in ("ear", "base", "hair", "socket_cover", "eye", "brow", "mouth"):
             composite.alpha_composite(layers[layer_name])
         layers["composite"] = composite
 
@@ -488,7 +501,7 @@ def generate_face_catalog(
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Generate self-owned procedural face components")
-    parser.add_argument("--output-dir", type=Path, default=Path(__file__).resolve().parents[3] / "assets" / "test" / "native_face_v3")
+    parser.add_argument("--output-dir", type=Path, default=Path(__file__).resolve().parents[3] / "assets" / "test" / "native_face_v4")
     parser.add_argument("--seed", type=int, default=20260727)
     parser.add_argument("--face-id", default="face_round_01")
     parser.add_argument("--pixel-scale", type=int, choices=(1, 2), default=1)

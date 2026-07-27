@@ -12,11 +12,12 @@
 
 ## 运行时契约
 
-使用 `36x34` RGBA 逻辑帧作为工程兼容尺寸，但轮廓、插槽、色板和五官布局全部重新设计。`native_face_v1` 是无耳朵基线，`native_face_v2` 加入人耳，`native_face_v3` 进一步采用无可见嘴部的大眼 Q 版脸，并支持 `pixel_scale=2` 的 `72x68` 高清输出。所有尺寸共享同一套逻辑像素分布。输出层为：
+使用 `36x34` RGBA 逻辑帧作为工程兼容尺寸，但轮廓、插槽、色板和五官布局全部重新设计。`native_face_v1` 是无耳朵基线，`native_face_v2` 加入人耳，`native_face_v3` 采用无可见嘴部的大眼 Q 版脸，`native_face_v4` 增加发型预留区、无脖子契约和轻微横向拉伸的大眼，并支持 `pixel_scale=2` 的 `72x68` 高清输出。所有尺寸共享同一套逻辑像素分布。输出层为：
 
 ```text
 Ear
 + Base
++ Hair
 + SocketCover
 + Eye
 + Brow
@@ -34,6 +35,8 @@ Ear
 - 皮肤轮廓使用新的像素阶梯和阴影布局。
 - 保持 Q 版无鼻无嘴阅读方式；`mouth` 只保留透明装饰槽位，未来饰品可以单独覆盖。
 - 通过深色轮廓、宝石色虹膜和克制的幻想色板保持西幻角色的可读性。
+- 头顶和额头保留较大的 crown 区，发型通过独立层覆盖，不把发型写死在脸部基底。
+- 不绘制脖子；角色身体和服装接入时从头部下缘直接连接。
 
 ## 因子与记录
 
@@ -41,7 +44,7 @@ Ear
 
 ```json
 {
-  "generator_version": "native_face_v3",
+  "generator_version": "native_face_v4",
   "seed": 20260727,
   "factors": {
     "head_shape": "round_soft",
@@ -54,7 +57,9 @@ Ear
     "point": "round",
     "inner_color": "warm_rose",
     "visibility": "full",
-    "mouth_status": "reserved_decoration_only"
+    "mouth_status": "reserved_decoration_only",
+    "hair_status": "reserved_decoration_only",
+    "neck_status": "absent"
   },
   "source": "procedural_local"
 }
@@ -68,6 +73,8 @@ Ear
 - Composite 只来自本次生成的 Base 和组件。
 - `mouth` 层保持完全透明，合成图中不出现可见嘴部像素。
 - 正面双眼保持大眼比例，不能退化为点状眼。
+- `hair` 层保持独立，逻辑预留区为 `x=3..32, y=0..13`。
+- 眼睛保持纵向高度，同时只做轻微横向扩展，避免变成扁平横线。
 - 生成器源码中不存在旧脸部资源路径。
 - 新资产与已知旧资源不共享文件内容 SHA。
 - 旧参考资源删除或替换后，生成器仍可独立运行。
@@ -85,6 +92,6 @@ Ear
 
 ## 耳朵阶段结果
 
-耳朵不写入 `Base`。`native_face_v3` 已在同一坐标契约上实现人耳，并记录 `size`、`angle`、`point`、`inner_color` 和 `visibility` 因子。耳朵先绘制，`Base` 再覆盖头部内侧，避免耳朵颜色侵入头部轮廓。
+耳朵不写入 `Base`。`native_face_v4` 已在同一坐标契约上实现人耳，并记录 `size`、`angle`、`point`、`inner_color` 和 `visibility` 因子。耳朵先绘制，`Base` 再覆盖头部内侧，避免耳朵颜色侵入头部轮廓。
 
 下一步再扩展精灵耳和兽耳，并为每种类型增加独立的边界、遮挡和方向测试。

@@ -1,0 +1,528 @@
+{
+  "directions": [
+    "D",
+    "L",
+    "R",
+    "U"
+  ],
+  "face_id": "face_round_01",
+  "factors": {
+    "angle": "up",
+    "brow_style": "soft_arc_02",
+    "ear_type": "human",
+    "eye_style": "large_round_02",
+    "hair_status": "reserved_decoration_only",
+    "head_shape": "round_wide",
+    "inner_color": "soft_coral",
+    "mouth_status": "reserved_decoration_only",
+    "neck_status": "absent",
+    "point": "round",
+    "size": "large",
+    "skin_palette": "rose_03",
+    "visibility": "subtle"
+  },
+  "frame_count": 28,
+  "frames": {
+    "face_round_01_stand_D_0.png": {
+      "sha256": {
+        "base": "33860adda847fb7f42a1d6744f3e56767f2e1ba41e21dadc4633fc5aedd7435f",
+        "brow": "78338ab2f0efbdbf886e85b6d016bd1f8cab7a10d4974d5e02c45e965979f0c2",
+        "composite": "5a3f2bebf20c8ef0d7e52264736b9ada4560de2e15be9ba74a00996ae7938eb6",
+        "ear": "9580efe66245582fb1efa8b76fa4f98f92c16e928c92a55d33c11a21d66d007d",
+        "eye": "208931175c2e4153ed517e66d6e3ce78a410ba2177d6f1b76af4ca46d02fd1b0",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "e055205fd0f4e73d3c2fe2b0eb8e1f74aee72d36e399f5602c37689caa8cc024"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_stand_L_0.png": {
+      "sha256": {
+        "base": "33860adda847fb7f42a1d6744f3e56767f2e1ba41e21dadc4633fc5aedd7435f",
+        "brow": "b1cd56d1be3acfac401dc5fd9043bb56cbc70d6518d695b6c8259b8ab0781c30",
+        "composite": "1148fc8f57b138ff49d47c1ab8ee316237fcf4720eb3ae4adbbbab2f7538249f",
+        "ear": "63086dcd0dd8cb3d912cbea7e49b0f3ddc385e502c0c0718c0c98e6fbaae65c6",
+        "eye": "a71de6c8d0d8a4740861714f86032761905121db9b1a00f6a8111b0454adefc3",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "8601b9ad6548159530ffabbb9a3c1a8f430a733bae05f638e563b13f10951f4a"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_stand_R_0.png": {
+      "sha256": {
+        "base": "33860adda847fb7f42a1d6744f3e56767f2e1ba41e21dadc4633fc5aedd7435f",
+        "brow": "0a683ddff616d2913dc4f005c3df3e450eeabf481c9775ff436d9300409fc298",
+        "composite": "286a611f1cfed16a4172db8b7d78b02c81bc246457378244d7166a6edada345e",
+        "ear": "e9b9600df5a16f4b9df2d68ffce412d17197eb655583a91c777ac1817b87cf6f",
+        "eye": "a0140cf6e3483572a572af6f1c56ff5c491d93da4cdec7a65079ab9386424449",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "a18719b6c814d2da780e576e4077832f854ed344776d9308c8f597182b9c63d9"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_stand_U_0.png": {
+      "sha256": {
+        "base": "104dece552b8904647c39d7054422839ea933540dd58a6a7784260922fd4ccbc",
+        "brow": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "composite": "15cec5339c4b08afa15c46ca5fb53f775da319869f54eefb46815cb75d6dc662",
+        "ear": "9580efe66245582fb1efa8b76fa4f98f92c16e928c92a55d33c11a21d66d007d",
+        "eye": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_D_0.png": {
+      "sha256": {
+        "base": "33860adda847fb7f42a1d6744f3e56767f2e1ba41e21dadc4633fc5aedd7435f",
+        "brow": "78338ab2f0efbdbf886e85b6d016bd1f8cab7a10d4974d5e02c45e965979f0c2",
+        "composite": "5a3f2bebf20c8ef0d7e52264736b9ada4560de2e15be9ba74a00996ae7938eb6",
+        "ear": "9580efe66245582fb1efa8b76fa4f98f92c16e928c92a55d33c11a21d66d007d",
+        "eye": "208931175c2e4153ed517e66d6e3ce78a410ba2177d6f1b76af4ca46d02fd1b0",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "e055205fd0f4e73d3c2fe2b0eb8e1f74aee72d36e399f5602c37689caa8cc024"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_D_1.png": {
+      "sha256": {
+        "base": "8d32c088a76482723484181177949f4d8261a2e619022645d9cc625b39142d2e",
+        "brow": "952c1bf657435601e08541be10ea3dd87b998ee59e2b650b1057361c45317dc3",
+        "composite": "947526bbc839bce0da16fbf7cf4a65631ba5975cb757ebb5a65916ececc1996c",
+        "ear": "644114ad8be27885831ca1756b0e888380ca4fb8fc7e603b47cb9b05a335a16e",
+        "eye": "86d8a0a323b552f568c95510208ae847a3b79fec360d0298991d089777cbe11c",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "6a78b98ed22b8978d289e599ec8c2a7aa8f6ddadc5e333d5f255253867275699"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_D_2.png": {
+      "sha256": {
+        "base": "33860adda847fb7f42a1d6744f3e56767f2e1ba41e21dadc4633fc5aedd7435f",
+        "brow": "78338ab2f0efbdbf886e85b6d016bd1f8cab7a10d4974d5e02c45e965979f0c2",
+        "composite": "5a3f2bebf20c8ef0d7e52264736b9ada4560de2e15be9ba74a00996ae7938eb6",
+        "ear": "9580efe66245582fb1efa8b76fa4f98f92c16e928c92a55d33c11a21d66d007d",
+        "eye": "208931175c2e4153ed517e66d6e3ce78a410ba2177d6f1b76af4ca46d02fd1b0",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "e055205fd0f4e73d3c2fe2b0eb8e1f74aee72d36e399f5602c37689caa8cc024"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_D_3.png": {
+      "sha256": {
+        "base": "e2c615a8d1b0b170a18f1998378f7dd673217d3f5c0d4b6a687728386539b31d",
+        "brow": "de3a3e61bb206714ca6871b52fb640526d4dd55f45955fee9c88c291c60327a4",
+        "composite": "164180597cee0f76140698a0ff5f7aa3d8c15a51767da621da61a9e2d6d4dfc0",
+        "ear": "d67bf3bd86d83fa69f1d3944aef8f164f7f1e0801be98d7bef28d553fbfc7ff5",
+        "eye": "f283c503acc67c35f07c01b092edc4f6c66f15463181f10eacb9cdf23c1a0f0e",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "c34e25cd870817345705e2f7de27b920a04a1c448dc2121cb9dc91e540f18651"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_D_4.png": {
+      "sha256": {
+        "base": "33860adda847fb7f42a1d6744f3e56767f2e1ba41e21dadc4633fc5aedd7435f",
+        "brow": "78338ab2f0efbdbf886e85b6d016bd1f8cab7a10d4974d5e02c45e965979f0c2",
+        "composite": "5a3f2bebf20c8ef0d7e52264736b9ada4560de2e15be9ba74a00996ae7938eb6",
+        "ear": "9580efe66245582fb1efa8b76fa4f98f92c16e928c92a55d33c11a21d66d007d",
+        "eye": "208931175c2e4153ed517e66d6e3ce78a410ba2177d6f1b76af4ca46d02fd1b0",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "e055205fd0f4e73d3c2fe2b0eb8e1f74aee72d36e399f5602c37689caa8cc024"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_D_5.png": {
+      "sha256": {
+        "base": "8d32c088a76482723484181177949f4d8261a2e619022645d9cc625b39142d2e",
+        "brow": "952c1bf657435601e08541be10ea3dd87b998ee59e2b650b1057361c45317dc3",
+        "composite": "947526bbc839bce0da16fbf7cf4a65631ba5975cb757ebb5a65916ececc1996c",
+        "ear": "644114ad8be27885831ca1756b0e888380ca4fb8fc7e603b47cb9b05a335a16e",
+        "eye": "86d8a0a323b552f568c95510208ae847a3b79fec360d0298991d089777cbe11c",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "6a78b98ed22b8978d289e599ec8c2a7aa8f6ddadc5e333d5f255253867275699"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_L_0.png": {
+      "sha256": {
+        "base": "33860adda847fb7f42a1d6744f3e56767f2e1ba41e21dadc4633fc5aedd7435f",
+        "brow": "b1cd56d1be3acfac401dc5fd9043bb56cbc70d6518d695b6c8259b8ab0781c30",
+        "composite": "1148fc8f57b138ff49d47c1ab8ee316237fcf4720eb3ae4adbbbab2f7538249f",
+        "ear": "63086dcd0dd8cb3d912cbea7e49b0f3ddc385e502c0c0718c0c98e6fbaae65c6",
+        "eye": "a71de6c8d0d8a4740861714f86032761905121db9b1a00f6a8111b0454adefc3",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "8601b9ad6548159530ffabbb9a3c1a8f430a733bae05f638e563b13f10951f4a"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_L_1.png": {
+      "sha256": {
+        "base": "8d32c088a76482723484181177949f4d8261a2e619022645d9cc625b39142d2e",
+        "brow": "a0115dab2726113e04cd5019cf976000df5b8c1125565d278a7e3ce940b64832",
+        "composite": "10ada28c87dbcb3134c1c3a9a1ebf3f4d79f04f5451c11bcd03a816726f3773a",
+        "ear": "7fff791f68353f171f405b41da10bd6e25525f80b355f8d6fc4207be5d366e19",
+        "eye": "ed5a27af95e44c77938aa63e80f76d6dc92f9308aa24c6df9816c109415cf8aa",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "2b4acf03fb26475777e103492639fd520fe0ce9f880f5096f2bcf0d056f380da"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_L_2.png": {
+      "sha256": {
+        "base": "33860adda847fb7f42a1d6744f3e56767f2e1ba41e21dadc4633fc5aedd7435f",
+        "brow": "b1cd56d1be3acfac401dc5fd9043bb56cbc70d6518d695b6c8259b8ab0781c30",
+        "composite": "1148fc8f57b138ff49d47c1ab8ee316237fcf4720eb3ae4adbbbab2f7538249f",
+        "ear": "63086dcd0dd8cb3d912cbea7e49b0f3ddc385e502c0c0718c0c98e6fbaae65c6",
+        "eye": "a71de6c8d0d8a4740861714f86032761905121db9b1a00f6a8111b0454adefc3",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "8601b9ad6548159530ffabbb9a3c1a8f430a733bae05f638e563b13f10951f4a"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_L_3.png": {
+      "sha256": {
+        "base": "e2c615a8d1b0b170a18f1998378f7dd673217d3f5c0d4b6a687728386539b31d",
+        "brow": "dbe1ebcc91414c21536588296ff8a5d754bbe788b1d3b7ade7d379f5eabc9c8f",
+        "composite": "8739b8bc39040b2f636d939852eb4f9316e2532f8bdc92235755f40d076c2c92",
+        "ear": "e67553b10b078b5cb4a26a2e912db90dd8876fdae962085643c0e37ce5087687",
+        "eye": "4a3a367796126c782eec06b3acfeecdba9776b5188d9bb39f15561107e856581",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "af51e41e4a1d69ca8907e74f4b55d9cafa59b129e4173728c789dc07ec61ff96"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_L_4.png": {
+      "sha256": {
+        "base": "33860adda847fb7f42a1d6744f3e56767f2e1ba41e21dadc4633fc5aedd7435f",
+        "brow": "b1cd56d1be3acfac401dc5fd9043bb56cbc70d6518d695b6c8259b8ab0781c30",
+        "composite": "1148fc8f57b138ff49d47c1ab8ee316237fcf4720eb3ae4adbbbab2f7538249f",
+        "ear": "63086dcd0dd8cb3d912cbea7e49b0f3ddc385e502c0c0718c0c98e6fbaae65c6",
+        "eye": "a71de6c8d0d8a4740861714f86032761905121db9b1a00f6a8111b0454adefc3",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "8601b9ad6548159530ffabbb9a3c1a8f430a733bae05f638e563b13f10951f4a"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_L_5.png": {
+      "sha256": {
+        "base": "8d32c088a76482723484181177949f4d8261a2e619022645d9cc625b39142d2e",
+        "brow": "a0115dab2726113e04cd5019cf976000df5b8c1125565d278a7e3ce940b64832",
+        "composite": "10ada28c87dbcb3134c1c3a9a1ebf3f4d79f04f5451c11bcd03a816726f3773a",
+        "ear": "7fff791f68353f171f405b41da10bd6e25525f80b355f8d6fc4207be5d366e19",
+        "eye": "ed5a27af95e44c77938aa63e80f76d6dc92f9308aa24c6df9816c109415cf8aa",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "2b4acf03fb26475777e103492639fd520fe0ce9f880f5096f2bcf0d056f380da"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_R_0.png": {
+      "sha256": {
+        "base": "33860adda847fb7f42a1d6744f3e56767f2e1ba41e21dadc4633fc5aedd7435f",
+        "brow": "0a683ddff616d2913dc4f005c3df3e450eeabf481c9775ff436d9300409fc298",
+        "composite": "286a611f1cfed16a4172db8b7d78b02c81bc246457378244d7166a6edada345e",
+        "ear": "e9b9600df5a16f4b9df2d68ffce412d17197eb655583a91c777ac1817b87cf6f",
+        "eye": "a0140cf6e3483572a572af6f1c56ff5c491d93da4cdec7a65079ab9386424449",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "a18719b6c814d2da780e576e4077832f854ed344776d9308c8f597182b9c63d9"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_R_1.png": {
+      "sha256": {
+        "base": "8d32c088a76482723484181177949f4d8261a2e619022645d9cc625b39142d2e",
+        "brow": "3237bf05ed866af4a46b29d513b79dbcf11e79b923441ae5ef7214cf9251451f",
+        "composite": "ba6eec041ff7993a054c0bdf3ced77c6258d4f2068178a517458e6552d4eb9d3",
+        "ear": "83270055c8d964acb5bfeb35fe29de2e7bd1c82ba0c5c3c678c39b1662070888",
+        "eye": "ff32ad92bc5bbf9797bd4f1698bd9632e6358ba8bb9439a66630c037a8d29f6d",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "62f78367a045260ba940065287ece6e47438088019c355ce0020bbc20fff0730"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_R_2.png": {
+      "sha256": {
+        "base": "33860adda847fb7f42a1d6744f3e56767f2e1ba41e21dadc4633fc5aedd7435f",
+        "brow": "0a683ddff616d2913dc4f005c3df3e450eeabf481c9775ff436d9300409fc298",
+        "composite": "286a611f1cfed16a4172db8b7d78b02c81bc246457378244d7166a6edada345e",
+        "ear": "e9b9600df5a16f4b9df2d68ffce412d17197eb655583a91c777ac1817b87cf6f",
+        "eye": "a0140cf6e3483572a572af6f1c56ff5c491d93da4cdec7a65079ab9386424449",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "a18719b6c814d2da780e576e4077832f854ed344776d9308c8f597182b9c63d9"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_R_3.png": {
+      "sha256": {
+        "base": "e2c615a8d1b0b170a18f1998378f7dd673217d3f5c0d4b6a687728386539b31d",
+        "brow": "c70446b3b229b8b4375597817eefd0428a2c44a60556dc79c2f0a7574a9ccf88",
+        "composite": "42dd0213e937153cb1f6da2ae79c269f820c8daf67868afde8e5f6fd9236a19f",
+        "ear": "2896f5268af63bd2e09f435be5fbaca0ce5ab1eca1aa021b3026f684aa9ddbab",
+        "eye": "8a3f3b2317fc338e621e2c1e68b3009e7c15df88b29957674e1c9a78f4d71a34",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "036320173cdd00a4b4444348011753618486f373f50ffe2008a0c2baccb76189"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_R_4.png": {
+      "sha256": {
+        "base": "33860adda847fb7f42a1d6744f3e56767f2e1ba41e21dadc4633fc5aedd7435f",
+        "brow": "0a683ddff616d2913dc4f005c3df3e450eeabf481c9775ff436d9300409fc298",
+        "composite": "286a611f1cfed16a4172db8b7d78b02c81bc246457378244d7166a6edada345e",
+        "ear": "e9b9600df5a16f4b9df2d68ffce412d17197eb655583a91c777ac1817b87cf6f",
+        "eye": "a0140cf6e3483572a572af6f1c56ff5c491d93da4cdec7a65079ab9386424449",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "a18719b6c814d2da780e576e4077832f854ed344776d9308c8f597182b9c63d9"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_R_5.png": {
+      "sha256": {
+        "base": "8d32c088a76482723484181177949f4d8261a2e619022645d9cc625b39142d2e",
+        "brow": "3237bf05ed866af4a46b29d513b79dbcf11e79b923441ae5ef7214cf9251451f",
+        "composite": "ba6eec041ff7993a054c0bdf3ced77c6258d4f2068178a517458e6552d4eb9d3",
+        "ear": "83270055c8d964acb5bfeb35fe29de2e7bd1c82ba0c5c3c678c39b1662070888",
+        "eye": "ff32ad92bc5bbf9797bd4f1698bd9632e6358ba8bb9439a66630c037a8d29f6d",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "62f78367a045260ba940065287ece6e47438088019c355ce0020bbc20fff0730"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_U_0.png": {
+      "sha256": {
+        "base": "104dece552b8904647c39d7054422839ea933540dd58a6a7784260922fd4ccbc",
+        "brow": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "composite": "15cec5339c4b08afa15c46ca5fb53f775da319869f54eefb46815cb75d6dc662",
+        "ear": "9580efe66245582fb1efa8b76fa4f98f92c16e928c92a55d33c11a21d66d007d",
+        "eye": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_U_1.png": {
+      "sha256": {
+        "base": "61fa043ce790a329e74afaf9f0cb84540a6ec7f643f6e97813be07ff78df1935",
+        "brow": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "composite": "92ee4e4513fae3dcd19e7d1b3f78861ce8ec843c58ebe174a0d9d4815c683fd8",
+        "ear": "644114ad8be27885831ca1756b0e888380ca4fb8fc7e603b47cb9b05a335a16e",
+        "eye": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_U_2.png": {
+      "sha256": {
+        "base": "104dece552b8904647c39d7054422839ea933540dd58a6a7784260922fd4ccbc",
+        "brow": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "composite": "15cec5339c4b08afa15c46ca5fb53f775da319869f54eefb46815cb75d6dc662",
+        "ear": "9580efe66245582fb1efa8b76fa4f98f92c16e928c92a55d33c11a21d66d007d",
+        "eye": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_U_3.png": {
+      "sha256": {
+        "base": "853d0cf20584ad82d4832b2aaaced82c1833f89ff8795c694cf20c701d6bdde2",
+        "brow": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "composite": "e124a6916adb64a728718b4dec94d0cc82b48094dbcb5f31f25aead1e2196480",
+        "ear": "d67bf3bd86d83fa69f1d3944aef8f164f7f1e0801be98d7bef28d553fbfc7ff5",
+        "eye": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_U_4.png": {
+      "sha256": {
+        "base": "104dece552b8904647c39d7054422839ea933540dd58a6a7784260922fd4ccbc",
+        "brow": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "composite": "15cec5339c4b08afa15c46ca5fb53f775da319869f54eefb46815cb75d6dc662",
+        "ear": "9580efe66245582fb1efa8b76fa4f98f92c16e928c92a55d33c11a21d66d007d",
+        "eye": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    },
+    "face_round_01_walk_U_5.png": {
+      "sha256": {
+        "base": "61fa043ce790a329e74afaf9f0cb84540a6ec7f643f6e97813be07ff78df1935",
+        "brow": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "composite": "92ee4e4513fae3dcd19e7d1b3f78861ce8ec843c58ebe174a0d9d4815c683fd8",
+        "ear": "644114ad8be27885831ca1756b0e888380ca4fb8fc7e603b47cb9b05a335a16e",
+        "eye": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "hair": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "mouth": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47",
+        "socket_cover": "dcb71eb0d9e06729edeb46f5a36b7ce212403e27d311d3636452c2ec6b73ca47"
+      },
+      "size": {
+        "height": 34,
+        "width": 36
+      }
+    }
+  },
+  "generator_version": "native_face_v4",
+  "layers": [
+    "base",
+    "hair",
+    "socket_cover",
+    "eye",
+    "brow",
+    "mouth",
+    "ear",
+    "composite"
+  ],
+  "logical_size": {
+    "height": 34,
+    "width": 36
+  },
+  "pixel_scale": 1,
+  "reference_inputs": [],
+  "seed": 20260727,
+  "size": {
+    "height": 34,
+    "width": 36
+  },
+  "slots": {
+    "hair": {
+      "logical_bounds": {
+        "x": [
+          3,
+          32
+        ],
+        "y": [
+          0,
+          13
+        ]
+      },
+      "status": "reserved_decoration_only"
+    },
+    "mouth": "reserved_decoration_only"
+  },
+  "source": "procedural_local",
+  "states": [
+    "stand",
+    "walk"
+  ],
+  "style_contract": {
+    "eye_orientation": "vertical_with_mild_horizontal_stretch",
+    "eye_scale": "large",
+    "face_language": "western_fantasy_chibi",
+    "hair_volume": "generous_crown",
+    "head_coverage": "dominant",
+    "mouth": "reserved_empty",
+    "neck": "absent",
+    "rendering": "procedural_pixel_art"
+  }
+}
