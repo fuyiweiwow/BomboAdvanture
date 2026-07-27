@@ -19,10 +19,14 @@ class NativeFace3DGeneratorTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="native_face_3d_models_") as temp_dir:
             manifest = generate_3d_face_catalog(Path(temp_dir), seed=20260727)
 
-            self.assertEqual(manifest["generator_version"], "native_face_3d_v1")
-            self.assertEqual(manifest["source"], "procedural_local_3d")
+            self.assertEqual(manifest["generator_version"], "native_face_3d_v2")
+            self.assertEqual(manifest["source"], "imported_local_cc0_base")
+            self.assertEqual(manifest["source_license"], "CC0-1.0")
+            self.assertEqual(manifest["source_pack"], "kenney_mini_characters")
             self.assertEqual(manifest["reference_inputs"], [])
             self.assertEqual(set(manifest["variants"]), set(MODEL_VARIANTS))
+            self.assertEqual(manifest["source_models"]["male"], "character-male-a.glb")
+            self.assertEqual(manifest["source_models"]["female"], "character-female-a.glb")
 
             for variant in MODEL_VARIANTS:
                 obj_path = Path(temp_dir) / "models" / f"native_chibi_{variant}.obj"
@@ -42,8 +46,9 @@ class NativeFace3DGeneratorTests(unittest.TestCase):
 
             self.assertEqual(manifest["logical_size"], {"width": 36, "height": 34})
             self.assertEqual(manifest["render_size"], {"width": 72, "height": 68})
-            self.assertEqual(manifest["style_contract"]["neck"], "absent")
+            self.assertEqual(manifest["style_contract"]["neck"], "source_preserved")
             self.assertEqual(manifest["style_contract"]["face_language"], "western_fantasy_chibi")
+            self.assertEqual(manifest["style_contract"]["body_proportion"], "chibi_exaggerated")
 
             for variant in MODEL_VARIANTS:
                 for direction in DIRECTIONS:
