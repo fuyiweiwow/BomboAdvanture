@@ -5,29 +5,139 @@ const MAP_ROOT := "res://assets/map/"
 const MAP_SET_ROOT := "res://assets/map_set/"
 
 const REGION_ORDER := [
+	"Youxian_mapTest",
 	"YongDong",
-	"SenLin",
-	"MiZhiDi",
-	"YeWai",
 	"JiZhou",
+	"SenLin",
+	"YeWai",
+	"MiZhiDi",
 	"NuFeng",
 	"FengBao",
 	"ShouWang",
 	"HeiLong",
-	"Youxian_mapTest",
 ]
 
 const REGION_NAMES := {
-	"YongDong": "Frozen Gate",
-	"SenLin": "Forest Trail",
-	"MiZhiDi": "Mystic Garden",
-	"YeWai": "Wild Field",
-	"JiZhou": "Polar Camp",
-	"NuFeng": "Storm Ridge",
-	"FengBao": "Blizzard Pass",
-	"ShouWang": "Watchland",
-	"HeiLong": "Black Dragon Keep",
-	"Youxian_mapTest": "Test Grounds",
+	"Youxian_mapTest": "冥河畔",
+	"YongDong": "伊尔萨寒原",
+	"JiZhou": "寒星矿区",
+	"SenLin": "洛安德旧林",
+	"YeWai": "洛安德工业郊野",
+	"MiZhiDi": "旧王庭密园",
+	"NuFeng": "普赛提亚风港",
+	"FengBao": "暴雪山口",
+	"ShouWang": "达特守望线",
+	"HeiLong": "皇家科学院",
+}
+
+const REGION_SUBTITLES := {
+	"Youxian_mapTest": "亡者记忆汇入世界的河岸。",
+	"YongDong": "蓝血石矿脉穿过雪线，普通人用危险换取下一代的机会。",
+	"JiZhou": "矿井、纪念碑与被暴雪封住的旧铁路。",
+	"SenLin": "祖先、土地和旧王权仍在林间回响。",
+	"YeWai": "工厂、罢工与现代化进入洛安德后的裂痕。",
+	"MiZhiDi": "王族残影与被掩埋的隐秘关系。",
+	"NuFeng": "船契精神、自治议会与海上贸易共同塑造的港湾。",
+	"FengBao": "联邦边境的风暴线，理想和组织在这里相互拉扯。",
+	"ShouWang": "联合王国的核心外环，铁路、军队和媒体从这里进入达特。",
+	"HeiLong": "比奥姆微观实验撕开现实，真相只留下碎片。",
+}
+
+const REGION_COLORS := {
+	"Youxian_mapTest": Color(0.42, 0.62, 0.86),
+	"YongDong": Color(0.60, 0.82, 0.95),
+	"JiZhou": Color(0.55, 0.70, 0.86),
+	"SenLin": Color(0.32, 0.55, 0.32),
+	"YeWai": Color(0.62, 0.56, 0.42),
+	"MiZhiDi": Color(0.45, 0.34, 0.58),
+	"NuFeng": Color(0.20, 0.62, 0.66),
+	"FengBao": Color(0.48, 0.64, 0.76),
+	"ShouWang": Color(0.72, 0.60, 0.34),
+	"HeiLong": Color(0.50, 0.34, 0.36),
+}
+
+const REGION_POSITIONS := {
+	"Youxian_mapTest": Vector2(0.50, 0.07),
+	"YongDong": Vector2(0.62, 0.20),
+	"JiZhou": Vector2(0.80, 0.22),
+	"SenLin": Vector2(0.27, 0.41),
+	"YeWai": Vector2(0.46, 0.60),
+	"MiZhiDi": Vector2(0.17, 0.20),
+	"NuFeng": Vector2(0.19, 0.73),
+	"FengBao": Vector2(0.72, 0.33),
+	"ShouWang": Vector2(0.53, 0.50),
+	"HeiLong": Vector2(0.63, 0.44),
+}
+
+const REGION_LEVEL_POSITIONS := {
+	"Youxian_mapTest": [
+		Vector2(0.50, 0.07),
+	],
+	"YongDong": [
+		Vector2(0.58, 0.18),
+		Vector2(0.66, 0.22),
+	],
+	"JiZhou": [
+		Vector2(0.73, 0.19),
+		Vector2(0.80, 0.21),
+		Vector2(0.86, 0.26),
+	],
+	"SenLin": [
+		Vector2(0.19, 0.39),
+		Vector2(0.25, 0.35),
+		Vector2(0.31, 0.39),
+		Vector2(0.25, 0.47),
+		Vector2(0.35, 0.46),
+	],
+	"YeWai": [
+		Vector2(0.37, 0.58),
+		Vector2(0.43, 0.61),
+		Vector2(0.49, 0.59),
+		Vector2(0.56, 0.62),
+	],
+	"MiZhiDi": [
+		Vector2(0.08, 0.23),
+		Vector2(0.14, 0.19),
+		Vector2(0.20, 0.15),
+		Vector2(0.26, 0.21),
+	],
+	"NuFeng": [
+		Vector2(0.11, 0.68),
+		Vector2(0.18, 0.73),
+		Vector2(0.28, 0.78),
+	],
+	"FengBao": [
+		Vector2(0.65, 0.34),
+		Vector2(0.72, 0.31),
+		Vector2(0.78, 0.35),
+	],
+	"ShouWang": [
+		Vector2(0.48, 0.55),
+		Vector2(0.54, 0.50),
+		Vector2(0.58, 0.46),
+	],
+	"HeiLong": [
+		Vector2(0.56, 0.42),
+		Vector2(0.59, 0.38),
+		Vector2(0.62, 0.40),
+		Vector2(0.65, 0.44),
+		Vector2(0.61, 0.48),
+		Vector2(0.67, 0.50),
+		Vector2(0.71, 0.46),
+	],
+}
+
+const REGION_LEVEL_NAMES := {
+	"Youxian_mapTest": ["冥河初醒"],
+	"YongDong": ["蓝井入口", "雪线营地"],
+	"JiZhou": ["矿工纪念碑", "旧铁路", "暴雪前夜"],
+	"SenLin": ["祖灵林道", "旧骑士营", "洛安德学校", "林间哨塔", "复兴者营地"],
+	"YeWai": ["工厂外环", "罢工街区", "货运站", "黑烟尽头"],
+	"MiZhiDi": ["密园入口", "破碎王冠", "公主密信", "祖庭深处"],
+	"NuFeng": ["风港码头", "船契议会", "蓝火仓库"],
+	"FengBao": ["风暴边境", "新船契派", "委员会灯塔"],
+	"ShouWang": ["王国铁路线", "守望关口", "达特城门"],
+	"HeiLong": ["科学院外庭", "真理大厅", "比奥姆反应炉", "记忆实验室", "黑龙档案", "现实裂缝", "未完成论文"],
 }
 
 var _profiles: Array[Dictionary] = []
@@ -51,8 +161,12 @@ func reload() -> void:
 		var set_profile = {
 			"id": set_name,
 			"name": REGION_NAMES.get(set_name, _humanize_id(set_name)),
+			"subtitle": REGION_SUBTITLES.get(set_name, ""),
 			"maps": maps.duplicate(),
 			"index": set_index,
+			"position": REGION_POSITIONS.get(set_name, _fallback_region_position(set_index, set_names.size())),
+			"color": REGION_COLORS.get(set_name, Color(0.45, 0.55, 0.48)),
+			"chapter": set_index + 1,
 		}
 		_sets.append(set_profile)
 		for local_index in maps.size():
@@ -123,7 +237,7 @@ func _maps_for_set(set_name: String) -> Array[String]:
 func _build_map_profile(map_name: String, set_name: String, set_index: int, set_count: int, local_index: int, set_size: int, global_index: int) -> Dictionary:
 	var map_data = _load_json(MAP_ROOT + map_name + ".json")
 	var basic = (map_data as Dictionary).get("basic", {}) if map_data is Dictionary else {}
-	var display_name = str(basic.get("name", map_name))
+	var display_name = _level_display_name(map_name, set_name, local_index)
 	return {
 		"id": map_name,
 		"map_name": map_name,
@@ -135,26 +249,46 @@ func _build_map_profile(map_name: String, set_name: String, set_index: int, set_
 		"set_size": set_size,
 		"local_number": local_index + 1,
 		"name": display_name,
+		"asset_name": str(basic.get("name", map_name)),
 		"region_name": REGION_NAMES.get(set_name, _humanize_id(set_name)),
-		"description": _describe_map(display_name, set_name, basic),
+		"region_subtitle": REGION_SUBTITLES.get(set_name, ""),
+		"region_color": REGION_COLORS.get(set_name, Color(0.45, 0.55, 0.48)),
+		"description": _describe_map(display_name, set_name, basic, local_index),
 		"width": int(basic.get("width", 0)),
 		"height": int(basic.get("height", 0)),
 		"music": str(basic.get("music", "")),
 		"begin": _array_to_vec2i(basic.get("begin", [0, 0])),
 		"finish": _array_to_vec2i(basic.get("finish", [0, 0])),
-		"map_position": _map_position(set_index, max(1, set_count), local_index, max(1, set_size)),
+		"map_position": _map_position(set_name, set_index, max(1, set_count), local_index, max(1, set_size)),
 	}
 
-func _describe_map(display_name: String, set_name: String, basic: Dictionary) -> String:
-	var size = "%dx%d" % [int(basic.get("width", 0)), int(basic.get("height", 0))]
-	return "%s in %s. Map size %s." % [display_name, REGION_NAMES.get(set_name, _humanize_id(set_name)), size]
+func _level_display_name(map_name: String, set_name: String, local_index: int) -> String:
+	var names = REGION_LEVEL_NAMES.get(set_name, [])
+	if names is Array and local_index < (names as Array).size():
+		return str((names as Array)[local_index])
+	return map_name
 
-func _map_position(set_index: int, set_count: int, local_index: int, set_size: int) -> Vector2:
-	var x = 0.10 + 0.80 * (float(set_index) / float(max(1, set_count - 1)))
+func _describe_map(display_name: String, set_name: String, basic: Dictionary, local_index: int) -> String:
+	var size = "%dx%d" % [int(basic.get("width", 0)), int(basic.get("height", 0))]
+	var subtitle = str(REGION_SUBTITLES.get(set_name, ""))
+	return "第%d段记忆：%s。%s 地图规模 %s。" % [local_index + 1, display_name, subtitle, size]
+
+func _map_position(set_name: String, set_index: int, set_count: int, local_index: int, set_size: int) -> Vector2:
+	var explicit_positions: Array = REGION_LEVEL_POSITIONS.get(set_name, [])
+	if local_index < explicit_positions.size():
+		return explicit_positions[local_index]
+	var base: Vector2 = REGION_POSITIONS.get(set_name, _fallback_region_position(set_index, set_count))
+	if set_size <= 1:
+		return base
 	var local_t = float(local_index) / float(max(1, set_size - 1))
-	var wave = sin(float(set_index) * 1.37) * 0.09
-	var y = 0.30 + 0.42 * local_t + wave
-	return Vector2(clampf(x, 0.08, 0.92), clampf(y, 0.18, 0.78))
+	var path_vector = Vector2(0.08, 0.04)
+	var offset = path_vector * (local_t - 0.5)
+	return Vector2(clampf(base.x + offset.x, 0.04, 0.96), clampf(base.y + offset.y, 0.10, 0.88))
+
+func _fallback_region_position(set_index: int, set_count: int) -> Vector2:
+	var x = 0.08 + 0.84 * (float(set_index) / float(max(1, set_count - 1)))
+	var y = 0.36 + sin(float(set_index) * 1.31) * 0.18
+	return Vector2(clampf(x, 0.06, 0.94), clampf(y, 0.18, 0.78))
 
 func _load_json(path: String) -> Variant:
 	var file = FileAccess.open(path, FileAccess.READ)

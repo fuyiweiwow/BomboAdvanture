@@ -5,18 +5,22 @@ const LEVEL_CATALOG := preload("res://src/level/level_catalog.gd")
 const LEVEL_PROGRESS_REPOSITORY := preload("res://src/level/level_progress_repository.gd")
 const LEVEL_SESSION := preload("res://src/level/level_session.gd")
 
-const NODE_SIZE := 54.0
-const REGION_SPACING := 160.0
-const LEVEL_SPACING := 82.0
-const MAP_MARGIN := Vector2(96.0, 86.0)
+const NODE_SIZE := 48.0
+const MAP_MARGIN := Vector2.ZERO
+const CANVAS_MIN_SIZE := Vector2(1536.0, 1024.0)
 
 class MapCanvas:
 	extends Control
 
 	var profiles: Array[Dictionary] = []
+	var regions: Array[Dictionary] = []
+	var background_texture: Texture2D
+
+	const BACKGROUND_PATH := "res://assets/concepts/hiloan_global_world_map_v4_3d_platformer_diorama.png"
 
 	func _ready() -> void:
 		mouse_filter = Control.MOUSE_FILTER_PASS
+		background_texture = _load_background_texture()
 
 	func _notification(what: int) -> void:
 		if what == NOTIFICATION_RESIZED:
@@ -24,53 +28,72 @@ class MapCanvas:
 
 	func _draw() -> void:
 		var bounds = Rect2(Vector2.ZERO, size)
-		draw_rect(bounds, Color(0.035, 0.105, 0.155))
-		_draw_island(bounds)
-		_draw_route()
-		_draw_landmarks()
+		_draw_background(bounds)
+		_draw_region_fields()
+		_draw_routes()
 
-	func _draw_island(bounds: Rect2) -> void:
-		var inset = Rect2(bounds.position + Vector2(42, 36), bounds.size - Vector2(84, 72))
-		if inset.size.x <= 0 or inset.size.y <= 0:
+	func _load_background_texture() -> Texture2D:
+		var image = Image.new()
+		var err = image.load(ProjectSettings.globalize_path(BACKGROUND_PATH))
+		if err == OK:
+			return ImageTexture.create_from_image(image)
+		var imported = ResourceLoader.load(BACKGROUND_PATH)
+		if imported is Texture2D:
+			return imported
+		push_warning("World map background missing: " + BACKGROUND_PATH)
+		return null
+
+	func _draw_background(bounds: Rect2) -> void:
+		draw_rect(bounds, Color(0.020, 0.075, 0.115))
+		if background_texture != null:
+			draw_texture_rect(background_texture, bounds, false)
+		draw_rect(bounds, Color(0.02, 0.05, 0.07, 0.10))
+		draw_line(Vector2(0.0, 0.0), Vector2(size.x, 0.0), Color(0.62, 0.86, 1.0, 0.25), 2.0, true)
+		draw_line(Vector2(0.0, size.y), Vector2(size.x, size.y), Color(0.01, 0.02, 0.03, 0.34), 10.0, true)
+
+	func _draw_region_fields() -> void:
+		for region in regions:
+			var center: Vector2 = region.get("world_point", Vector2.ZERO)
+			var color: Color = region.get("color", Color(0.45, 0.55, 0.48))
+			draw_circle(center, 86.0, Color(color.r, color.g, color.b, 0.12))
+			draw_arc(center, 88.0, -0.35, TAU - 0.35, 64, Color(color.r, color.g, color.b, 0.55), 3.0, true)
+			draw_arc(center, 96.0, 0.25, TAU + 0.25, 64, Color(0.75, 0.94, 1.0, 0.22), 2.0, true)
+
+	func _draw_routes() -> void:
+		if profiles.size() <= 1:
 			return
-		var island = PackedVector2Array([
-			_point(inset, Vector2(0.02, 0.76)),
-			_point(inset, Vector2(0.06, 0.34)),
-			_point(inset, Vector2(0.20, 0.16)),
-			_point(inset, Vector2(0.44, 0.25)),
-			_point(inset, Vector2(0.58, 0.09)),
-			_point(inset, Vector2(0.94, 0.12)),
-			_point(inset, Vector2(0.99, 0.43)),
-			_point(inset, Vector2(0.87, 0.80)),
-			_point(inset, Vector2(0.58, 0.93)),
-			_point(inset, Vector2(0.29, 0.84)),
-		])
-		draw_colored_polygon(island, Color(0.15, 0.31, 0.22))
-		draw_polyline(island + PackedVector2Array([island[0]]), Color(0.50, 0.70, 0.42), 5.0, true)
-		draw_polyline(island + PackedVector2Array([island[0]]), Color(0.09, 0.17, 0.10, 0.58), 2.0, true)
+		for i in range(profiles.size() - 1):
+			var from_profile = profiles[i]
+			var to_profile = profiles[i + 1]
+			var from_point: Vector2 = from_profile.get("world_point", Vector2.ZERO)
+			var to_point: Vector2 = to_profile.get("world_point", Vector2.ZERO)
+			var unlocked = bool(from_profile.get("unlocked", false)) and bool(to_profile.get("unlocked", false))
+			_draw_route_segment(from_point, to_point, unlocked, i)
 
-	func _draw_route() -> void:
-		var path = PackedVector2Array()
-		for profile in profiles:
-			path.append(profile.get("world_point", Vector2.ZERO))
-		if path.size() > 1:
-			draw_polyline(path, Color(0.95, 0.74, 0.28, 0.88), 7.0, true)
-			draw_polyline(path, Color(0.36, 0.20, 0.07, 0.60), 2.0, true)
+	func _draw_route_segment(from_point: Vector2, to_point: Vector2, unlocked: bool, index: int) -> void:
+		var delta = to_point - from_point
+		var distance = delta.length()
+		if distance <= 1.0:
+			return
+		var normal = Vector2(-delta.y, delta.x).normalized()
+		var bend = min(distance * 0.16, 64.0) * (1.0 if index % 2 == 0 else -1.0)
+		var control = from_point.lerp(to_point, 0.5) + normal * bend
+		var points = PackedVector2Array()
+		for step in range(18):
+			var t = float(step) / 17.0
+			points.append(from_point.lerp(control, t).lerp(control.lerp(to_point, t), t))
+		var main_color = Color(0.42, 0.86, 1.0, 0.90) if unlocked else Color(0.34, 0.42, 0.48, 0.72)
+		var bead_color = Color(1.0, 0.78, 0.22, 0.95) if unlocked else Color(0.28, 0.32, 0.36, 0.82)
+		draw_polyline(points, Color(0.02, 0.04, 0.06, 0.70), 14.0, true)
+		draw_polyline(points, Color(main_color.r, main_color.g, main_color.b, 0.28), 10.0, true)
+		draw_polyline(points, main_color, 4.0, true)
+		draw_circle(_quadratic_point(from_point, control, to_point, 0.5), 5.0, bead_color)
 
-	func _draw_landmarks() -> void:
-		for marker in [Vector2(0.14, 0.42), Vector2(0.23, 0.34), Vector2(0.72, 0.29), Vector2(0.78, 0.37)]:
-			var p = Vector2(marker.x * size.x, marker.y * size.y)
-			draw_circle(p, 13.0, Color(0.08, 0.25, 0.14))
-			draw_circle(p + Vector2(0, -7), 7.0, Color(0.18, 0.42, 0.20))
-		for marker in [Vector2(0.44, 0.74), Vector2(0.51, 0.77), Vector2(0.84, 0.50)]:
-			var p = Vector2(marker.x * size.x, marker.y * size.y)
-			draw_circle(p, 16.0, Color(0.62, 0.16, 0.05))
-			draw_circle(p, 8.0, Color(1.0, 0.48, 0.08))
-		for marker in [Vector2(0.12, 0.66), Vector2(0.37, 0.55), Vector2(0.88, 0.23)]:
-			draw_circle(Vector2(marker.x * size.x, marker.y * size.y), 10.0, Color(0.82, 0.92, 1.0, 0.72))
+	func _quadratic_point(from_point: Vector2, control: Vector2, to_point: Vector2, t: float) -> Vector2:
+		return from_point.lerp(control, t).lerp(control.lerp(to_point, t), t)
 
-	func _point(rect: Rect2, normalized: Vector2) -> Vector2:
-		return rect.position + Vector2(normalized.x * rect.size.x, normalized.y * rect.size.y)
+	func _point(normalized: Vector2) -> Vector2:
+		return Vector2(normalized.x * size.x, normalized.y * size.y)
 
 var catalog
 var progress_repository
@@ -108,49 +131,63 @@ func _build() -> void:
 	map_canvas.custom_minimum_size = _canvas_size()
 	map_canvas.size = map_canvas.custom_minimum_size
 	map_canvas.profiles = profiles
+	map_canvas.regions = _regions_with_world_points()
 	scroll.add_child(map_canvas)
 
+	for region in map_canvas.regions:
+		_add_region_label(region)
 	for profile in profiles:
 		_add_level_node(profile)
 
 	root.add_child(_build_detail_band())
 
 	if not profiles.is_empty():
-		_show_profile(profiles[0])
+		var focus_profile = _first_available_profile(profiles)
+		_show_profile(focus_profile)
 	call_deferred("_center_initial_view")
 
 func _build_header() -> Control:
+	var panel = PanelContainer.new()
+	panel.custom_minimum_size.y = 72
+	panel.add_theme_stylebox_override("panel", _panel_style(Color(0.050, 0.080, 0.095)))
+
 	var header = HBoxContainer.new()
-	header.custom_minimum_size.y = 70
 	header.add_theme_constant_override("separation", 12)
+	panel.add_child(header)
 
 	var back_button = Button.new()
-	back_button.text = "Back"
-	back_button.custom_minimum_size = Vector2(104, 42)
+	back_button.text = "返回"
+	back_button.custom_minimum_size = Vector2(104, 44)
 	back_button.add_theme_font_size_override("font_size", 18)
 	back_button.pressed.connect(_return_to_title)
 	header.add_child(back_button)
 
 	var title = Label.new()
-	title.text = "LEVEL MAP"
+	title.text = "希洛安大陆"
 	title.size_flags_horizontal = SIZE_EXPAND_FILL
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	title.add_theme_font_size_override("font_size", 34)
-	title.add_theme_color_override("font_color", Color(1.0, 0.84, 0.34))
+	title.add_theme_color_override("font_color", Color(0.98, 0.82, 0.32))
 	header.add_child(title)
 
-	var right_pad = Control.new()
-	right_pad.custom_minimum_size.x = 104
-	header.add_child(right_pad)
-	return header
+	var count_label = Label.new()
+	count_label.text = "%d 段记忆" % catalog.levels().size()
+	count_label.custom_minimum_size.x = 132
+	count_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	count_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	count_label.add_theme_font_size_override("font_size", 16)
+	count_label.add_theme_color_override("font_color", Color(0.72, 0.84, 0.86))
+	header.add_child(count_label)
+	return panel
 
 func _build_detail_band() -> Control:
 	var panel = PanelContainer.new()
-	panel.custom_minimum_size.y = 110
+	panel.custom_minimum_size.y = 124
+	panel.add_theme_stylebox_override("panel", _panel_style(Color(0.040, 0.065, 0.078)))
 
 	var label = Label.new()
-	label.custom_minimum_size.y = 88
+	label.custom_minimum_size.y = 96
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -161,56 +198,82 @@ func _build_detail_band() -> Control:
 	return panel
 
 func _canvas_size() -> Vector2:
-	var sets = catalog.map_sets()
-	var set_count = max(1, sets.size())
-	var max_set_size = 1
-	for set_profile in sets:
-		max_set_size = max(max_set_size, (set_profile.get("maps", []) as Array).size())
-	return Vector2(
-		max(1120.0, MAP_MARGIN.x * 2.0 + REGION_SPACING * float(max(1, set_count - 1)) + NODE_SIZE),
-		max(620.0, MAP_MARGIN.y * 2.0 + LEVEL_SPACING * float(max(1, max_set_size - 1)) + NODE_SIZE)
-	)
+	return CANVAS_MIN_SIZE
 
 func _profiles_with_world_points() -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
 	var canvas_size = _canvas_size()
 	for raw_profile in catalog.levels():
 		var profile = raw_profile.duplicate(true)
-		profile["world_point"] = _world_point(profile, canvas_size)
+		profile["world_point"] = _world_point(profile.get("map_position", Vector2.ZERO), canvas_size)
+		var level_id = str(profile.get("id", ""))
+		profile["unlocked"] = progress_repository.is_unlocked(level_id)
+		profile["completed"] = progress_repository.completed_level_ids().has(level_id)
 		result.append(profile)
 	return result
 
-func _world_point(profile: Dictionary, canvas_size: Vector2) -> Vector2:
-	var set_index = int(profile.get("set_index", 0))
-	var local_index = int(profile.get("local_index", 0))
-	var set_size = max(1, int(profile.get("set_size", 1)))
-	var start_y = (canvas_size.y - LEVEL_SPACING * float(max(0, set_size - 1))) * 0.5
-	var wave = sin(float(set_index) * 1.37) * 24.0
-	return Vector2(MAP_MARGIN.x + REGION_SPACING * float(set_index), start_y + LEVEL_SPACING * float(local_index) + wave)
+func _regions_with_world_points() -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	var canvas_size = _canvas_size()
+	for raw_region in catalog.map_sets():
+		var region = raw_region.duplicate(true)
+		region["world_point"] = _world_point(region.get("position", Vector2.ZERO), canvas_size)
+		result.append(region)
+	return result
+
+func _world_point(normalized: Variant, canvas_size: Vector2) -> Vector2:
+	var value = normalized if normalized is Vector2 else Vector2.ZERO
+	return Vector2(MAP_MARGIN.x + value.x * (canvas_size.x - MAP_MARGIN.x * 2.0), MAP_MARGIN.y + value.y * (canvas_size.y - MAP_MARGIN.y * 2.0))
+
+func _add_region_label(region: Dictionary) -> void:
+	var label = Label.new()
+	label.name = "Region_%s" % str(region.get("id", ""))
+	label.text = "第%d章  %s" % [int(region.get("chapter", 0)), str(region.get("name", ""))]
+	label.position = region.get("world_point", Vector2.ZERO) + Vector2(-92.0, 72.0)
+	label.size = Vector2(184.0, 28.0)
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.add_theme_font_size_override("font_size", 16)
+	label.add_theme_color_override("font_color", Color(0.94, 0.90, 0.72))
+	label.add_theme_color_override("font_outline_color", Color(0.03, 0.05, 0.07, 0.95))
+	label.add_theme_constant_override("outline_size", 4)
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	map_canvas.add_child(label)
 
 func _add_level_node(profile: Dictionary) -> void:
 	var level_id = str(profile.get("id", ""))
-	var unlocked = progress_repository.is_unlocked(level_id)
-	var completed = progress_repository.completed_level_ids().has(level_id)
+	var unlocked = bool(profile.get("unlocked", false))
+	var completed = bool(profile.get("completed", false))
 	var point = profile.get("world_point", Vector2.ZERO)
 	var button = Button.new()
 	button.name = "Level_%s" % level_id
-	button.text = str(profile.get("local_number", profile.get("number", "?"))) if unlocked else "LOCK"
+	button.text = str(profile.get("local_number", profile.get("number", "?"))) if unlocked else "?"
 	button.position = point - Vector2(NODE_SIZE * 0.5, NODE_SIZE * 0.5)
 	button.size = Vector2(NODE_SIZE, NODE_SIZE)
-	button.add_theme_font_size_override("font_size", 21 if unlocked else 10)
+	button.add_theme_font_size_override("font_size", 21 if unlocked else 17)
 	button.tooltip_text = _tooltip(profile, unlocked)
 	button.disabled = not unlocked
-	button.add_theme_stylebox_override("normal", _level_style(Color(0.16, 0.52, 0.32) if completed else Color(0.14, 0.34, 0.52)))
-	button.add_theme_stylebox_override("hover", _level_style(Color(0.94, 0.62, 0.16)))
-	button.add_theme_stylebox_override("pressed", _level_style(Color(0.95, 0.76, 0.22)))
-	button.add_theme_stylebox_override("disabled", _level_style(Color(0.16, 0.18, 0.20)))
+	button.add_theme_color_override("font_outline_color", Color(0.02, 0.04, 0.06, 0.95))
+	button.add_theme_constant_override("outline_size", 3)
+	button.add_theme_stylebox_override("normal", _level_style(Color(0.20, 0.74, 0.54, 0.92) if completed else Color(0.12, 0.45, 0.86, 0.92)))
+	button.add_theme_stylebox_override("hover", _level_style(Color(1.0, 0.72, 0.20, 0.96)))
+	button.add_theme_stylebox_override("pressed", _level_style(Color(1.0, 0.84, 0.30, 0.98)))
+	button.add_theme_stylebox_override("disabled", _level_style(Color(0.12, 0.14, 0.16, 0.78)))
 	button.mouse_entered.connect(func(): _show_profile(profile))
 	button.focus_entered.connect(func(): _show_profile(profile))
 	if unlocked:
 		button.pressed.connect(func(): _enter_level(level_id))
 	map_canvas.add_child(button)
 	level_buttons[level_id] = button
+
+func _first_available_profile(profiles: Array[Dictionary]) -> Dictionary:
+	for profile in profiles:
+		if bool(profile.get("unlocked", false)) and not bool(profile.get("completed", false)):
+			return profile
+	for profile in profiles:
+		if bool(profile.get("unlocked", false)):
+			return profile
+	return profiles[0]
 
 func _center_initial_view() -> void:
 	if scroll == null or map_canvas == null:
@@ -221,7 +284,7 @@ func _center_initial_view() -> void:
 
 func _tooltip(profile: Dictionary, unlocked: bool) -> String:
 	if not unlocked:
-		return "Complete the previous level to unlock"
+		return "完成前一段记忆后解锁"
 	return "%s\n%s" % [str(profile.get("name", "")), str(profile.get("description", ""))]
 
 func _show_profile(profile: Dictionary) -> void:
@@ -230,10 +293,10 @@ func _show_profile(profile: Dictionary) -> void:
 		return
 	var level_id = str(profile.get("id", ""))
 	var completed = progress_repository.completed_level_ids().has(level_id)
-	var state = "COMPLETED" if completed else ("READY" if progress_repository.is_unlocked(level_id) else "LOCKED")
-	detail_label.text = "%s  %s-%s  |  %s\n%s  |  Start %s  Finish %s" % [
+	var state = "已完成" if completed else ("可进入" if progress_repository.is_unlocked(level_id) else "未解锁")
+	detail_label.text = "%s  第%s章-%s  |  %s\n%s  |  起点 %s  终点 %s" % [
 		state,
-		str(profile.get("region_name", "")),
+		str(profile.get("set_index", 0) + 1),
 		str(profile.get("local_number", "")),
 		str(profile.get("name", "")),
 		str(profile.get("description", "")),
@@ -263,7 +326,18 @@ func _return_to_title() -> void:
 func _level_style(color: Color) -> StyleBoxFlat:
 	var style = StyleBoxFlat.new()
 	style.bg_color = color
-	style.border_color = Color(0.86, 0.91, 0.82)
+	style.border_color = Color(0.92, 0.98, 1.0, 0.96)
 	style.set_border_width_all(3)
 	style.set_corner_radius_all(int(NODE_SIZE * 0.5))
+	style.shadow_color = Color(0.00, 0.05, 0.08, 0.42)
+	style.shadow_size = 8
+	style.shadow_offset = Vector2(0, 3)
+	return style
+
+func _panel_style(color: Color) -> StyleBoxFlat:
+	var style = StyleBoxFlat.new()
+	style.bg_color = color
+	style.border_color = Color(0.18, 0.27, 0.28)
+	style.set_border_width_all(1)
+	style.set_corner_radius_all(0)
 	return style
