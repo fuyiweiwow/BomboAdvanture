@@ -1,0 +1,169 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://assets/environment/kenney_nature/tree_default.glb" id="1_ixhs0"]
+[ext_resource type="PackedScene" path="res://assets/environment/kenney_nature/tree_oak.glb" id="2_h7pbw"]
+[ext_resource type="PackedScene" path="res://assets/environment/kenney_nature/tree_pineDefaultA.glb" id="3_6el61"]
+[ext_resource type="PackedScene" path="res://assets/environment/kenney_nature/rock_largeA.glb" id="4_tdvem"]
+[ext_resource type="PackedScene" path="res://assets/environment/kenney_nature/cactus_tall.glb" id="5_tljth"]
+[ext_resource type="Texture2D" path="res://assets/environment/terrain_textures/packed/grassland_alb_ht.png" id="6_onfiu"]
+[ext_resource type="Texture2D" path="res://assets/environment/terrain_textures/packed/grassland_nrm_rgh.png" id="7_gyexj"]
+[ext_resource type="Texture2D" path="res://assets/environment/terrain_textures/packed/mountain_rock_alb_ht.png" id="8_7jd6m"]
+[ext_resource type="Texture2D" path="res://assets/environment/terrain_textures/packed/mountain_rock_nrm_rgh.png" id="9_btlkp"]
+[ext_resource type="Texture2D" path="res://assets/environment/terrain_textures/packed/sand_01_alb_ht.png" id="10_ydrd3"]
+[ext_resource type="Texture2D" path="res://assets/environment/terrain_textures/packed/sand_01_nrm_rgh.png" id="11_i1ng8"]
+[ext_resource type="Texture2D" path="res://assets/environment/terrain_textures/packed/snow_02_alb_ht.png" id="12_hckhr"]
+[ext_resource type="Texture2D" path="res://assets/environment/terrain_textures/packed/snow_02_nrm_rgh.png" id="13_od671"]
+
+[sub_resource type="Gradient" id="Gradient_kbt1b"]
+offsets = PackedFloat32Array(0.2, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_hoaxk"]
+noise_type = 2
+frequency = 0.03
+cellular_jitter = 3.0
+cellular_return_type = 0
+domain_warp_enabled = true
+domain_warp_type = 1
+domain_warp_amplitude = 50.0
+domain_warp_fractal_type = 2
+domain_warp_fractal_lacunarity = 1.5
+domain_warp_fractal_gain = 1.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_eeijg"]
+noise = SubResource("FastNoiseLite_hoaxk")
+color_ramp = SubResource("Gradient_kbt1b")
+seamless = true
+
+[sub_resource type="Terrain3DMaterial" id="Terrain3DMaterial_maso2"]
+_shader_parameters = {
+&"bias_distance": null,
+&"blend_sharpness": null,
+&"depth_blur": null,
+&"enable_macro_variation": null,
+&"enable_projection": null,
+&"flat_terrain_normals": null,
+&"macro_variation1": null,
+&"macro_variation2": null,
+&"macro_variation_slope": null,
+&"mipmap_bias": null,
+&"noise1_angle": null,
+&"noise1_offset": null,
+&"noise1_scale": null,
+&"noise2_scale": null,
+&"noise_texture": SubResource("NoiseTexture2D_eeijg"),
+&"projection_threshold": null
+}
+show_colormap = true
+
+[sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_phytg"]
+name = "Broadleaf Tree"
+scene_file = ExtResource("1_ixhs0")
+height_offset = 0.46
+last_lod = 1
+last_shadow_lod = 1
+lod0_range = 128.0
+
+[sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_3fq1r"]
+name = "Oak Tree"
+id = 1
+scene_file = ExtResource("2_h7pbw")
+height_offset = 0.48
+last_lod = 1
+last_shadow_lod = 1
+lod0_range = 128.0
+
+[sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_qhg7p"]
+name = "Northern Pine"
+id = 2
+scene_file = ExtResource("3_6el61")
+height_offset = 0.48
+last_lod = 1
+last_shadow_lod = 1
+lod0_range = 128.0
+
+[sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_74gjr"]
+name = "Mountain Rock"
+id = 3
+scene_file = ExtResource("4_tdvem")
+height_offset = 0.24
+last_lod = 1
+last_shadow_lod = 1
+lod0_range = 128.0
+
+[sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_mbv0p"]
+name = "Desert Cactus"
+id = 4
+scene_file = ExtResource("5_tljth")
+height_offset = 0.44
+last_lod = 1
+last_shadow_lod = 1
+lod0_range = 128.0
+
+[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_a387p"]
+name = "Grassland"
+albedo_color = Color(0.48235294, 0.6039216, 0.39607844, 1)
+albedo_texture = ExtResource("6_onfiu")
+normal_texture = ExtResource("7_gyexj")
+normal_depth = 0.72
+roughness = 0.08
+uv_scale = 0.0045
+detiling_rotation = 0.13
+
+[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_rttbk"]
+name = "Forest Floor"
+id = 1
+albedo_color = Color(0.25882354, 0.41960785, 0.28235295, 1)
+albedo_texture = ExtResource("6_onfiu")
+normal_texture = ExtResource("7_gyexj")
+normal_depth = 0.72
+roughness = 0.08
+uv_scale = 0.005
+detiling_rotation = 0.13
+
+[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_r3i7d"]
+name = "Mountain Rock"
+id = 2
+albedo_color = Color(0.45490196, 0.4862745, 0.47058824, 1)
+albedo_texture = ExtResource("8_7jd6m")
+normal_texture = ExtResource("9_btlkp")
+normal_depth = 0.72
+roughness = 0.08
+uv_scale = 0.004
+detiling_rotation = 0.13
+
+[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_trtkn"]
+name = "Southern Sand"
+id = 3
+albedo_color = Color(0.7764706, 0.6039216, 0.3529412, 1)
+albedo_texture = ExtResource("10_ydrd3")
+normal_texture = ExtResource("11_i1ng8")
+normal_depth = 0.72
+roughness = 0.08
+uv_scale = 0.0032
+detiling_rotation = 0.13
+
+[sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_f8h3e"]
+name = "Northern Snow"
+id = 4
+albedo_color = Color(0.8392157, 0.8862745, 0.8666667, 1)
+albedo_texture = ExtResource("12_hckhr")
+normal_texture = ExtResource("13_od671")
+normal_depth = 0.72
+roughness = 0.08
+uv_scale = 0.0038
+detiling_rotation = 0.13
+
+[sub_resource type="Terrain3DAssets" id="Terrain3DAssets_pr4ce"]
+mesh_list = Array[Terrain3DMeshAsset]([SubResource("Terrain3DMeshAsset_phytg"), SubResource("Terrain3DMeshAsset_3fq1r"), SubResource("Terrain3DMeshAsset_qhg7p"), SubResource("Terrain3DMeshAsset_74gjr"), SubResource("Terrain3DMeshAsset_mbv0p")])
+texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_a387p"), SubResource("Terrain3DTextureAsset_rttbk"), SubResource("Terrain3DTextureAsset_r3i7d"), SubResource("Terrain3DTextureAsset_trtkn"), SubResource("Terrain3DTextureAsset_f8h3e")])
+
+[node name="HiloanTerrain3D" type="Terrain3D" unique_id=791083870]
+data_directory = "res://assets/terrain3d/hiloan"
+material = SubResource("Terrain3DMaterial_maso2")
+assets = SubResource("Terrain3DAssets_pr4ce")
+vertex_spacing = 64.0
+free_editor_textures = false
+show_colormap = true
+top_level = true
+metadata/_edit_lock_ = true
