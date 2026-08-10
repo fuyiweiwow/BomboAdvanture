@@ -108,11 +108,11 @@ func _create_terrain_assets() -> Resource:
 	var assets := ClassDB.instantiate("Terrain3DAssets") as Resource
 	assert(assets != null)
 	var texture_definitions := [
-		["Grassland", TEXTURE_GRASS, "res://assets/environment/terrain_textures/packed/grassland_alb_ht.png", "res://assets/environment/terrain_textures/packed/grassland_nrm_rgh.png", Color("#7b9a65"), 0.0045],
-		["Forest Floor", TEXTURE_FOREST, "res://assets/environment/terrain_textures/packed/grassland_alb_ht.png", "res://assets/environment/terrain_textures/packed/grassland_nrm_rgh.png", Color("#426b48"), 0.0050],
-		["Mountain Rock", TEXTURE_ROCK, "res://assets/environment/terrain_textures/packed/mountain_rock_alb_ht.png", "res://assets/environment/terrain_textures/packed/mountain_rock_nrm_rgh.png", Color("#747c78"), 0.0040],
-		["Southern Sand", TEXTURE_SAND, "res://assets/environment/terrain_textures/packed/sand_01_alb_ht.png", "res://assets/environment/terrain_textures/packed/sand_01_nrm_rgh.png", Color("#c69a5a"), 0.0032],
-		["Northern Snow", TEXTURE_SNOW, "res://assets/environment/terrain_textures/packed/snow_02_alb_ht.png", "res://assets/environment/terrain_textures/packed/snow_02_nrm_rgh.png", Color("#d6e2dd"), 0.0038],
+		["Cartoon Grassland", TEXTURE_GRASS, "res://assets/environment/terrain_textures/packed/grassland_alb_ht.png", "res://assets/environment/terrain_textures/packed/grassland_nrm_rgh.png", Color("#6b9656"), 0.0036],
+		["Cartoon Forest", TEXTURE_FOREST, "res://assets/environment/terrain_textures/packed/grassland_alb_ht.png", "res://assets/environment/terrain_textures/packed/grassland_nrm_rgh.png", Color("#356940"), 0.0040],
+		["Cartoon Mountain Rock", TEXTURE_ROCK, "res://assets/environment/terrain_textures/packed/mountain_rock_alb_ht.png", "res://assets/environment/terrain_textures/packed/mountain_rock_nrm_rgh.png", Color("#707977"), 0.0034],
+		["Cartoon Southern Sand", TEXTURE_SAND, "res://assets/environment/terrain_textures/packed/sand_01_alb_ht.png", "res://assets/environment/terrain_textures/packed/sand_01_nrm_rgh.png", Color("#c0924e"), 0.0028],
+		["Northern Peak Snow", TEXTURE_SNOW, "res://assets/environment/terrain_textures/packed/snow_02_alb_ht.png", "res://assets/environment/terrain_textures/packed/snow_02_nrm_rgh.png", Color("#e7eee9"), 0.0032],
 	]
 	for definition in texture_definitions:
 		var texture_asset := ClassDB.instantiate("Terrain3DTextureAsset") as Resource
@@ -121,8 +121,8 @@ func _create_terrain_assets() -> Resource:
 		texture_asset.set("albedo_texture", load(definition[2]))
 		texture_asset.set("normal_texture", load(definition[3]))
 		texture_asset.set("albedo_color", definition[4])
-		texture_asset.set("normal_depth", 0.72)
-		texture_asset.set("roughness", 0.08)
+		texture_asset.set("normal_depth", 0.26)
+		texture_asset.set("roughness", 0.24)
 		texture_asset.set("uv_scale", definition[5])
 		texture_asset.set("detiling_rotation", 0.13)
 		_set_texture_asset(assets, int(definition[1]), texture_asset)
@@ -274,31 +274,33 @@ func _southern_archipelago_field(x: float, z: float) -> float:
 func _world_color(x: float, z: float, height: float) -> Color:
 	if height < 0.05:
 		return Color("#2d7180")
-	var color := Color("#55733f")
+	var color := Color("#5d8d49")
 	var loand_forest := _gaussian(x, z, -6.0, -0.8, 5.0, 3.4)
 	var west_forest := _gaussian(x, z, -10.5, 2.8, 2.8, 2.4)
 	var forest_pattern := smoothstep(-0.28, 0.42, _terrain_noise(x * 1.32 + 2.0, z * 1.32 - 1.0))
 	var forest := maxf(loand_forest * 0.92, west_forest) * (0.52 + forest_pattern * 0.48)
-	color = color.lerp(Color("#173e2a"), forest * 0.90)
+	color = color.lerp(Color("#245b38"), forest * 0.88)
 
 	var datt_plain := _gaussian(x, z, 3.8, -1.3, 4.6, 3.0)
-	color = color.lerp(Color("#718d49"), datt_plain * 0.76)
+	color = color.lerp(Color("#729a50"), datt_plain * 0.74)
 	var south_dryness := smoothstep(2.8, 7.0, z) * (1.0 - _gaussian(x, z, 10.5, 4.2, 3.2, 2.8) * 0.5)
-	color = color.lerp(Color("#a66f35"), south_dryness * 0.92)
+	color = color.lerp(Color("#b9843f"), south_dryness * 0.92)
 	var dunes := south_dryness * (sin(x * 2.15 + z * 0.52) * 0.5 + 0.5)
-	color = color.lerp(Color("#c3944e"), dunes * 0.24)
+	color = color.lerp(Color("#d2a552"), dunes * 0.20)
 	var archipelago := smoothstep(-0.06, 0.20, _southern_archipelago_field(x, z))
-	color = color.lerp(Color("#56845b"), archipelago * 0.96)
+	color = color.lerp(Color("#558c58"), archipelago * 0.96)
 
 	var heren_coast := _gaussian(x, z, 10.7, -3.4, 2.2, 2.4)
-	color = color.lerp(Color("#4d7650"), heren_coast * 0.55)
+	color = color.lerp(Color("#4c7854"), heren_coast * 0.54)
 	var northern_cold := smoothstep(4.8, 8.8, -z)
-	color = color.lerp(Color("#788a80"), northern_cold * 0.46)
+	color = color.lerp(Color("#778e83"), northern_cold * 0.30)
 	var exposed_rock := smoothstep(2.2, 4.7, height)
-	color = color.lerp(Color("#424a46"), exposed_rock * 0.92)
-	var snow := smoothstep(6.0, 7.6, height)
-	color = color.lerp(Color("#b8c8c1"), snow)
-	var variation := _terrain_noise(x * 2.2, z * 2.2) * 0.055
+	color = color.lerp(Color("#5c6462"), exposed_rock * 0.86)
+	var snow := _snow_mask(z, height)
+	color = color.lerp(Color("#e2ebe5"), snow)
+	# Three broad tonal steps read like painted map regions instead of noisy PBR terrain.
+	var variation_noise := _terrain_noise(x * 1.35, z * 1.35)
+	var variation := -0.035 if variation_noise < -0.18 else (0.025 if variation_noise > 0.30 else 0.0)
 	return color.lightened(maxf(variation, 0.0)).darkened(maxf(-variation, 0.0))
 
 
@@ -326,7 +328,7 @@ func _world_control(x: float, z: float, height: float) -> Color:
 		if rock > 0.05:
 			overlay_id = TEXTURE_ROCK
 			blend = rock
-		var snow := smoothstep(5.65, 7.25, height)
+		var snow := _snow_mask(z, height)
 		if snow > 0.05:
 			base_id = TEXTURE_ROCK
 			overlay_id = TEXTURE_SNOW
@@ -335,6 +337,12 @@ func _world_control(x: float, z: float, height: float) -> Color:
 	bits |= Terrain3DUtil.enc_overlay(overlay_id)
 	bits |= Terrain3DUtil.enc_blend(roundi(clampf(blend, 0.0, 1.0) * 255.0))
 	return Color(Terrain3DUtil.as_float(bits), 0.0, 0.0, 1.0)
+
+
+func _snow_mask(z: float, height: float) -> float:
+	var northern_latitude := smoothstep(5.4, 7.2, -z)
+	var high_peak := smoothstep(10.0, 14.2, height)
+	return northern_latitude * high_peak
 
 
 func _carve_valley(height: float, point: Vector2, polyline: Array, width: float, depth: float) -> float:

@@ -159,8 +159,9 @@ func _add_environment(parent: Node3D) -> void:
 	var light := DirectionalLight3D.new()
 	light.name = "SunLight"
 	light.rotation_degrees = Vector3(-54.0, -32.0, 0.0)
-	light.light_energy = 0.72
+	light.light_energy = 0.74
 	light.shadow_enabled = true
+	light.shadow_opacity = 0.58
 	_attach(parent, light)
 
 	var world_environment := WorldEnvironment.new()
@@ -169,9 +170,10 @@ func _add_environment(parent: Node3D) -> void:
 	environment.background_mode = Environment.BG_COLOR
 	environment.background_color = Color("#173f47")
 	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	environment.ambient_light_color = Color("#9daea4")
-	environment.ambient_light_energy = 0.34
+	environment.ambient_light_color = Color("#b9d1c1")
+	environment.ambient_light_energy = 0.36
 	environment.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+	environment.adjustment_enabled = false
 	world_environment.environment = environment
 	_attach(parent, world_environment)
 
@@ -192,7 +194,7 @@ func _add_ocean(parent: Node3D) -> void:
 	mesh.size = Vector2(100000.0, 100000.0)
 	ocean.mesh = mesh
 	ocean.position.y = 4.0
-	ocean.material_override = _material(Color("#184f5c"), 0.34)
+	ocean.material_override = _material(Color("#184f5c"), 0.52)
 	_attach(parent, ocean)
 
 func _add_terrain(parent: Node3D) -> void:
@@ -364,7 +366,7 @@ func _add_western_floating_islands(parent: Node3D) -> void:
 		rock_mesh.radial_segments = 9
 		rock.mesh = rock_mesh
 		rock.position.y = -rock_height * 0.5
-		rock.material_override = _material(Color("#62564b"), 0.96)
+		rock.material_override = _material(Color("#6d6258"), 0.92)
 		_attach(island, rock)
 
 		var crown := MeshInstance3D.new()
@@ -376,7 +378,7 @@ func _add_western_floating_islands(parent: Node3D) -> void:
 		crown_mesh.radial_segments = 12
 		crown.mesh = crown_mesh
 		crown.position.y = 18.0
-		crown.material_override = _material(Color("#5d8e60"), 0.90)
+		crown.material_override = _material(Color("#70ad66"), 0.86)
 		_attach(island, crown)
 
 		var lift_core := MeshInstance3D.new()
@@ -459,19 +461,19 @@ func _retint_asset_mesh(source_mesh: Mesh, scene_path: String) -> Mesh:
 		var material := source_material.duplicate(true) as StandardMaterial3D
 		var material_name := material.resource_name.to_lower()
 		if is_rock:
-			material.albedo_color = Color("#85877f") if surface_index == 0 else Color("#929985")
+			material.albedo_color = Color("#7b8583") if surface_index == 0 else Color("#88958a")
 		elif material_name.contains("wood") or material_name.contains("bark"):
-			material.albedo_color = Color("#8a6542")
+			material.albedo_color = Color("#916943")
 		elif is_cactus:
-			material.albedo_color = Color("#668f4f")
+			material.albedo_color = Color("#6da154")
 		elif is_pine:
-			material.albedo_color = Color("#4f7f61")
+			material.albedo_color = Color("#4f8b63")
 		else:
-			material.albedo_color = Color("#5d945b")
+			material.albedo_color = Color("#61a35d")
 		material.roughness = 0.88
 		material.emission_enabled = true
 		material.emission = material.albedo_color
-		material.emission_energy_multiplier = 0.10
+		material.emission_energy_multiplier = 0.16
 		mesh.surface_set_material(surface_index, material)
 	return mesh
 
