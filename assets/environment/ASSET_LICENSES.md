@@ -10,6 +10,16 @@ Commons CC0 1.0 Universal license.
 - Files used: selected tree, pine, cactus, and rock GLB models in
   `kenney_nature/`.
 
+## Quaternius Ultimate Stylized Nature Pack
+
+- Source: https://quaternius.com/packs/ultimatestylizednature.html
+- Author: Quaternius
+- License: CC0 1.0
+- Files used: selected, terrain-grounded tree, bush, palm, and rock GLB
+  models in `quaternius_stylized/`.
+- The original license text is included at
+  `quaternius_stylized/LICENSE.txt`.
+
 ## Poly Haven Sand 01
 
 - Source: https://polyhaven.com/a/sand_01

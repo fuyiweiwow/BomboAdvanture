@@ -1,9 +1,9 @@
 [gd_scene format=3]
 
-[ext_resource type="PackedScene" path="res://assets/environment/kenney_nature/tree_default.glb" id="1_ixhs0"]
-[ext_resource type="PackedScene" path="res://assets/environment/kenney_nature/tree_oak.glb" id="2_h7pbw"]
-[ext_resource type="PackedScene" path="res://assets/environment/kenney_nature/tree_pineDefaultA.glb" id="3_6el61"]
-[ext_resource type="PackedScene" path="res://assets/environment/kenney_nature/rock_largeA.glb" id="4_tdvem"]
+[ext_resource type="PackedScene" path="res://assets/environment/quaternius_stylized/normal_tree_1.glb" id="1_ixhs0"]
+[ext_resource type="PackedScene" path="res://assets/environment/quaternius_stylized/birch_tree_2.glb" id="2_h7pbw"]
+[ext_resource type="PackedScene" path="res://assets/environment/quaternius_stylized/pine_tree_2.glb" id="3_6el61"]
+[ext_resource type="PackedScene" path="res://assets/environment/quaternius_stylized/rock_5.glb" id="4_tdvem"]
 [ext_resource type="PackedScene" path="res://assets/environment/kenney_nature/cactus_tall.glb" id="5_tljth"]
 [ext_resource type="Texture2D" path="res://assets/environment/terrain_textures/packed/grassland_alb_ht.png" id="6_onfiu"]
 [ext_resource type="Texture2D" path="res://assets/environment/terrain_textures/packed/grassland_nrm_rgh.png" id="7_gyexj"]
@@ -59,16 +59,16 @@ show_colormap = true
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_phytg"]
 name = "Broadleaf Tree"
 scene_file = ExtResource("1_ixhs0")
-height_offset = 0.46
+height_offset = 0.0
 last_lod = 1
 last_shadow_lod = 1
 lod0_range = 128.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_3fq1r"]
-name = "Oak Tree"
+name = "Birch Tree"
 id = 1
 scene_file = ExtResource("2_h7pbw")
-height_offset = 0.48
+height_offset = 0.0
 last_lod = 1
 last_shadow_lod = 1
 lod0_range = 128.0
@@ -77,7 +77,7 @@ lod0_range = 128.0
 name = "Northern Pine"
 id = 2
 scene_file = ExtResource("3_6el61")
-height_offset = 0.48
+height_offset = 0.0
 last_lod = 1
 last_shadow_lod = 1
 lod0_range = 128.0
@@ -86,7 +86,7 @@ lod0_range = 128.0
 name = "Mountain Rock"
 id = 3
 scene_file = ExtResource("4_tdvem")
-height_offset = 0.24
+height_offset = 0.0
 last_lod = 1
 last_shadow_lod = 1
 lod0_range = 128.0
