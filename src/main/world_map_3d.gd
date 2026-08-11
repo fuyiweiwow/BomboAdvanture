@@ -346,38 +346,28 @@ func _add_western_floating_islands(parent: Node3D) -> void:
 		Vector4(-15.7, 3.6, 700.0, 2200.0),
 		Vector4(-18.3, 4.8, 500.0, 1890.0),
 	]
+	var shape_names := ["LongRidge", "TriangularCliff", "Teardrop", "TwinLobe", "BroadMesa", "VerticalShard"]
 	for index in range(definitions.size()):
 		var definition: Vector4 = definitions[index]
 		var island := Node3D.new()
-		island.name = "FloatingIsland_%02d" % index
+		island.name = "FloatingIsland_%02d_%s" % [index, shape_names[index]]
 		island.position = Vector3(definition.x * MAP_SCALE, definition.w, definition.y * MAP_SCALE)
 		island.set_meta("base_y", definition.w)
+		island.set_meta("island_shape", shape_names[index])
 		_attach(cluster, island)
 		_floating_islands.append(island)
 
 		var radius := definition.z
 		var rock_height := radius * (1.42 if index % 2 == 0 else 1.68)
 		var rock := MeshInstance3D.new()
-		rock.name = "TaperedRock"
-		var rock_mesh := CylinderMesh.new()
-		rock_mesh.top_radius = radius
-		rock_mesh.bottom_radius = radius * 0.10
-		rock_mesh.height = rock_height
-		rock_mesh.radial_segments = 9
-		rock.mesh = rock_mesh
-		rock.position.y = -rock_height * 0.5
+		rock.name = "FacetedRock_%s" % shape_names[index]
+		rock.mesh = _build_floating_rock_mesh(radius, rock_height, index)
 		rock.material_override = _material(Color("#6d6258"), 0.92)
 		_attach(island, rock)
 
 		var crown := MeshInstance3D.new()
-		crown.name = "GrassCrown"
-		var crown_mesh := CylinderMesh.new()
-		crown_mesh.top_radius = radius * 1.04
-		crown_mesh.bottom_radius = radius * 0.96
-		crown_mesh.height = 52.0
-		crown_mesh.radial_segments = 12
-		crown.mesh = crown_mesh
-		crown.position.y = 18.0
+		crown.name = "GrassCrown_%s" % shape_names[index]
+		crown.mesh = _build_floating_crown_mesh(radius, index)
 		crown.material_override = _material(Color("#70ad66"), 0.86)
 		_attach(island, crown)
 
@@ -414,6 +404,95 @@ func _add_western_floating_islands(parent: Node3D) -> void:
 			var basis := Basis(Vector3.UP, angle + 0.4).scaled(Vector3.ONE * tree_scale)
 			tree_transforms.append(Transform3D(basis, Vector3(cos(angle) * distance, 48.0, sin(angle) * distance)))
 		_add_asset_multimesh(island, "IslandTrees", "res://assets/environment/kenney_nature/tree_pineDefaultA.glb", tree_transforms)
+
+
+func _build_floating_rock_mesh(radius: float, depth: float, shape_index: int) -> ArrayMesh:
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var segments := 11 + shape_index % 3
+	var top: Array[Vector3] = []
+	var shoulder: Array[Vector3] = []
+	var lower: Array[Vector3] = []
+	var tip: Array[Vector3] = []
+	var tip_offset := Vector2(sin(float(shape_index) * 1.9) * radius * 0.18, cos(float(shape_index) * 1.37) * radius * 0.13)
+	for segment_index in range(segments):
+		var angle := TAU * float(segment_index) / float(segments)
+		var outline := _floating_island_outline(radius, angle, shape_index)
+		top.append(Vector3(outline.x, 0.0, outline.y))
+		shoulder.append(Vector3(outline.x * 0.84 + tip_offset.x * 0.12, -depth * 0.24, outline.y * 0.84 + tip_offset.y * 0.12))
+		lower.append(Vector3(outline.x * 0.38 + tip_offset.x * 0.58, -depth * 0.68, outline.y * 0.38 + tip_offset.y * 0.58))
+		tip.append(Vector3(outline.x * 0.055 + tip_offset.x, -depth, outline.y * 0.055 + tip_offset.y))
+	_add_surface_ring(surface, top, shoulder)
+	_add_surface_ring(surface, shoulder, lower)
+	_add_surface_ring(surface, lower, tip)
+	_add_surface_cap(surface, top, Vector3.ZERO, true)
+	surface.generate_normals()
+	return surface.commit()
+
+
+func _build_floating_crown_mesh(radius: float, shape_index: int) -> ArrayMesh:
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var segments := 11 + shape_index % 3
+	var top: Array[Vector3] = []
+	var bottom: Array[Vector3] = []
+	for segment_index in range(segments):
+		var angle := TAU * float(segment_index) / float(segments)
+		var outline := _floating_island_outline(radius, angle, shape_index)
+		top.append(Vector3(outline.x * 1.04, 54.0, outline.y * 1.04))
+		bottom.append(Vector3(outline.x * 0.97, 0.0, outline.y * 0.97))
+	_add_surface_ring(surface, top, bottom)
+	_add_surface_cap(surface, top, Vector3(0.0, 54.0, 0.0), true)
+	surface.generate_normals()
+	return surface.commit()
+
+
+func _floating_island_outline(radius: float, angle: float, shape_index: int) -> Vector2:
+	var axis_scale := Vector2.ONE
+	var contour := 1.0
+	match shape_index:
+		0:
+			axis_scale = Vector2(1.42, 0.70)
+			contour += sin(angle * 3.0 + 0.4) * 0.08
+		1:
+			axis_scale = Vector2(1.04, 0.92)
+			contour += cos(angle * 3.0 - 0.3) * 0.22
+		2:
+			axis_scale = Vector2(1.18, 0.86)
+			contour += cos(angle) * 0.27 + sin(angle * 4.0) * 0.06
+		3:
+			axis_scale = Vector2(1.12, 0.84)
+			contour += cos(angle * 2.0 + 0.35) * 0.24
+		4:
+			axis_scale = Vector2(1.28, 0.94)
+			contour += cos(angle * 4.0 - 0.5) * 0.10
+		5:
+			axis_scale = Vector2(0.76, 1.46)
+			contour += sin(angle * 3.0 + 0.8) * 0.16
+	contour += sin(angle * float(5 + shape_index % 2) + float(shape_index) * 1.13) * 0.045
+	return Vector2(cos(angle) * radius * axis_scale.x * contour, sin(angle) * radius * axis_scale.y * contour)
+
+
+func _add_surface_ring(surface: SurfaceTool, upper: Array[Vector3], lower: Array[Vector3]) -> void:
+	for index in range(upper.size()):
+		var next := (index + 1) % upper.size()
+		_add_surface_triangle(surface, upper[index], upper[next], lower[index])
+		_add_surface_triangle(surface, upper[next], lower[next], lower[index])
+
+
+func _add_surface_cap(surface: SurfaceTool, ring: Array[Vector3], center: Vector3, face_up: bool) -> void:
+	for index in range(ring.size()):
+		var next := (index + 1) % ring.size()
+		if face_up:
+			_add_surface_triangle(surface, center, ring[index], ring[next])
+		else:
+			_add_surface_triangle(surface, center, ring[next], ring[index])
+
+
+func _add_surface_triangle(surface: SurfaceTool, a: Vector3, b: Vector3, c: Vector3) -> void:
+	surface.add_vertex(a)
+	surface.add_vertex(b)
+	surface.add_vertex(c)
 
 
 func _asset_transform(x: float, z: float, height: float, scale_factor: float, angle: float) -> Transform3D:
