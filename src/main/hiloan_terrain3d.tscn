@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" path="res://assets/environment/quaternius_stylized/birch_tree_2.glb" id="2_h7pbw"]
 [ext_resource type="PackedScene" path="res://assets/environment/quaternius_stylized/pine_tree_2.glb" id="3_6el61"]
 [ext_resource type="PackedScene" path="res://assets/environment/quaternius_stylized/rock_5.glb" id="4_tdvem"]
-[ext_resource type="PackedScene" path="res://assets/environment/kenney_nature/cactus_tall.glb" id="5_tljth"]
+[ext_resource type="PackedScene" path="res://assets/environment/quaternius_stylized/dead_tree_1.glb" id="5_tljth"]
 [ext_resource type="Texture2D" path="res://assets/environment/terrain_textures/packed/grassland_alb_ht.png" id="6_onfiu"]
 [ext_resource type="Texture2D" path="res://assets/environment/terrain_textures/packed/grassland_nrm_rgh.png" id="7_gyexj"]
 [ext_resource type="Texture2D" path="res://assets/environment/terrain_textures/packed/mountain_rock_alb_ht.png" id="8_7jd6m"]
@@ -92,10 +92,10 @@ last_shadow_lod = 1
 lod0_range = 128.0
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_mbv0p"]
-name = "Desert Cactus"
+name = "Desert Dead Tree"
 id = 4
 scene_file = ExtResource("5_tljth")
-height_offset = 0.44
+height_offset = 0.0
 last_lod = 1
 last_shadow_lod = 1
 lod0_range = 128.0
@@ -105,8 +105,8 @@ name = "Cartoon Grassland"
 albedo_color = Color(0.41960785, 0.5882353, 0.3372549, 1)
 albedo_texture = ExtResource("6_onfiu")
 normal_texture = ExtResource("7_gyexj")
-normal_depth = 0.12
-roughness = 0.32
+normal_depth = 0.07
+roughness = 0.78
 uv_scale = 0.0022
 detiling_rotation = 0.13
 
@@ -116,8 +116,8 @@ id = 1
 albedo_color = Color(0.20784314, 0.4117647, 0.2509804, 1)
 albedo_texture = ExtResource("6_onfiu")
 normal_texture = ExtResource("7_gyexj")
-normal_depth = 0.12
-roughness = 0.32
+normal_depth = 0.07
+roughness = 0.78
 uv_scale = 0.0024
 detiling_rotation = 0.13
 
@@ -127,8 +127,8 @@ id = 2
 albedo_color = Color(0.4392157, 0.4745098, 0.46666667, 1)
 albedo_texture = ExtResource("8_7jd6m")
 normal_texture = ExtResource("9_btlkp")
-normal_depth = 0.12
-roughness = 0.32
+normal_depth = 0.07
+roughness = 0.82
 uv_scale = 0.002
 detiling_rotation = 0.13
 
@@ -138,8 +138,8 @@ id = 3
 albedo_color = Color(0.7529412, 0.57254905, 0.30588236, 1)
 albedo_texture = ExtResource("10_ydrd3")
 normal_texture = ExtResource("11_i1ng8")
-normal_depth = 0.12
-roughness = 0.32
+normal_depth = 0.07
+roughness = 0.82
 uv_scale = 0.0018
 detiling_rotation = 0.13
 
@@ -149,8 +149,8 @@ id = 4
 albedo_color = Color(0.90588236, 0.93333334, 0.9137255, 1)
 albedo_texture = ExtResource("12_hckhr")
 normal_texture = ExtResource("13_od671")
-normal_depth = 0.12
-roughness = 0.32
+normal_depth = 0.05
+roughness = 0.74
 uv_scale = 0.002
 detiling_rotation = 0.13
 

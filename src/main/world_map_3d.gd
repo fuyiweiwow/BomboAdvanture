@@ -253,9 +253,9 @@ func _add_terrain_cover(parent: Node3D) -> void:
 		var height := _height_at(x, z)
 		if height <= 12.0 or height > 390.0 or _terrain_normal_at(x, z).y < 0.88:
 			continue
-		var tree_transform := _asset_transform(x, z, height, random.randf_range(57.0, 76.0), random.randf_range(0.0, TAU), 0.12, 3.0)
+		var tree_transform := _asset_transform(x, z, height, random.randf_range(34.0, 47.0), random.randf_range(0.0, TAU), 0.12, 2.0)
 		var tree_variant := random.randf()
-		if tree_variant < 0.20:
+		if tree_variant < 0.06:
 			birch_transforms.append(tree_transform)
 		elif tree_variant < 0.55:
 			broadleaf_b_transforms.append(tree_transform)
@@ -264,7 +264,7 @@ func _add_terrain_cover(parent: Node3D) -> void:
 		if random.randf() < 0.34:
 			var bush_x := x + random.randf_range(-0.12, 0.12)
 			var bush_z := z + random.randf_range(-0.12, 0.12)
-			bush_transforms.append(_asset_transform(bush_x, bush_z, _height_at(bush_x, bush_z), random.randf_range(95.0, 138.0), random.randf_range(0.0, TAU), 0.45, 2.0))
+			bush_transforms.append(_asset_transform(bush_x, bush_z, _height_at(bush_x, bush_z), random.randf_range(34.0, 52.0), random.randf_range(0.0, TAU), 0.45, 1.0))
 
 	var pine_a_transforms: Array[Transform3D] = []
 	var pine_b_transforms: Array[Transform3D] = []
@@ -278,7 +278,7 @@ func _add_terrain_cover(parent: Node3D) -> void:
 		if height < 70.0 or height > 590.0 or _terrain_normal_at(x, z).y < 0.84:
 			continue
 		var destination := pine_a_transforms if random.randf() < 0.56 else pine_b_transforms
-		destination.append(_asset_transform(x, z, height, random.randf_range(61.0, 83.0), random.randf_range(0.0, TAU), 0.14, 3.0))
+		destination.append(_asset_transform(x, z, height, random.randf_range(37.0, 51.0), random.randf_range(0.0, TAU), 0.14, 2.0))
 
 	var mountain_tree_transforms: Array[Transform3D] = []
 	for _index in range(440):
@@ -294,9 +294,10 @@ func _add_terrain_cover(parent: Node3D) -> void:
 		var tree_line_factor := clampf((920.0 - height) / 520.0, 0.0, 1.0)
 		if height < 170.0 or height > 920.0 or random.randf() > tree_line_factor or _terrain_normal_at(x, z).y < 0.78:
 			continue
-		mountain_tree_transforms.append(_asset_transform(x, z, height, random.randf_range(55.0, 74.0), random.randf_range(0.0, TAU), 0.18, 4.0))
+		mountain_tree_transforms.append(_asset_transform(x, z, height, random.randf_range(34.0, 47.0), random.randf_range(0.0, TAU), 0.18, 2.0))
 
-	var cactus_transforms: Array[Transform3D] = []
+	var desert_dead_tree_transforms: Array[Transform3D] = []
+	var desert_bush_transforms: Array[Transform3D] = []
 	for _index in range(92):
 		var x := random.randf_range(-9.2, 6.8)
 		var z := random.randf_range(4.8, 8.4)
@@ -305,7 +306,10 @@ func _add_terrain_cover(parent: Node3D) -> void:
 		var height := _height_at(x, z)
 		if height > 360.0:
 			continue
-		cactus_transforms.append(_asset_transform(x, z, height, random.randf_range(175.0, 235.0), random.randf_range(0.0, TAU), 0.10, 3.0))
+		if random.randf() < 0.32:
+			desert_dead_tree_transforms.append(_asset_transform(x, z, height, random.randf_range(34.0, 48.0), random.randf_range(0.0, TAU), 0.12, 1.0))
+		else:
+			desert_bush_transforms.append(_asset_transform(x, z, height, random.randf_range(30.0, 46.0), random.randf_range(0.0, TAU), 0.34, 1.0))
 
 	var island_palm_a_transforms: Array[Transform3D] = []
 	var island_palm_b_transforms: Array[Transform3D] = []
@@ -327,7 +331,7 @@ func _add_terrain_cover(parent: Node3D) -> void:
 			if height <= 10.0:
 				continue
 			var destination := island_palm_a_transforms if random.randf() < 0.58 else island_palm_b_transforms
-			destination.append(_asset_transform(x, z, height, random.randf_range(61.0, 84.0), random.randf_range(0.0, TAU), 0.12, 3.0))
+			destination.append(_asset_transform(x, z, height, random.randf_range(37.0, 52.0), random.randf_range(0.0, TAU), 0.12, 2.0))
 
 	var low_rock_transforms: Array[Transform3D] = []
 	var medium_rock_transforms: Array[Transform3D] = []
@@ -367,7 +371,8 @@ func _add_terrain_cover(parent: Node3D) -> void:
 	_add_asset_multimesh(parent, "HerenPineForestA", STYLIZED_NATURE_ROOT + "pine_tree_1.glb", pine_a_transforms)
 	_add_asset_multimesh(parent, "HerenPineForestB", STYLIZED_NATURE_ROOT + "pine_tree_2.glb", pine_b_transforms)
 	_add_asset_multimesh(parent, "MountainTreeLine", STYLIZED_NATURE_ROOT + "pine_tree_2.glb", mountain_tree_transforms)
-	_add_asset_multimesh(parent, "SouthernCacti", "res://assets/environment/kenney_nature/cactus_tall.glb", cactus_transforms)
+	_add_asset_multimesh(parent, "SouthernDeadWood", STYLIZED_NATURE_ROOT + "dead_tree_1.glb", desert_dead_tree_transforms)
+	_add_asset_multimesh(parent, "SouthernDryBrush", STYLIZED_NATURE_ROOT + "bush_large.glb", desert_bush_transforms)
 	_add_asset_multimesh(parent, "SouthernPalmGrovesA", STYLIZED_NATURE_ROOT + "palm_tree_1.glb", island_palm_a_transforms)
 	_add_asset_multimesh(parent, "SouthernPalmGrovesB", STYLIZED_NATURE_ROOT + "palm_tree_2.glb", island_palm_b_transforms)
 	_add_asset_multimesh(parent, "MountainRocksLow", STYLIZED_NATURE_ROOT + "rock_2.glb", low_rock_transforms)
@@ -483,10 +488,11 @@ func _add_western_floating_islands(parent: Node3D) -> void:
 		for tree_index in range(tree_count):
 			var angle := TAU * float(tree_index) / float(tree_count) + float(index) * 0.71
 			var distance := radius * (0.26 + 0.11 * float(tree_index % 2))
-			var tree_scale := 165.0 + float((index + tree_index) % 3) * 22.0
+			var tree_scale := 84.0 + float((index + tree_index) % 3) * 12.0
 			var basis := Basis(Vector3.UP, angle + 0.4).scaled(Vector3.ONE * tree_scale)
 			tree_transforms.append(Transform3D(basis, Vector3(cos(angle) * distance, 48.0, sin(angle) * distance)))
-		_add_asset_multimesh(island, "IslandTrees", "res://assets/environment/kenney_nature/tree_pineDefaultA.glb", tree_transforms)
+		var island_tree_asset := "normal_tree_1.glb" if index % 2 == 0 else "normal_tree_2.glb"
+		_add_asset_multimesh(island, "IslandTrees", STYLIZED_NATURE_ROOT + island_tree_asset, tree_transforms)
 
 
 func _build_floating_rock_mesh(radius: float, depth: float, shape_index: int) -> ArrayMesh:
@@ -614,7 +620,7 @@ func _add_asset_multimesh(parent: Node3D, node_name: String, scene_path: String,
 	var instance := MultiMeshInstance3D.new()
 	instance.name = node_name
 	instance.multimesh = multimesh
-	instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if scene_path.contains("rock") or scene_path.contains("outcrop") else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 	_attach(parent, instance)
 	source_root.free()
 
@@ -633,7 +639,8 @@ func _retint_asset_mesh(source_mesh: Mesh, scene_path: String) -> Mesh:
 	var mesh := source_mesh.duplicate(true) as Mesh
 	var is_pine := scene_path.contains("pine")
 	var is_birch := scene_path.contains("birch")
-	var is_cactus := scene_path.contains("cactus")
+	var is_dead_tree := scene_path.contains("dead_tree")
+	var is_dry_bush := scene_path.contains("bush_large")
 	var is_rock := scene_path.contains("rock") or scene_path.contains("outcrop")
 	for surface_index in range(mesh.get_surface_count()):
 		var source_material := mesh.surface_get_material(surface_index)
@@ -641,22 +648,26 @@ func _retint_asset_mesh(source_mesh: Mesh, scene_path: String) -> Mesh:
 			continue
 		var material := source_material.duplicate(true) as StandardMaterial3D
 		var material_name := material.resource_name.to_lower()
+		material.albedo_texture = null
+		material.normal_enabled = false
+		material.normal_texture = null
 		if is_rock:
-			material.albedo_color = Color("#7b8583") if surface_index == 0 else Color("#88958a")
+			material.albedo_color = Color("#78817b") if surface_index == 0 else Color("#8e9687")
 		elif is_birch and material_name.contains("bark"):
-			material.albedo_color = Color("#d9d2bc")
+			material.albedo_color = Color("#c9c3ae")
 		elif material_name.contains("wood") or material_name.contains("bark"):
-			material.albedo_color = Color("#916943")
-		elif is_cactus:
-			material.albedo_color = Color("#6da154")
+			material.albedo_color = Color("#806342")
+		elif is_dead_tree:
+			material.albedo_color = Color("#756348")
+		elif is_dry_bush:
+			material.albedo_color = Color("#8f8b55")
 		elif is_pine:
-			material.albedo_color = Color("#4f8b63")
+			material.albedo_color = Color("#51775b")
 		else:
-			material.albedo_color = Color("#61a35d")
-		material.roughness = 0.88
-		material.emission_enabled = true
-		material.emission = material.albedo_color
-		material.emission_energy_multiplier = 0.16
+			material.albedo_color = Color("#64845b")
+		material.roughness = 0.94
+		material.emission_enabled = false
+		material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_VERTEX
 		mesh.surface_set_material(surface_index, material)
 	return mesh
 
@@ -760,8 +771,8 @@ func _add_river_feature(parent: Node3D, node_name: String, path: Array, width: f
 
 func _add_transport_network(parent: Node3D) -> void:
 	var rail_points := [Vector2(-7.4, 0.6), Vector2(-2.2, -0.2), Vector2(3.9, -1.0), Vector2(7.2, -0.7), Vector2(10.5, 0.6)]
-	_add_surface_path(parent, "MaglevBed", rail_points, 0.12, Color("#39494a"), 0.30)
-	_add_surface_path(parent, "MaglevGlow", rail_points, 0.032, Color("#f0cf63"), 0.34, true)
+	_add_surface_strip(parent, "MaglevBed", rail_points, 0.13, Color("#435654"), 0.105)
+	_add_surface_strip(parent, "MaglevGuide", rail_points, 0.035, Color("#d5b85b"), 0.125)
 	var train := Node3D.new()
 	train.name = "MovingMaglev"
 	_add_box_child(train, "Body", Vector3(620.0, 150.0, 210.0), Vector3(0.0, 80.0, 0.0), Color("#dce9e2"))
@@ -798,7 +809,7 @@ func _add_regional_architecture(parent: Node3D) -> void:
 func _add_datt_future_district(parent: Node3D, center: Vector2, scale_factor: float, node_name: String) -> void:
 	var district := Node3D.new()
 	district.name = node_name
-	district.position = _surface_point(center.x, center.y, 0.08)
+	district.position = _structure_anchor(center, 720.0 * scale_factor, 0.02)
 	_attach(parent, district)
 	_add_cylinder_child(district, "TerracedBase", Vector3.ZERO, 720.0 * scale_factor, 64.0 * scale_factor, Color("#526b68"))
 
@@ -838,8 +849,8 @@ func _add_cartoon_tower(parent: Node3D, node_name: String, position_: Vector3, h
 func _add_loand_castle_complex(parent: Node3D, center: Vector2) -> void:
 	var castle := Node3D.new()
 	castle.name = "LoandRoyalCastle"
-	castle.position = _surface_point(center.x, center.y, 0.08)
-	castle.scale = Vector3.ONE * 0.76
+	castle.position = _structure_anchor(center, 620.0 * 0.58, 0.01)
+	castle.scale = Vector3.ONE * 0.58
 	_attach(parent, castle)
 	_add_cylinder_child(castle, "CastleHill", Vector3.ZERO, 620.0, 72.0, Color("#66815b"))
 	_add_box_child(castle, "CentralKeep", Vector3(560.0, 440.0, 500.0), Vector3(0.0, 292.0, 0.0), Color("#a9997d"))
@@ -1101,42 +1112,8 @@ func _build_campaign_layer() -> void:
 	if _profiles.is_empty():
 		return
 
-	for i in range(_profiles.size() - 1):
-		var from_profile := _profiles[i]
-		var to_profile := _profiles[i + 1]
-		_add_level_route(layer, from_profile, to_profile, i)
 	for profile_index in range(_profiles.size()):
 		_add_level_marker(layer, _profiles[profile_index], profile_index)
-
-
-func _add_level_route(parent: Node3D, from_profile: Dictionary, to_profile: Dictionary, route_index: int) -> void:
-	var start := _level_position(from_profile)
-	var finish := _level_position(to_profile)
-	var flat_delta := Vector2(finish.x - start.x, finish.z - start.z)
-	var normal := Vector2(-flat_delta.y, flat_delta.x).normalized()
-	var bend := minf(flat_delta.length() * 0.12, 1.1 * MAP_SCALE) * (1.0 if route_index % 2 == 0 else -1.0)
-	var control := (start + finish) * 0.5 + Vector3(normal.x * bend, 0.8 * HEIGHT_SCALE, normal.y * bend)
-	var points: Array[Vector3] = []
-	for step in range(13):
-		var t := float(step) / 12.0
-		var point := start.lerp(control, t).lerp(control.lerp(finish, t), t)
-		point.y += (0.22 + sin(t * PI) * 0.18) * HEIGHT_SCALE
-		points.append(point)
-	var completed := bool(from_profile.get("completed", false))
-	var color := Color("#6ad5c5") if completed else Color("#e6bd4f")
-	_add_ribbon(parent, "LevelRoute_%02d" % route_index, points, 0.075, color, true)
-	for bead_index in range(1, 4):
-		var bead_t := float(bead_index) / 4.0
-		var bead_position := points[int(round(bead_t * float(points.size() - 1)))]
-		var bead := MeshInstance3D.new()
-		bead.name = "RouteLight_%02d_%02d" % [route_index, bead_index]
-		var bead_mesh := SphereMesh.new()
-		bead_mesh.radius = 0.09 * MAP_SCALE
-		bead_mesh.height = 0.18 * MAP_SCALE
-		bead.mesh = bead_mesh
-		bead.position = bead_position
-		bead.material_override = _material(color.lightened(0.18), 0.18, true)
-		_attach(parent, bead)
 
 
 func _add_level_marker(parent: Node3D, profile: Dictionary, marker_index: int) -> void:
@@ -1298,12 +1275,15 @@ func _surface_point(x: float, z: float, lift: float = 0.0) -> Vector3:
 	return Vector3(x * MAP_SCALE, _height_at(x, z) + lift * HEIGHT_SCALE, z * MAP_SCALE)
 
 
-func _add_surface_path(parent: Node3D, node_name: String, points_2d: Array, width: float, color: Color, lift: float = 0.10, emission: bool = false) -> void:
-	var points: Array[Vector3] = []
-	for raw_point in points_2d:
-		var point: Vector2 = raw_point
-		points.append(_surface_point(point.x, point.y, lift))
-	_add_ribbon(parent, node_name, points, width, color, emission)
+func _structure_anchor(center: Vector2, radius_world: float, lift: float = 0.0) -> Vector3:
+	var highest := _height_at(center.x, center.y)
+	var radius_map := radius_world / MAP_SCALE
+	for sample_index in range(8):
+		var angle := TAU * float(sample_index) / 8.0
+		var sample_x := center.x + cos(angle) * radius_map
+		var sample_z := center.y + sin(angle) * radius_map
+		highest = maxf(highest, _height_at(sample_x, sample_z))
+	return Vector3(center.x * MAP_SCALE, highest + lift * HEIGHT_SCALE, center.y * MAP_SCALE)
 
 
 func _add_surface_strip(parent: Node3D, node_name: String, points_2d: Array, width: float, color: Color, lift: float) -> void:
@@ -1341,40 +1321,6 @@ func _add_up_facing_triangle(surface: SurfaceTool, a: Vector3, b: Vector3, c: Ve
 	for vertex in [a, b, c]:
 		surface.set_normal(Vector3.UP)
 		surface.add_vertex(vertex)
-
-
-func _add_ribbon(parent: Node3D, node_name: String, points: Array[Vector3], width: float, color: Color, emission: bool = false) -> void:
-	var path := Node3D.new()
-	path.name = node_name
-	_attach(parent, path)
-	for i in range(points.size() - 1):
-		var start := points[i]
-		var finish := points[i + 1]
-		var direction := finish - start
-		var length := direction.length()
-		if length <= 0.001:
-			continue
-		var segment := MeshInstance3D.new()
-		segment.name = "Segment_%02d" % i
-		var mesh := CylinderMesh.new()
-		mesh.top_radius = width * MAP_SCALE
-		mesh.bottom_radius = width * MAP_SCALE
-		mesh.height = length
-		mesh.radial_segments = 8
-		segment.mesh = mesh
-		segment.transform = Transform3D(_basis_from_up(direction), (start + finish) * 0.5)
-		segment.material_override = _material(color, 0.28, emission)
-		_attach(path, segment)
-
-
-func _basis_from_up(direction: Vector3) -> Basis:
-	var up := direction.normalized()
-	var right := up.cross(Vector3.FORWARD)
-	if right.length_squared() < 0.001:
-		right = up.cross(Vector3.RIGHT)
-	right = right.normalized()
-	var forward := right.cross(up).normalized()
-	return Basis(right, up, forward)
 
 
 func _add_box_child(parent: Node3D, node_name: String, size: Vector3, position_: Vector3, color: Color, emission: bool = false) -> MeshInstance3D:
@@ -1496,7 +1442,8 @@ func _terrain_color(x: float, z: float) -> Color:
 func _material(color: Color, roughness: float, emission: bool = false) -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	material.albedo_color = color
-	material.roughness = roughness
+	material.roughness = maxf(roughness, 0.68)
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_VERTEX
 	if color.a < 0.999:
 		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	if emission:
