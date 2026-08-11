@@ -15,6 +15,12 @@ const CAMERA_MAX_SIZE := 38000.0
 const LEVEL_CATALOG := preload("res://src/level/level_catalog.gd")
 const HILOAN_TERRAIN3D := preload("res://src/main/hiloan_terrain3d.tscn")
 const MINIATURE_WATER_SHADER := preload("res://assets/environment/materials/miniature_water.gdshader")
+const LOAND_RIVER_PATH := [Vector2(-4.0, -6.0), Vector2(-5.1, -3.4), Vector2(-5.6, -0.6), Vector2(-4.6, 2.0), Vector2(-3.2, 3.2)]
+const HEREN_RIVER_PATH := [Vector2(7.8, -8.2), Vector2(7.0, -5.7), Vector2(6.2, -3.8), Vector2(5.2, -2.1)]
+const SOUTHERN_RIVER_PATH := [Vector2(-0.6, 4.3), Vector2(-0.9, 5.9), Vector2(-0.3, 7.5), Vector2(0.8, 8.8)]
+const LOAND_WEST_TRIBUTARY := [Vector2(-10.2, -2.7), Vector2(-8.4, -1.8), Vector2(-7.0, -0.9), Vector2(-5.6, -0.6)]
+const LOAND_NORTH_TRIBUTARY := [Vector2(-2.7, -5.8), Vector2(-3.8, -4.0), Vector2(-4.8, -2.4), Vector2(-5.5, -0.8)]
+const HEREN_EAST_TRIBUTARY := [Vector2(10.6, -6.5), Vector2(9.4, -5.2), Vector2(8.0, -4.2), Vector2(6.3, -3.7)]
 
 var _profiles: Array[Dictionary] = []
 var _camera: Camera3D
@@ -151,7 +157,11 @@ func _build_world() -> void:
 	_add_ocean(generated)
 	_add_terrain(generated)
 	_add_lakes(generated)
+	_add_rivers_and_canals(generated)
 	_add_terrain_cover(generated)
+	_add_regional_architecture(generated)
+	_add_transport_network(generated)
+	_add_southern_future_fleet(generated)
 	_add_western_floating_islands(generated)
 
 
@@ -603,43 +613,207 @@ func _add_mountain_chain(parent: Node3D, node_name: String, anchors: Array[Vecto
 
 
 func _add_rivers_and_canals(parent: Node3D) -> void:
-	_add_surface_path(parent, "LoandRiver", [Vector2(-4.0, -6.0), Vector2(-5.1, -3.4), Vector2(-5.6, -0.6), Vector2(-4.6, 2.0), Vector2(-3.2, 3.2)], 0.22, Color("#66bbb8"))
-	_add_surface_path(parent, "HerenRiver", [Vector2(7.8, -8.2), Vector2(7.0, -5.7), Vector2(6.2, -3.8), Vector2(5.2, -2.1)], 0.20, Color("#69c2c0"))
-	_add_surface_path(parent, "SouthernRiver", [Vector2(-0.6, 4.3), Vector2(-0.9, 5.9), Vector2(-0.3, 7.5), Vector2(0.8, 8.8)], 0.20, Color("#5aaca9"))
+	var waterways := Node3D.new()
+	waterways.name = "DetailedWaterways"
+	_attach(parent, waterways)
+	_add_river_feature(waterways, "LoandMainRiver", LOAND_RIVER_PATH, 0.20)
+	_add_river_feature(waterways, "HerenMainRiver", HEREN_RIVER_PATH, 0.18)
+	_add_river_feature(waterways, "SouthernMainRiver", SOUTHERN_RIVER_PATH, 0.18)
+	_add_river_feature(waterways, "LoandWestTributary", LOAND_WEST_TRIBUTARY, 0.105)
+	_add_river_feature(waterways, "LoandNorthTributary", LOAND_NORTH_TRIBUTARY, 0.095)
+	_add_river_feature(waterways, "HerenEastTributary", HEREN_EAST_TRIBUTARY, 0.095)
 
 	var hub := Vector2(3.9, -1.4)
-	_add_surface_path(parent, "DattCanalNorthSouth", [Vector2(3.9, -5.2), Vector2(3.9, -3.2), hub, Vector2(3.9, 1.1)], 0.32, Color("#3f9dab"))
-	_add_surface_path(parent, "DattCanalWestEast", [Vector2(-3.8, -1.4), Vector2(0.2, -1.4), hub, Vector2(7.4, -1.1), Vector2(10.5, 0.2)], 0.32, Color("#3f9dab"))
+	var north_south_canal := [Vector2(3.9, -5.2), Vector2(3.9, -3.2), hub, Vector2(3.9, 1.1)]
+	var west_east_canal := [Vector2(-3.8, -1.4), Vector2(0.2, -1.4), hub, Vector2(7.4, -1.1), Vector2(10.5, 0.2)]
+	_add_surface_strip(waterways, "DattCanalNorthSouthBank", north_south_canal, 0.26, Color("#536c65"), 0.075)
+	_add_surface_strip(waterways, "DattCanalNorthSouth", north_south_canal, 0.17, Color("#43a8b8"), 0.105)
+	_add_surface_strip(waterways, "DattCanalWestEastBank", west_east_canal, 0.26, Color("#536c65"), 0.075)
+	_add_surface_strip(waterways, "DattCanalWestEast", west_east_canal, 0.17, Color("#43a8b8"), 0.105)
 	var canal_hub := MeshInstance3D.new()
 	canal_hub.name = "CanalExchangeBasin"
 	var hub_mesh := CylinderMesh.new()
-	hub_mesh.top_radius = 0.72
-	hub_mesh.bottom_radius = 0.72
-	hub_mesh.height = 0.08
-	hub_mesh.radial_segments = 20
+	hub_mesh.top_radius = 520.0
+	hub_mesh.bottom_radius = 520.0
+	hub_mesh.height = 34.0
+	hub_mesh.radial_segments = 24
 	canal_hub.mesh = hub_mesh
-	canal_hub.position = _surface_point(hub.x, hub.y, 0.11)
+	canal_hub.position = _surface_point(hub.x, hub.y, 0.13)
 	canal_hub.material_override = _material(Color("#45a8b3"), 0.22, true)
-	_attach(parent, canal_hub)
+	_attach(waterways, canal_hub)
+
+
+func _add_river_feature(parent: Node3D, node_name: String, path: Array, width: float) -> void:
+	var group := Node3D.new()
+	group.name = node_name
+	_attach(parent, group)
+	_add_surface_strip(group, "EarthBank", path, width * 1.62, Color("#61735a"), 0.060)
+	_add_surface_strip(group, "Water", path, width, Color("#4aa9bd"), 0.095)
+	for bend_index in range(1, path.size() - 1):
+		var bend: Vector2 = path[bend_index]
+		var stone := MeshInstance3D.new()
+		stone.name = "BankStone_%02d" % bend_index
+		var stone_mesh := SphereMesh.new()
+		stone_mesh.radius = width * MAP_SCALE * 0.32
+		stone_mesh.height = width * MAP_SCALE * 0.42
+		stone_mesh.radial_segments = 6
+		stone_mesh.rings = 3
+		stone.mesh = stone_mesh
+		stone.position = _surface_point(bend.x + width * 0.95, bend.y, 0.12)
+		stone.material_override = _material(Color("#78817b"), 0.88)
+		_attach(group, stone)
 
 
 func _add_transport_network(parent: Node3D) -> void:
 	var rail_points := [Vector2(-7.4, 0.6), Vector2(-2.2, -0.2), Vector2(3.9, -1.0), Vector2(7.2, -0.7), Vector2(10.5, 0.6)]
-	_add_surface_path(parent, "MaglevBed", rail_points, 0.15, Color("#30393a"), 0.22)
-	_add_surface_path(parent, "MaglevGlow", rail_points, 0.055, Color("#e6ca59"), 0.25, true)
+	_add_surface_path(parent, "MaglevBed", rail_points, 0.12, Color("#39494a"), 0.30)
+	_add_surface_path(parent, "MaglevGlow", rail_points, 0.032, Color("#f0cf63"), 0.34, true)
 	var train := Node3D.new()
 	train.name = "MovingMaglev"
-	_add_box_child(train, "Body", Vector3(0.85, 0.22, 0.28), Vector3.ZERO, Color("#d8e7df"), true)
+	_add_box_child(train, "Body", Vector3(620.0, 150.0, 210.0), Vector3(0.0, 80.0, 0.0), Color("#dce9e2"))
+	_add_box_child(train, "WindowBand", Vector3(430.0, 72.0, 216.0), Vector3(15.0, 105.0, 0.0), Color("#56c9d0"), true)
 	_attach(parent, train)
-	_animated_vehicles.append({"node": train, "from": _surface_point(-6.8, 0.5, 0.55), "to": _surface_point(10.1, 0.5, 0.55), "speed": 0.045, "phase": 0.1})
+	_animated_vehicles.append({"node": train, "from": _surface_point(-6.8, 0.5, 0.72), "to": _surface_point(10.1, 0.5, 0.72), "speed": 0.045, "phase": 0.1})
 
 	for index in range(2):
 		var shuttle := Node3D.new()
 		shuttle.name = "AirShuttle_%02d" % index
-		_add_box_child(shuttle, "Cabin", Vector3(0.56, 0.16, 0.24), Vector3.ZERO, Color("#77d9d4"), true)
-		_add_box_child(shuttle, "Wing", Vector3(0.82, 0.04, 0.12), Vector3.ZERO, Color("#ebcc63"), true)
+		_add_box_child(shuttle, "Cabin", Vector3(390.0, 125.0, 190.0), Vector3.ZERO, Color("#8bd8d2"), true)
+		_add_box_child(shuttle, "Wing", Vector3(650.0, 35.0, 110.0), Vector3(0.0, -15.0, 0.0), Color("#e8ca62"), true)
 		_attach(parent, shuttle)
-		_animated_vehicles.append({"node": shuttle, "from": Vector3(2.8, 4.0 + index, -2.0), "to": Vector3(11.5, 3.2 + index, 1.3), "speed": 0.035 + index * 0.008, "phase": index * 0.48})
+		_animated_vehicles.append({
+			"node": shuttle,
+			"from": Vector3(2.8 * MAP_SCALE, 980.0 + index * 180.0, -2.0 * MAP_SCALE),
+			"to": Vector3(11.5 * MAP_SCALE, 820.0 + index * 180.0, 1.3 * MAP_SCALE),
+			"speed": 0.035 + index * 0.008,
+			"phase": index * 0.48,
+		})
+
+
+func _add_regional_architecture(parent: Node3D) -> void:
+	var architecture := Node3D.new()
+	architecture.name = "RegionalArchitecture"
+	_attach(parent, architecture)
+	_add_datt_future_district(architecture, Vector2(3.9, -1.4), 0.82, "DattCentralExchange")
+	_add_datt_future_district(architecture, Vector2(6.3, -0.2), 0.50, "DattEasternCampus")
+	_add_loand_castle_complex(architecture, Vector2(-4.8, -1.5))
+	_add_loand_village(architecture, Vector2(-8.2, 1.0), 0.92, "LoandRiverTown")
+	_add_loand_village(architecture, Vector2(-2.4, 1.3), 0.72, "LoandEastVillage")
+
+
+func _add_datt_future_district(parent: Node3D, center: Vector2, scale_factor: float, node_name: String) -> void:
+	var district := Node3D.new()
+	district.name = node_name
+	district.position = _surface_point(center.x, center.y, 0.08)
+	_attach(parent, district)
+	_add_cylinder_child(district, "TerracedBase", Vector3.ZERO, 720.0 * scale_factor, 64.0 * scale_factor, Color("#526b68"))
+
+	var transit_ring := MeshInstance3D.new()
+	transit_ring.name = "AerialTransitRing"
+	var ring_mesh := TorusMesh.new()
+	ring_mesh.inner_radius = 530.0 * scale_factor
+	ring_mesh.outer_radius = 585.0 * scale_factor
+	ring_mesh.rings = 28
+	ring_mesh.ring_segments = 8
+	transit_ring.mesh = ring_mesh
+	transit_ring.position.y = 150.0 * scale_factor
+	transit_ring.material_override = _material(Color("#64d5d0"), 0.18, true)
+	_attach(district, transit_ring)
+
+	var tower_count := 7 if scale_factor > 0.8 else 5
+	for index in range(tower_count):
+		var angle := TAU * float(index) / float(tower_count) + 0.18
+		var height := (620.0 + float(index % 3) * 210.0) * scale_factor
+		var position_ := Vector3(cos(angle) * 405.0 * scale_factor, 62.0 * scale_factor, sin(angle) * 335.0 * scale_factor)
+		_add_cartoon_tower(district, "Arcology_%02d" % index, position_, height, 92.0 * scale_factor, Color("#9eb7b1"), Color("#55c9ce"))
+	_add_cartoon_tower(district, "ExchangeSpire", Vector3(0.0, 62.0 * scale_factor, 0.0), 1280.0 * scale_factor, 128.0 * scale_factor, Color("#b6cbc4"), Color("#efce62"))
+	_add_box_child(district, "MaglevTerminal", Vector3(760.0, 180.0, 300.0) * scale_factor, Vector3(780.0, 150.0, 0.0) * scale_factor, Color("#779b98"))
+	_add_box_child(district, "TerminalLight", Vector3(520.0, 46.0, 310.0) * scale_factor, Vector3(780.0, 242.0, 0.0) * scale_factor, Color("#64d8d2"), true)
+
+
+func _add_cartoon_tower(parent: Node3D, node_name: String, position_: Vector3, height: float, radius: float, body_color: Color, accent_color: Color) -> void:
+	var tower := Node3D.new()
+	tower.name = node_name
+	tower.position = position_
+	_attach(parent, tower)
+	_add_cylinder_child(tower, "Body", Vector3.ZERO, radius, height, body_color)
+	_add_cylinder_child(tower, "WindowCrown", Vector3(0.0, height * 0.70, 0.0), radius * 1.10, height * 0.13, accent_color, true)
+	_add_cone_child(tower, "TaperedRoof", Vector3(0.0, height, 0.0), radius * 0.92, height * 0.24, accent_color, true, 8)
+
+
+func _add_loand_castle_complex(parent: Node3D, center: Vector2) -> void:
+	var castle := Node3D.new()
+	castle.name = "LoandRoyalCastle"
+	castle.position = _surface_point(center.x, center.y, 0.08)
+	castle.scale = Vector3.ONE * 0.76
+	_attach(parent, castle)
+	_add_cylinder_child(castle, "CastleHill", Vector3.ZERO, 620.0, 72.0, Color("#66815b"))
+	_add_box_child(castle, "CentralKeep", Vector3(560.0, 440.0, 500.0), Vector3(0.0, 292.0, 0.0), Color("#a9997d"))
+	_add_box_child(castle, "KeepGate", Vector3(150.0, 235.0, 42.0), Vector3(0.0, 188.0, 271.0), Color("#675849"))
+	var tower_positions := [Vector3(-360.0, 72.0, -310.0), Vector3(360.0, 72.0, -310.0), Vector3(-360.0, 72.0, 310.0), Vector3(360.0, 72.0, 310.0)]
+	for index in range(tower_positions.size()):
+		var tower := Node3D.new()
+		tower.name = "CastleTower_%02d" % index
+		tower.position = tower_positions[index]
+		_attach(castle, tower)
+		_add_cylinder_child(tower, "StoneBody", Vector3.ZERO, 108.0, 590.0 + float(index % 2) * 80.0, Color("#ad9d7e"))
+		_add_cone_child(tower, "BlueRoof", Vector3(0.0, 590.0 + float(index % 2) * 80.0, 0.0), 152.0, 245.0, Color("#4f7182"), false, 8)
+	_add_cartoon_tower(castle, "RoyalMagicTower", Vector3(0.0, 72.0, -70.0), 910.0, 95.0, Color("#b5a587"), Color("#80c8c0"))
+
+
+func _add_loand_village(parent: Node3D, center: Vector2, scale_factor: float, node_name: String) -> void:
+	var village := Node3D.new()
+	village.name = node_name
+	village.position = _surface_point(center.x, center.y, 0.06)
+	_attach(parent, village)
+	for index in range(6):
+		var angle := TAU * float(index) / 6.0 + 0.35
+		var distance := (260.0 + float(index % 2) * 95.0) * scale_factor
+		var house := Node3D.new()
+		house.name = "House_%02d" % index
+		house.position = Vector3(cos(angle) * distance, 0.0, sin(angle) * distance * 0.72)
+		house.rotation.y = -angle
+		_attach(village, house)
+		_add_box_child(house, "StoneHouse", Vector3(215.0, 165.0, 190.0) * scale_factor, Vector3(0.0, 86.0 * scale_factor, 0.0), Color("#c3ad85"))
+		_add_cone_child(house, "TileRoof", Vector3(0.0, 168.0 * scale_factor, 0.0), 170.0 * scale_factor, 130.0 * scale_factor, Color("#8c5f4d"), false, 4)
+	_add_cartoon_tower(village, "VillageMageTower", Vector3.ZERO, 450.0 * scale_factor, 68.0 * scale_factor, Color("#baa984"), Color("#77bdb3"))
+
+
+func _add_southern_future_fleet(parent: Node3D) -> void:
+	var fleet := Node3D.new()
+	fleet.name = "SouthernFutureFleet"
+	_attach(parent, fleet)
+	_add_future_ship(fleet, "StraitHydrofoil", Vector3(-10.2 * MAP_SCALE, 70.0, 9.15 * MAP_SCALE), Vector3(10.8 * MAP_SCALE, 70.0, 9.15 * MAP_SCALE), 0.92, 0, 0.04)
+	_add_future_ship(fleet, "ArchipelagoExpress", Vector3(-9.0 * MAP_SCALE, 68.0, 13.15 * MAP_SCALE), Vector3(11.8 * MAP_SCALE, 68.0, 13.15 * MAP_SCALE), 0.78, 1, 0.46)
+	_add_future_ship(fleet, "EasternCargoSkimmer", Vector3(15.5 * MAP_SCALE, 76.0, 9.8 * MAP_SCALE), Vector3(15.5 * MAP_SCALE, 76.0, 15.8 * MAP_SCALE), 1.16, 2, 0.29)
+
+
+func _add_future_ship(parent: Node3D, node_name: String, from_point: Vector3, to_point: Vector3, scale_factor: float, ship_type: int, phase: float) -> void:
+	var ship := Node3D.new()
+	ship.name = node_name
+	ship.position = from_point
+	ship.scale = Vector3.ONE * scale_factor
+	_attach(parent, ship)
+	var hull_color := Color("#789a9b") if ship_type != 2 else Color("#607f83")
+	for side in [-1.0, 1.0]:
+		var hull := MeshInstance3D.new()
+		hull.name = "StreamlinedHull_%s" % ("Port" if side < 0.0 else "Starboard")
+		var hull_mesh := CapsuleMesh.new()
+		hull_mesh.radius = 92.0
+		hull_mesh.height = 690.0 if ship_type != 2 else 860.0
+		hull_mesh.radial_segments = 8
+		hull_mesh.rings = 4
+		hull.mesh = hull_mesh
+		hull.rotation_degrees.x = 90.0
+		hull.position = Vector3(side * 165.0, 0.0, 0.0)
+		hull.material_override = _material(hull_color, 0.34)
+		_attach(ship, hull)
+	_add_box_child(ship, "BridgeDeck", Vector3(420.0, 96.0, 430.0), Vector3(0.0, 92.0, -20.0), Color("#345f68"))
+	_add_box_child(ship, "GlassCanopy", Vector3(285.0, 92.0, 235.0), Vector3(0.0, 176.0, -70.0), Color("#62c9d1"), true)
+	_add_box_child(ship, "EnergyWing", Vector3(610.0, 28.0, 145.0), Vector3(0.0, 38.0, 80.0), Color("#e9c95e"), true)
+	for side in [-1.0, 1.0]:
+		_add_cylinder_child(ship, "Thruster_%s" % ("Port" if side < 0.0 else "Starboard"), Vector3(side * 165.0, -32.0, 330.0), 48.0, 92.0, Color("#69ded8"), true)
+	_animated_vehicles.append({"node": ship, "from": from_point, "to": to_point, "speed": 0.025 + float(ship_type) * 0.006, "phase": phase})
 
 
 func _add_landmarks(parent: Node3D) -> void:
@@ -970,6 +1144,43 @@ func _add_surface_path(parent: Node3D, node_name: String, points_2d: Array, widt
 	_add_ribbon(parent, node_name, points, width, color, emission)
 
 
+func _add_surface_strip(parent: Node3D, node_name: String, points_2d: Array, width: float, color: Color, lift: float) -> void:
+	if points_2d.size() < 2:
+		return
+	var points: Array[Vector3] = []
+	for raw_point in points_2d:
+		var point: Vector2 = raw_point
+		points.append(_surface_point(point.x, point.y, lift))
+	var left: Array[Vector3] = []
+	var right: Array[Vector3] = []
+	for index in range(points.size()):
+		var previous := points[maxi(index - 1, 0)]
+		var following := points[mini(index + 1, points.size() - 1)]
+		var tangent := following - previous
+		tangent.y = 0.0
+		var side := Vector3(-tangent.z, 0.0, tangent.x).normalized() * width * MAP_SCALE
+		left.append(points[index] + side)
+		right.append(points[index] - side)
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for index in range(points.size() - 1):
+		_add_up_facing_triangle(surface, left[index], right[index], left[index + 1])
+		_add_up_facing_triangle(surface, right[index], right[index + 1], left[index + 1])
+	var strip := MeshInstance3D.new()
+	strip.name = node_name
+	strip.mesh = surface.commit()
+	var strip_material := _material(color, 0.42)
+	strip_material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	strip.material_override = strip_material
+	_attach(parent, strip)
+
+
+func _add_up_facing_triangle(surface: SurfaceTool, a: Vector3, b: Vector3, c: Vector3) -> void:
+	for vertex in [a, b, c]:
+		surface.set_normal(Vector3.UP)
+		surface.add_vertex(vertex)
+
+
 func _add_ribbon(parent: Node3D, node_name: String, points: Array[Vector3], width: float, color: Color, emission: bool = false) -> void:
 	var path := Node3D.new()
 	path.name = node_name
@@ -1038,6 +1249,22 @@ func _add_cylinder_child(parent: Node3D, node_name: String, position_: Vector3, 
 	instance.mesh = mesh
 	instance.position = position_ + Vector3(0.0, height * 0.5, 0.0)
 	instance.material_override = _material(color, 0.78, emission)
+	_attach(parent, instance)
+	return instance
+
+
+func _add_cone_child(parent: Node3D, node_name: String, position_: Vector3, radius: float, height: float, color: Color, emission: bool = false, sides: int = 8) -> MeshInstance3D:
+	var instance := MeshInstance3D.new()
+	instance.name = node_name
+	var mesh := CylinderMesh.new()
+	mesh.top_radius = 0.0
+	mesh.bottom_radius = radius
+	mesh.height = height
+	mesh.radial_segments = sides
+	instance.mesh = mesh
+	instance.position = position_ + Vector3(0.0, height * 0.5, 0.0)
+	instance.material_override = _material(color, 0.72, emission)
+	instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 	_attach(parent, instance)
 	return instance
 

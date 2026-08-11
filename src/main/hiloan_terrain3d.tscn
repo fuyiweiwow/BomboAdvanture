@@ -105,9 +105,9 @@ name = "Cartoon Grassland"
 albedo_color = Color(0.41960785, 0.5882353, 0.3372549, 1)
 albedo_texture = ExtResource("6_onfiu")
 normal_texture = ExtResource("7_gyexj")
-normal_depth = 0.26
-roughness = 0.24
-uv_scale = 0.0036
+normal_depth = 0.12
+roughness = 0.32
+uv_scale = 0.0022
 detiling_rotation = 0.13
 
 [sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_rttbk"]
@@ -116,9 +116,9 @@ id = 1
 albedo_color = Color(0.20784314, 0.4117647, 0.2509804, 1)
 albedo_texture = ExtResource("6_onfiu")
 normal_texture = ExtResource("7_gyexj")
-normal_depth = 0.26
-roughness = 0.24
-uv_scale = 0.004
+normal_depth = 0.12
+roughness = 0.32
+uv_scale = 0.0024
 detiling_rotation = 0.13
 
 [sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_r3i7d"]
@@ -127,9 +127,9 @@ id = 2
 albedo_color = Color(0.4392157, 0.4745098, 0.46666667, 1)
 albedo_texture = ExtResource("8_7jd6m")
 normal_texture = ExtResource("9_btlkp")
-normal_depth = 0.26
-roughness = 0.24
-uv_scale = 0.0034
+normal_depth = 0.12
+roughness = 0.32
+uv_scale = 0.002
 detiling_rotation = 0.13
 
 [sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_trtkn"]
@@ -138,9 +138,9 @@ id = 3
 albedo_color = Color(0.7529412, 0.57254905, 0.30588236, 1)
 albedo_texture = ExtResource("10_ydrd3")
 normal_texture = ExtResource("11_i1ng8")
-normal_depth = 0.26
-roughness = 0.24
-uv_scale = 0.0028
+normal_depth = 0.12
+roughness = 0.32
+uv_scale = 0.0018
 detiling_rotation = 0.13
 
 [sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_f8h3e"]
@@ -149,16 +149,16 @@ id = 4
 albedo_color = Color(0.90588236, 0.93333334, 0.9137255, 1)
 albedo_texture = ExtResource("12_hckhr")
 normal_texture = ExtResource("13_od671")
-normal_depth = 0.26
-roughness = 0.24
-uv_scale = 0.0032
+normal_depth = 0.12
+roughness = 0.32
+uv_scale = 0.002
 detiling_rotation = 0.13
 
 [sub_resource type="Terrain3DAssets" id="Terrain3DAssets_pr4ce"]
 mesh_list = Array[Terrain3DMeshAsset]([SubResource("Terrain3DMeshAsset_phytg"), SubResource("Terrain3DMeshAsset_3fq1r"), SubResource("Terrain3DMeshAsset_qhg7p"), SubResource("Terrain3DMeshAsset_74gjr"), SubResource("Terrain3DMeshAsset_mbv0p")])
 texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_a387p"), SubResource("Terrain3DTextureAsset_rttbk"), SubResource("Terrain3DTextureAsset_r3i7d"), SubResource("Terrain3DTextureAsset_trtkn"), SubResource("Terrain3DTextureAsset_f8h3e")])
 
-[node name="HiloanTerrain3D" type="Terrain3D" unique_id=1305739499]
+[node name="HiloanTerrain3D" type="Terrain3D" unique_id=486868128]
 data_directory = "res://assets/terrain3d/hiloan"
 material = SubResource("Terrain3DMaterial_maso2")
 assets = SubResource("Terrain3DAssets_pr4ce")
