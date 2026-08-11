@@ -158,7 +158,7 @@ detiling_rotation = 0.13
 mesh_list = Array[Terrain3DMeshAsset]([SubResource("Terrain3DMeshAsset_phytg"), SubResource("Terrain3DMeshAsset_3fq1r"), SubResource("Terrain3DMeshAsset_qhg7p"), SubResource("Terrain3DMeshAsset_74gjr"), SubResource("Terrain3DMeshAsset_mbv0p")])
 texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_a387p"), SubResource("Terrain3DTextureAsset_rttbk"), SubResource("Terrain3DTextureAsset_r3i7d"), SubResource("Terrain3DTextureAsset_trtkn"), SubResource("Terrain3DTextureAsset_f8h3e")])
 
-[node name="HiloanTerrain3D" type="Terrain3D" unique_id=486868128]
+[node name="HiloanTerrain3D" type="Terrain3D" unique_id=330549553]
 data_directory = "res://assets/terrain3d/hiloan"
 material = SubResource("Terrain3DMaterial_maso2")
 assets = SubResource("Terrain3DAssets_pr4ce")

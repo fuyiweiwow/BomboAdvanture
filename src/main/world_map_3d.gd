@@ -15,12 +15,12 @@ const CAMERA_MAX_SIZE := 38000.0
 const LEVEL_CATALOG := preload("res://src/level/level_catalog.gd")
 const HILOAN_TERRAIN3D := preload("res://src/main/hiloan_terrain3d.tscn")
 const MINIATURE_WATER_SHADER := preload("res://assets/environment/materials/miniature_water.gdshader")
-const LOAND_RIVER_PATH := [Vector2(-4.0, -6.0), Vector2(-5.1, -3.4), Vector2(-5.6, -0.6), Vector2(-4.6, 2.0), Vector2(-3.2, 3.2)]
-const HEREN_RIVER_PATH := [Vector2(7.8, -8.2), Vector2(7.0, -5.7), Vector2(6.2, -3.8), Vector2(5.2, -2.1)]
-const SOUTHERN_RIVER_PATH := [Vector2(-0.6, 4.3), Vector2(-0.9, 5.9), Vector2(-0.3, 7.5), Vector2(0.8, 8.8)]
-const LOAND_WEST_TRIBUTARY := [Vector2(-10.2, -2.7), Vector2(-8.4, -1.8), Vector2(-7.0, -0.9), Vector2(-5.6, -0.6)]
-const LOAND_NORTH_TRIBUTARY := [Vector2(-2.7, -5.8), Vector2(-3.8, -4.0), Vector2(-4.8, -2.4), Vector2(-5.5, -0.8)]
-const HEREN_EAST_TRIBUTARY := [Vector2(10.6, -6.5), Vector2(9.4, -5.2), Vector2(8.0, -4.2), Vector2(6.3, -3.7)]
+const LOAND_RIVER_PATH := [Vector2(-4.0, -6.0), Vector2(-4.7, -5.0), Vector2(-4.5, -4.0), Vector2(-5.2, -3.0), Vector2(-4.9, -2.0), Vector2(-5.6, -0.9), Vector2(-5.1, 0.2), Vector2(-5.5, 1.3), Vector2(-4.6, 2.3), Vector2(-3.8, 3.2), Vector2(-2.4, 3.9), Vector2(-0.6, 4.3)]
+const HEREN_RIVER_PATH := [Vector2(7.8, -8.2), Vector2(7.3, -7.2), Vector2(6.7, -6.3), Vector2(7.2, -5.4), Vector2(6.4, -4.5), Vector2(6.2, -3.7), Vector2(6.9, -2.9), Vector2(7.8, -2.2), Vector2(8.7, -1.4), Vector2(9.8, -0.7), Vector2(10.5, 0.2), Vector2(11.6, 0.0), Vector2(12.6, 0.5)]
+const SOUTHERN_RIVER_PATH := [Vector2(-0.6, 4.3), Vector2(-0.1, 4.9), Vector2(-0.8, 5.6), Vector2(-0.3, 6.3), Vector2(-0.6, 7.0), Vector2(0.1, 7.6), Vector2(0.0, 8.2), Vector2(0.8, 8.8)]
+const LOAND_WEST_TRIBUTARY := [Vector2(-10.2, -2.7), Vector2(-9.3, -2.3), Vector2(-8.6, -1.6), Vector2(-7.8, -1.8), Vector2(-7.0, -1.0), Vector2(-5.6, -0.9)]
+const LOAND_NORTH_TRIBUTARY := [Vector2(-2.7, -5.8), Vector2(-3.2, -4.9), Vector2(-3.9, -4.1), Vector2(-3.7, -3.2), Vector2(-4.6, -2.4), Vector2(-5.4, -1.0)]
+const HEREN_EAST_TRIBUTARY := [Vector2(10.6, -6.5), Vector2(10.0, -5.8), Vector2(9.3, -5.1), Vector2(9.5, -4.5), Vector2(8.3, -4.1), Vector2(7.4, -4.3), Vector2(6.3, -3.7)]
 
 var _profiles: Array[Dictionary] = []
 var _camera: Camera3D
@@ -160,6 +160,7 @@ func _build_world() -> void:
 	_add_rivers_and_canals(generated)
 	_add_terrain_cover(generated)
 	_add_regional_architecture(generated)
+	_add_river_mouth_ports(generated)
 	_add_transport_network(generated)
 	_add_southern_future_fleet(generated)
 	_add_western_floating_islands(generated)
@@ -249,6 +250,22 @@ func _add_terrain_cover(parent: Node3D) -> void:
 		var destination := small_pine_transforms if random.randf() < 0.36 else pine_transforms
 		destination.append(_asset_transform(x, z, height, random.randf_range(195.0, 265.0), random.randf_range(0.0, TAU)))
 
+	var mountain_tree_transforms: Array[Transform3D] = []
+	for _index in range(440):
+		var x := random.randf_range(-10.8, 11.8)
+		var z := random.randf_range(-7.2, 4.4)
+		var loand_tree_line := exp(-(pow((x + 5.1) / 5.2, 2.0) + pow((z + 4.0) / 1.45, 2.0)))
+		var heren_tree_line := exp(-(pow((x - 5.2) / 7.3, 2.0) + pow((z + 5.1) / 1.75, 2.0)))
+		var southern_tree_line := exp(-(pow(x / 8.8, 2.0) + pow((z - 3.35) / 0.82, 2.0)))
+		var mountain_density := maxf(loand_tree_line, maxf(heren_tree_line, southern_tree_line * 0.58))
+		if random.randf() > mountain_density * 0.72 or not _is_land(x, z):
+			continue
+		var height := _height_at(x, z)
+		var tree_line_factor := clampf((920.0 - height) / 520.0, 0.0, 1.0)
+		if height < 170.0 or height > 920.0 or random.randf() > tree_line_factor:
+			continue
+		mountain_tree_transforms.append(_asset_transform(x, z, height, random.randf_range(175.0, 245.0), random.randf_range(0.0, TAU)))
+
 	var cactus_transforms: Array[Transform3D] = []
 	for _index in range(92):
 		var x := random.randf_range(-9.2, 6.8)
@@ -282,25 +299,38 @@ func _add_terrain_cover(parent: Node3D) -> void:
 
 	var rock_transforms: Array[Transform3D] = []
 	var tall_rock_transforms: Array[Transform3D] = []
-	for _index in range(190):
-		var x := random.randf_range(-9.5, 12.5)
-		var z := random.randf_range(-8.2, 4.5)
+	for _index in range(430):
+		var x := random.randf_range(-11.0, 13.0)
+		var z := random.randf_range(-8.4, 5.0)
 		if not _is_land(x, z):
 			continue
 		var height := _height_at(x, z)
-		if height < 270.0 or random.randf() > clampf((height - 250.0) / 620.0, 0.18, 0.86):
+		if height < 220.0 or random.randf() > clampf((height - 180.0) / 680.0, 0.22, 0.90):
 			continue
-		var destination := tall_rock_transforms if random.randf() < 0.25 else rock_transforms
-		destination.append(_asset_transform(x, z, height, random.randf_range(300.0, 470.0), random.randf_range(0.0, TAU)))
+		var destination := tall_rock_transforms if random.randf() < 0.30 else rock_transforms
+		destination.append(_asset_transform(x, z, height, random.randf_range(280.0, 520.0), random.randf_range(0.0, TAU)))
+
+	var outcrop_transforms: Array[Transform3D] = []
+	var outcrop_points := [
+		Vector2(-8.6, -3.8), Vector2(-7.0, -4.6), Vector2(-5.2, -4.7), Vector2(-3.4, -4.3),
+		Vector2(2.1, -6.7), Vector2(4.0, -7.2), Vector2(5.8, -7.6), Vector2(7.5, -7.0), Vector2(9.4, -6.5),
+		Vector2(-6.5, 3.8), Vector2(-4.3, 4.1), Vector2(-1.9, 3.8), Vector2(0.8, 3.9), Vector2(3.1, 4.0), Vector2(5.6, 3.8),
+	]
+	for point_index in range(outcrop_points.size()):
+		var point: Vector2 = outcrop_points[point_index]
+		var height := _height_at(point.x, point.y)
+		outcrop_transforms.append(_asset_transform(point.x, point.y, height, 470.0 + float(point_index % 4) * 85.0, float(point_index) * 1.37))
 
 	_add_asset_multimesh(parent, "LoandBroadleafForest", "res://assets/environment/kenney_nature/tree_default.glb", broadleaf_transforms)
 	_add_asset_multimesh(parent, "LoandOakForest", "res://assets/environment/kenney_nature/tree_oak.glb", oak_transforms)
 	_add_asset_multimesh(parent, "HerenPineForest", "res://assets/environment/kenney_nature/tree_pineDefaultA.glb", pine_transforms)
 	_add_asset_multimesh(parent, "HerenSmallPines", "res://assets/environment/kenney_nature/tree_pineSmallA.glb", small_pine_transforms)
+	_add_asset_multimesh(parent, "MountainTreeLine", "res://assets/environment/kenney_nature/tree_pineDefaultA.glb", mountain_tree_transforms)
 	_add_asset_multimesh(parent, "SouthernCacti", "res://assets/environment/kenney_nature/cactus_tall.glb", cactus_transforms)
 	_add_asset_multimesh(parent, "SouthernIslandGroves", "res://assets/environment/kenney_nature/tree_oak.glb", island_tree_transforms)
 	_add_asset_multimesh(parent, "MountainRocks", "res://assets/environment/kenney_nature/rock_largeA.glb", rock_transforms)
 	_add_asset_multimesh(parent, "MountainSpireRocks", "res://assets/environment/kenney_nature/rock_tallA.glb", tall_rock_transforms)
+	_add_asset_multimesh(parent, "MountainCliffOutcrops", "res://assets/environment/kenney_nature/rock_largeC.glb", outcrop_transforms)
 
 
 func _add_lakes(parent: Node3D) -> void:
@@ -777,6 +807,70 @@ func _add_loand_village(parent: Node3D, center: Vector2, scale_factor: float, no
 		_add_box_child(house, "StoneHouse", Vector3(215.0, 165.0, 190.0) * scale_factor, Vector3(0.0, 86.0 * scale_factor, 0.0), Color("#c3ad85"))
 		_add_cone_child(house, "TileRoof", Vector3(0.0, 168.0 * scale_factor, 0.0), 170.0 * scale_factor, 130.0 * scale_factor, Color("#8c5f4d"), false, 4)
 	_add_cartoon_tower(village, "VillageMageTower", Vector3.ZERO, 450.0 * scale_factor, 68.0 * scale_factor, Color("#baa984"), Color("#77bdb3"))
+
+
+func _add_river_mouth_ports(parent: Node3D) -> void:
+	var ports := Node3D.new()
+	ports.name = "RiverMouthPorts"
+	_attach(parent, ports)
+	_add_estuary_port(ports, "SouthernEstuaryPort", Vector2(0.8, 8.8), 0.0, 0.78, Color("#527a77"), Color("#e4c45c"))
+	_add_estuary_port(ports, "EasternWarmCurrentPort", Vector2(12.6, 0.5), PI * 0.5, 0.90, Color("#486e72"), Color("#65d2cf"))
+
+
+func _add_estuary_port(parent: Node3D, node_name: String, center: Vector2, yaw: float, scale_factor: float, body_color: Color, accent_color: Color) -> void:
+	var port := Node3D.new()
+	port.name = node_name
+	var coastal_height := maxf(_height_at(center.x, center.y), 20.0)
+	port.position = Vector3(center.x * MAP_SCALE, coastal_height + 24.0, center.y * MAP_SCALE)
+	port.rotation.y = yaw
+	port.scale = Vector3.ONE * scale_factor
+	_attach(parent, port)
+
+	var basin := MeshInstance3D.new()
+	basin.name = "RiverSeaBasin"
+	var basin_mesh := CylinderMesh.new()
+	basin_mesh.top_radius = 390.0
+	basin_mesh.bottom_radius = 390.0
+	basin_mesh.height = 28.0
+	basin_mesh.radial_segments = 24
+	basin.mesh = basin_mesh
+	basin.position = Vector3(0.0, 8.0, 170.0)
+	basin.material_override = _material(Color("#3c9fb0"), 0.34)
+	_attach(port, basin)
+
+	_add_box_child(port, "IntermodalTerminal", Vector3(760.0, 210.0, 340.0), Vector3(0.0, 150.0, -330.0), body_color)
+	_add_box_child(port, "CommoditiesExchange", Vector3(360.0, 340.0, 300.0), Vector3(-540.0, 215.0, -300.0), Color("#879b91"))
+	_add_box_child(port, "ExchangeLightBand", Vector3(370.0, 52.0, 310.0), Vector3(-540.0, 365.0, -300.0), accent_color, true)
+	for pier_index in range(3):
+		var pier_x := (float(pier_index) - 1.0) * 250.0
+		_add_box_child(port, "Pier_%02d" % pier_index, Vector3(74.0, 34.0, 650.0), Vector3(pier_x, 42.0, 275.0), Color("#596b66"))
+		_add_port_crane(port, "Crane_%02d" % pier_index, Vector3(pier_x + 72.0, 58.0, 28.0), body_color, accent_color)
+
+	var landing_ring := MeshInstance3D.new()
+	landing_ring.name = "AirTransitPad"
+	var landing_mesh := TorusMesh.new()
+	landing_mesh.inner_radius = 245.0
+	landing_mesh.outer_radius = 282.0
+	landing_mesh.rings = 24
+	landing_mesh.ring_segments = 8
+	landing_ring.mesh = landing_mesh
+	landing_ring.position = Vector3(690.0, 72.0, -250.0)
+	landing_ring.material_override = _material(accent_color, 0.18, true)
+	_attach(port, landing_ring)
+	_add_cartoon_tower(port, "HarborControlTower", Vector3(650.0, 54.0, -255.0), 520.0, 68.0, Color("#9fb4ae"), accent_color)
+	for cargo_index in range(5):
+		var cargo_color := Color("#d6a452") if cargo_index % 2 == 0 else Color("#5f9d98")
+		_add_box_child(port, "Cargo_%02d" % cargo_index, Vector3(150.0, 82.0, 95.0), Vector3(-260.0 + float(cargo_index) * 130.0, 88.0, -92.0), cargo_color)
+
+
+func _add_port_crane(parent: Node3D, node_name: String, position_: Vector3, body_color: Color, accent_color: Color) -> void:
+	var crane := Node3D.new()
+	crane.name = node_name
+	crane.position = position_
+	_attach(parent, crane)
+	_add_box_child(crane, "Mast", Vector3(48.0, 310.0, 48.0), Vector3(0.0, 155.0, 0.0), body_color)
+	_add_box_child(crane, "Boom", Vector3(250.0, 38.0, 46.0), Vector3(86.0, 292.0, 0.0), accent_color)
+	_add_box_child(crane, "Cable", Vector3(22.0, 165.0, 22.0), Vector3(190.0, 204.0, 0.0), Color("#3f5553"))
 
 
 func _add_southern_future_fleet(parent: Node3D) -> void:

@@ -16,23 +16,33 @@ const TEXTURE_SAND := 3
 const TEXTURE_SNOW := 4
 
 const LOAND_RIVER := [
-	Vector2(-4.0, -6.0), Vector2(-5.1, -3.4), Vector2(-5.6, -0.6),
-	Vector2(-4.6, 2.0), Vector2(-3.2, 3.2),
+	Vector2(-4.0, -6.0), Vector2(-4.7, -5.0), Vector2(-4.5, -4.0),
+	Vector2(-5.2, -3.0), Vector2(-4.9, -2.0), Vector2(-5.6, -0.9),
+	Vector2(-5.1, 0.2), Vector2(-5.5, 1.3), Vector2(-4.6, 2.3),
+	Vector2(-3.8, 3.2), Vector2(-2.4, 3.9), Vector2(-0.6, 4.3),
 ]
 const HEREN_RIVER := [
-	Vector2(7.8, -8.2), Vector2(7.0, -5.7), Vector2(6.2, -3.8), Vector2(5.2, -2.1),
+	Vector2(7.8, -8.2), Vector2(7.3, -7.2), Vector2(6.7, -6.3),
+	Vector2(7.2, -5.4), Vector2(6.4, -4.5), Vector2(6.2, -3.7),
+	Vector2(6.9, -2.9), Vector2(7.8, -2.2), Vector2(8.7, -1.4),
+	Vector2(9.8, -0.7), Vector2(10.5, 0.2), Vector2(11.6, 0.0), Vector2(12.6, 0.5),
 ]
 const SOUTHERN_RIVER := [
-	Vector2(-0.6, 4.3), Vector2(-0.9, 5.9), Vector2(-0.3, 7.5), Vector2(0.8, 8.8),
+	Vector2(-0.6, 4.3), Vector2(-0.1, 4.9), Vector2(-0.8, 5.6),
+	Vector2(-0.3, 6.3), Vector2(-0.6, 7.0), Vector2(0.1, 7.6),
+	Vector2(0.0, 8.2), Vector2(0.8, 8.8),
 ]
 const LOAND_WEST_TRIBUTARY := [
-	Vector2(-10.2, -2.7), Vector2(-8.4, -1.8), Vector2(-7.0, -0.9), Vector2(-5.6, -0.6),
+	Vector2(-10.2, -2.7), Vector2(-9.3, -2.3), Vector2(-8.6, -1.6),
+	Vector2(-7.8, -1.8), Vector2(-7.0, -1.0), Vector2(-5.6, -0.9),
 ]
 const LOAND_NORTH_TRIBUTARY := [
-	Vector2(-2.7, -5.8), Vector2(-3.8, -4.0), Vector2(-4.8, -2.4), Vector2(-5.5, -0.8),
+	Vector2(-2.7, -5.8), Vector2(-3.2, -4.9), Vector2(-3.9, -4.1),
+	Vector2(-3.7, -3.2), Vector2(-4.6, -2.4), Vector2(-5.4, -1.0),
 ]
 const HEREN_EAST_TRIBUTARY := [
-	Vector2(10.6, -6.5), Vector2(9.4, -5.2), Vector2(8.0, -4.2), Vector2(6.3, -3.7),
+	Vector2(10.6, -6.5), Vector2(10.0, -5.8), Vector2(9.3, -5.1),
+	Vector2(9.5, -4.5), Vector2(8.3, -4.1), Vector2(7.4, -4.3), Vector2(6.3, -3.7),
 ]
 
 
