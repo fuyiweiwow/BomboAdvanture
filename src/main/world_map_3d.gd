@@ -15,13 +15,26 @@ const CAMERA_MAX_SIZE := 38000.0
 const LEVEL_CATALOG := preload("res://src/level/level_catalog.gd")
 const HILOAN_TERRAIN3D := preload("res://src/main/hiloan_terrain3d.tscn")
 const MINIATURE_WATER_SHADER := preload("res://assets/environment/materials/miniature_water.gdshader")
+const MINIATURE_ROAD_SHADER := preload("res://assets/environment/materials/miniature_road.gdshader")
 const STYLIZED_NATURE_ROOT := "res://assets/environment/quaternius_stylized/"
+const MEDIEVAL_VILLAGE_ROOT := "res://assets/environment/quaternius_medieval_village/"
+const MODULAR_STREETS_ROOT := "res://assets/environment/quaternius_modular_streets/"
+const SHIPS_ROOT := "res://assets/environment/quaternius_ships/"
 const LOAND_RIVER_PATH := [Vector2(-4.0, -6.0), Vector2(-4.7, -5.0), Vector2(-4.5, -4.0), Vector2(-5.2, -3.0), Vector2(-4.9, -2.0), Vector2(-5.6, -0.9), Vector2(-5.1, 0.2), Vector2(-5.5, 1.3), Vector2(-4.6, 2.3), Vector2(-3.8, 3.2), Vector2(-2.4, 3.9), Vector2(-0.6, 4.3)]
 const HEREN_RIVER_PATH := [Vector2(7.8, -8.2), Vector2(7.3, -7.2), Vector2(6.7, -6.3), Vector2(7.2, -5.4), Vector2(6.4, -4.5), Vector2(6.2, -3.7), Vector2(6.9, -2.9), Vector2(7.8, -2.2), Vector2(8.7, -1.4), Vector2(9.8, -0.7), Vector2(10.5, 0.2), Vector2(11.6, 0.0), Vector2(12.6, 0.5)]
 const SOUTHERN_RIVER_PATH := [Vector2(-0.6, 4.3), Vector2(-0.1, 4.9), Vector2(-0.8, 5.6), Vector2(-0.3, 6.3), Vector2(-0.6, 7.0), Vector2(0.1, 7.6), Vector2(0.0, 8.2), Vector2(0.8, 8.8)]
 const LOAND_WEST_TRIBUTARY := [Vector2(-10.2, -2.7), Vector2(-9.3, -2.3), Vector2(-8.6, -1.6), Vector2(-7.8, -1.8), Vector2(-7.0, -1.0), Vector2(-5.6, -0.9)]
 const LOAND_NORTH_TRIBUTARY := [Vector2(-2.7, -5.8), Vector2(-3.2, -4.9), Vector2(-3.9, -4.1), Vector2(-3.7, -3.2), Vector2(-4.6, -2.4), Vector2(-5.4, -1.0)]
 const HEREN_EAST_TRIBUTARY := [Vector2(10.6, -6.5), Vector2(10.0, -5.8), Vector2(9.3, -5.1), Vector2(9.5, -4.5), Vector2(8.3, -4.1), Vector2(7.4, -4.3), Vector2(6.3, -3.7)]
+const WORLD_ROAD_PATHS := [
+	["NetherRiverTrail", [Vector2(8.3, -8.7), Vector2(8.0, -8.6), Vector2(7.8, -8.2), Vector2(7.6, -7.6), Vector2(7.2, -7.2), Vector2(7.0, -6.8), Vector2(6.8, -6.4), Vector2(6.8, -6.0), Vector2(7.0, -5.8), Vector2(7.0, -5.4), Vector2(6.8, -5.0), Vector2(6.6, -4.6), Vector2(6.8, -4.4), Vector2(6.6, -4.0), Vector2(6.8, -4.0)], "trail"],
+	["HerenWarmCurrentCoastRoad", [Vector2(6.8, -4.0), Vector2(7.0, -3.6), Vector2(7.8, -3.6), Vector2(8.4, -3.4), Vector2(9.0, -2.8), Vector2(9.6, -2.2), Vector2(10.2, -1.6), Vector2(10.6, -1.2), Vector2(10.6, -0.8), Vector2(10.2, -0.4), Vector2(10.2, 0.2), Vector2(9.6, 0.6)], "gravel"],
+	["LoandRoyalRoad", [Vector2(-6.9, -2.4), Vector2(-6.4, -2.2), Vector2(-5.8, -2.2), Vector2(-5.2, -2.0), Vector2(-4.6, -2.0), Vector2(-4.2, -1.6), Vector2(-4.2, -1.2), Vector2(-3.8, -0.8), Vector2(-3.2, -0.4), Vector2(-2.6, 0.2), Vector2(-2.0, 0.2), Vector2(-1.4, 0.2), Vector2(-0.8, 0.2), Vector2(-0.6, -0.3)], "royal"],
+	["NorthernMountainPass", [Vector2(6.8, -4.0), Vector2(6.6, -3.6), Vector2(6.2, -3.0), Vector2(5.8, -2.6), Vector2(5.0, -2.6), Vector2(4.4, -2.2), Vector2(3.8, -2.2), Vector2(3.2, -2.2), Vector2(2.6, -2.2), Vector2(2.0, -2.2), Vector2(1.4, -2.2), Vector2(0.8, -2.2), Vector2(0.2, -2.0), Vector2(-0.4, -2.0), Vector2(-1.0, -2.0), Vector2(-1.6, -2.0), Vector2(-2.2, -2.0), Vector2(-2.4, -1.4), Vector2(-2.1, -0.8), Vector2(-1.4, 0.2), Vector2(-0.6, -0.3)], "mountain"],
+	["SouthernFrontierRoad", [Vector2(-4.2, -1.2), Vector2(-4.4, -0.8), Vector2(-4.8, -0.6), Vector2(-4.2, -0.2), Vector2(-4.0, 0.4), Vector2(-4.0, 1.0), Vector2(-3.8, 1.4), Vector2(-3.6, 1.8), Vector2(-3.6, 2.6), Vector2(-4.0, 3.0), Vector2(-4.0, 3.4), Vector2(-4.2, 3.6), Vector2(-4.2, 4.0), Vector2(-4.2, 4.6), Vector2(-4.4, 5.0), Vector2(-4.4, 5.6), Vector2(-4.8, 5.8)], "frontier"],
+	["DattArterialRoad", [Vector2(-0.6, -0.3), Vector2(0.6, 1.0), Vector2(3.0, -0.2), Vector2(3.9, -1.4), Vector2(4.8, -1.0), Vector2(6.9, -0.8), Vector2(8.4, -2.8)], "paved"],
+	["EasternPortRoad", [Vector2(4.8, -1.0), Vector2(5.4, -0.6), Vector2(6.0, -0.6), Vector2(6.6, -0.2), Vector2(7.2, -0.2), Vector2(7.8, -0.2), Vector2(8.4, 0.0), Vector2(9.0, 0.4), Vector2(9.6, 0.4), Vector2(10.2, 0.2), Vector2(10.6, 0.0), Vector2(11.4, 0.0)], "paved"],
+]
 
 var _profiles: Array[Dictionary] = []
 var _camera: Camera3D
@@ -174,6 +187,7 @@ func _complete_surface_build(generated: Node3D) -> void:
 		return
 	_add_lakes(generated)
 	_add_rivers_and_canals(generated)
+	_add_world_roads(generated)
 	_add_terrain_cover(generated)
 	_add_regional_architecture(generated)
 	_add_river_mouth_ports(generated)
@@ -248,7 +262,7 @@ func _add_terrain_cover(parent: Node3D) -> void:
 		var loand_forest := exp(-(pow((x + 6.1) / 5.0, 2.0) + pow((z + 0.7) / 3.4, 2.0)))
 		var west_forest := exp(-(pow((x + 10.5) / 2.8, 2.0) + pow((z - 2.8) / 2.4, 2.0)))
 		var density := maxf(loand_forest * 0.90, west_forest)
-		if random.randf() > density or not _is_land(x, z):
+		if random.randf() > density or not _is_land(x, z) or _near_world_road(x, z, 0.19):
 			continue
 		var height := _height_at(x, z)
 		if height <= 12.0 or height > 390.0 or _terrain_normal_at(x, z).y < 0.88:
@@ -272,7 +286,7 @@ func _add_terrain_cover(parent: Node3D) -> void:
 		var x := random.randf_range(-1.5, 11.2)
 		var z := random.randf_range(-7.0, -3.0)
 		var foothill_density := exp(-(pow((x - 5.0) / 7.0, 2.0) + pow((z + 4.8) / 1.8, 2.0)))
-		if random.randf() > foothill_density * 0.72 or not _is_land(x, z):
+		if random.randf() > foothill_density * 0.72 or not _is_land(x, z) or _near_world_road(x, z, 0.19):
 			continue
 		var height := _height_at(x, z)
 		if height < 70.0 or height > 590.0 or _terrain_normal_at(x, z).y < 0.84:
@@ -288,7 +302,7 @@ func _add_terrain_cover(parent: Node3D) -> void:
 		var heren_tree_line := exp(-(pow((x - 5.2) / 7.3, 2.0) + pow((z + 5.1) / 1.75, 2.0)))
 		var southern_tree_line := exp(-(pow(x / 8.8, 2.0) + pow((z - 3.35) / 0.82, 2.0)))
 		var mountain_density := maxf(loand_tree_line, maxf(heren_tree_line, southern_tree_line * 0.58))
-		if random.randf() > mountain_density * 0.72 or not _is_land(x, z):
+		if random.randf() > mountain_density * 0.72 or not _is_land(x, z) or _near_world_road(x, z, 0.18):
 			continue
 		var height := _height_at(x, z)
 		var tree_line_factor := clampf((920.0 - height) / 520.0, 0.0, 1.0)
@@ -301,7 +315,7 @@ func _add_terrain_cover(parent: Node3D) -> void:
 	for _index in range(92):
 		var x := random.randf_range(-9.2, 6.8)
 		var z := random.randf_range(4.8, 8.4)
-		if random.randf() > 0.48 or not _is_land(x, z):
+		if random.randf() > 0.48 or not _is_land(x, z) or _near_world_road(x, z, 0.18):
 			continue
 		var height := _height_at(x, z)
 		if height > 360.0:
@@ -339,7 +353,7 @@ func _add_terrain_cover(parent: Node3D) -> void:
 	for _index in range(430):
 		var x := random.randf_range(-11.0, 13.0)
 		var z := random.randf_range(-8.4, 5.0)
-		if not _is_land(x, z):
+		if not _is_land(x, z) or _near_world_road(x, z, 0.17):
 			continue
 		var height := _height_at(x, z)
 		if height < 220.0 or random.randf() > clampf((height - 180.0) / 680.0, 0.22, 0.90):
@@ -625,6 +639,78 @@ func _add_asset_multimesh(parent: Node3D, node_name: String, scene_path: String,
 	source_root.free()
 
 
+func _add_map_asset(parent: Node3D, node_name: String, scene_path: String, center: Vector2, target_size: float, yaw: float = 0.0, lift: float = 0.0, absolute_y: float = NAN) -> Node3D:
+	var packed_scene := load(scene_path) as PackedScene
+	if packed_scene == null:
+		push_warning("Unable to load map asset: " + scene_path)
+		return null
+	var source_root := packed_scene.instantiate() as Node3D
+	if source_root == null:
+		push_warning("Map asset is not a Node3D: " + scene_path)
+		return null
+	var bounds := _scene_bounds(source_root)
+	var largest_dimension := maxf(bounds.size.x, maxf(bounds.size.y, bounds.size.z))
+	if largest_dimension <= 0.001:
+		source_root.free()
+		push_warning("Map asset has invalid bounds: " + scene_path)
+		return null
+	var wrapper := Node3D.new()
+	wrapper.name = node_name
+	wrapper.rotation.y = yaw
+	var base_y := _height_at(center.x, center.y) + lift if is_nan(absolute_y) else absolute_y + lift
+	wrapper.position = Vector3(center.x * MAP_SCALE, base_y, center.y * MAP_SCALE)
+	var scale_factor := target_size / largest_dimension
+	source_root.scale = Vector3.ONE * scale_factor
+	var bounds_center := bounds.position + bounds.size * 0.5
+	source_root.position = Vector3(-bounds_center.x, -bounds.position.y, -bounds_center.z) * scale_factor
+	_tune_scene_asset(source_root)
+	_attach(wrapper, source_root)
+	_attach(parent, wrapper)
+	return wrapper
+
+
+func _scene_bounds(root_node: Node3D) -> AABB:
+	var bounds := AABB()
+	var has_point := false
+	for raw_mesh in root_node.find_children("*", "MeshInstance3D", true, false):
+		var mesh_instance := raw_mesh as MeshInstance3D
+		if mesh_instance == null or mesh_instance.mesh == null:
+			continue
+		var aabb := mesh_instance.get_aabb()
+		var relative_transform := _node_transform_relative_to(mesh_instance, root_node)
+		for corner_index in range(8):
+			var corner := aabb.position + Vector3(
+				aabb.size.x if corner_index & 1 else 0.0,
+				aabb.size.y if corner_index & 2 else 0.0,
+				aabb.size.z if corner_index & 4 else 0.0
+			)
+			var point := relative_transform * corner
+			if has_point:
+				bounds = bounds.expand(point)
+			else:
+				bounds = AABB(point, Vector3.ZERO)
+				has_point = true
+	return bounds
+
+
+func _tune_scene_asset(root_node: Node3D) -> void:
+	for raw_mesh in root_node.find_children("*", "MeshInstance3D", true, false):
+		var mesh_instance := raw_mesh as MeshInstance3D
+		if mesh_instance == null or mesh_instance.mesh == null:
+			continue
+		var mesh := mesh_instance.mesh.duplicate(true) as Mesh
+		for surface_index in range(mesh.get_surface_count()):
+			var source_material := mesh.surface_get_material(surface_index)
+			if not source_material is StandardMaterial3D:
+				continue
+			var material := source_material.duplicate(true) as StandardMaterial3D
+			material.roughness = maxf(material.roughness, 0.82)
+			material.metallic = 0.0
+			material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_VERTEX
+			mesh.surface_set_material(surface_index, material)
+		mesh_instance.mesh = mesh
+
+
 func _node_transform_relative_to(node: Node3D, ancestor: Node) -> Transform3D:
 	var result := Transform3D.IDENTITY
 	var current: Node = node
@@ -769,6 +855,69 @@ func _add_river_feature(parent: Node3D, node_name: String, path: Array, width: f
 		_attach(group, stone)
 
 
+func _add_world_roads(parent: Node3D) -> void:
+	var roads := Node3D.new()
+	roads.name = "OverlandRoadNetwork"
+	_attach(parent, roads)
+	for road_data in WORLD_ROAD_PATHS:
+		_add_road_feature(roads, str(road_data[0]), road_data[1], str(road_data[2]))
+	_add_road_bridge(roads, "LoandRiverBridge", Vector2(-5.15, -2.02), deg_to_rad(92.0), 390.0)
+	_add_road_bridge(roads, "HerenEstuaryBridge", Vector2(10.22, 0.18), deg_to_rad(48.0), 430.0)
+
+
+func _add_road_feature(parent: Node3D, node_name: String, path: Array, style: String) -> void:
+	var road := Node3D.new()
+	road.name = node_name
+	_attach(parent, road)
+	var terrain_path := _densify_map_path(path, 0.20)
+	_add_surface_strip(road, "Shoulder", terrain_path, 0.104, Color("#625a48"), 0.082, _road_material(style, true))
+	_add_surface_strip(road, "TravelSurface", terrain_path, 0.070, Color("#aa9263"), 0.104, _road_material(style, false))
+
+
+func _road_material(style: String, shoulder: bool) -> ShaderMaterial:
+	var material := ShaderMaterial.new()
+	material.shader = MINIATURE_ROAD_SHADER
+	var road_color := Color("#937a50")
+	var stone_color := Color("#c0a56f")
+	var edge_color := Color("#554d3d")
+	var marking_color := Color("#e0c45c")
+	var paved := 0.0
+	match style:
+		"trail":
+			road_color = Color("#76634a")
+			stone_color = Color("#a48d68")
+			edge_color = Color("#48453b")
+		"gravel", "mountain":
+			road_color = Color("#77766c")
+			stone_color = Color("#a5a398")
+			edge_color = Color("#4c504b")
+		"royal":
+			road_color = Color("#9d8660")
+			stone_color = Color("#c7b083")
+			edge_color = Color("#5c5140")
+		"frontier":
+			road_color = Color("#a0784d")
+			stone_color = Color("#c7a06a")
+			edge_color = Color("#66503c")
+		"paved":
+			road_color = Color("#48595b")
+			stone_color = Color("#6f8180")
+			edge_color = Color("#2d3c3d")
+			marking_color = Color("#e7cf62")
+			paved = 1.0
+	material.set_shader_parameter("road_color", road_color)
+	material.set_shader_parameter("stone_color", stone_color)
+	material.set_shader_parameter("edge_color", edge_color)
+	material.set_shader_parameter("marking_color", marking_color)
+	material.set_shader_parameter("paved", paved)
+	material.set_shader_parameter("shoulder", 1.0 if shoulder else 0.0)
+	return material
+
+
+func _add_road_bridge(parent: Node3D, node_name: String, center: Vector2, yaw: float, target_size: float) -> void:
+	_add_map_asset(parent, node_name, MODULAR_STREETS_ROOT + "street_bridge_water.glb", center, target_size, yaw, 24.0)
+
+
 func _add_transport_network(parent: Node3D) -> void:
 	var rail_points := [Vector2(-7.4, 0.6), Vector2(-2.2, -0.2), Vector2(3.9, -1.0), Vector2(7.2, -0.7), Vector2(10.5, 0.6)]
 	_add_surface_strip(parent, "MaglevBed", rail_points, 0.13, Color("#435654"), 0.105)
@@ -804,6 +953,24 @@ func _add_regional_architecture(parent: Node3D) -> void:
 	_add_loand_castle_complex(architecture, Vector2(-4.8, -1.5))
 	_add_loand_village(architecture, Vector2(-8.2, 1.0), 0.92, "LoandRiverTown")
 	_add_loand_village(architecture, Vector2(-2.4, 1.3), 0.72, "LoandEastVillage")
+	_add_collected_loand_assets(architecture)
+
+
+func _add_collected_loand_assets(parent: Node3D) -> void:
+	var definitions := [
+		["RoyalBellTower", "bell_tower.glb", Vector2(-4.15, -1.05), 360.0, 0.18],
+		["RiverTownInn", "inn.glb", Vector2(-8.15, 0.84), 330.0, -0.72],
+		["RiverTownMill", "mill.glb", Vector2(-7.65, 1.28), 350.0, 0.62],
+		["RiverTownHouseA", "house_1.glb", Vector2(-8.58, 1.22), 270.0, -0.18],
+		["RiverTownHouseB", "house_3.glb", Vector2(-8.00, 1.52), 255.0, 0.44],
+		["EastVillageBlacksmith", "blacksmith.glb", Vector2(-2.62, 1.08), 300.0, 0.82],
+		["EastVillageStable", "stable.glb", Vector2(-2.08, 1.48), 310.0, -0.35],
+		["EastVillageHouseA", "house_2.glb", Vector2(-2.72, 1.62), 255.0, 0.24],
+		["EastVillageHouseB", "house_4.glb", Vector2(-1.82, 1.08), 245.0, -0.58],
+		["LoandForestSawmill", "sawmill.glb", Vector2(-9.05, 0.30), 330.0, 0.55],
+	]
+	for definition in definitions:
+		_add_map_asset(parent, definition[0], MEDIEVAL_VILLAGE_ROOT + definition[1], definition[2], definition[3], definition[4], 8.0)
 
 
 func _add_datt_future_district(parent: Node3D, center: Vector2, scale_factor: float, node_name: String) -> void:
@@ -959,6 +1126,17 @@ func _add_southern_future_fleet(parent: Node3D) -> void:
 	_add_future_ship(fleet, "StraitHydrofoil", Vector3(-10.2 * MAP_SCALE, 70.0, 9.15 * MAP_SCALE), Vector3(10.8 * MAP_SCALE, 70.0, 9.15 * MAP_SCALE), 0.92, 0, 0.04)
 	_add_future_ship(fleet, "ArchipelagoExpress", Vector3(-9.0 * MAP_SCALE, 68.0, 13.15 * MAP_SCALE), Vector3(11.8 * MAP_SCALE, 68.0, 13.15 * MAP_SCALE), 0.78, 1, 0.46)
 	_add_future_ship(fleet, "EasternCargoSkimmer", Vector3(15.5 * MAP_SCALE, 76.0, 9.8 * MAP_SCALE), Vector3(15.5 * MAP_SCALE, 76.0, 15.8 * MAP_SCALE), 1.16, 2, 0.29)
+	_add_collected_ship_assets(fleet)
+
+
+func _add_collected_ship_assets(parent: Node3D) -> void:
+	var southern_liner := _add_map_asset(parent, "PsetiaPassengerLiner", SHIPS_ROOT + "cruiseship.glb", Vector2(-1.0, 9.55), 920.0, deg_to_rad(82.0), 0.0, 56.0)
+	if southern_liner != null:
+		_animated_vehicles.append({"node": southern_liner, "from": Vector3(-1.0 * MAP_SCALE, 56.0, 9.55 * MAP_SCALE), "to": Vector3(5.4 * MAP_SCALE, 56.0, 9.95 * MAP_SCALE), "speed": 0.012, "phase": 0.18})
+	var eastern_liner := _add_map_asset(parent, "EasternOceanLiner", SHIPS_ROOT + "cruiseship.glb", Vector2(13.6, 1.15), 760.0, deg_to_rad(-8.0), 0.0, 56.0)
+	if eastern_liner != null:
+		_animated_vehicles.append({"node": eastern_liner, "from": Vector3(13.6 * MAP_SCALE, 56.0, 1.15 * MAP_SCALE), "to": Vector3(14.6 * MAP_SCALE, 56.0, 6.2 * MAP_SCALE), "speed": 0.010, "phase": 0.54})
+	_add_map_asset(parent, "PsetiaHarborRescueBoat", SHIPS_ROOT + "lifeboat.glb", Vector2(1.8, 9.05), 330.0, deg_to_rad(70.0), 0.0, 58.0)
 
 
 func _add_future_ship(parent: Node3D, node_name: String, from_point: Vector3, to_point: Vector3, scale_factor: float, ship_type: int, phase: float) -> void:
@@ -1112,8 +1290,257 @@ func _build_campaign_layer() -> void:
 	if _profiles.is_empty():
 		return
 
+	for route_index in range(_profiles.size() - 1):
+		_add_travel_direction_route(layer, _profiles[route_index], _profiles[route_index + 1], route_index)
 	for profile_index in range(_profiles.size()):
 		_add_level_marker(layer, _profiles[profile_index], profile_index)
+
+
+func _add_travel_direction_route(parent: Node3D, from_profile: Dictionary, to_profile: Dictionary, route_index: int) -> void:
+	if not bool(from_profile.get("completed", false)):
+		return
+	var start := _level_position(from_profile)
+	var finish := _level_position(to_profile)
+	var mode := _travel_mode_between(from_profile, to_profile)
+	var flat_delta := Vector2(finish.x - start.x, finish.z - start.z)
+	if flat_delta.length_squared() < 1.0:
+		return
+	var route_path := _travel_route_path(start, finish, mode)
+	var route_length := _world_path_length(route_path)
+	if route_length < 1.0:
+		return
+	var arrow_count := clampi(int(route_length / 620.0), 4, 18)
+	var completed := bool(to_profile.get("completed", false))
+	var color := _travel_mode_color(mode, completed)
+	var route := Node3D.new()
+	route.name = "Direction_%02d_%s" % [route_index, mode.capitalize()]
+	_attach(parent, route)
+	var midpoint := Vector3.ZERO
+	var midpoint_direction := Vector3.FORWARD
+	for arrow_index in range(arrow_count):
+		var progress := (float(arrow_index) + 0.65) / float(arrow_count)
+		var distance := route_length * progress
+		var point := _sample_world_path(route_path, distance)
+		var before := _sample_world_path(route_path, maxf(0.0, distance - 32.0))
+		var after := _sample_world_path(route_path, minf(route_length, distance + 32.0))
+		point.y = _travel_route_height(point, mode, start, finish, progress)
+		before.y = point.y
+		after.y = point.y
+		var arrow := MeshInstance3D.new()
+		arrow.name = "Arrow_%02d" % arrow_index
+		arrow.mesh = _build_direction_arrow_mesh(260.0, 180.0)
+		arrow.position = point
+		var direction := after - point if after.distance_squared_to(point) > 0.01 else point - before
+		arrow.rotation.y = atan2(-direction.x, -direction.z)
+		var arrow_material := _material(color, 0.76, not completed)
+		arrow_material.cull_mode = BaseMaterial3D.CULL_DISABLED
+		arrow.material_override = arrow_material
+		arrow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		_attach(route, arrow)
+		if arrow_index == floori(float(arrow_count) * 0.5):
+			midpoint = point
+			midpoint_direction = direction
+	if not completed and mode == "boat":
+		_add_route_boat_icon(route, midpoint, midpoint_direction)
+
+
+func _travel_route_path(start: Vector3, finish: Vector3, mode: String) -> Array[Vector3]:
+	if mode == "walk":
+		return _road_route_path(start, finish)
+	var flat_delta := Vector2(finish.x - start.x, finish.z - start.z)
+	var normal := Vector2(-flat_delta.y, flat_delta.x).normalized()
+	var bend := minf(flat_delta.length() * 0.13, 1.2 * MAP_SCALE)
+	if mode == "boat":
+		bend = maxf(bend, 4.5 * MAP_SCALE)
+		if normal.x < 0.0:
+			normal = -normal
+	var control := (start + finish) * 0.5 + Vector3(normal.x * bend, 0.0, normal.y * bend)
+	var result: Array[Vector3] = []
+	for step in range(25):
+		result.append(_quadratic_point(start, control, finish, float(step) / 24.0))
+	return result
+
+
+func _road_route_path(start: Vector3, finish: Vector3) -> Array[Vector3]:
+	var graph := _build_road_graph()
+	if graph.is_empty():
+		return [start, finish]
+	var start_key := _nearest_road_node_key(Vector2(start.x / MAP_SCALE, start.z / MAP_SCALE), graph)
+	var finish_key := _nearest_road_node_key(Vector2(finish.x / MAP_SCALE, finish.z / MAP_SCALE), graph)
+	var open_nodes: Array[String] = [start_key]
+	var costs := {start_key: 0.0}
+	var previous: Dictionary = {}
+	while not open_nodes.is_empty():
+		var current := _lowest_cost_road_node(open_nodes, costs)
+		open_nodes.erase(current)
+		if current == finish_key:
+			break
+		var current_node: Dictionary = graph[current]
+		var neighbors: Dictionary = current_node["neighbors"]
+		for raw_neighbor in neighbors:
+			var neighbor := str(raw_neighbor)
+			var next_cost := float(costs[current]) + float(neighbors[neighbor])
+			if not costs.has(neighbor) or next_cost < float(costs[neighbor]):
+				costs[neighbor] = next_cost
+				previous[neighbor] = current
+				if not open_nodes.has(neighbor):
+					open_nodes.append(neighbor)
+	if start_key != finish_key and not previous.has(finish_key):
+		return [start, finish]
+	var node_keys: Array[String] = [finish_key]
+	while node_keys[0] != start_key:
+		node_keys.push_front(str(previous[node_keys[0]]))
+	var result: Array[Vector3] = [start]
+	for node_key in node_keys:
+		var point: Vector2 = graph[node_key]["point"]
+		result.append(Vector3(point.x * MAP_SCALE, 0.0, point.y * MAP_SCALE))
+	result.append(finish)
+	return result
+
+
+func _build_road_graph() -> Dictionary:
+	var graph: Dictionary = {}
+	for road_data in WORLD_ROAD_PATHS:
+		var path: Array = road_data[1]
+		for index in range(path.size() - 1):
+			_add_road_graph_edge(graph, path[index], path[index + 1])
+	return graph
+
+
+func _add_road_graph_edge(graph: Dictionary, from_point: Vector2, to_point: Vector2) -> void:
+	var from_key := _road_point_key(from_point)
+	var to_key := _road_point_key(to_point)
+	if not graph.has(from_key):
+		graph[from_key] = {"point": from_point, "neighbors": {}}
+	if not graph.has(to_key):
+		graph[to_key] = {"point": to_point, "neighbors": {}}
+	var distance := from_point.distance_to(to_point)
+	var from_node: Dictionary = graph[from_key]
+	var from_neighbors: Dictionary = from_node["neighbors"]
+	from_neighbors[to_key] = distance
+	from_node["neighbors"] = from_neighbors
+	graph[from_key] = from_node
+	var to_node: Dictionary = graph[to_key]
+	var to_neighbors: Dictionary = to_node["neighbors"]
+	to_neighbors[from_key] = distance
+	to_node["neighbors"] = to_neighbors
+	graph[to_key] = to_node
+
+
+func _nearest_road_node_key(point: Vector2, graph: Dictionary) -> String:
+	var nearest_key := ""
+	var nearest_distance := INF
+	for raw_key in graph:
+		var key := str(raw_key)
+		var road_point: Vector2 = graph[key]["point"]
+		var distance := point.distance_squared_to(road_point)
+		if distance < nearest_distance:
+			nearest_distance = distance
+			nearest_key = key
+	return nearest_key
+
+
+func _lowest_cost_road_node(open_nodes: Array[String], costs: Dictionary) -> String:
+	var best := open_nodes[0]
+	for key in open_nodes:
+		if float(costs.get(key, INF)) < float(costs.get(best, INF)):
+			best = key
+	return best
+
+
+func _road_point_key(point: Vector2) -> String:
+	return "%.3f,%.3f" % [point.x, point.y]
+
+
+func _world_path_length(path: Array[Vector3]) -> float:
+	var length := 0.0
+	for index in range(path.size() - 1):
+		length += path[index].distance_to(path[index + 1])
+	return length
+
+
+func _sample_world_path(path: Array[Vector3], distance: float) -> Vector3:
+	var remaining := maxf(distance, 0.0)
+	for index in range(path.size() - 1):
+		var segment_length := path[index].distance_to(path[index + 1])
+		if remaining <= segment_length:
+			return path[index].lerp(path[index + 1], remaining / maxf(segment_length, 0.001))
+		remaining -= segment_length
+	return path[path.size() - 1]
+
+
+func _travel_mode_between(from_profile: Dictionary, to_profile: Dictionary) -> String:
+	var from_set := str(from_profile.get("map_set", ""))
+	var to_set := str(to_profile.get("map_set", ""))
+	if from_set == "MiZhiDi" or to_set == "MiZhiDi":
+		return "airship"
+	if from_set == "NuFeng" and to_set == "NuFeng":
+		return "boat"
+	return str(to_profile.get("travel_mode", "walk"))
+
+
+func _travel_mode_color(mode: String, completed: bool) -> Color:
+	var color := Color("#e5be55")
+	if mode == "boat":
+		color = Color("#54c9d3")
+	elif mode == "airship":
+		color = Color("#9ad5ca")
+	return color.darkened(0.32) if completed else color
+
+
+func _quadratic_point(start: Vector3, control: Vector3, finish: Vector3, t: float) -> Vector3:
+	var one_minus_t := 1.0 - t
+	return start * one_minus_t * one_minus_t + control * 2.0 * one_minus_t * t + finish * t * t
+
+
+func _travel_route_height(point: Vector3, mode: String, start: Vector3, finish: Vector3, t: float) -> float:
+	if mode == "airship":
+		return maxf(start.y, finish.y) + 260.0 + sin(t * PI) * 220.0
+	var map_x := point.x / MAP_SCALE
+	var map_z := point.z / MAP_SCALE
+	if mode == "boat" and not _is_land(map_x, map_z):
+		return 58.0
+	return _height_at(map_x, map_z) + 58.0
+
+
+func _build_direction_arrow_mesh(length: float, width: float) -> ArrayMesh:
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var outline := PackedVector2Array([
+		Vector2(-width * 0.5, length * 0.46),
+		Vector2(0.0, -length * 0.54),
+		Vector2(width * 0.5, length * 0.46),
+		Vector2(width * 0.18, length * 0.18),
+		Vector2(0.0, -length * 0.14),
+		Vector2(-width * 0.18, length * 0.18),
+	])
+	var indices := Geometry2D.triangulate_polygon(outline)
+	for triangle_index in range(0, indices.size(), 3):
+		var a := outline[indices[triangle_index]]
+		var b := outline[indices[triangle_index + 1]]
+		var c := outline[indices[triangle_index + 2]]
+		_add_up_facing_triangle(surface, Vector3(a.x, 0.0, a.y), Vector3(b.x, 0.0, b.y), Vector3(c.x, 0.0, c.y))
+	return surface.commit()
+
+
+func _add_route_boat_icon(parent: Node3D, position_: Vector3, direction: Vector3) -> void:
+	var boat := Node3D.new()
+	boat.name = "TravelBoat"
+	boat.position = position_ + Vector3(0.0, 42.0, 0.0)
+	boat.rotation.y = atan2(-direction.x, -direction.z)
+	_attach(parent, boat)
+	var hull := MeshInstance3D.new()
+	var hull_mesh := CapsuleMesh.new()
+	hull_mesh.radius = 48.0
+	hull_mesh.height = 260.0
+	hull_mesh.radial_segments = 8
+	hull_mesh.rings = 3
+	hull.mesh = hull_mesh
+	hull.rotation_degrees.x = 90.0
+	hull.material_override = _material(Color("#547d7f"), 0.78)
+	_attach(boat, hull)
+	_add_box_child(boat, "Cabin", Vector3(96.0, 54.0, 104.0), Vector3(0.0, 48.0, 18.0), Color("#d9e0cd"))
+	_add_box_child(boat, "Canopy", Vector3(70.0, 34.0, 62.0), Vector3(0.0, 84.0, 10.0), Color("#58b9c2"), true)
 
 
 func _add_level_marker(parent: Node3D, profile: Dictionary, marker_index: int) -> void:
@@ -1275,6 +1702,31 @@ func _surface_point(x: float, z: float, lift: float = 0.0) -> Vector3:
 	return Vector3(x * MAP_SCALE, _height_at(x, z) + lift * HEIGHT_SCALE, z * MAP_SCALE)
 
 
+func _densify_map_path(path: Array, maximum_step: float) -> Array[Vector2]:
+	var result: Array[Vector2] = []
+	if path.is_empty():
+		return result
+	for index in range(path.size() - 1):
+		var start: Vector2 = path[index]
+		var finish: Vector2 = path[index + 1]
+		var subdivisions := maxi(1, int(ceil(start.distance_to(finish) / maximum_step)))
+		for step in range(subdivisions):
+			result.append(start.lerp(finish, float(step) / float(subdivisions)))
+	result.append(path[path.size() - 1])
+	return result
+
+
+func _near_world_road(x: float, z: float, clearance: float) -> bool:
+	var point := Vector2(x, z)
+	for road_data in WORLD_ROAD_PATHS:
+		var path: Array = road_data[1]
+		for index in range(path.size() - 1):
+			var closest := Geometry2D.get_closest_point_to_segment(point, path[index], path[index + 1])
+			if point.distance_squared_to(closest) <= clearance * clearance:
+				return true
+	return false
+
+
 func _structure_anchor(center: Vector2, radius_world: float, lift: float = 0.0) -> Vector3:
 	var highest := _height_at(center.x, center.y)
 	var radius_map := radius_world / MAP_SCALE
@@ -1286,7 +1738,7 @@ func _structure_anchor(center: Vector2, radius_world: float, lift: float = 0.0) 
 	return Vector3(center.x * MAP_SCALE, highest + lift * HEIGHT_SCALE, center.y * MAP_SCALE)
 
 
-func _add_surface_strip(parent: Node3D, node_name: String, points_2d: Array, width: float, color: Color, lift: float) -> void:
+func _add_surface_strip(parent: Node3D, node_name: String, points_2d: Array, width: float, color: Color, lift: float, custom_material: Material = null) -> void:
 	if points_2d.size() < 2:
 		return
 	var points: Array[Vector3] = []
@@ -1295,6 +1747,7 @@ func _add_surface_strip(parent: Node3D, node_name: String, points_2d: Array, wid
 		points.append(_surface_point(point.x, point.y, lift))
 	var left: Array[Vector3] = []
 	var right: Array[Vector3] = []
+	var distances: Array[float] = [0.0]
 	for index in range(points.size()):
 		var previous := points[maxi(index - 1, 0)]
 		var following := points[mini(index + 1, points.size() - 1)]
@@ -1303,17 +1756,24 @@ func _add_surface_strip(parent: Node3D, node_name: String, points_2d: Array, wid
 		var side := Vector3(-tangent.z, 0.0, tangent.x).normalized() * width * MAP_SCALE
 		left.append(points[index] + side)
 		right.append(points[index] - side)
+		if index > 0:
+			distances.append(distances[index - 1] + points[index - 1].distance_to(points[index]))
 	var surface := SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for index in range(points.size() - 1):
-		_add_up_facing_triangle(surface, left[index], right[index], left[index + 1])
-		_add_up_facing_triangle(surface, right[index], right[index + 1], left[index + 1])
+		var current_v := distances[index] / 420.0
+		var next_v := distances[index + 1] / 420.0
+		_add_up_facing_textured_triangle(surface, left[index], Vector2(0.0, current_v), right[index], Vector2(1.0, current_v), left[index + 1], Vector2(0.0, next_v))
+		_add_up_facing_textured_triangle(surface, right[index], Vector2(1.0, current_v), right[index + 1], Vector2(1.0, next_v), left[index + 1], Vector2(0.0, next_v))
 	var strip := MeshInstance3D.new()
 	strip.name = node_name
 	strip.mesh = surface.commit()
-	var strip_material := _material(color, 0.42)
-	strip_material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	strip.material_override = strip_material
+	if custom_material != null:
+		strip.material_override = custom_material
+	else:
+		var strip_material := _material(color, 0.42)
+		strip_material.cull_mode = BaseMaterial3D.CULL_DISABLED
+		strip.material_override = strip_material
 	_attach(parent, strip)
 
 
@@ -1321,6 +1781,13 @@ func _add_up_facing_triangle(surface: SurfaceTool, a: Vector3, b: Vector3, c: Ve
 	for vertex in [a, b, c]:
 		surface.set_normal(Vector3.UP)
 		surface.add_vertex(vertex)
+
+
+func _add_up_facing_textured_triangle(surface: SurfaceTool, a: Vector3, uv_a: Vector2, b: Vector3, uv_b: Vector2, c: Vector3, uv_c: Vector2) -> void:
+	for vertex_data in [[a, uv_a], [b, uv_b], [c, uv_c]]:
+		surface.set_normal(Vector3.UP)
+		surface.set_uv(vertex_data[1])
+		surface.add_vertex(vertex_data[0])
 
 
 func _add_box_child(parent: Node3D, node_name: String, size: Vector3, position_: Vector3, color: Color, emission: bool = false) -> MeshInstance3D:
@@ -1459,8 +1926,10 @@ func _editor_preview_profiles() -> Array[Dictionary]:
 	for raw_profile in catalog.levels():
 		var profile := raw_profile.duplicate(true)
 		profile["unlocked"] = true
-		profile["completed"] = false
+		profile["completed"] = true
 		result.append(profile)
+	if not result.is_empty():
+		result[result.size() - 1]["completed"] = false
 	return result
 
 

@@ -20,6 +20,30 @@ Commons CC0 1.0 Universal license.
 - The original license text is included at
   `quaternius_stylized/LICENSE.txt`.
 
+## Quaternius Medieval Village Pack
+
+- Source: https://quaternius.com/packs/medievalvillage.html
+- Author: Quaternius
+- License: CC0 1.0
+- Files used: selected buildings converted to GLB in
+  `quaternius_medieval_village/`.
+
+## Quaternius Modular Streets Pack
+
+- Source: https://quaternius.com/packs/modularstreets.html
+- Author: Quaternius
+- License: CC0 1.0
+- Files used: selected road, intersection, bridge, and elevated-road models
+  converted to GLB in `quaternius_modular_streets/`.
+
+## Quaternius Ships Pack
+
+- Source: https://quaternius.com/packs/ships.html
+- Author: Quaternius
+- License: CC0 1.0
+- Files used: selected modern passenger and rescue vessels converted to GLB
+  in `quaternius_ships/`.
+
 ## Poly Haven Sand 01
 
 - Source: https://polyhaven.com/a/sand_01

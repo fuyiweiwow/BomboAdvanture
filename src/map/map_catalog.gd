@@ -57,73 +57,73 @@ const REGION_COLORS := {
 }
 
 const REGION_POSITIONS := {
-	"Youxian_mapTest": Vector2(0.50, 0.07),
-	"YongDong": Vector2(0.62, 0.20),
-	"JiZhou": Vector2(0.80, 0.22),
-	"SenLin": Vector2(0.27, 0.41),
-	"YeWai": Vector2(0.46, 0.60),
-	"MiZhiDi": Vector2(0.17, 0.20),
-	"NuFeng": Vector2(0.19, 0.73),
-	"FengBao": Vector2(0.72, 0.33),
-	"ShouWang": Vector2(0.53, 0.50),
-	"HeiLong": Vector2(0.63, 0.44),
+	"Youxian_mapTest": Vector2(0.776, 0.062),
+	"YongDong": Vector2(0.620, 0.185),
+	"JiZhou": Vector2(0.805, 0.245),
+	"SenLin": Vector2(0.339, 0.406),
+	"YeWai": Vector2(0.446, 0.641),
+	"MiZhiDi": Vector2(0.124, 0.189),
+	"NuFeng": Vector2(0.823, 0.504),
+	"FengBao": Vector2(0.704, 0.344),
+	"ShouWang": Vector2(0.600, 0.487),
+	"HeiLong": Vector2(0.629, 0.426),
 }
 
 const REGION_LEVEL_POSITIONS := {
 	"Youxian_mapTest": [
-		Vector2(0.50, 0.07),
+		Vector2(0.776, 0.062),
 	],
 	"YongDong": [
-		Vector2(0.58, 0.18),
-		Vector2(0.66, 0.22),
+		Vector2(0.58, 0.17),
+		Vector2(0.66, 0.21),
 	],
 	"JiZhou": [
-		Vector2(0.73, 0.19),
-		Vector2(0.80, 0.21),
-		Vector2(0.86, 0.26),
+		Vector2(0.75, 0.19),
+		Vector2(0.82, 0.23),
+		Vector2(0.87, 0.29),
 	],
 	"SenLin": [
-		Vector2(0.19, 0.39),
-		Vector2(0.25, 0.35),
-		Vector2(0.31, 0.39),
-		Vector2(0.25, 0.47),
-		Vector2(0.35, 0.46),
+		Vector2(0.27, 0.38),
+		Vector2(0.33, 0.35),
+		Vector2(0.39, 0.40),
+		Vector2(0.34, 0.47),
+		Vector2(0.43, 0.46),
 	],
 	"YeWai": [
-		Vector2(0.37, 0.58),
-		Vector2(0.43, 0.61),
-		Vector2(0.49, 0.59),
-		Vector2(0.56, 0.62),
+		Vector2(0.38, 0.61),
+		Vector2(0.43, 0.65),
+		Vector2(0.49, 0.63),
+		Vector2(0.55, 0.66),
 	],
 	"MiZhiDi": [
 		Vector2(0.08, 0.23),
-		Vector2(0.14, 0.19),
-		Vector2(0.20, 0.15),
-		Vector2(0.26, 0.21),
+		Vector2(0.12, 0.16),
+		Vector2(0.17, 0.14),
+		Vector2(0.22, 0.21),
 	],
 	"NuFeng": [
-		Vector2(0.11, 0.68),
-		Vector2(0.18, 0.73),
-		Vector2(0.28, 0.78),
+		Vector2(0.91, 0.505),
+		Vector2(0.93, 0.55),
+		Vector2(0.89, 0.60),
 	],
 	"FengBao": [
-		Vector2(0.65, 0.34),
+		Vector2(0.66, 0.35),
 		Vector2(0.72, 0.31),
-		Vector2(0.78, 0.35),
+		Vector2(0.78, 0.36),
 	],
 	"ShouWang": [
-		Vector2(0.48, 0.55),
-		Vector2(0.54, 0.50),
-		Vector2(0.58, 0.46),
+		Vector2(0.52, 0.55),
+		Vector2(0.60, 0.49),
+		Vector2(0.66, 0.45),
 	],
 	"HeiLong": [
-		Vector2(0.56, 0.42),
+		Vector2(0.56, 0.43),
 		Vector2(0.59, 0.38),
-		Vector2(0.62, 0.40),
-		Vector2(0.65, 0.44),
-		Vector2(0.61, 0.48),
-		Vector2(0.67, 0.50),
-		Vector2(0.71, 0.46),
+		Vector2(0.63, 0.40),
+		Vector2(0.67, 0.44),
+		Vector2(0.63, 0.49),
+		Vector2(0.69, 0.51),
+		Vector2(0.73, 0.46),
 	],
 }
 
@@ -254,6 +254,7 @@ func _build_map_profile(map_name: String, set_name: String, set_index: int, set_
 		"region_subtitle": REGION_SUBTITLES.get(set_name, ""),
 		"region_color": REGION_COLORS.get(set_name, Color(0.45, 0.55, 0.48)),
 		"description": _describe_map(display_name, set_name, basic, local_index),
+		"travel_mode": _travel_mode_for_level(set_name, local_index),
 		"width": int(basic.get("width", 0)),
 		"height": int(basic.get("height", 0)),
 		"music": str(basic.get("music", "")),
@@ -261,6 +262,14 @@ func _build_map_profile(map_name: String, set_name: String, set_index: int, set_
 		"finish": _array_to_vec2i(basic.get("finish", [0, 0])),
 		"map_position": _map_position(set_name, set_index, max(1, set_count), local_index, max(1, set_size)),
 	}
+
+
+func _travel_mode_for_level(set_name: String, local_index: int) -> String:
+	if set_name == "MiZhiDi":
+		return "airship"
+	if set_name == "NuFeng":
+		return "airship" if local_index == 0 else "boat"
+	return "walk"
 
 func _level_display_name(map_name: String, set_name: String, local_index: int) -> String:
 	var names = REGION_LEVEL_NAMES.get(set_name, [])

@@ -180,10 +180,12 @@ func _show_profile(profile: Dictionary) -> void:
 	var level_id := str(profile.get("id", ""))
 	var completed := bool(profile.get("completed", false))
 	var unlocked: bool = progress_repository.is_unlocked(level_id)
+	var travel_mode := str(profile.get("travel_mode", "walk"))
+	var travel_label: String = str({"walk": "步行", "boat": "乘船", "airship": "浮空交通"}.get(travel_mode, "步行"))
 	detail_state.text = "已完成" if completed else ("可进入" if unlocked else "未解锁")
 	detail_state.add_theme_color_override("font_color", Color("#6ed3c5") if completed else Color("#f1c85a"))
 	detail_title.text = "第%s章-%s  %s" % [str(int(profile.get("set_index", 0)) + 1), str(profile.get("local_number", "")), str(profile.get("name", level_id))]
-	detail_description.text = "%s\n%s" % [str(profile.get("region_name", "")), str(profile.get("description", ""))]
+	detail_description.text = "%s · 前往方式：%s\n%s" % [str(profile.get("region_name", "")), travel_label, str(profile.get("description", ""))]
 	enter_button.disabled = not unlocked
 	world_map_3d.focus_level(level_id)
 
