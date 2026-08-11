@@ -15,11 +15,12 @@ const CAMERA_MAX_SIZE := 38000.0
 const LEVEL_CATALOG := preload("res://src/level/level_catalog.gd")
 const HILOAN_TERRAIN3D := preload("res://src/main/hiloan_terrain3d.tscn")
 const MINIATURE_WATER_SHADER := preload("res://assets/environment/materials/miniature_water.gdshader")
-const MINIATURE_ROAD_SHADER := preload("res://assets/environment/materials/miniature_road.gdshader")
 const STYLIZED_NATURE_ROOT := "res://assets/environment/quaternius_stylized/"
+const NATURE_MEGAKIT_ROOT := "res://assets/environment/quaternius_nature_megakit/"
 const MEDIEVAL_VILLAGE_ROOT := "res://assets/environment/quaternius_medieval_village/"
 const MODULAR_STREETS_ROOT := "res://assets/environment/quaternius_modular_streets/"
 const SHIPS_ROOT := "res://assets/environment/quaternius_ships/"
+const ROAD_TEXTURE_ROOT := "res://assets/environment/road_textures/polyhaven/"
 const LOAND_RIVER_PATH := [Vector2(-4.0, -6.0), Vector2(-4.7, -5.0), Vector2(-4.5, -4.0), Vector2(-5.2, -3.0), Vector2(-4.9, -2.0), Vector2(-5.6, -0.9), Vector2(-5.1, 0.2), Vector2(-5.5, 1.3), Vector2(-4.6, 2.3), Vector2(-3.8, 3.2), Vector2(-2.4, 3.9), Vector2(-0.6, 4.3)]
 const HEREN_RIVER_PATH := [Vector2(7.8, -8.2), Vector2(7.3, -7.2), Vector2(6.7, -6.3), Vector2(7.2, -5.4), Vector2(6.4, -4.5), Vector2(6.2, -3.7), Vector2(6.9, -2.9), Vector2(7.8, -2.2), Vector2(8.7, -1.4), Vector2(9.8, -0.7), Vector2(10.5, 0.2), Vector2(11.6, 0.0), Vector2(12.6, 0.5)]
 const SOUTHERN_RIVER_PATH := [Vector2(-0.6, 4.3), Vector2(-0.1, 4.9), Vector2(-0.8, 5.6), Vector2(-0.3, 6.3), Vector2(-0.6, 7.0), Vector2(0.1, 7.6), Vector2(0.0, 8.2), Vector2(0.8, 8.8)]
@@ -43,7 +44,7 @@ var _camera_target := Vector3(0.0, 420.0, 1600.0)
 var _camera_yaw := deg_to_rad(-12.0)
 var _camera_pitch := deg_to_rad(40.0)
 var _camera_distance := 29000.0
-var _camera_size := 25500.0
+var _camera_size := 22000.0
 var _left_dragging := false
 var _pan_dragging := false
 var _pointer_down := Vector2.ZERO
@@ -77,7 +78,7 @@ func reset_camera() -> void:
 	_camera_yaw = deg_to_rad(-12.0)
 	_camera_pitch = deg_to_rad(40.0)
 	_camera_distance = 29000.0
-	_camera_size = 25500.0
+	_camera_size = 22000.0
 	_update_camera()
 
 
@@ -189,6 +190,8 @@ func _complete_surface_build(generated: Node3D) -> void:
 	_add_rivers_and_canals(generated)
 	_add_world_roads(generated)
 	_add_terrain_cover(generated)
+	_add_biome_detail_clusters(generated)
+	_add_roadside_asset_details(generated)
 	_add_regional_architecture(generated)
 	_add_river_mouth_ports(generated)
 	_add_transport_network(generated)
@@ -256,7 +259,7 @@ func _add_terrain_cover(parent: Node3D) -> void:
 	var broadleaf_b_transforms: Array[Transform3D] = []
 	var birch_transforms: Array[Transform3D] = []
 	var bush_transforms: Array[Transform3D] = []
-	for _index in range(430):
+	for _index in range(800):
 		var x := random.randf_range(-12.8, -1.0)
 		var z := random.randf_range(-3.4, 4.8)
 		var loand_forest := exp(-(pow((x + 6.1) / 5.0, 2.0) + pow((z + 0.7) / 3.4, 2.0)))
@@ -282,7 +285,7 @@ func _add_terrain_cover(parent: Node3D) -> void:
 
 	var pine_a_transforms: Array[Transform3D] = []
 	var pine_b_transforms: Array[Transform3D] = []
-	for _index in range(230):
+	for _index in range(520):
 		var x := random.randf_range(-1.5, 11.2)
 		var z := random.randf_range(-7.0, -3.0)
 		var foothill_density := exp(-(pow((x - 5.0) / 7.0, 2.0) + pow((z + 4.8) / 1.8, 2.0)))
@@ -295,7 +298,7 @@ func _add_terrain_cover(parent: Node3D) -> void:
 		destination.append(_asset_transform(x, z, height, random.randf_range(37.0, 51.0), random.randf_range(0.0, TAU), 0.14, 2.0))
 
 	var mountain_tree_transforms: Array[Transform3D] = []
-	for _index in range(440):
+	for _index in range(620):
 		var x := random.randf_range(-10.8, 11.8)
 		var z := random.randf_range(-7.2, 4.4)
 		var loand_tree_line := exp(-(pow((x + 5.1) / 5.2, 2.0) + pow((z + 4.0) / 1.45, 2.0)))
@@ -334,7 +337,7 @@ func _add_terrain_cover(parent: Node3D) -> void:
 	]
 	for raw_center in island_centers:
 		var center: Vector3 = raw_center
-		for _index in range(16):
+		for _index in range(28):
 			var angle: float = random.randf_range(0.0, TAU)
 			var radius: float = sqrt(random.randf()) * 0.76
 			var x: float = center.x + cos(angle) * radius * center.z
@@ -345,27 +348,31 @@ func _add_terrain_cover(parent: Node3D) -> void:
 			if height <= 10.0:
 				continue
 			var destination := island_palm_a_transforms if random.randf() < 0.58 else island_palm_b_transforms
-			destination.append(_asset_transform(x, z, height, random.randf_range(37.0, 52.0), random.randf_range(0.0, TAU), 0.12, 2.0))
+			destination.append(_asset_transform(x, z, height, random.randf_range(43.0, 62.0), random.randf_range(0.0, TAU), 0.12, 2.0))
 
 	var low_rock_transforms: Array[Transform3D] = []
 	var medium_rock_transforms: Array[Transform3D] = []
 	var tall_rock_transforms: Array[Transform3D] = []
-	for _index in range(430):
-		var x := random.randf_range(-11.0, 13.0)
-		var z := random.randf_range(-8.4, 5.0)
-		if not _is_land(x, z) or _near_world_road(x, z, 0.17):
-			continue
-		var height := _height_at(x, z)
-		if height < 220.0 or random.randf() > clampf((height - 180.0) / 680.0, 0.22, 0.90):
-			continue
-		var rock_variant := random.randf()
-		var rock_transform := _asset_transform(x, z, height, random.randf_range(108.0, 188.0), random.randf_range(0.0, TAU), 0.72, random.randf_range(8.0, 20.0))
-		if rock_variant < 0.40:
-			low_rock_transforms.append(rock_transform)
-		elif rock_variant < 0.74:
-			medium_rock_transforms.append(rock_transform)
-		else:
-			tall_rock_transforms.append(rock_transform)
+	var rock_cluster_centers := [
+		Vector2(-8.6, -3.9), Vector2(-6.5, -4.5), Vector2(-4.4, -4.6), Vector2(-2.4, -4.2),
+		Vector2(1.8, -6.4), Vector2(4.1, -6.9), Vector2(6.5, -7.0), Vector2(8.8, -6.5), Vector2(10.8, -5.7),
+		Vector2(-6.1, 3.7), Vector2(-3.2, 3.9), Vector2(0.0, 3.8), Vector2(3.2, 3.9), Vector2(6.0, 3.7),
+	]
+	for center_index in range(rock_cluster_centers.size()):
+		var center: Vector2 = rock_cluster_centers[center_index]
+		for cluster_index in range(5 + center_index % 3):
+			var angle := random.randf_range(0.0, TAU)
+			var radius := random.randf_range(0.10, 0.46)
+			var x := center.x + cos(angle) * radius
+			var z := center.y + sin(angle) * radius * 0.68
+			if not _is_land(x, z) or _near_world_road(x, z, 0.15):
+				continue
+			var height := _height_at(x, z)
+			var rock_transform := _asset_transform(x, z, height, random.randf_range(48.0, 86.0), random.randf_range(0.0, TAU), 0.82, random.randf_range(10.0, 24.0))
+			match (center_index + cluster_index) % 3:
+				0: low_rock_transforms.append(rock_transform)
+				1: medium_rock_transforms.append(rock_transform)
+				2: tall_rock_transforms.append(rock_transform)
 
 	var outcrop_transforms: Array[Transform3D] = []
 	var outcrop_points := [
@@ -389,10 +396,118 @@ func _add_terrain_cover(parent: Node3D) -> void:
 	_add_asset_multimesh(parent, "SouthernDryBrush", STYLIZED_NATURE_ROOT + "bush_large.glb", desert_bush_transforms)
 	_add_asset_multimesh(parent, "SouthernPalmGrovesA", STYLIZED_NATURE_ROOT + "palm_tree_1.glb", island_palm_a_transforms)
 	_add_asset_multimesh(parent, "SouthernPalmGrovesB", STYLIZED_NATURE_ROOT + "palm_tree_2.glb", island_palm_b_transforms)
-	_add_asset_multimesh(parent, "MountainRocksLow", STYLIZED_NATURE_ROOT + "rock_2.glb", low_rock_transforms)
-	_add_asset_multimesh(parent, "MountainRocksMedium", STYLIZED_NATURE_ROOT + "rock_5.glb", medium_rock_transforms)
-	_add_asset_multimesh(parent, "MountainRocksTall", STYLIZED_NATURE_ROOT + "rock_4.glb", tall_rock_transforms)
+	_add_asset_multimesh(parent, "MountainRocksLow", NATURE_MEGAKIT_ROOT + "rock_medium_1.glb", low_rock_transforms)
+	_add_asset_multimesh(parent, "MountainRocksMedium", NATURE_MEGAKIT_ROOT + "rock_medium_2.glb", medium_rock_transforms)
+	_add_asset_multimesh(parent, "MountainRocksTall", NATURE_MEGAKIT_ROOT + "rock_medium_3.glb", tall_rock_transforms)
 	_add_asset_multimesh(parent, "MountainCliffOutcrops", STYLIZED_NATURE_ROOT + "stone_outcrop_2.glb", outcrop_transforms)
+
+
+func _add_biome_detail_clusters(parent: Node3D) -> void:
+	var random := RandomNumberGenerator.new()
+	random.seed = 0x4D494E4941545552
+	var short_grass: Array[Transform3D] = []
+	var tall_grass: Array[Transform3D] = []
+	var wispy_grass: Array[Transform3D] = []
+	var ferns: Array[Transform3D] = []
+	var clover: Array[Transform3D] = []
+	var flowers_a: Array[Transform3D] = []
+	var flowers_b: Array[Transform3D] = []
+	var flowering_bushes: Array[Transform3D] = []
+	var dry_plants: Array[Transform3D] = []
+	for _index in range(1900):
+		var x := random.randf_range(-12.8, 12.4)
+		var z := random.randf_range(-7.2, 8.2)
+		if not _is_land(x, z) or _near_world_road(x, z, 0.10):
+			continue
+		var height := _height_at(x, z)
+		var normal := _terrain_normal_at(x, z)
+		if height < 14.0 or height > 720.0 or normal.y < 0.89:
+			continue
+		var southern_dryness := smoothstep(3.6, 7.0, z)
+		var forest_moisture := exp(-(pow((x + 6.2) / 6.2, 2.0) + pow((z + 0.2) / 4.2, 2.0)))
+		var detail_scale := random.randf_range(30.0, 49.0)
+		var detail_transform := _asset_transform(x, z, height, detail_scale, random.randf_range(0.0, TAU), 0.58, 1.5)
+		if southern_dryness > 0.58:
+			if random.randf() < 0.56:
+				dry_plants.append(detail_transform)
+			else:
+				wispy_grass.append(detail_transform)
+		elif forest_moisture > 0.30 and random.randf() < 0.34:
+			ferns.append(detail_transform)
+		elif random.randf() < 0.18:
+			clover.append(detail_transform)
+		elif random.randf() < 0.52:
+			short_grass.append(detail_transform)
+		else:
+			tall_grass.append(detail_transform)
+		if x < -1.0 and z > -2.8 and z < 3.6 and random.randf() < 0.075:
+			var flower_transform := _asset_transform(x, z, height, random.randf_range(29.0, 46.0), random.randf_range(0.0, TAU), 0.48, 1.0)
+			if random.randf() < 0.5:
+				flowers_a.append(flower_transform)
+			else:
+				flowers_b.append(flower_transform)
+		if x < -1.5 and forest_moisture > 0.42 and random.randf() < 0.055:
+			flowering_bushes.append(_asset_transform(x, z, height, random.randf_range(34.0, 52.0), random.randf_range(0.0, TAU), 0.42, 1.0))
+	_add_asset_multimesh(parent, "GrasslandShortDetail", NATURE_MEGAKIT_ROOT + "grass_common_short.glb", short_grass)
+	_add_asset_multimesh(parent, "GrasslandTallDetail", NATURE_MEGAKIT_ROOT + "grass_common_tall.glb", tall_grass)
+	_add_asset_multimesh(parent, "DryWispyGrassDetail", NATURE_MEGAKIT_ROOT + "grass_wispy_tall.glb", wispy_grass)
+	_add_asset_multimesh(parent, "LoandFernBeds", NATURE_MEGAKIT_ROOT + "fern_1.glb", ferns)
+	_add_asset_multimesh(parent, "LoandCloverBeds", NATURE_MEGAKIT_ROOT + "clover_2.glb", clover)
+	_add_asset_multimesh(parent, "LoandFlowerBedsA", NATURE_MEGAKIT_ROOT + "flower_3_group.glb", flowers_a)
+	_add_asset_multimesh(parent, "LoandFlowerBedsB", NATURE_MEGAKIT_ROOT + "flower_4_group.glb", flowers_b)
+	_add_asset_multimesh(parent, "LoandFloweringBushes", NATURE_MEGAKIT_ROOT + "bush_common_flowers.glb", flowering_bushes)
+	_add_asset_multimesh(parent, "SouthernDryPlants", NATURE_MEGAKIT_ROOT + "plant_7_big.glb", dry_plants)
+
+	var pebbles_a: Array[Transform3D] = []
+	var pebbles_b: Array[Transform3D] = []
+	var pebbles_c: Array[Transform3D] = []
+	for _index in range(360):
+		var x := random.randf_range(-11.8, 12.5)
+		var z := random.randf_range(-7.8, 5.2)
+		if not _is_land(x, z) or _near_world_road(x, z, 0.13):
+			continue
+		var height := _height_at(x, z)
+		var normal := _terrain_normal_at(x, z)
+		if height < 150.0 or normal.y < 0.70:
+			continue
+		var pebble_transform := _asset_transform(x, z, height, random.randf_range(18.0, 42.0), random.randf_range(0.0, TAU), 0.86, random.randf_range(4.0, 12.0))
+		match random.randi_range(0, 2):
+			0: pebbles_a.append(pebble_transform)
+			1: pebbles_b.append(pebble_transform)
+			2: pebbles_c.append(pebble_transform)
+	_add_asset_multimesh(parent, "MountainPebbles_00", NATURE_MEGAKIT_ROOT + "pebble_round_1.glb", pebbles_a)
+	_add_asset_multimesh(parent, "MountainPebbles_01", NATURE_MEGAKIT_ROOT + "pebble_round_2.glb", pebbles_b)
+	_add_asset_multimesh(parent, "MountainPebbles_02", NATURE_MEGAKIT_ROOT + "pebble_round_3.glb", pebbles_c)
+
+
+func _add_roadside_asset_details(parent: Node3D) -> void:
+	var random := RandomNumberGenerator.new()
+	random.seed = 0x524F414453494445
+	var pebbles_a: Array[Transform3D] = []
+	var pebbles_b: Array[Transform3D] = []
+	var pebbles_c: Array[Transform3D] = []
+	for road_data in WORLD_ROAD_PATHS:
+		var style := str(road_data[2])
+		if style == "paved":
+			continue
+		var path := _densify_map_path(road_data[1], 0.34)
+		for index in range(1, path.size() - 1, 2):
+			var direction: Vector2 = (path[index + 1] - path[index - 1]).normalized()
+			var side := Vector2(-direction.y, direction.x)
+			for side_sign in [-1.0, 1.0]:
+				if random.randf() < 0.28:
+					continue
+				var point: Vector2 = path[index] + side * (0.095 + random.randf_range(0.0, 0.045)) * side_sign
+				if not _is_land(point.x, point.y):
+					continue
+				var pebble_transform := _asset_transform(point.x, point.y, _height_at(point.x, point.y), random.randf_range(14.0, 28.0), random.randf_range(0.0, TAU), 0.86, 3.0)
+				match random.randi_range(0, 2):
+					0: pebbles_a.append(pebble_transform)
+					1: pebbles_b.append(pebble_transform)
+					2: pebbles_c.append(pebble_transform)
+	_add_asset_multimesh(parent, "RoadsidePebbles_00", NATURE_MEGAKIT_ROOT + "pebble_round_1.glb", pebbles_a)
+	_add_asset_multimesh(parent, "RoadsidePebbles_01", NATURE_MEGAKIT_ROOT + "pebble_round_2.glb", pebbles_b)
+	_add_asset_multimesh(parent, "RoadsidePebbles_02", NATURE_MEGAKIT_ROOT + "pebble_round_3.glb", pebbles_c)
 
 
 func _add_lakes(parent: Node3D) -> void:
@@ -623,19 +738,25 @@ func _add_asset_multimesh(parent: Node3D, node_name: String, scene_path: String,
 		source_root.free()
 		push_warning("Map asset has no mesh: " + scene_path)
 		return
-	var source_mesh := source_meshes[0] as MeshInstance3D
-	var source_transform := _node_transform_relative_to(source_mesh, source_root)
-	var multimesh := MultiMesh.new()
-	multimesh.transform_format = MultiMesh.TRANSFORM_3D
-	multimesh.mesh = _retint_asset_mesh(source_mesh.mesh, scene_path)
-	multimesh.instance_count = transforms.size()
-	for index in range(transforms.size()):
-		multimesh.set_instance_transform(index, transforms[index] * source_transform)
-	var instance := MultiMeshInstance3D.new()
-	instance.name = node_name
-	instance.multimesh = multimesh
-	instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
-	_attach(parent, instance)
+	var group := Node3D.new()
+	group.name = node_name
+	_attach(parent, group)
+	for mesh_index in range(source_meshes.size()):
+		var source_mesh := source_meshes[mesh_index] as MeshInstance3D
+		if source_mesh == null or source_mesh.mesh == null:
+			continue
+		var source_transform := _node_transform_relative_to(source_mesh, source_root)
+		var multimesh := MultiMesh.new()
+		multimesh.transform_format = MultiMesh.TRANSFORM_3D
+		multimesh.mesh = _retint_asset_mesh(source_mesh.mesh, scene_path)
+		multimesh.instance_count = transforms.size()
+		for index in range(transforms.size()):
+			multimesh.set_instance_transform(index, transforms[index] * source_transform)
+		var instance := MultiMeshInstance3D.new()
+		instance.name = "Part_%02d_%s" % [mesh_index, source_mesh.name]
+		instance.multimesh = multimesh
+		instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+		_attach(group, instance)
 	source_root.free()
 
 
@@ -706,7 +827,9 @@ func _tune_scene_asset(root_node: Node3D) -> void:
 			var material := source_material.duplicate(true) as StandardMaterial3D
 			material.roughness = maxf(material.roughness, 0.82)
 			material.metallic = 0.0
-			material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_VERTEX
+			material.normal_enabled = material.normal_texture != null
+			material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+			material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL
 			mesh.surface_set_material(surface_index, material)
 		mesh_instance.mesh = mesh
 
@@ -727,33 +850,36 @@ func _retint_asset_mesh(source_mesh: Mesh, scene_path: String) -> Mesh:
 	var is_birch := scene_path.contains("birch")
 	var is_dead_tree := scene_path.contains("dead_tree")
 	var is_dry_bush := scene_path.contains("bush_large")
-	var is_rock := scene_path.contains("rock") or scene_path.contains("outcrop")
+	var is_rock := scene_path.contains("rock") or scene_path.contains("outcrop") or scene_path.contains("pebble")
 	for surface_index in range(mesh.get_surface_count()):
 		var source_material := mesh.surface_get_material(surface_index)
 		if not source_material is StandardMaterial3D:
 			continue
 		var material := source_material.duplicate(true) as StandardMaterial3D
 		var material_name := material.resource_name.to_lower()
-		material.albedo_texture = null
-		material.normal_enabled = false
-		material.normal_texture = null
-		if is_rock:
-			material.albedo_color = Color("#78817b") if surface_index == 0 else Color("#8e9687")
-		elif is_birch and material_name.contains("bark"):
-			material.albedo_color = Color("#c9c3ae")
-		elif material_name.contains("wood") or material_name.contains("bark"):
-			material.albedo_color = Color("#806342")
-		elif is_dead_tree:
-			material.albedo_color = Color("#756348")
-		elif is_dry_bush:
-			material.albedo_color = Color("#8f8b55")
-		elif is_pine:
-			material.albedo_color = Color("#51775b")
-		else:
-			material.albedo_color = Color("#64845b")
-		material.roughness = 0.94
+		var has_authored_texture := material.albedo_texture != null
+		if has_authored_texture and is_rock:
+			material.albedo_color *= Color("#9ba198")
+		if not has_authored_texture:
+			if is_rock:
+				material.albedo_color = Color("#78817b") if surface_index == 0 else Color("#8e9687")
+			elif is_birch and material_name.contains("bark"):
+				material.albedo_color = Color("#c9c3ae")
+			elif material_name.contains("wood") or material_name.contains("bark"):
+				material.albedo_color = Color("#806342")
+			elif is_dead_tree:
+				material.albedo_color = Color("#756348")
+			elif is_dry_bush:
+				material.albedo_color = Color("#8f8b55")
+			elif is_pine:
+				material.albedo_color = Color("#51775b")
+			else:
+				material.albedo_color = Color("#64845b")
+		material.normal_enabled = material.normal_texture != null
+		material.roughness = maxf(material.roughness, 0.82)
 		material.emission_enabled = false
-		material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_VERTEX
+		material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+		material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL
 		mesh.surface_set_material(surface_index, material)
 	return mesh
 
@@ -863,6 +989,8 @@ func _add_world_roads(parent: Node3D) -> void:
 		_add_road_feature(roads, str(road_data[0]), road_data[1], str(road_data[2]))
 	_add_road_bridge(roads, "LoandRiverBridge", Vector2(-5.15, -2.02), deg_to_rad(92.0), 390.0)
 	_add_road_bridge(roads, "HerenEstuaryBridge", Vector2(10.22, 0.18), deg_to_rad(48.0), 430.0)
+	_add_map_asset(roads, "DattFourWayTransitJunction", MODULAR_STREETS_ROOT + "street_4way.glb", Vector2(4.82, -1.02), 285.0, deg_to_rad(12.0), 20.0)
+	_add_map_asset(roads, "DattCanalThreeWayJunction", MODULAR_STREETS_ROOT + "street_3way.glb", Vector2(6.92, -0.78), 255.0, deg_to_rad(78.0), 20.0)
 
 
 func _add_road_feature(parent: Node3D, node_name: String, path: Array, style: String) -> void:
@@ -874,43 +1002,29 @@ func _add_road_feature(parent: Node3D, node_name: String, path: Array, style: St
 	_add_surface_strip(road, "TravelSurface", terrain_path, 0.070, Color("#aa9263"), 0.104, _road_material(style, false))
 
 
-func _road_material(style: String, shoulder: bool) -> ShaderMaterial:
-	var material := ShaderMaterial.new()
-	material.shader = MINIATURE_ROAD_SHADER
-	var road_color := Color("#937a50")
-	var stone_color := Color("#c0a56f")
-	var edge_color := Color("#554d3d")
-	var marking_color := Color("#e0c45c")
-	var paved := 0.0
-	match style:
-		"trail":
-			road_color = Color("#76634a")
-			stone_color = Color("#a48d68")
-			edge_color = Color("#48453b")
-		"gravel", "mountain":
-			road_color = Color("#77766c")
-			stone_color = Color("#a5a398")
-			edge_color = Color("#4c504b")
-		"royal":
-			road_color = Color("#9d8660")
-			stone_color = Color("#c7b083")
-			edge_color = Color("#5c5140")
-		"frontier":
-			road_color = Color("#a0784d")
-			stone_color = Color("#c7a06a")
-			edge_color = Color("#66503c")
-		"paved":
-			road_color = Color("#48595b")
-			stone_color = Color("#6f8180")
-			edge_color = Color("#2d3c3d")
-			marking_color = Color("#e7cf62")
-			paved = 1.0
-	material.set_shader_parameter("road_color", road_color)
-	material.set_shader_parameter("stone_color", stone_color)
-	material.set_shader_parameter("edge_color", edge_color)
-	material.set_shader_parameter("marking_color", marking_color)
-	material.set_shader_parameter("paved", paved)
-	material.set_shader_parameter("shoulder", 1.0 if shoulder else 0.0)
+func _road_material(style: String, shoulder: bool) -> StandardMaterial3D:
+	var texture_name := "gravel_road"
+	if style in ["trail", "frontier"]:
+		texture_name = "stony_dirt_path"
+	elif style in ["royal", "paved"] and not shoulder:
+		texture_name = "pavement_05"
+	var material := StandardMaterial3D.new()
+	material.albedo_texture = load(ROAD_TEXTURE_ROOT + texture_name + "_diff_1k.jpg") as Texture2D
+	material.normal_enabled = true
+	material.normal_texture = load(ROAD_TEXTURE_ROOT + texture_name + "_nor_gl_1k.jpg") as Texture2D
+	material.normal_scale = 0.86 if shoulder else 1.12
+	material.roughness = 1.0
+	material.roughness_texture = load(ROAD_TEXTURE_ROOT + texture_name + "_rough_1k.jpg") as Texture2D
+	material.albedo_color = Color("#827b6d") if shoulder else Color(1.22, 1.16, 1.06, 1.0)
+	if style == "paved" and not shoulder:
+		material.albedo_color = Color(1.10, 1.20, 1.18, 1.0)
+	elif style == "royal" and not shoulder:
+		material.albedo_color = Color(1.26, 1.19, 1.05, 1.0)
+	elif style == "frontier" and not shoulder:
+		material.albedo_color = Color(1.28, 1.10, 0.92, 1.0)
+	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL
 	return material
 
 

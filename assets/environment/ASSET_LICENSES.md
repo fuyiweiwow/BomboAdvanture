@@ -20,6 +20,14 @@ Commons CC0 1.0 Universal license.
 - The original license text is included at
   `quaternius_stylized/LICENSE.txt`.
 
+## Quaternius Stylized Nature MegaKit
+
+- Source: https://quaternius.com/packs/stylizednaturemegakit.html
+- Author: Quaternius
+- License: CC0 1.0
+- Files used: selected textured rocks, pebbles, grasses, ferns, flowers, and
+  plants converted to GLB in `quaternius_nature_megakit/`.
+
 ## Quaternius Medieval Village Pack
 
 - Source: https://quaternius.com/packs/medievalvillage.html
@@ -57,6 +65,15 @@ Commons CC0 1.0 Universal license.
 - Author: Rob Tuytel
 - License: CC0 1.0
 - Files used: 1K diffuse, displacement, OpenGL normal, and roughness maps.
+
+## Poly Haven road surfaces
+
+- Gravel Road: https://polyhaven.com/a/gravel_road
+- Stony Dirt Path: https://polyhaven.com/a/stony_dirt_path
+- Pavement 05: https://polyhaven.com/a/pavement_05
+- License: CC0 1.0
+- Files used: 1K diffuse, OpenGL normal, and roughness maps in
+  `road_textures/polyhaven/`.
 
 ## Terrain3D demo ground and rock
 
