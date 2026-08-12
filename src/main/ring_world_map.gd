@@ -521,8 +521,44 @@ func _draw_magic_crystal(center: Vector2, scale_value: float = 1.0) -> void:
 func _draw_waterways() -> void:
 	for path in RIVER_PATHS:
 		_draw_tiled_infrastructure(path, "river")
+	_draw_river_mouth(RIVER_PATHS[1])
 	for path in CANAL_PATHS:
 		_draw_tiled_infrastructure(path, "canal")
+
+
+func _draw_river_mouth(path: Array) -> void:
+	var cells := _rasterize_grid_path(path)
+	var last_land_index := -1
+	for index in range(cells.size()):
+		var cell: Vector2i = cells[index]
+		if _is_world_tile(cell.x, cell.y):
+			last_land_index = index
+			continue
+		if last_land_index < 0:
+			continue
+		var land_cell: Vector2i = cells[last_land_index]
+		var land_center := _grid_surface_to_world(Vector2(land_cell), 1.0)
+		var sea_center := _grid_to_world(Vector2(cell))
+		var direction := land_center.direction_to(sea_center)
+		var side := direction.orthogonal()
+		var outer := PackedVector2Array([
+			land_center - side * 9.0, sea_center - side * 15.0,
+			sea_center + side * 15.0, land_center + side * 9.0,
+		])
+		var water := PackedVector2Array([
+			land_center - side * 6.0, sea_center - side * 12.0,
+			sea_center + side * 12.0, land_center + side * 6.0,
+		])
+		draw_colored_polygon(outer, Color("#244f55"))
+		draw_colored_polygon(water, Color("#2d6e75"))
+		for flow_offset in [-0.52, 0.0, 0.52]:
+			var flow_start := land_center + side * 5.0 * float(flow_offset)
+			var flow_end := sea_center + side * 10.0 * float(flow_offset)
+			draw_line(flow_start.lerp(flow_end, 0.28), flow_end, Color(0.50, 0.78, 0.77, 0.28), 0.9, true)
+		draw_line(sea_center - side * 11.0, sea_center + side * 11.0, Color(0.65, 0.90, 0.86, 0.48), 1.5, true)
+		var glint_center := land_center.lerp(sea_center, 0.62)
+		draw_line(glint_center - side * 5.0, glint_center + side * 5.0, Color(0.55, 0.83, 0.80, 0.32), 1.0, true)
+		return
 
 
 func _draw_ground_roads() -> void:

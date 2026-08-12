@@ -31,6 +31,9 @@ The active campaign map is a lightweight 2D isometric tile map implemented in
 - Port water is never painted over land. Cargo piers are anchored in ocean
   cells south of the district, with visible pilings, crane feet and rail bases
   connecting the gantries to their decks.
+- Rivers that reach the coastline use a dedicated elevation transition from
+  the final land cell to the first ocean cell, so their mouths remain visibly
+  connected to sea level instead of stopping at the coastal cliff.
 - Rendering is ordered as terrain, embedded waterways and roads, bridges,
   vegetation, then buildings. Infrastructure tiles sample terrain elevation,
   roads reserve clear verges, and crossings use separate bridge decks instead
