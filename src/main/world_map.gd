@@ -3,10 +3,12 @@ extends Control
 
 const LEVEL_CATALOG := preload("res://src/level/level_catalog.gd")
 const LEVEL_PROGRESS_REPOSITORY := preload("res://src/level/level_progress_repository.gd")
+const WORLD_CAMPAIGN_CATALOG := preload("res://src/level/world_campaign_catalog.gd")
 const LEVEL_SESSION := preload("res://src/level/level_session.gd")
 const RING_WORLD_MAP := preload("res://src/main/ring_world_map.tscn")
 
 var catalog
+var campaign
 var progress_repository
 var map_view: SubViewportContainer
 var map_viewport: SubViewport
@@ -22,7 +24,8 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = MOUSE_FILTER_STOP
 	catalog = LEVEL_CATALOG.new()
-	progress_repository = LEVEL_PROGRESS_REPOSITORY.new()
+	campaign = WORLD_CAMPAIGN_CATALOG.new(WORLD_CAMPAIGN_CATALOG.DEFAULT_PATH, catalog)
+	progress_repository = LEVEL_PROGRESS_REPOSITORY.new(LEVEL_PROGRESS_REPOSITORY.DEFAULT_PATH, catalog, campaign)
 	_build()
 
 
@@ -52,6 +55,8 @@ func _build() -> void:
 
 	var profiles := _visible_profiles()
 	ring_world_map = RING_WORLD_MAP.instantiate() as AdventureRingWorldMap
+	ring_world_map.show_campaign_overlay = true
+	ring_world_map.show_campaign_routes = false
 	ring_world_map.configure(profiles)
 	ring_world_map.level_focused.connect(_show_profile)
 	ring_world_map.level_activated.connect(_enter_level)
@@ -107,6 +112,7 @@ func _build_detail_band() -> Control:
 	var panel := PanelContainer.new()
 	panel.name = "LevelDetail"
 	panel.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	panel.offset_top = -126.0
 	panel.custom_minimum_size.y = 126.0
 	panel.add_theme_stylebox_override("panel", _panel_style(Color(0.030, 0.055, 0.066, 0.98)))
 
@@ -152,15 +158,17 @@ func _build_detail_band() -> Control:
 func _visible_profiles() -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
 	var completed_ids: Array[String] = progress_repository.completed_level_ids()
-	for raw_profile in catalog.levels():
-		var level_id := str(raw_profile.get("id", ""))
+	for level_id in progress_repository.visible_level_ids():
+		var raw_profile: Dictionary = catalog.profile(level_id)
+		if raw_profile.is_empty():
+			continue
 		var unlocked: bool = progress_repository.is_unlocked(level_id)
 		var completed: bool = completed_ids.has(level_id)
-		if not unlocked and not completed:
-			continue
 		var profile: Dictionary = raw_profile.duplicate(true)
+		profile.merge(campaign.campaign_profile(level_id), true)
 		profile["unlocked"] = unlocked
 		profile["completed"] = completed
+		profile["selected_candidate"] = progress_repository.selected_level_for_stage(str(profile.get("campaign_stage_id", ""))) == level_id
 		result.append(profile)
 	return result
 
@@ -181,11 +189,11 @@ func _show_profile(profile: Dictionary) -> void:
 	var completed := bool(profile.get("completed", false))
 	var unlocked: bool = progress_repository.is_unlocked(level_id)
 	var travel_mode := str(profile.get("travel_mode", "walk"))
-	var travel_label: String = str({"walk": "步行", "boat": "乘船", "airship": "浮空交通"}.get(travel_mode, "步行"))
+	var travel_label: String = str({"walk": "步行", "boat": "乘船", "airship": "浮空交通", "rail": "高速铁路"}.get(travel_mode, "步行"))
 	detail_state.text = "已完成" if completed else ("可进入" if unlocked else "未解锁")
 	detail_state.add_theme_color_override("font_color", Color("#6ed3c5") if completed else Color("#f1c85a"))
-	detail_title.text = "第%s章-%s  %s" % [str(int(profile.get("set_index", 0)) + 1), str(profile.get("local_number", "")), str(profile.get("name", level_id))]
-	detail_description.text = "%s · 前往方式：%s\n%s" % [str(profile.get("region_name", "")), travel_label, str(profile.get("description", ""))]
+	detail_title.text = "%s · 候选点 %s  %s" % [str(profile.get("campaign_stage_name", "")), str(int(profile.get("campaign_candidate_index", 0)) + 1), str(profile.get("name", level_id))]
+	detail_description.text = "%s · 前往方式：%s\n%s" % [str(profile.get("region_name", "")), travel_label, str(profile.get("region_subtitle", ""))]
 	enter_button.disabled = not unlocked
 	ring_world_map.focus_level(level_id)
 
@@ -196,6 +204,8 @@ func _enter_selected_level() -> void:
 
 func _enter_level(level_id: String) -> void:
 	if level_id.is_empty() or not progress_repository.is_unlocked(level_id):
+		return
+	if not progress_repository.select_level(level_id):
 		return
 	if not LEVEL_SESSION.select_level(level_id):
 		return

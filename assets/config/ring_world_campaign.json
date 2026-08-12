@@ -1,0 +1,100 @@
+{
+	"version": 1,
+	"seed": 731942,
+	"placement": {
+		"minimum_spacing": 2.4,
+		"infrastructure_clearance": 1.1,
+		"landmark_clearance": 2.2,
+		"detail_clearance": 1
+	},
+	"regions": [
+		{
+			"id": "nether",
+			"name": "冥河极寒带",
+			"description": "主角醒来的无人极寒区，亡者记忆沿冥河汇入大陆。",
+			"bounds": [35, 0, 43, 4],
+			"biomes": ["nether", "snow"],
+			"travel_mode": "walk"
+		},
+		{
+			"id": "mine",
+			"name": "赫伦矿山",
+			"description": "雪线、矿脉与沿海工业带之间的高地矿区。",
+			"bounds": [31, 5, 42, 13],
+			"biomes": ["rock", "tundra", "industry"],
+			"travel_mode": "walk"
+		},
+		{
+			"id": "forest",
+			"name": "洛安德森林",
+			"description": "古老林地包围着旧道路、村落与祖灵遗迹。",
+			"bounds": [10, 9, 22, 20],
+			"biomes": ["forest", "plains"],
+			"travel_mode": "walk"
+		},
+		{
+			"id": "loand",
+			"name": "洛安德自治区",
+			"description": "土地肥沃、历史悠久，古典城堡与现代郊野并存。",
+			"bounds": [14, 12, 27, 21],
+			"biomes": ["forest", "plains"],
+			"travel_mode": "walk"
+		},
+		{
+			"id": "floating_islands",
+			"name": "西部浮空岛",
+			"description": "大小各异的魔法岛屿悬浮在洛安德西方。",
+			"bounds": [1, 4, 10, 15],
+			"biomes": ["floating"],
+			"travel_mode": "airship"
+		},
+		{
+			"id": "desert",
+			"name": "南部荒漠",
+			"description": "远离达特核心区的干旱边疆与稀疏聚落。",
+			"bounds": [16, 22, 32, 28],
+			"biomes": ["desert"],
+			"travel_mode": "walk"
+		},
+		{
+			"id": "datt",
+			"name": "达特核心区",
+			"description": "运河、飞行交通与高速铁路汇聚的未来工业中心。",
+			"bounds": [27, 12, 37, 20],
+			"biomes": ["urban", "plains"],
+			"travel_mode": "rail"
+		},
+		{
+			"id": "port",
+			"name": "赫伦国际港",
+			"description": "连接海洋、铁路和空运的综合交通与大宗交易枢纽。",
+			"bounds": [38, 16, 46, 22],
+			"biomes": ["industry", "coast"],
+			"travel_mode": "boat"
+		},
+		{
+			"id": "psetia",
+			"name": "普赛提亚群岛",
+			"description": "由快艇、轮船与群岛城市连接起来的海洋联邦。",
+			"bounds": [28, 23, 47, 29],
+			"biomes": ["coast"],
+			"travel_mode": "boat"
+		}
+	],
+	"stages": [
+		{"id": "nether_awakening", "region": "nether", "name": "冥河初醒", "level_ids": ["yx_map"]},
+		{"id": "mine_snowline", "region": "mine", "name": "雪线矿道", "level_ids": ["YongDong1", "YongDong2"]},
+		{"id": "mine_depths", "region": "mine", "name": "矿脉深处", "level_ids": ["JiZhou1", "JiZhou2", "JiZhou3"]},
+		{"id": "forest_border", "region": "forest", "name": "祖灵林缘", "level_ids": ["SenLin1", "SenLin2", "SenLin3"]},
+		{"id": "forest_heart", "region": "forest", "name": "旧林腹地", "level_ids": ["SenLin4", "SenLin5"]},
+		{"id": "loand_outskirts", "region": "loand", "name": "洛安德郊野", "level_ids": ["YeWai1", "YeWai2"]},
+		{"id": "desert_frontier", "region": "desert", "name": "南部边疆", "level_ids": ["YeWai3", "YeWai4"]},
+		{"id": "loand_old_court", "region": "loand", "name": "旧王庭", "level_ids": ["MiZhiDi1", "MiZhiDi2"]},
+		{"id": "floating_arcana", "region": "floating_islands", "name": "浮岛秘境", "level_ids": ["MiZhiDi3", "MiZhiDi4"]},
+		{"id": "port_trade", "region": "port", "name": "国际港区", "level_ids": ["NuFeng1", "NuFeng2", "NuFeng3"]},
+		{"id": "psetia_stormline", "region": "psetia", "name": "群岛航线", "level_ids": ["FengBao1", "FengBao2", "FengBao3"]},
+		{"id": "datt_outer_ring", "region": "datt", "name": "达特外环", "level_ids": ["ShouWang1", "ShouWang2", "ShouWang3"]},
+		{"id": "datt_academy", "region": "datt", "name": "皇家科学院", "level_ids": ["HeiLong1", "HeiLong2", "HeiLong3"]},
+		{"id": "datt_finale", "region": "datt", "name": "现实裂缝", "level_ids": ["HeiLong4", "HeiLong5", "HeiLong6", "HeiLong7"]}
+	]
+}

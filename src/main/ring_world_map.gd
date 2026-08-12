@@ -48,6 +48,7 @@ const ROAD_PATHS := [
 
 var _profiles: Array[Dictionary] = []
 var _marker_by_id: Dictionary = {}
+var _campaign_marker_cells: Dictionary = {}
 var _selected_level_id := ""
 var _camera: Camera2D
 var _dragging := false
@@ -55,12 +56,14 @@ var _last_pointer := Vector2.ZERO
 var _elapsed := 0.0
 
 @export var show_campaign_overlay := false
+@export var show_campaign_routes := false
 
 
 func configure(profiles: Array[Dictionary]) -> void:
 	_profiles.clear()
 	for profile in profiles:
 		_profiles.append(profile.duplicate(true))
+	_assign_campaign_positions()
 	if is_inside_tree():
 		_build_level_markers()
 	queue_redraw()
@@ -70,6 +73,10 @@ func focus_level(level_id: String) -> void:
 	if not _marker_by_id.has(level_id):
 		return
 	_selected_level_id = level_id
+	var marker := _marker_by_id[level_id] as Button
+	if _camera != null and marker != null:
+		var profile := marker.get_meta("profile", {}) as Dictionary
+		_camera.position = _profile_to_world(profile)
 	_refresh_markers()
 	queue_redraw()
 
@@ -197,6 +204,8 @@ func _draw_terrain_details() -> void:
 		for row in range(GRID_ROWS):
 			var column := diagonal - row
 			if column < 0 or column >= GRID_COLUMNS or not _is_world_tile(column, row):
+				continue
+			if _is_campaign_clearing(Vector2i(column, row)):
 				continue
 			var biome := _biome_at(column, row)
 			var elevation := _elevation_at(column, row, biome)
@@ -815,7 +824,7 @@ func _draw_bridge(grid: Vector2, direction: Vector2, future: bool) -> void:
 
 
 func _draw_world_routes() -> void:
-	if not show_campaign_overlay or _profiles.size() < 2:
+	if not show_campaign_overlay or not show_campaign_routes or _profiles.size() < 2:
 		return
 	for index in range(_profiles.size() - 1):
 		var from_profile := _profiles[index]
@@ -1308,7 +1317,7 @@ func _build_level_markers() -> void:
 			continue
 		var marker := Button.new()
 		marker.name = "Level_%s" % level_id
-		marker.text = str(profile.get("local_number", index + 1))
+		marker.text = str(profile.get("marker_label", profile.get("local_number", index + 1)))
 		marker.position = _profile_to_world(profile) - Vector2(20.0, 20.0)
 		marker.custom_minimum_size = Vector2(40.0, 40.0)
 		marker.size = Vector2(40.0, 40.0)
@@ -1385,10 +1394,143 @@ func _marker_style(color: Color, emphasized: bool) -> StyleBoxFlat:
 
 
 func _profile_to_world(profile: Dictionary) -> Vector2:
+	if profile.has("campaign_grid_position"):
+		var grid: Vector2 = profile["campaign_grid_position"]
+		var column := clampi(roundi(grid.x), 0, GRID_COLUMNS - 1)
+		var row := clampi(roundi(grid.y), 0, GRID_ROWS - 1)
+		var elevation := _elevation_at(column, row, _biome_at(column, row))
+		return _grid_to_world(grid) - Vector2(0.0, elevation + 28.0)
 	var normalized: Vector2 = profile.get("map_position", Vector2(0.5, 0.5))
 	var design_column := lerpf(4.0, 45.0, normalized.x)
 	var design_row := lerpf(1.0, 28.0, normalized.y)
 	return _design_to_world(Vector2(design_column, design_row)) - Vector2(0.0, 28.0)
+
+
+func campaign_marker_cells() -> Dictionary:
+	return _campaign_marker_cells.duplicate(true)
+
+
+func _assign_campaign_positions() -> void:
+	_campaign_marker_cells.clear()
+	var stage_profiles: Dictionary = {}
+	for profile in _profiles:
+		var stage_id := str(profile.get("campaign_stage_id", ""))
+		if stage_id.is_empty():
+			continue
+		if not stage_profiles.has(stage_id):
+			stage_profiles[stage_id] = []
+		(stage_profiles[stage_id] as Array).append(profile)
+	var ordered_stage_ids: Array[String] = []
+	for stage_id in stage_profiles:
+		ordered_stage_ids.append(str(stage_id))
+	ordered_stage_ids.sort_custom(func(a: String, b: String) -> bool:
+		return _stage_index(stage_profiles[a]) < _stage_index(stage_profiles[b])
+	)
+	var occupied: Array[Vector2] = []
+	for stage_id in ordered_stage_ids:
+		var profiles: Array = stage_profiles[stage_id]
+		var representative: Dictionary = profiles[0]
+		var candidate_count := int(representative.get("campaign_candidate_count", profiles.size()))
+		var generated: Array[Vector2i] = _generate_stage_cells(representative, candidate_count, occupied)
+		for cell in generated:
+			occupied.append(Vector2(cell))
+		for profile in profiles:
+			var candidate_index := int((profile as Dictionary).get("campaign_candidate_index", 0))
+			if candidate_index < 0 or candidate_index >= generated.size():
+				continue
+			var cell: Vector2i = generated[candidate_index]
+			(profile as Dictionary)["campaign_grid_position"] = Vector2(cell)
+			_campaign_marker_cells[str((profile as Dictionary).get("id", ""))] = cell
+
+
+func _stage_index(profiles: Array) -> int:
+	if profiles.is_empty():
+		return 0
+	return int((profiles[0] as Dictionary).get("campaign_stage_index", 0))
+
+
+func _generate_stage_cells(profile: Dictionary, count: int, occupied: Array[Vector2]) -> Array[Vector2i]:
+	var bounds: Array = profile.get("campaign_region_bounds", [])
+	var allowed_biomes: Array = profile.get("campaign_region_biomes", [])
+	var placement: Dictionary = profile.get("campaign_placement", {})
+	var minimum_spacing := float(placement.get("minimum_spacing", 2.4))
+	var infrastructure_clearance := float(placement.get("infrastructure_clearance", 1.1))
+	var landmark_clearance := float(placement.get("landmark_clearance", 2.2))
+	var design_min := Vector2(float(bounds[0]), float(bounds[1])) if bounds.size() >= 4 else Vector2(4, 1)
+	var design_max := Vector2(float(bounds[2]), float(bounds[3])) if bounds.size() >= 4 else Vector2(45, 28)
+	var grid_min := Vector2i(_design_to_grid(design_min).ceil())
+	var grid_max := Vector2i(_design_to_grid(design_max).floor())
+	var available: Array[Vector2i] = []
+	for row in range(grid_min.y, grid_max.y + 1):
+		for column in range(grid_min.x, grid_max.x + 1):
+			if column < 0 or row < 0 or column >= GRID_COLUMNS or row >= GRID_ROWS:
+				continue
+			if not _is_world_tile(column, row):
+				continue
+			if not allowed_biomes.is_empty() and not allowed_biomes.has(_biome_at(column, row)):
+				continue
+			var grid := Vector2(column, row)
+			if _near_infrastructure(grid, infrastructure_clearance):
+				continue
+			if _near_landmark(grid, landmark_clearance):
+				continue
+			available.append(Vector2i(column, row))
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(profile.get("campaign_seed", 0)) + int(profile.get("campaign_stage_index", 0)) * 104729
+	for index in range(available.size() - 1, 0, -1):
+		var swap_index := rng.randi_range(0, index)
+		var value := available[index]
+		available[index] = available[swap_index]
+		available[swap_index] = value
+	var result: Array[Vector2i] = []
+	for candidate in available:
+		if not _far_enough_from_cells(Vector2(candidate), occupied, minimum_spacing):
+			continue
+		var selected_cells: Array[Vector2] = []
+		for selected in result:
+			selected_cells.append(Vector2(selected))
+		if not _far_enough_from_cells(Vector2(candidate), selected_cells, minimum_spacing):
+			continue
+		result.append(candidate)
+		if result.size() >= count:
+			break
+	if result.size() < count:
+		for candidate in available:
+			if result.has(candidate):
+				continue
+			result.append(candidate)
+			if result.size() >= count:
+				break
+	return result
+
+
+func _far_enough_from_cells(cell: Vector2, cells: Array[Vector2], distance: float) -> bool:
+	for other in cells:
+		if cell.distance_to(other) < distance:
+			return false
+	return true
+
+
+func _near_landmark(grid: Vector2, radius: float) -> bool:
+	var design := _grid_to_design(grid)
+	var landmarks := [
+		Vector2(13, 17), Vector2(22, 18), Vector2(28, 21), Vector2(39, 2),
+		Vector2(18, 14), Vector2(32, 16), Vector2(40, 11), Vector2(35, 9),
+		Vector2(38, 8), Vector2(42, 19), Vector2(24, 24), Vector2(5, 8),
+		Vector2(3, 12), Vector2(8, 13), Vector2(35, 27), Vector2(41, 26),
+		Vector2(45, 23), Vector2(29, 28), Vector2(39, 29), Vector2(46, 20),
+	]
+	for landmark in landmarks:
+		if design.distance_to(landmark) < radius:
+			return true
+	return false
+
+
+func _is_campaign_clearing(cell: Vector2i) -> bool:
+	for marker_cell in _campaign_marker_cells.values():
+		if cell.distance_to(marker_cell as Vector2i) <= 1.0:
+			return true
+	return false
 
 
 func _design_to_world(design: Vector2) -> Vector2:

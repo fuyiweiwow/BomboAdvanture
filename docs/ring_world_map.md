@@ -69,12 +69,19 @@ The active campaign map is a lightweight 2D isometric tile map implemented in
 - Secondary regional props follow the base 52 by 26 tile scale: villages,
   island settlements, mines, vessels and magical structures stay within one
   or two local cells, while only capital districts use a larger footprint.
-- The campaign marker and route layer is currently disabled so landmarks stay
-  readable while the world art is being developed. Set
-  `show_campaign_overlay` on the map scene when that layer is ready to return.
-- When enabled, campaign markers use positions and travel modes from
-  `map_catalog.gd`, while the progress repository exposes completed levels and
-  only the next unlocked level.
+- Campaign flow is configured in `assets/config/ring_world_campaign.json`. The
+  JSON owns region bounds and biomes, stage order, candidate level IDs, travel
+  modes, the deterministic placement seed, and marker clearances.
+- The map shows completed choices, the selected unfinished point, and all
+  candidates in the next unselected stage. Entering one candidate persists the
+  choice and removes its siblings; completing it reveals the following stage.
+  Multiple stages can use the same region.
+- Candidate points are placed on matching land biomes and avoid waterways,
+  roads, railways, and landmark footprints. Procedural details are skipped in
+  a small radius around visible points to preserve a readable clearing.
+- Candidate route lines stay disabled because points in one active set are
+  alternatives, not sequential destinations. The first active point is focused
+  automatically when the map opens.
 
 ## Controls
 
