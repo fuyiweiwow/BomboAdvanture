@@ -22,6 +22,9 @@ const MODULAR_STREETS_ROOT := "res://assets/environment/quaternius_modular_stree
 const SHIPS_ROOT := "res://assets/environment/quaternius_ships/"
 const INDUSTRIAL_CITY_ROOT := "res://assets/environment/kenney_city_industrial/"
 const COMMERCIAL_CITY_ROOT := "res://assets/environment/kenney_city_commercial/"
+const KAYKIT_MEDIEVAL_ROOT := "res://assets/environment/kaykit_medieval/buildings/"
+const KAYKIT_CITY_ROOT := "res://assets/environment/kaykit_city/"
+const KAYKIT_SPACE_ROOT := "res://assets/environment/kaykit_space/"
 const ROAD_TEXTURE_ROOT := "res://assets/environment/road_textures/polyhaven/"
 const LOAND_RIVER_PATH := [Vector2(-4.0, -6.0), Vector2(-4.7, -5.0), Vector2(-4.5, -4.0), Vector2(-5.2, -3.0), Vector2(-4.9, -2.0), Vector2(-5.6, -0.9), Vector2(-5.1, 0.2), Vector2(-5.5, 1.3), Vector2(-4.6, 2.3), Vector2(-3.8, 3.2), Vector2(-2.4, 3.9), Vector2(-0.6, 4.3)]
 const HEREN_RIVER_PATH := [Vector2(7.8, -8.2), Vector2(7.3, -7.2), Vector2(6.7, -6.3), Vector2(7.2, -5.4), Vector2(6.4, -4.5), Vector2(6.2, -3.7), Vector2(6.9, -2.9), Vector2(7.8, -2.2), Vector2(8.7, -1.4), Vector2(9.8, -0.7), Vector2(10.5, 0.2), Vector2(11.6, 0.0), Vector2(12.6, 0.5)]
@@ -911,6 +914,33 @@ func _add_map_asset(parent: Node3D, node_name: String, scene_path: String, cente
 	return wrapper
 
 
+func _add_local_map_asset(parent: Node3D, node_name: String, scene_path: String, local_position: Vector3, target_size: float, yaw: float = 0.0) -> Node3D:
+	var packed_scene := load(scene_path) as PackedScene
+	if packed_scene == null:
+		push_warning("Unable to load local map asset: " + scene_path)
+		return null
+	var source_root := packed_scene.instantiate() as Node3D
+	if source_root == null:
+		return null
+	var bounds := _scene_bounds(source_root)
+	var largest_dimension := maxf(bounds.size.x, maxf(bounds.size.y, bounds.size.z))
+	if largest_dimension <= 0.001:
+		source_root.free()
+		return null
+	var wrapper := Node3D.new()
+	wrapper.name = node_name
+	wrapper.position = local_position
+	wrapper.rotation.y = yaw
+	var scale_factor := target_size / largest_dimension
+	source_root.scale = Vector3.ONE * scale_factor
+	var bounds_center := bounds.position + bounds.size * 0.5
+	source_root.position = Vector3(-bounds_center.x, -bounds.position.y, -bounds_center.z) * scale_factor
+	_tune_scene_asset(source_root)
+	_attach(wrapper, source_root)
+	_attach(parent, wrapper)
+	return wrapper
+
+
 func _scene_bounds(root_node: Node3D) -> AABB:
 	var bounds := AABB()
 	var has_point := false
@@ -1183,15 +1213,71 @@ func _add_regional_architecture(parent: Node3D) -> void:
 	var architecture := Node3D.new()
 	architecture.name = "RegionalArchitecture"
 	_attach(parent, architecture)
-	_add_datt_future_district(architecture, Vector2(3.9, -1.4), 0.82, "DattCentralExchange")
-	_add_datt_future_district(architecture, Vector2(6.3, -0.2), 0.50, "DattEasternCampus")
-	_add_loand_castle_complex(architecture, Vector2(-4.8, -1.5))
-	_add_loand_village(architecture, Vector2(-8.2, 1.0), 0.92, "LoandRiverTown")
-	_add_loand_village(architecture, Vector2(-2.4, 1.3), 0.72, "LoandEastVillage")
-	_add_collected_loand_assets(architecture)
-	_add_loand_hamlet_ring(architecture)
-	_add_datt_urban_satellites(architecture)
-	_add_heren_industrial_corridor(architecture)
+	_add_kaykit_loand_settlements(architecture)
+	_add_kaykit_datt_city(architecture)
+	_add_kaykit_heren_industry(architecture)
+
+
+func _add_kaykit_loand_settlements(parent: Node3D) -> void:
+	var definitions := [
+		["LoandRoyalCastle", "building_castle_blue.gltf", Vector2(-4.85, -1.62), 420.0, 0.10],
+		["RoyalChurch", "building_church_blue.gltf", Vector2(-4.22, -1.10), 270.0, 0.52],
+		["RoyalMarket", "building_market_blue.gltf", Vector2(-5.45, -1.02), 235.0, -0.28],
+		["RiverWatermill", "building_watermill_blue.gltf", Vector2(-5.72, 0.78), 220.0, 0.18],
+		["WestTownTavern", "building_tavern_blue.gltf", Vector2(-8.20, 0.88), 220.0, -0.58],
+		["WestTownHomeA", "building_home_A_blue.gltf", Vector2(-8.58, 1.22), 178.0, -0.12],
+		["WestTownHomeB", "building_home_B_blue.gltf", Vector2(-7.84, 1.30), 182.0, 0.38],
+		["WestTownLumbermill", "building_lumbermill_blue.gltf", Vector2(-8.70, 0.48), 215.0, 0.74],
+		["EastVillageBlacksmith", "building_blacksmith_blue.gltf", Vector2(-2.58, 1.05), 205.0, 0.78],
+		["EastVillageHomeA", "building_home_A_blue.gltf", Vector2(-2.84, 1.58), 172.0, 0.18],
+		["EastVillageHomeB", "building_home_B_blue.gltf", Vector2(-2.08, 1.52), 176.0, -0.44],
+		["EastVillageWindmill", "building_windmill_blue.gltf", Vector2(-1.78, 0.88), 235.0, -0.22],
+		["NorthernPassTower", "building_tower_A_blue.gltf", Vector2(-6.62, -2.72), 230.0, 0.10],
+	]
+	for definition in definitions:
+		_add_map_asset(parent, definition[0], KAYKIT_MEDIEVAL_ROOT + definition[1], definition[2], definition[3], definition[4], 2.0)
+
+
+func _add_kaykit_datt_city(parent: Node3D) -> void:
+	var urban_definitions := [
+		["DattWestApartments", "building_A.gltf", Vector2(2.25, -1.12), 300.0, 0.20],
+		["DattNorthExchange", "building_H.gltf", Vector2(3.05, -2.18), 410.0, -0.08],
+		["DattNorthOffice", "building_E.gltf", Vector2(4.72, -2.08), 355.0, 0.14],
+		["DattSouthOffice", "building_G.gltf", Vector2(3.10, -0.56), 365.0, -0.18],
+		["DattSouthApartments", "building_F.gltf", Vector2(4.72, -0.48), 330.0, 0.22],
+		["DattEastCommerce", "building_D.gltf", Vector2(5.55, -1.22), 315.0, -0.32],
+		["DattPortDistrict", "building_B.gltf", Vector2(7.45, -0.48), 300.0, 0.28],
+	]
+	for definition in urban_definitions:
+		_add_map_asset(parent, definition[0], KAYKIT_CITY_ROOT + definition[1], definition[2], definition[3], definition[4], 2.0)
+
+	var future_definitions := [
+		["DattExchangeSpire", "structure_tall.gltf", Vector2(4.46, -1.70), 470.0, 0.12],
+		["DattResearchModule", "basemodule_C.gltf", Vector2(2.72, -2.62), 290.0, -0.34],
+		["DattTransitModule", "basemodule_A.gltf", Vector2(5.42, -2.45), 305.0, 0.42],
+		["DattAerialTerminal", "landingpad_large.gltf", Vector2(6.16, -0.04), 330.0, -0.10],
+		["DattAirTaxi", "lander_A.gltf", Vector2(6.22, -0.08), 175.0, 0.42],
+		["DattSolarArray", "solarpanel.gltf", Vector2(6.76, -0.32), 190.0, -0.18],
+	]
+	for definition in future_definitions:
+		_add_map_asset(parent, definition[0], KAYKIT_SPACE_ROOT + definition[1], definition[2], definition[3], definition[4], 3.0)
+
+
+func _add_kaykit_heren_industry(parent: Node3D) -> void:
+	var definitions := [
+		["HerenNorthernMine", "drill_structure.gltf", Vector2(9.35, -4.72), 410.0, 0.18],
+		["HerenOreDepot", "cargodepot_A.gltf", Vector2(10.18, -4.18), 350.0, -0.12],
+		["HerenWindPlant", "windturbine_tall.gltf", Vector2(9.76, -3.70), 310.0, 0.16],
+		["HerenSteelWorks", "structure_tall.gltf", Vector2(10.72, -3.38), 390.0, 0.32],
+		["HerenCargoStacks", "containers_A.gltf", Vector2(10.18, -2.98), 215.0, -0.28],
+		["HerenCoastalDepot", "cargodepot_B.gltf", Vector2(11.08, -2.58), 350.0, -0.24],
+		["HerenMachineGarage", "basemodule_garage.gltf", Vector2(11.26, -1.86), 315.0, 0.20],
+		["HerenSolarWorks", "roofmodule_solarpanels.gltf", Vector2(10.72, -1.52), 220.0, -0.16],
+		["HerenPortWarehouse", "cargodepot_C.gltf", Vector2(11.40, -1.10), 330.0, 0.26],
+		["HerenHauler", "spacetruck_large.gltf", Vector2(10.70, -2.12), 190.0, -0.48],
+	]
+	for definition in definitions:
+		_add_map_asset(parent, definition[0], KAYKIT_SPACE_ROOT + definition[1], definition[2], definition[3], definition[4], 2.0)
 
 
 func _add_collected_loand_assets(parent: Node3D) -> void:
@@ -1349,8 +1435,8 @@ func _add_river_mouth_ports(parent: Node3D) -> void:
 	var ports := Node3D.new()
 	ports.name = "RiverMouthPorts"
 	_attach(parent, ports)
-	_add_estuary_port(ports, "SouthernEstuaryPort", Vector2(0.8, 8.8), 0.0, 0.78, Color("#527a77"), Color("#e4c45c"))
-	_add_estuary_port(ports, "EasternWarmCurrentPort", Vector2(12.6, 0.5), PI * 0.5, 0.90, Color("#486e72"), Color("#65d2cf"))
+	_add_estuary_port(ports, "SouthernEstuaryPort", Vector2(0.8, 8.8), 0.0, 0.62, Color("#527a77"), Color("#e4c45c"))
+	_add_estuary_port(ports, "EasternWarmCurrentPort", Vector2(12.6, 0.5), PI * 0.5, 0.68, Color("#486e72"), Color("#65d2cf"))
 
 
 func _add_estuary_port(parent: Node3D, node_name: String, center: Vector2, yaw: float, scale_factor: float, body_color: Color, accent_color: Color) -> void:
@@ -1374,29 +1460,16 @@ func _add_estuary_port(parent: Node3D, node_name: String, center: Vector2, yaw: 
 	basin.material_override = _material(Color("#3c9fb0"), 0.34)
 	_attach(port, basin)
 
-	_add_box_child(port, "IntermodalTerminal", Vector3(760.0, 210.0, 340.0), Vector3(0.0, 150.0, -330.0), body_color)
-	_add_box_child(port, "CommoditiesExchange", Vector3(360.0, 340.0, 300.0), Vector3(-540.0, 215.0, -300.0), Color("#879b91"))
-	_add_box_child(port, "ExchangeLightBand", Vector3(370.0, 52.0, 310.0), Vector3(-540.0, 365.0, -300.0), accent_color, true)
+	_add_local_map_asset(port, "IntermodalTerminal", KAYKIT_SPACE_ROOT + "cargodepot_B.gltf", Vector3(0.0, 34.0, -330.0), 430.0, 0.08)
+	_add_local_map_asset(port, "CommoditiesExchange", KAYKIT_CITY_ROOT + "building_E.gltf", Vector3(-480.0, 32.0, -300.0), 320.0, -0.16)
+	_add_local_map_asset(port, "AirTransitPad", KAYKIT_SPACE_ROOT + "landingpad_large.gltf", Vector3(620.0, 28.0, -260.0), 330.0, 0.14)
+	_add_local_map_asset(port, "HarborAirTaxi", KAYKIT_SPACE_ROOT + "lander_B.gltf", Vector3(620.0, 72.0, -260.0), 175.0, -0.20)
+	_add_local_map_asset(port, "CargoStacks", KAYKIT_SPACE_ROOT + "containers_B.gltf", Vector3(-180.0, 30.0, -60.0), 210.0, 0.22)
+	_add_local_map_asset(port, "PortHauler", KAYKIT_SPACE_ROOT + "spacetruck.gltf", Vector3(170.0, 30.0, -80.0), 155.0, -0.34)
 	for pier_index in range(3):
 		var pier_x := (float(pier_index) - 1.0) * 250.0
 		_add_box_child(port, "Pier_%02d" % pier_index, Vector3(74.0, 34.0, 650.0), Vector3(pier_x, 42.0, 275.0), Color("#596b66"))
 		_add_port_crane(port, "Crane_%02d" % pier_index, Vector3(pier_x + 72.0, 58.0, 28.0), body_color, accent_color)
-
-	var landing_ring := MeshInstance3D.new()
-	landing_ring.name = "AirTransitPad"
-	var landing_mesh := TorusMesh.new()
-	landing_mesh.inner_radius = 245.0
-	landing_mesh.outer_radius = 282.0
-	landing_mesh.rings = 24
-	landing_mesh.ring_segments = 8
-	landing_ring.mesh = landing_mesh
-	landing_ring.position = Vector3(690.0, 72.0, -250.0)
-	landing_ring.material_override = _material(accent_color, 0.18, true)
-	_attach(port, landing_ring)
-	_add_cartoon_tower(port, "HarborControlTower", Vector3(650.0, 54.0, -255.0), 520.0, 68.0, Color("#9fb4ae"), accent_color)
-	for cargo_index in range(5):
-		var cargo_color := Color("#d6a452") if cargo_index % 2 == 0 else Color("#5f9d98")
-		_add_box_child(port, "Cargo_%02d" % cargo_index, Vector3(150.0, 82.0, 95.0), Vector3(-260.0 + float(cargo_index) * 130.0, 88.0, -92.0), cargo_color)
 
 
 func _add_port_crane(parent: Node3D, node_name: String, position_: Vector3, body_color: Color, accent_color: Color) -> void:

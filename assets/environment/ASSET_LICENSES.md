@@ -3,6 +3,32 @@
 The environment assets in this directory are available under the Creative
 Commons CC0 1.0 Universal license.
 
+## KayKit Medieval Hexagon Pack
+
+- Source: https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0
+- Author: Kay Lousberg / KayKit
+- License: CC0 1.0
+- Files used: standalone blue-roof castle, civic, village, and production
+  buildings in `kaykit_medieval/`; no hex terrain tiles are used.
+- The original license text is included at `kaykit_medieval/LICENSE.txt`.
+
+## KayKit City Builder Bits
+
+- Source: https://github.com/KayKit-Game-Assets/KayKit-City-Builder-Bits-1.0
+- Author: Kay Lousberg / KayKit
+- License: CC0 1.0
+- Files used: city buildings, street props, and vehicles in `kaykit_city/`.
+- The original license text is included at `kaykit_city/LICENSE.txt`.
+
+## KayKit Space Base Bits
+
+- Source: https://github.com/KayKit-Game-Assets/KayKit-Space-Base-Bits-1.0
+- Author: Kay Lousberg / KayKit
+- License: CC0 1.0
+- Files used: future modules, cargo depots, landing pads, energy facilities,
+  mining structures, and vehicles in `kaykit_space/`.
+- The original license text is included at `kaykit_space/LICENSE.txt`.
+
 ## Kenney Nature Kit
 
 - Source: https://kenney.nl/assets/nature-kit
