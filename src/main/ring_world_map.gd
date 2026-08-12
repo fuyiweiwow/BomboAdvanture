@@ -962,17 +962,14 @@ func _draw_factory_district(center: Vector2) -> void:
 
 
 func _draw_modern_port(center: Vector2) -> void:
-	# The river broadens west of the cargo berths before joining the deep-water basin.
-	draw_ellipse_shadow(center + Vector2(13, 16), Vector2(86, 25), Color(0.02, 0.07, 0.09, 0.38))
-	draw_colored_polygon(PackedVector2Array([
-		center + Vector2(-82, 5), center + Vector2(-23, -27), center + Vector2(75, 14), center + Vector2(17, 49),
-	]), Color("#35666c"))
-	draw_polyline(PackedVector2Array([
-		center + Vector2(-78, 5), center + Vector2(-23, -23), center + Vector2(71, 14),
-	]), Color(0.52, 0.84, 0.81, 0.52), 2.0, true)
-	for pier_index in range(3):
-		var pier_origin := center + Vector2(-18 + pier_index * 27, 5 + pier_index * 7)
-		_draw_port_pier(pier_origin, pier_index)
+	# Cargo structures use the actual ocean cells south of the landward district.
+	var harbor_center := _design_to_world(Vector2(42, 21))
+	var shore_anchors := [
+		_design_to_world(Vector2(41, 20)),
+		_design_to_world(Vector2(41, 21)),
+	]
+	for pier_index in range(shore_anchors.size()):
+		_draw_port_pier(shore_anchors[pier_index], pier_index)
 
 	# Warehouses stay clear of the estuary corridor on the landward side.
 	var warehouse_offsets := [Vector2(-78, -8), Vector2(1, -40), Vector2(31, -33)]
@@ -994,29 +991,41 @@ func _draw_modern_port(center: Vector2) -> void:
 	draw_arc(center + Vector2(83, -18), 18.0, PI, TAU, 24, Color("#85ddd3"), 3.0, true)
 	draw_line(center + Vector2(65, -18), center + Vector2(101, -18), Color("#9fb3ad"), 3.0, true)
 	_draw_airship(center + Vector2(83, -58), 0.70)
-	_draw_fast_boat(center + Vector2(29, 53), 0.72)
+	_draw_fast_boat(harbor_center + Vector2(-30, 49), 0.72)
 
 
 func _draw_port_pier(center: Vector2, variant: int) -> void:
-	var length := 43.0 + float(variant) * 4.0
+	var length := 54.0 + float(variant) * 4.0
 	var end := center + Vector2(length, 24.0)
-	draw_line(center, end, Color(0.04, 0.11, 0.12, 0.52), 12.0, true)
-	draw_line(center, end, Color("#a79b79"), 8.0, true)
-	draw_line(center, end, Color("#d0bd87"), 1.4, true)
-	for crane_index in range(3):
-		var anchor := center.lerp(end, 0.22 + float(crane_index) * 0.27)
+	draw_line(center + Vector2(2, 6), end + Vector2(2, 6), Color(0.04, 0.11, 0.12, 0.58), 18.0, true)
+	draw_line(center, end, Color("#8c856f"), 14.0, true)
+	draw_line(center - Vector2(0, 3), end - Vector2(0, 3), Color("#c3b280"), 1.3, true)
+	draw_line(center + Vector2(0, 3), end + Vector2(0, 3), Color("#5f645d"), 1.2, true)
+	for support_step in [0.18, 0.48, 0.78]:
+		var support: Vector2 = center.lerp(end, float(support_step))
+		draw_line(support + Vector2(-4, 5), support + Vector2(-4, 15), Color("#454b48"), 2.4, true)
+		draw_line(support + Vector2(4, 7), support + Vector2(4, 15), Color("#5b605a"), 2.0, true)
+	for crane_index in range(2):
+		var anchor := center.lerp(end, 0.34 + float(crane_index) * 0.38)
 		_draw_cargo_crane(anchor, 0.74 + float(variant) * 0.05)
-	for container_index in range(4):
-		var stack := center.lerp(end, 0.16 + float(container_index) * 0.19) + Vector2(-4, 5)
+	for container_index in range(3):
+		var stack := center.lerp(end, 0.18 + float(container_index) * 0.27) + Vector2(-5, 5)
 		draw_rect(Rect2(stack + Vector2(-4, -5), Vector2(8, 5)), [Color("#a65f49"), Color("#4d7b78"), Color("#b7934d")][(container_index + variant) % 3])
 
 
 func _draw_cargo_crane(center: Vector2, scale_value: float) -> void:
 	var gold := Color("#d0ad5f")
-	draw_line(center, center + Vector2(0, -31) * scale_value, gold, 3.0, true)
-	draw_line(center + Vector2(0, -28) * scale_value, center + Vector2(21, -37) * scale_value, gold, 2.4, true)
-	draw_line(center + Vector2(5, -30) * scale_value, center + Vector2(12, -3) * scale_value, gold.darkened(0.08), 1.8, true)
-	draw_line(center + Vector2(17, -35) * scale_value, center + Vector2(17, -18) * scale_value, Color("#7d6d52"), 1.1, true)
+	var left_foot := center + Vector2(-5, 1) * scale_value
+	var right_foot := center + Vector2(7, 5) * scale_value
+	var left_top := center + Vector2(-3, -28) * scale_value
+	var right_top := center + Vector2(9, -24) * scale_value
+	draw_line(left_foot + Vector2(-4, 1) * scale_value, left_foot + Vector2(4, 1) * scale_value, Color("#57594f"), 2.4 * scale_value, true)
+	draw_line(right_foot + Vector2(-4, 1) * scale_value, right_foot + Vector2(4, 1) * scale_value, Color("#57594f"), 2.4 * scale_value, true)
+	draw_line(left_foot, left_top, gold, 3.0 * scale_value, true)
+	draw_line(right_foot, right_top, gold.darkened(0.08), 2.5 * scale_value, true)
+	draw_line(left_top, right_top, gold, 2.8 * scale_value, true)
+	draw_line(right_top, center + Vector2(26, -33) * scale_value, gold, 2.3 * scale_value, true)
+	draw_line(center + Vector2(22, -31) * scale_value, center + Vector2(22, -16) * scale_value, Color("#7d6d52"), 1.1 * scale_value, true)
 
 
 func _draw_fast_boat(center: Vector2, scale_value: float) -> void:

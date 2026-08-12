@@ -28,6 +28,9 @@ The active campaign map is a lightweight 2D isometric tile map implemented in
 - The eastern river reaches the coastal bay west of the modern port. Warehouses
   and container berths remain on the eastern shore instead of blocking the
   river mouth.
+- Port water is never painted over land. Cargo piers are anchored in ocean
+  cells south of the district, with visible pilings, crane feet and rail bases
+  connecting the gantries to their decks.
 - Rendering is ordered as terrain, embedded waterways and roads, bridges,
   vegetation, then buildings. Infrastructure tiles sample terrain elevation,
   roads reserve clear verges, and crossings use separate bridge decks instead
