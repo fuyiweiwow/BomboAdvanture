@@ -1,8 +1,9 @@
 # World map open-source references
 
-The civilization-style world map uses an original Godot 4 implementation.
-Its axial/offset hex-grid structure and chunk-oriented organization were
-informed by the following open-source projects:
+The optional hex-map prototype uses an original Godot 4 implementation. It is
+kept as a reference scene but is not the active world map. Its axial/offset
+grid structure and chunk-oriented organization were informed by the following
+open-source projects:
 
 - Godot-3D-hex-map by havfo, MIT License:
   https://github.com/havfo/Godot-3D-hex-map

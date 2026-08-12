@@ -1,5 +1,5 @@
 @tool
-class_name LegacyAdventureWorldMap3D
+class_name AdventureWorldMap3D
 extends Node3D
 
 signal level_focused(profile: Dictionary)
@@ -208,7 +208,7 @@ func _add_environment(parent: Node3D) -> void:
 	var light := DirectionalLight3D.new()
 	light.name = "SunLight"
 	light.rotation_degrees = Vector3(-54.0, -32.0, 0.0)
-	light.light_energy = 0.74
+	light.light_energy = 0.94
 	light.shadow_enabled = true
 	light.shadow_opacity = 0.58
 	_attach(parent, light)
@@ -220,9 +220,12 @@ func _add_environment(parent: Node3D) -> void:
 	environment.background_color = Color("#173f47")
 	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	environment.ambient_light_color = Color("#b9d1c1")
-	environment.ambient_light_energy = 0.36
+	environment.ambient_light_energy = 0.46
 	environment.tonemap_mode = Environment.TONE_MAPPER_FILMIC
-	environment.adjustment_enabled = false
+	environment.adjustment_enabled = true
+	environment.adjustment_brightness = 1.02
+	environment.adjustment_contrast = 1.08
+	environment.adjustment_saturation = 1.16
 	world_environment.environment = environment
 	_attach(parent, world_environment)
 

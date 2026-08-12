@@ -1,5 +1,5 @@
 @tool
-class_name AdventureWorldMap3D
+class_name CivilizationHexWorldMap3D
 extends Node3D
 
 signal level_focused(profile: Dictionary)
