@@ -4,13 +4,13 @@ extends Control
 const LEVEL_CATALOG := preload("res://src/level/level_catalog.gd")
 const LEVEL_PROGRESS_REPOSITORY := preload("res://src/level/level_progress_repository.gd")
 const LEVEL_SESSION := preload("res://src/level/level_session.gd")
-const WORLD_MAP_3D := preload("res://src/main/world_map_3d.tscn")
+const RING_WORLD_MAP := preload("res://src/main/ring_world_map.tscn")
 
 var catalog
 var progress_repository
 var map_view: SubViewportContainer
 var map_viewport: SubViewport
-var world_map_3d: AdventureWorldMap3D
+var ring_world_map: AdventureRingWorldMap
 var detail_title: Label
 var detail_description: Label
 var detail_state: Label
@@ -34,7 +34,7 @@ func _build() -> void:
 	add_child(background)
 
 	map_view = SubViewportContainer.new()
-	map_view.name = "WorldMap3DContainer"
+	map_view.name = "RingWorldMapContainer"
 	map_view.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	map_view.offset_top = 64.0
 	map_view.offset_bottom = -126.0
@@ -43,19 +43,18 @@ func _build() -> void:
 	add_child(map_view)
 
 	map_viewport = SubViewport.new()
-	map_viewport.name = "WorldMap3DViewport"
+	map_viewport.name = "RingWorldMapViewport"
 	map_viewport.size = Vector2i(1280, 720)
 	map_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	map_viewport.handle_input_locally = true
-	map_viewport.physics_object_picking = true
 	map_view.add_child(map_viewport)
 
 	var profiles := _visible_profiles()
-	world_map_3d = WORLD_MAP_3D.instantiate() as AdventureWorldMap3D
-	world_map_3d.configure(profiles)
-	world_map_3d.level_focused.connect(_show_profile)
-	world_map_3d.level_activated.connect(_enter_level)
-	map_viewport.add_child(world_map_3d)
+	ring_world_map = RING_WORLD_MAP.instantiate() as AdventureRingWorldMap
+	ring_world_map.configure(profiles)
+	ring_world_map.level_focused.connect(_show_profile)
+	ring_world_map.level_activated.connect(_enter_level)
+	map_viewport.add_child(ring_world_map)
 
 	add_child(_build_header())
 	add_child(_build_detail_band())
@@ -98,7 +97,7 @@ func _build_header() -> Control:
 	reset_button.tooltip_text = "恢复地图初始视角"
 	reset_button.custom_minimum_size = Vector2(108, 42)
 	reset_button.add_theme_font_size_override("font_size", 16)
-	reset_button.pressed.connect(func(): world_map_3d.reset_camera())
+	reset_button.pressed.connect(func(): ring_world_map.reset_camera())
 	header.add_child(reset_button)
 	return panel
 
@@ -187,7 +186,7 @@ func _show_profile(profile: Dictionary) -> void:
 	detail_title.text = "第%s章-%s  %s" % [str(int(profile.get("set_index", 0)) + 1), str(profile.get("local_number", "")), str(profile.get("name", level_id))]
 	detail_description.text = "%s · 前往方式：%s\n%s" % [str(profile.get("region_name", "")), travel_label, str(profile.get("description", ""))]
 	enter_button.disabled = not unlocked
-	world_map_3d.focus_level(level_id)
+	ring_world_map.focus_level(level_id)
 
 
 func _enter_selected_level() -> void:
