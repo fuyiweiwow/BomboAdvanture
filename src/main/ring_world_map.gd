@@ -30,7 +30,7 @@ const URBAN := Color("#6f827d")
 
 const RIVER_PATHS := [
 	[Vector2(29, 4), Vector2(28, 8), Vector2(30, 11), Vector2(29, 15), Vector2(31, 18), Vector2(30, 23), Vector2(32, 27)],
-	[Vector2(39, 4), Vector2(38, 8), Vector2(36, 12), Vector2(37, 16), Vector2(41, 19)],
+	[Vector2(39, 4), Vector2(38, 8), Vector2(36, 12), Vector2(37, 16), Vector2(39, 18), Vector2(39, 20), Vector2(41, 22)],
 	[Vector2(17, 9), Vector2(19, 12), Vector2(23, 14), Vector2(29, 15)],
 ]
 
@@ -962,7 +962,7 @@ func _draw_factory_district(center: Vector2) -> void:
 
 
 func _draw_modern_port(center: Vector2) -> void:
-	# Deep-water basin and three long cargo fingers establish the port as a district.
+	# The river broadens west of the cargo berths before joining the deep-water basin.
 	draw_ellipse_shadow(center + Vector2(13, 16), Vector2(86, 25), Color(0.02, 0.07, 0.09, 0.38))
 	draw_colored_polygon(PackedVector2Array([
 		center + Vector2(-82, 5), center + Vector2(-23, -27), center + Vector2(75, 14), center + Vector2(17, 49),
@@ -971,12 +971,13 @@ func _draw_modern_port(center: Vector2) -> void:
 		center + Vector2(-78, 5), center + Vector2(-23, -23), center + Vector2(71, 14),
 	]), Color(0.52, 0.84, 0.81, 0.52), 2.0, true)
 	for pier_index in range(3):
-		var pier_origin := center + Vector2(-47 + pier_index * 30, 4 + pier_index * 8)
+		var pier_origin := center + Vector2(-18 + pier_index * 27, 5 + pier_index * 7)
 		_draw_port_pier(pier_origin, pier_index)
 
-	# Warehouses and the mineral/futures exchange occupy the landward side.
-	for warehouse_index in range(4):
-		var warehouse_base := center + Vector2(-62 + warehouse_index * 28, -25 - float(warehouse_index % 2) * 7.0)
+	# Warehouses stay clear of the estuary corridor on the landward side.
+	var warehouse_offsets := [Vector2(-78, -8), Vector2(1, -40), Vector2(31, -33)]
+	for warehouse_index in range(warehouse_offsets.size()):
+		var warehouse_base: Vector2 = center + warehouse_offsets[warehouse_index]
 		_draw_iso_building(warehouse_base, Vector2(27, 14), 15.0, Color("#777065"), Color("#535c59"), Color("#aaa184"))
 		for door_index in range(3):
 			draw_line(warehouse_base + Vector2(-8 + door_index * 7, -7), warehouse_base + Vector2(-8 + door_index * 7, -2), Color("#384a49"), 2.0)
@@ -997,7 +998,7 @@ func _draw_modern_port(center: Vector2) -> void:
 
 
 func _draw_port_pier(center: Vector2, variant: int) -> void:
-	var length := 48.0 + float(variant) * 5.0
+	var length := 43.0 + float(variant) * 4.0
 	var end := center + Vector2(length, 24.0)
 	draw_line(center, end, Color(0.04, 0.11, 0.12, 0.52), 12.0, true)
 	draw_line(center, end, Color("#a79b79"), 8.0, true)

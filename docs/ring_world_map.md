@@ -25,6 +25,9 @@ The active campaign map is a lightweight 2D isometric tile map implemented in
 - Datt and the modern port are multi-tile districts. Their towers, warehouses,
   exchange, terminals, cargo piers, cranes and vessels are separate draw
   elements, so the districts can be expanded without replacing the continent.
+- The eastern river reaches the coastal bay west of the modern port. Warehouses
+  and container berths remain on the eastern shore instead of blocking the
+  river mouth.
 - Rendering is ordered as terrain, embedded waterways and roads, bridges,
   vegetation, then buildings. Infrastructure tiles sample terrain elevation,
   roads reserve clear verges, and crossings use separate bridge decks instead
