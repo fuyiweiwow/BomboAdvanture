@@ -6,13 +6,13 @@ signal level_activated(level_id: String)
 
 const GRID_COLUMNS := 48
 const GRID_ROWS := 30
-const TILE_WIDTH := 44.0
-const TILE_HEIGHT := 22.0
-const MAP_ORIGIN := Vector2(1020.0, 126.0)
-const CAMERA_HOME := Vector2(1260.0, 538.0)
-const CAMERA_MIN_ZOOM := 0.72
+const TILE_WIDTH := 64.0
+const TILE_HEIGHT := 32.0
+const MAP_ORIGIN := Vector2(1460.0, 180.0)
+const CAMERA_HOME := Vector2(1520.0, 760.0)
+const CAMERA_MIN_ZOOM := 0.46
 const CAMERA_MAX_ZOOM := 2.70
-const CAMERA_HOME_ZOOM := 1.53
+const CAMERA_HOME_ZOOM := 1.05
 
 const OCEAN := Color("#326f78")
 const OCEAN_DEEP := Color("#173f4d")
@@ -122,8 +122,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event is InputEventMouseMotion and _dragging:
 		var motion := event as InputEventMouseMotion
 		_camera.position -= motion.relative / _camera.zoom.x
-		_camera.position.x = clampf(_camera.position.x, 540.0, 1490.0)
-		_camera.position.y = clampf(_camera.position.y, 300.0, 800.0)
+		_camera.position.x = clampf(_camera.position.x, 240.0, 2780.0)
+		_camera.position.y = clampf(_camera.position.y, 260.0, 1540.0)
 		_last_pointer = motion.position
 		get_viewport().set_input_as_handled()
 
@@ -147,11 +147,11 @@ func _draw() -> void:
 
 
 func _draw_ocean() -> void:
-	draw_rect(Rect2(-300.0, -200.0, 2700.0, 1600.0), OCEAN_DEEP)
+	draw_rect(Rect2(-5000.0, -3000.0, 12000.0, 8000.0), OCEAN_DEEP)
 	for band in range(5):
 		var band_color := OCEAN.lightened(0.04 * float(band))
 		band_color.a = 0.12 - float(band) * 0.014
-		draw_rect(Rect2(-300.0, 120.0 + float(band) * 180.0, 2700.0, 180.0), band_color)
+		draw_rect(Rect2(-5000.0, 120.0 + float(band) * 180.0, 12000.0, 180.0), band_color)
 	for row in range(22):
 		var y := 28.0 + float(row) * 54.0
 		var offset := float(row % 2) * 42.0
@@ -513,66 +513,127 @@ func _draw_magic_crystal(center: Vector2) -> void:
 
 func _draw_waterways() -> void:
 	for path in RIVER_PATHS:
-		_draw_river(path)
+		_draw_tiled_infrastructure(path, "river")
 	for path in CANAL_PATHS:
-		_draw_canal(_grid_surface_to_world(path[0], 2.0), _grid_surface_to_world(path[1], 2.0))
-
-
-func _draw_river(grid_points: Array) -> void:
-	var anchors := _surface_anchors(grid_points, 1.0)
-	var points := _smooth_path(anchors, 9)
-	var bank_widths := PackedFloat32Array()
-	var water_widths := PackedFloat32Array()
-	for index in range(points.size()):
-		var variation := _value_noise(float(index) * 0.23 + points[index].x * 0.006, points[index].y * 0.008)
-		bank_widths.append(13.0 + variation * 7.0)
-		water_widths.append(8.0 + variation * 5.0)
-	draw_colored_polygon(_path_ribbon(points, bank_widths), Color("#586a4d").darkened(0.16))
-	draw_colored_polygon(_path_ribbon(points, water_widths), Color("#2b6971"))
-	_draw_water_glints(points)
-	_draw_river_bank_texture(points, bank_widths)
-
-
-func _draw_canal(from: Vector2, to: Vector2) -> void:
-	var points := PackedVector2Array([from, to])
-	var retaining_width := PackedFloat32Array([7.5, 7.5])
-	var water_width := PackedFloat32Array([4.8, 4.8])
-	draw_colored_polygon(_path_ribbon(points, retaining_width), Color("#596764"))
-	draw_colored_polygon(_path_ribbon(points, water_width), Color("#36747a"))
-	draw_line(from, to, Color(0.60, 0.90, 0.86, 0.38), 1.0, true)
+		_draw_tiled_infrastructure(path, "canal")
 
 
 func _draw_ground_roads() -> void:
 	for road in ROAD_PATHS:
-		_draw_road(road["points"], bool(road["future"]))
+		_draw_tiled_infrastructure(road["points"], "rail" if bool(road["future"]) else "road")
 
 
-func _draw_road(grid_points: Array, future_rail: bool) -> void:
-	var anchors := _surface_anchors(grid_points, 3.0)
-	var points := _smooth_path(anchors, 8)
-	if future_rail:
-		draw_polyline(points, Color("#59625f"), 6.2, true)
-		draw_polyline(points, Color("#a9b2aa"), 3.6, true)
-		draw_polyline(points, Color(0.39, 0.82, 0.76, 0.76), 0.9, true)
-		_draw_path_sleepers(points)
-	else:
-		draw_polyline(points, Color("#756b55"), 6.8, true)
-		draw_polyline(points, Color("#b7a373"), 4.4, true)
-		_draw_road_texture(points)
+func _draw_tiled_infrastructure(grid_points: Array, kind: String) -> void:
+	var cells := _rasterize_grid_path(grid_points)
+	for index in range(cells.size()):
+		var connections: Array[Vector2i] = []
+		if index > 0:
+			connections.append(cells[index - 1] - cells[index])
+		if index < cells.size() - 1:
+			connections.append(cells[index + 1] - cells[index])
+		_draw_infrastructure_tile(cells[index], connections, kind, index)
 
 
-func _draw_path_sleepers(points: PackedVector2Array) -> void:
-	for index in range(4, points.size() - 1, 5):
-		var direction := points[index - 1].direction_to(points[index + 1])
-		var side := direction.orthogonal() * 4.0
-		draw_line(points[index] - side, points[index] + side, Color("#d5d7c7"), 1.0, true)
+func _rasterize_grid_path(grid_points: Array) -> Array[Vector2i]:
+	var cells: Array[Vector2i] = []
+	for segment_index in range(grid_points.size() - 1):
+		var from := Vector2i(roundi((grid_points[segment_index] as Vector2).x), roundi((grid_points[segment_index] as Vector2).y))
+		var to := Vector2i(roundi((grid_points[segment_index + 1] as Vector2).x), roundi((grid_points[segment_index + 1] as Vector2).y))
+		var delta := to - from
+		var total_steps := absi(delta.x) + absi(delta.y)
+		if cells.is_empty() or cells[-1] != from:
+			cells.append(from)
+		if total_steps == 0:
+			continue
+		var sign_x := signi(delta.x)
+		var sign_y := signi(delta.y)
+		for step in range(1, total_steps + 1):
+			var x_steps := roundi(float(absi(delta.x) * step) / float(total_steps))
+			var y_steps := step - x_steps
+			var cell := from + Vector2i(sign_x * x_steps, sign_y * y_steps)
+			if cells[-1] != cell:
+				cells.append(cell)
+	return cells
 
 
-func _surface_anchors(grid_points: Array, lift: float) -> PackedVector2Array:
-	var anchors := PackedVector2Array()
-	for point in grid_points:
-		anchors.append(_grid_surface_to_world(point as Vector2, lift))
-	return anchors
+func _draw_infrastructure_tile(cell: Vector2i, connections: Array[Vector2i], kind: String, variant: int) -> void:
+	if not _is_world_tile(cell.x, cell.y):
+		return
+	var lift := 1.0 if kind in ["river", "canal"] else 3.0
+	var center := _grid_surface_to_world(Vector2(cell), lift)
+	var diamond := _tile_diamond(center, 0.0)
+	var shoulder_color := Color("#52614b")
+	var surface_color := Color("#2d6e75")
+	var shoulder_width := 18.0
+	var surface_width := 12.0
+	if kind == "canal":
+		shoulder_color = Color("#68716b")
+		surface_color = Color("#39777b")
+		shoulder_width = 13.0
+		surface_width = 9.0
+	elif kind == "road":
+		shoulder_color = Color("#756b55")
+		surface_color = Color("#b5a174")
+		shoulder_width = 11.0
+		surface_width = 8.0
+	elif kind == "rail":
+		shoulder_color = Color("#59625f")
+		surface_color = Color("#a8b0a8")
+		shoulder_width = 10.0
+		surface_width = 6.0
+	var edge_centers := PackedVector2Array()
+	for connection in connections:
+		var edge := _tile_edge_center(diamond, connection)
+		edge_centers.append(edge)
+		_draw_isometric_arm(center, edge, shoulder_width, shoulder_color)
+	_draw_iso_path_center(center, shoulder_width, shoulder_color)
+	for edge in edge_centers:
+		_draw_isometric_arm(center, edge, surface_width, surface_color)
+	_draw_iso_path_center(center, surface_width, surface_color)
+	_draw_infrastructure_texture(center, edge_centers, kind, variant)
+
+
+func _tile_edge_center(diamond: PackedVector2Array, direction: Vector2i) -> Vector2:
+	if direction == Vector2i(1, 0):
+		return diamond[1].lerp(diamond[2], 0.5)
+	if direction == Vector2i(-1, 0):
+		return diamond[3].lerp(diamond[0], 0.5)
+	if direction == Vector2i(0, 1):
+		return diamond[2].lerp(diamond[3], 0.5)
+	return diamond[0].lerp(diamond[1], 0.5)
+
+
+func _draw_isometric_arm(center: Vector2, edge: Vector2, width: float, color: Color) -> void:
+	var direction := center.direction_to(edge)
+	var side := direction.orthogonal() * width * 0.5
+	draw_colored_polygon(PackedVector2Array([center - side, edge - side, edge + side, center + side]), color)
+
+
+func _draw_iso_path_center(center: Vector2, width: float, color: Color) -> void:
+	draw_colored_polygon(PackedVector2Array([
+		center + Vector2(0, -width * 0.34), center + Vector2(width * 0.68, 0),
+		center + Vector2(0, width * 0.34), center + Vector2(-width * 0.68, 0),
+	]), color)
+
+
+func _draw_infrastructure_texture(center: Vector2, edges: PackedVector2Array, kind: String, variant: int) -> void:
+	for edge in edges:
+		var direction := center.direction_to(edge)
+		var side := direction.orthogonal()
+		if kind == "river":
+			if variant % 3 == 0:
+				var glint := center.lerp(edge, 0.55)
+				draw_line(glint - direction * 3.0, glint + direction * 3.0, Color(0.65, 0.90, 0.86, 0.38), 1.0, true)
+		elif kind == "canal":
+			draw_line(center + side * 2.0, edge + side * 2.0, Color(0.66, 0.91, 0.86, 0.26), 0.9, true)
+		elif kind == "road":
+			if variant % 2 == 0:
+				var groove := center.lerp(edge, 0.65)
+				draw_line(groove - side * 1.8, groove + side * 1.8, Color(0.43, 0.36, 0.24, 0.34), 0.8, true)
+		else:
+			for sleeper_step in [0.35, 0.68]:
+				var sleeper: Vector2 = center.lerp(edge, float(sleeper_step))
+				draw_line(sleeper - side * 3.5, sleeper + side * 3.5, Color("#d4d7cd"), 0.9, true)
 
 
 func _grid_surface_to_world(grid: Vector2, lift: float = 0.0) -> Vector2:
@@ -581,50 +642,6 @@ func _grid_surface_to_world(grid: Vector2, lift: float = 0.0) -> Vector2:
 	var biome := _biome_at(column, row)
 	var elevation := _elevation_at(column, row, biome)
 	return _grid_to_world(grid) - Vector2(0, elevation + lift)
-
-
-func _path_ribbon(points: PackedVector2Array, widths: PackedFloat32Array) -> PackedVector2Array:
-	var left := PackedVector2Array()
-	var right := PackedVector2Array()
-	for index in range(points.size()):
-		var before := points[maxi(0, index - 1)]
-		var after := points[mini(points.size() - 1, index + 1)]
-		var tangent := before.direction_to(after)
-		if tangent.is_zero_approx():
-			tangent = Vector2.RIGHT
-		var normal := tangent.orthogonal()
-		var half_width := widths[index] * 0.5
-		left.append(points[index] + normal * half_width)
-		right.append(points[index] - normal * half_width)
-	var polygon := PackedVector2Array()
-	polygon.append_array(left)
-	for index in range(right.size() - 1, -1, -1):
-		polygon.append(right[index])
-	return polygon
-
-
-func _draw_river_bank_texture(points: PackedVector2Array, widths: PackedFloat32Array) -> void:
-	for index in range(4, points.size() - 2, 7):
-		var tangent := points[index - 1].direction_to(points[index + 1])
-		var normal := tangent.orthogonal()
-		var side := -1.0 if index % 2 == 0 else 1.0
-		var edge := points[index] + normal * widths[index] * 0.46 * side
-		draw_line(edge - tangent * 3.5, edge + tangent * 3.5, Color(0.76, 0.70, 0.48, 0.35), 1.2, true)
-
-
-func _draw_water_glints(points: PackedVector2Array) -> void:
-	for index in range(6, points.size() - 2, 11):
-		var tangent := points[index - 1].direction_to(points[index + 1])
-		var side := tangent.orthogonal()
-		var offset := side * ((_hash_noise(index, points.size()) - 0.5) * 3.0)
-		draw_line(points[index] + offset - tangent * 3.0, points[index] + offset + tangent * 3.0, Color(0.60, 0.88, 0.84, 0.38), 1.1, true)
-
-
-func _draw_road_texture(points: PackedVector2Array) -> void:
-	for index in range(3, points.size() - 1, 6):
-		var tangent := points[index - 1].direction_to(points[index + 1])
-		var dash_center := points[index]
-		draw_line(dash_center - tangent * 2.2, dash_center + tangent * 2.2, Color(0.89, 0.80, 0.58, 0.34), 0.9, true)
 
 
 func _near_infrastructure(point: Vector2, radius: float) -> bool:
@@ -680,24 +697,6 @@ func _draw_bridge(grid: Vector2, direction: Vector2, future: bool) -> void:
 	for support in [-0.55, 0.55]:
 		var support_center: Vector2 = center + normalized * half_length * float(support)
 		draw_line(support_center - side * half_width, support_center + side * half_width, Color(0.23, 0.27, 0.25, 0.55), 1.0, true)
-
-
-func _smooth_path(anchors: PackedVector2Array, subdivisions: int) -> PackedVector2Array:
-	if anchors.size() < 3:
-		return anchors
-	var result := PackedVector2Array()
-	for index in range(anchors.size() - 1):
-		var p0 := anchors[maxi(0, index - 1)]
-		var p1 := anchors[index]
-		var p2 := anchors[index + 1]
-		var p3 := anchors[mini(anchors.size() - 1, index + 2)]
-		for step in range(subdivisions):
-			var t := float(step) / float(subdivisions)
-			var t2 := t * t
-			var t3 := t2 * t
-			result.append(0.5 * ((2.0 * p1) + (-p0 + p2) * t + (2.0 * p0 - 5.0 * p1 + 4.0 * p2 - p3) * t2 + (-p0 + 3.0 * p1 - 3.0 * p2 + p3) * t3))
-	result.append(anchors[anchors.size() - 1])
-	return result
 
 
 func _draw_world_routes() -> void:
@@ -830,20 +829,34 @@ func _draw_netherit_gate(center: Vector2) -> void:
 
 
 func _draw_castle(center: Vector2) -> void:
-	draw_ellipse_shadow(center + Vector2(10, 9), Vector2(39, 11), Color(0.04, 0.06, 0.05, 0.34))
+	draw_ellipse_shadow(center + Vector2(16, 16), Vector2(65, 19), Color(0.03, 0.06, 0.05, 0.36))
+	# Raised bailey platform and four low wall sections share the map's 2:1 projection.
 	draw_colored_polygon(PackedVector2Array([
-		center + Vector2(-33, -2), center + Vector2(0, -18), center + Vector2(34, -2), center + Vector2(0, 16),
-	]), Color("#8d846c"))
-	for offset in [-18.0, 0.0, 18.0]:
-		var tower_height := 42.0 + (10.0 if offset == 0.0 else 0.0)
-		draw_rect(Rect2(center + Vector2(offset - 6, -tower_height), Vector2(12, tower_height - 1)), Color("#887862"))
-		draw_rect(Rect2(center + Vector2(offset, -tower_height), Vector2(6, tower_height - 1)), Color("#6f6557"))
-		draw_colored_polygon(PackedVector2Array([center + Vector2(offset - 10, -tower_height), center + Vector2(offset, -tower_height - 15), center + Vector2(offset + 10, -tower_height)]), Color("#375754"))
-		draw_line(center + Vector2(offset - 2, -tower_height + 7), center + Vector2(offset - 2, -tower_height + 13), Color("#eed591"), 2.0)
-	draw_rect(Rect2(center + Vector2(-27, -20), Vector2(54, 20)), Color("#a18d70"))
-	for merlon in range(7):
-		draw_rect(Rect2(center + Vector2(-26 + merlon * 8, -25), Vector2(5, 6)), Color("#aa987c"))
-	draw_arc(center + Vector2(0, 0), 8.0, PI, TAU, 14, Color("#493f38"), 4.0)
+		center + Vector2(0, -31), center + Vector2(62, 0), center + Vector2(0, 31), center + Vector2(-62, 0),
+	]), Color("#8f866f"))
+	_draw_iso_building(center + Vector2(0, 23), Vector2(92, 18), 13.0, Color("#8e7d65"), Color("#6f6658"), Color("#b2a383"))
+	_draw_iso_building(center + Vector2(0, -22), Vector2(92, 18), 13.0, Color("#8e7d65"), Color("#6f6658"), Color("#b2a383"))
+	_draw_iso_building(center + Vector2(-45, 0), Vector2(20, 43), 13.0, Color("#8e7d65"), Color("#6f6658"), Color("#b2a383"))
+	_draw_iso_building(center + Vector2(45, 0), Vector2(20, 43), 13.0, Color("#8e7d65"), Color("#6f6658"), Color("#b2a383"))
+	for tower_offset in [Vector2(-47, -24), Vector2(47, -24), Vector2(-47, 24), Vector2(47, 24)]:
+		_draw_castle_tower(center + tower_offset, 37.0)
+	# The central keep, gatehouse and chapel read as separate model pieces.
+	_draw_iso_building(center + Vector2(0, -3), Vector2(42, 23), 55.0, Color("#94816a"), Color("#6d6659"), Color("#b6a789"), Color("#efcf84"))
+	_draw_iso_building(center + Vector2(0, 27), Vector2(27, 15), 30.0, Color("#927e67"), Color("#665f55"), Color("#a99a7d"))
+	draw_arc(center + Vector2(0, 30), 8.0, PI, TAU, 14, Color("#3c3834"), 4.0)
+	_draw_iso_building(center + Vector2(26, -4), Vector2(19, 12), 34.0, Color("#9c896f"), Color("#71685a"), Color("#3d5a56"), Color("#efd28b"))
+	draw_line(center + Vector2(0, -60), center + Vector2(0, -78), Color("#554937"), 2.0)
+	draw_colored_polygon(PackedVector2Array([
+		center + Vector2(0, -78), center + Vector2(20, -72), center + Vector2(0, -65),
+	]), Color("#c99a45"))
+
+
+func _draw_castle_tower(center: Vector2, height: float) -> void:
+	_draw_iso_building(center, Vector2(22, 13), height, Color("#8d7c67"), Color("#696257"), Color("#a99a7f"), Color("#efd18a"))
+	draw_colored_polygon(PackedVector2Array([
+		center + Vector2(-14, -height - 5), center + Vector2(0, -height - 22), center + Vector2(14, -height - 5), center + Vector2(0, -height + 2),
+	]), Color("#385550"))
+	draw_circle(center + Vector2(-3, -height - 8), 2.0, Color(0.78, 0.91, 0.80, 0.42))
 
 
 func _draw_future_hub(center: Vector2) -> void:

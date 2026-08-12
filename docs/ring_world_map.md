@@ -22,10 +22,20 @@ The active campaign map is a lightweight 2D isometric tile map implemented in
 - Datt and the modern port are multi-tile districts. Their towers, warehouses,
   exchange, terminals, cargo piers, cranes and vessels are separate draw
   elements, so the districts can be expanded without replacing the continent.
-- Rendering is ordered as terrain, carved waterways and roads, bridges,
-  vegetation, then buildings. Rivers use variable-width bank and water ribbons
-  sampled against terrain elevation; roads reserve clear verges and crossings
-  use separate bridge decks instead of drawing one line over another.
+- Rendering is ordered as terrain, embedded waterways and roads, bridges,
+  vegetation, then buildings. Infrastructure tiles sample terrain elevation,
+  roads reserve clear verges, and crossings use separate bridge decks instead
+  of drawing one line over another.
+- The terrain now uses 64 by 32 world tiles instead of 44 by 22 tiles, expanding
+  the navigable world footprint by roughly 45 percent in each projected axis.
+  The default camera is a regional view; zoom out for the continent overview or
+  drag the camera to inspect each country at model scale.
+- Roads, railways, rivers and canals are assembled from projected tile modules.
+  Every entrance, exit, turn, shoulder and surface texture shares the same 2:1
+  axes as the ground diamond, so infrastructure cannot drift into screen-space
+  angles that disagree with the terrain.
+- Loand's castle is a multi-part isometric model made from a raised bailey,
+  outer walls, four corner towers, a central keep, gatehouse, chapel and flag.
 - The campaign marker and route layer is currently disabled so landmarks stay
   readable while the world art is being developed. Set
   `show_campaign_overlay` on the map scene when that layer is ready to return.
