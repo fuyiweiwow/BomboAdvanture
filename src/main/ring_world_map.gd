@@ -4,13 +4,15 @@ extends Node2D
 signal level_focused(profile: Dictionary)
 signal level_activated(level_id: String)
 
-const GRID_COLUMNS := 48
-const GRID_ROWS := 30
-const TILE_WIDTH := 64.0
-const TILE_HEIGHT := 32.0
-const MAP_ORIGIN := Vector2(1460.0, 180.0)
-const CAMERA_HOME := Vector2(1520.0, 760.0)
-const CAMERA_MIN_ZOOM := 0.46
+const DESIGN_GRID_COLUMNS := 48
+const DESIGN_GRID_ROWS := 30
+const GRID_COLUMNS := 80
+const GRID_ROWS := 50
+const TILE_WIDTH := 52.0
+const TILE_HEIGHT := 26.0
+const MAP_ORIGIN := Vector2(1900.0, 180.0)
+const CAMERA_HOME := Vector2(1980.0, 900.0)
+const CAMERA_MIN_ZOOM := 0.34
 const CAMERA_MAX_ZOOM := 2.70
 const CAMERA_HOME_ZOOM := 1.05
 
@@ -122,8 +124,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event is InputEventMouseMotion and _dragging:
 		var motion := event as InputEventMouseMotion
 		_camera.position -= motion.relative / _camera.zoom.x
-		_camera.position.x = clampf(_camera.position.x, 240.0, 2780.0)
-		_camera.position.y = clampf(_camera.position.y, 260.0, 1540.0)
+		_camera.position.x = clampf(_camera.position.x, 180.0, 3900.0)
+		_camera.position.y = clampf(_camera.position.y, 220.0, 2160.0)
 		_last_pointer = motion.position
 		get_viewport().set_input_as_handled()
 
@@ -205,66 +207,70 @@ func _draw_terrain_details() -> void:
 func _is_world_tile(column: int, row: int) -> bool:
 	if _is_floating_island(column, row) or _is_southern_island(column, row):
 		return true
-	var x := (float(column) - 27.0) / 20.5
-	var y := (float(row) - 14.0) / 12.4
+	var design := _grid_to_design(Vector2(column, row))
+	var x := (design.x - 27.0) / 20.5
+	var y := (design.y - 14.0) / 12.4
 	var edge_noise := (_fractal_noise(float(column) * 0.31, float(row) * 0.31) - 0.5) * 0.56
 	var shape := 1.0 - x * x - y * y + edge_noise
-	shape += sin(float(column) * 0.72) * 0.07 + cos(float(row) * 0.91) * 0.06
-	if column < 13 and row < 8:
+	shape += sin(design.x * 0.72) * 0.07 + cos(design.y * 0.91) * 0.06
+	if design.x < 13 and design.y < 8:
 		shape -= 0.38
-	if column < 12 and row > 20:
+	if design.x < 12 and design.y > 20:
 		shape -= 0.34
-	if column > 42 and row > 21:
+	if design.x > 42 and design.y > 21:
 		shape -= 0.30
 	return shape > 0.05
 
 
 func _is_floating_island(column: int, row: int) -> bool:
+	var design := _grid_to_design(Vector2(column, row))
 	return (
-		_in_ellipse(column, row, 5, 8, 3, 2)
-		or _in_ellipse(column, row, 3, 12, 2, 2)
-		or _in_ellipse(column, row, 8, 13, 2, 2)
-		or _in_ellipse(column, row, 7, 5, 1, 1)
+		_in_ellipse(design.x, design.y, 5, 8, 3, 2)
+		or _in_ellipse(design.x, design.y, 3, 12, 2, 2)
+		or _in_ellipse(design.x, design.y, 8, 13, 2, 2)
+		or _in_ellipse(design.x, design.y, 7, 5, 1, 1)
 	)
 
 
 func _is_southern_island(column: int, row: int) -> bool:
+	var design := _grid_to_design(Vector2(column, row))
 	return (
-		_in_ellipse(column, row, 35, 27, 3, 1)
-		or _in_ellipse(column, row, 41, 26, 3, 2)
-		or _in_ellipse(column, row, 45, 23, 2, 1)
-		or _in_ellipse(column, row, 29, 28, 2, 1)
+		_in_ellipse(design.x, design.y, 35, 27, 3, 1)
+		or _in_ellipse(design.x, design.y, 41, 26, 3, 2)
+		or _in_ellipse(design.x, design.y, 45, 23, 2, 1)
+		or _in_ellipse(design.x, design.y, 29, 28, 2, 1)
 	)
 
 
-func _in_ellipse(column: int, row: int, center_x: int, center_y: int, radius_x: int, radius_y: int) -> bool:
-	var x := float(column - center_x) / float(maxi(1, radius_x))
-	var y := float(row - center_y) / float(maxi(1, radius_y))
+func _in_ellipse(column: float, row: float, center_x: float, center_y: float, radius_x: float, radius_y: float) -> bool:
+	var x := (column - center_x) / maxf(1.0, radius_x)
+	var y := (row - center_y) / maxf(1.0, radius_y)
 	return x * x + y * y <= 1.0
 
 
 func _biome_at(column: int, row: int) -> String:
+	var design := _grid_to_design(Vector2(column, row))
 	if _is_floating_island(column, row):
 		return "floating"
 	if _is_southern_island(column, row):
 		return "coast"
-	if row <= 3 and column >= 32:
+	if design.y <= 3 and design.x >= 32:
 		return "nether"
-	if row <= 5:
+	if design.y <= 5:
 		return "snow"
-	if row <= 8:
+	if design.y <= 8:
 		return "tundra" if _fractal_noise(float(column) * 0.25, float(row) * 0.25) > 0.34 else "snow"
-	if row >= 22 and column < 34:
+	if design.y >= 22 and design.x < 34:
 		return "desert"
-	if column >= 37 and row <= 15:
-		return "rock" if row < 10 else "industry"
-	if column >= 39 and row <= 21:
+	if design.x >= 37 and design.y <= 15:
+		return "rock" if design.y < 10 else "industry"
+	if design.x >= 39 and design.y <= 21:
 		return "industry"
-	if column >= 27 and column <= 36 and row >= 12 and row <= 20:
+	if design.x >= 27 and design.x <= 36 and design.y >= 12 and design.y <= 20:
 		return "urban" if _fractal_noise(float(column) * 0.37, float(row) * 0.37) > 0.42 else "plains"
-	if column <= 22 and row >= 9 and row <= 20:
+	if design.x <= 22 and design.y >= 9 and design.y <= 20:
 		return "forest" if _fractal_noise(float(column) * 0.31, float(row) * 0.31) > 0.38 else "plains"
-	if (column >= 24 and column <= 35 and row <= 10) or (column >= 34 and row <= 13):
+	if (design.x >= 24 and design.x <= 35 and design.y <= 10) or (design.x >= 34 and design.y <= 13):
 		return "rock"
 	if _fractal_noise(float(column) * 0.29, float(row) * 0.29) > 0.67:
 		return "forest"
@@ -344,6 +350,7 @@ func _draw_coast_detail(center: Vector2, column: int, row: int) -> void:
 
 func _draw_tile_detail(center: Vector2, column: int, row: int, biome: String) -> void:
 	var noise := _fractal_noise(float(column) * 0.43 + 8.1, float(row) * 0.43 + 3.9)
+	var design := _grid_to_design(Vector2(column, row))
 	if _near_infrastructure(Vector2(column, row), 0.64):
 		if biome in ["forest", "rock", "snow", "tundra", "plains", "coast"]:
 			_draw_verge_detail(center, column, row, biome)
@@ -359,11 +366,11 @@ func _draw_tile_detail(center: Vector2, column: int, row: int, biome: String) ->
 				_draw_tree(center + offset, _hash_noise(column + index * 13, row + index * 7))
 		"rock":
 			if noise > 0.22:
-				_draw_mountain(center + Vector2(0.0, -3.0), noise, row < 8)
+				_draw_mountain(center + Vector2(0.0, -3.0), noise, design.y < 8)
 			elif noise > 0.08:
 				_draw_rock_cluster(center, noise)
 		"snow", "tundra":
-			if noise > 0.72 or (row < 5 and noise > 0.51):
+			if noise > 0.72 or (design.y < 5 and noise > 0.51):
 				_draw_mountain(center + Vector2(0, -2), 0.55 + noise * 0.40, true)
 			elif noise > 0.50:
 				_draw_pine(center + Vector2(-4.0, -3.0), Color("#345d55"), 0.85 + noise * 0.35)
@@ -385,7 +392,7 @@ func _draw_tile_detail(center: Vector2, column: int, row: int, biome: String) ->
 		"plains", "coast":
 			if noise > 0.72:
 				_draw_tree(center + Vector2(4, -2), noise)
-			elif noise < 0.21 and row > 10:
+			elif noise < 0.21 and design.y > 10:
 				_draw_field(center, column, row)
 			else:
 				_draw_grass_detail(center, column, row, noise)
@@ -537,8 +544,10 @@ func _draw_tiled_infrastructure(grid_points: Array, kind: String) -> void:
 func _rasterize_grid_path(grid_points: Array) -> Array[Vector2i]:
 	var cells: Array[Vector2i] = []
 	for segment_index in range(grid_points.size() - 1):
-		var from := Vector2i(roundi((grid_points[segment_index] as Vector2).x), roundi((grid_points[segment_index] as Vector2).y))
-		var to := Vector2i(roundi((grid_points[segment_index + 1] as Vector2).x), roundi((grid_points[segment_index + 1] as Vector2).y))
+		var from_grid := _design_to_grid(grid_points[segment_index] as Vector2)
+		var to_grid := _design_to_grid(grid_points[segment_index + 1] as Vector2)
+		var from := Vector2i(roundi(from_grid.x), roundi(from_grid.y))
+		var to := Vector2i(roundi(to_grid.x), roundi(to_grid.y))
 		var delta := to - from
 		var total_steps := absi(delta.x) + absi(delta.y)
 		if cells.is_empty() or cells[-1] != from:
@@ -645,14 +654,16 @@ func _grid_surface_to_world(grid: Vector2, lift: float = 0.0) -> Vector2:
 
 
 func _near_infrastructure(point: Vector2, radius: float) -> bool:
+	var design_point := _grid_to_design(point)
+	var design_radius := radius * float(DESIGN_GRID_COLUMNS - 1) / float(GRID_COLUMNS - 1)
 	for path in RIVER_PATHS:
-		if _distance_to_grid_path(point, path) <= radius:
+		if _distance_to_grid_path(design_point, path) <= design_radius:
 			return true
 	for path in CANAL_PATHS:
-		if _distance_to_grid_path(point, path) <= radius:
+		if _distance_to_grid_path(design_point, path) <= design_radius:
 			return true
 	for road in ROAD_PATHS:
-		if _distance_to_grid_path(point, road["points"]) <= radius:
+		if _distance_to_grid_path(design_point, road["points"]) <= design_radius:
 			return true
 	return false
 
@@ -680,7 +691,7 @@ func _draw_bridges() -> void:
 
 
 func _draw_bridge(grid: Vector2, direction: Vector2, future: bool) -> void:
-	var center := _grid_surface_to_world(grid, 5.0)
+	var center := _grid_surface_to_world(_design_to_grid(grid), 5.0)
 	var normalized := direction.normalized()
 	var side := normalized.orthogonal()
 	var half_length := 13.0 if future else 11.0
@@ -736,18 +747,18 @@ func _draw_direction_chevrons(from: Vector2, to: Vector2, color: Color) -> void:
 
 
 func _draw_landmarks() -> void:
-	_draw_village(_grid_to_world(Vector2(13, 17)), Color("#8a5d45"))
-	_draw_village(_grid_to_world(Vector2(22, 18)), Color("#7e6148"))
-	_draw_village(_grid_to_world(Vector2(28, 21)), Color("#9b754b"))
-	_draw_netherit_gate(_grid_to_world(Vector2(39, 2)))
-	_draw_castle(_grid_to_world(Vector2(18, 14)))
-	_draw_datt_metropolis(_grid_to_world(Vector2(32, 16)))
-	_draw_heren_industrial_coast(_grid_to_world(Vector2(40, 11)))
-	_draw_modern_port(_grid_to_world(Vector2(42, 19)))
-	_draw_desert_outpost(_grid_to_world(Vector2(24, 24)))
-	_draw_ship(_grid_to_world(Vector2(40, 26)) + Vector2(18, 24))
-	_draw_airship(_grid_to_world(Vector2(8, 8)) + Vector2(-4, -48), 0.82)
-	_draw_airship(_grid_to_world(Vector2(4, 13)) + Vector2(-18, -34), 0.62)
+	_draw_village(_design_to_world(Vector2(13, 17)), Color("#8a5d45"))
+	_draw_village(_design_to_world(Vector2(22, 18)), Color("#7e6148"))
+	_draw_village(_design_to_world(Vector2(28, 21)), Color("#9b754b"))
+	_draw_netherit_gate(_design_to_world(Vector2(39, 2)))
+	_draw_castle(_design_to_world(Vector2(18, 14)))
+	_draw_datt_metropolis(_design_to_world(Vector2(32, 16)))
+	_draw_heren_industrial_coast(_design_to_world(Vector2(40, 11)))
+	_draw_modern_port(_design_to_world(Vector2(42, 19)))
+	_draw_desert_outpost(_design_to_world(Vector2(24, 24)))
+	_draw_ship(_design_to_world(Vector2(40, 26)) + Vector2(18, 24))
+	_draw_airship(_design_to_world(Vector2(8, 8)) + Vector2(-4, -48), 0.82)
+	_draw_airship(_design_to_world(Vector2(4, 13)) + Vector2(-18, -34), 0.62)
 
 
 func _draw_iso_building(base: Vector2, footprint: Vector2, height: float, front: Color, side: Color, roof: Color, window_color: Color = Color.TRANSPARENT) -> void:
@@ -1008,13 +1019,13 @@ func _draw_airship(center: Vector2, scale_value: float) -> void:
 
 func _draw_region_labels() -> void:
 	var font := ThemeDB.fallback_font
-	_draw_map_label(font, "冥河极寒带", _grid_to_world(Vector2(39, 1)) + Vector2(-54, -60), Color("#dcece7"))
-	_draw_map_label(font, "洛安德自治区", _grid_to_world(Vector2(17, 16)) + Vector2(-64, 35), Color("#f1deb1"))
-	_draw_map_label(font, "达特核心区", _grid_to_world(Vector2(31, 18)) + Vector2(-48, 52), Color("#b8eee5"))
-	_draw_map_label(font, "赫伦工业海岸", _grid_to_world(Vector2(40, 10)) + Vector2(20, -44), Color("#ead7ad"))
-	_draw_map_label(font, "南部拓殖带", _grid_to_world(Vector2(23, 25)) + Vector2(-46, 42), Color("#f1d08f"))
-	_draw_map_label(font, "普赛提亚群岛", _grid_to_world(Vector2(39, 27)) + Vector2(-42, 54), Color("#c5ece6"))
-	_draw_map_label(font, "西部浮空岛", _grid_to_world(Vector2(5, 9)) + Vector2(-62, -45), Color("#d8c8ea"))
+	_draw_map_label(font, "冥河极寒带", _design_to_world(Vector2(39, 1)) + Vector2(-54, -60), Color("#dcece7"))
+	_draw_map_label(font, "洛安德自治区", _design_to_world(Vector2(17, 16)) + Vector2(-64, 35), Color("#f1deb1"))
+	_draw_map_label(font, "达特核心区", _design_to_world(Vector2(31, 18)) + Vector2(-48, 52), Color("#b8eee5"))
+	_draw_map_label(font, "赫伦工业海岸", _design_to_world(Vector2(40, 10)) + Vector2(20, -44), Color("#ead7ad"))
+	_draw_map_label(font, "南部拓殖带", _design_to_world(Vector2(23, 25)) + Vector2(-46, 42), Color("#f1d08f"))
+	_draw_map_label(font, "普赛提亚群岛", _design_to_world(Vector2(39, 27)) + Vector2(-42, 54), Color("#c5ece6"))
+	_draw_map_label(font, "西部浮空岛", _design_to_world(Vector2(5, 9)) + Vector2(-62, -45), Color("#d8c8ea"))
 
 
 func _draw_map_label(font: Font, text: String, position: Vector2, color: Color) -> void:
@@ -1114,9 +1125,27 @@ func _marker_style(color: Color, emphasized: bool) -> StyleBoxFlat:
 
 func _profile_to_world(profile: Dictionary) -> Vector2:
 	var normalized: Vector2 = profile.get("map_position", Vector2(0.5, 0.5))
-	var column := lerpf(4.0, 45.0, normalized.x)
-	var row := lerpf(1.0, 28.0, normalized.y)
-	return _grid_to_world(Vector2(column, row)) - Vector2(0.0, 28.0)
+	var design_column := lerpf(4.0, 45.0, normalized.x)
+	var design_row := lerpf(1.0, 28.0, normalized.y)
+	return _design_to_world(Vector2(design_column, design_row)) - Vector2(0.0, 28.0)
+
+
+func _design_to_world(design: Vector2) -> Vector2:
+	return _grid_to_world(_design_to_grid(design))
+
+
+func _design_to_grid(design: Vector2) -> Vector2:
+	return Vector2(
+		design.x * float(GRID_COLUMNS - 1) / float(DESIGN_GRID_COLUMNS - 1),
+		design.y * float(GRID_ROWS - 1) / float(DESIGN_GRID_ROWS - 1)
+	)
+
+
+func _grid_to_design(grid: Vector2) -> Vector2:
+	return Vector2(
+		grid.x * float(DESIGN_GRID_COLUMNS - 1) / float(GRID_COLUMNS - 1),
+		grid.y * float(DESIGN_GRID_ROWS - 1) / float(GRID_ROWS - 1)
+	)
 
 
 func _grid_to_world(grid: Vector2) -> Vector2:
