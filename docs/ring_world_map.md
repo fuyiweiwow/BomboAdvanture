@@ -49,6 +49,9 @@ The active campaign map is a lightweight 2D isometric tile map implemented in
 - Heren's mountain mines use rock-backed mine mouths, timber portals,
   conveyors, processing sheds, ore carts and spoil piles, distinct from the
   factories along the eastern coast.
+- Secondary regional props follow the base 52 by 26 tile scale: villages,
+  island settlements, mines, vessels and magical structures stay within one
+  or two local cells, while only capital districts use a larger footprint.
 - The campaign marker and route layer is currently disabled so landmarks stay
   readable while the world art is being developed. Set
   `show_campaign_overlay` on the map scene when that layer is ready to return.

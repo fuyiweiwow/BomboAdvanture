@@ -512,10 +512,10 @@ func _draw_small_block(center: Vector2, seed: float) -> void:
 		draw_line(center + Vector2(3, -height + 4 + floor_index * 5), center + Vector2(3, -height + 7 + floor_index * 5), Color("#76d0c8"), 1.6)
 
 
-func _draw_magic_crystal(center: Vector2) -> void:
-	draw_circle(center + Vector2(0, -4), 8.0, Color(0.35, 0.88, 0.85, 0.09))
-	draw_colored_polygon(PackedVector2Array([center + Vector2(-4, 0), center + Vector2(0, -16), center + Vector2(5, 0), center + Vector2(0, 5)]), Color("#69c6c2"))
-	draw_colored_polygon(PackedVector2Array([center + Vector2(-1, -2), center + Vector2(0, -14), center + Vector2(3, -1), center + Vector2(0, 2)]), Color("#b6f0df"))
+func _draw_magic_crystal(center: Vector2, scale_value: float = 1.0) -> void:
+	draw_circle(center + Vector2(0, -4) * scale_value, 8.0 * scale_value, Color(0.35, 0.75, 0.71, 0.07))
+	draw_colored_polygon(PackedVector2Array([center + Vector2(-4, 0) * scale_value, center + Vector2(0, -16) * scale_value, center + Vector2(5, 0) * scale_value, center + Vector2(0, 5) * scale_value]), Color("#69aaa3"))
+	draw_colored_polygon(PackedVector2Array([center + Vector2(-1, -2) * scale_value, center + Vector2(0, -14) * scale_value, center + Vector2(3, -1) * scale_value, center + Vector2(0, 2) * scale_value]), Color("#b2d8ca"))
 
 
 func _draw_waterways() -> void:
@@ -754,16 +754,16 @@ func _draw_landmarks() -> void:
 	_draw_castle(_design_to_world(Vector2(18, 14)))
 	_draw_datt_metropolis(_design_to_world(Vector2(32, 16)))
 	_draw_heren_industrial_coast(_design_to_world(Vector2(40, 11)))
-	_draw_mining_complex(_design_to_world(Vector2(35, 9)))
-	_draw_mining_complex(_design_to_world(Vector2(38, 8)) + Vector2(28, 10))
+	_draw_mining_complex(_design_to_world(Vector2(35, 9)), 0.52)
+	_draw_mining_complex(_design_to_world(Vector2(38, 8)) + Vector2(28, 10), 0.46)
 	_draw_modern_port(_design_to_world(Vector2(42, 19)))
 	_draw_desert_outpost(_design_to_world(Vector2(24, 24)))
 	_draw_psetia_archipelago()
-	_draw_magic_sanctuary(_design_to_world(Vector2(5, 8)), 1.0)
-	_draw_magic_sanctuary(_design_to_world(Vector2(3, 12)), 0.72)
-	_draw_magic_observatory(_design_to_world(Vector2(8, 13)))
-	_draw_ship(_design_to_world(Vector2(39, 29)), 1.0)
-	_draw_ship(_design_to_world(Vector2(46, 20)), 0.82)
+	_draw_magic_sanctuary(_design_to_world(Vector2(5, 8)), 0.54)
+	_draw_magic_sanctuary(_design_to_world(Vector2(3, 12)), 0.44)
+	_draw_magic_observatory(_design_to_world(Vector2(8, 13)), 0.58)
+	_draw_ship(_design_to_world(Vector2(39, 29)), 0.62)
+	_draw_ship(_design_to_world(Vector2(46, 20)), 0.55)
 	_draw_airship(_design_to_world(Vector2(8, 8)) + Vector2(-4, -48), 0.82)
 	_draw_airship(_design_to_world(Vector2(4, 13)) + Vector2(-18, -34), 0.62)
 
@@ -837,8 +837,9 @@ func _draw_heren_industrial_coast(center: Vector2) -> void:
 		draw_arc(tank_center - Vector2(0, 8), 8.0, PI, TAU, 14, Color("#d2d4ca"), 1.3)
 
 
-func _draw_mining_complex(center: Vector2) -> void:
+func _draw_mining_complex(center: Vector2, scale_value: float) -> void:
 	# The mine mouth sits against a rock spoil bank instead of floating as an icon.
+	draw_set_transform(center * (1.0 - scale_value), 0.0, Vector2.ONE * scale_value)
 	draw_ellipse_shadow(center + Vector2(12, 8), Vector2(44, 13), Color(0.03, 0.05, 0.04, 0.34))
 	draw_colored_polygon(PackedVector2Array([
 		center + Vector2(-35, 7), center + Vector2(-20, -23), center + Vector2(2, -31),
@@ -868,6 +869,7 @@ func _draw_mining_complex(center: Vector2) -> void:
 		draw_colored_polygon(PackedVector2Array([
 			pile_center + Vector2(-8, 3), pile_center + Vector2(0, -8 - pile_index * 2), pile_center + Vector2(9, 3),
 		]), [Color("#776f62"), Color("#655f58"), Color("#8a7351")][pile_index])
+	draw_set_transform(Vector2.ZERO)
 
 
 func _draw_ore_cart(center: Vector2) -> void:
@@ -1037,10 +1039,10 @@ func _draw_desert_outpost(center: Vector2) -> void:
 
 
 func _draw_psetia_archipelago() -> void:
-	_draw_psetia_settlement(_design_to_world(Vector2(35, 27)), 0.88, true)
-	_draw_psetia_settlement(_design_to_world(Vector2(41, 26)), 1.0, true)
-	_draw_psetia_settlement(_design_to_world(Vector2(45, 23)), 0.74, false)
-	_draw_psetia_settlement(_design_to_world(Vector2(29, 28)), 0.68, false)
+	_draw_psetia_settlement(_design_to_world(Vector2(35, 27)), 0.48, true)
+	_draw_psetia_settlement(_design_to_world(Vector2(41, 26)), 0.54, true)
+	_draw_psetia_settlement(_design_to_world(Vector2(45, 23)), 0.44, false)
+	_draw_psetia_settlement(_design_to_world(Vector2(29, 28)), 0.40, false)
 
 
 func _draw_psetia_settlement(center: Vector2, scale_value: float, has_temple: bool) -> void:
@@ -1053,31 +1055,31 @@ func _draw_psetia_settlement(center: Vector2, scale_value: float, has_temple: bo
 
 
 func _draw_stilt_house(center: Vector2, scale_value: float) -> void:
-	var wall := Color("#b58a58")
-	var dark_wall := Color("#7e6045")
-	var roof := Color("#5f4938")
+	var wall := Color("#aa936d")
+	var dark_wall := Color("#766451")
+	var roof := Color("#765748")
 	for stilt_x in [-8.0, 7.0]:
 		draw_line(center + Vector2(stilt_x, -1) * scale_value, center + Vector2(stilt_x, 12) * scale_value, Color("#594635"), 2.0 * scale_value)
-	_draw_iso_building(center, Vector2(24, 13) * scale_value, 15.0 * scale_value, wall, dark_wall, Color("#9e7248"))
+	_draw_iso_building(center, Vector2(24, 13) * scale_value, 15.0 * scale_value, wall, dark_wall, Color("#9a7958"))
 	draw_colored_polygon(PackedVector2Array([
 		center + Vector2(-17, -18) * scale_value,
 		center + Vector2(0, -34) * scale_value,
 		center + Vector2(19, -18) * scale_value,
 		center + Vector2(0, -9) * scale_value,
 	]), roof)
-	draw_line(center + Vector2(-18, -17) * scale_value, center + Vector2(19, -17) * scale_value, Color("#d1a568"), 1.5 * scale_value)
+	draw_line(center + Vector2(-18, -17) * scale_value, center + Vector2(19, -17) * scale_value, Color("#b79664"), 1.5 * scale_value)
 
 
 func _draw_psetia_temple(center: Vector2, scale_value: float) -> void:
 	for tier in range(3):
 		var tier_scale := scale_value * (1.0 - float(tier) * 0.20)
 		var tier_center := center - Vector2(0, float(tier) * 14.0 * scale_value)
-		_draw_iso_building(tier_center, Vector2(31, 16) * tier_scale, 12.0 * scale_value, Color("#b99965"), Color("#826a50"), Color("#d0af68"))
+		_draw_iso_building(tier_center, Vector2(31, 16) * tier_scale, 12.0 * scale_value, Color("#a9926c"), Color("#746354"), Color("#b49a69"))
 		draw_colored_polygon(PackedVector2Array([
 			tier_center + Vector2(-20, -14) * tier_scale, tier_center + Vector2(0, -26) * tier_scale,
 			tier_center + Vector2(21, -14) * tier_scale, tier_center + Vector2(0, -6) * tier_scale,
-		]), Color("#7c4938").lightened(float(tier) * 0.06))
-	draw_line(center + Vector2(0, -58) * scale_value, center + Vector2(0, -72) * scale_value, Color("#d6b65f"), 2.0)
+		]), Color("#765044").lightened(float(tier) * 0.05))
+	draw_line(center + Vector2(0, -58) * scale_value, center + Vector2(0, -72) * scale_value, Color("#bba264"), 1.5 * scale_value)
 
 
 func _draw_island_pier(center: Vector2, scale_value: float) -> void:
@@ -1090,8 +1092,8 @@ func _draw_island_pier(center: Vector2, scale_value: float) -> void:
 
 
 func _draw_magic_sanctuary(center: Vector2, scale_value: float) -> void:
-	var cyan := Color("#74ddd5")
-	var glow := Color(0.43, 0.94, 0.88, 0.22)
+	var cyan := Color("#76b8ae")
+	var glow := Color(0.43, 0.75, 0.70, 0.13)
 	var outer := PackedVector2Array([
 		center + Vector2(0, -22) * scale_value, center + Vector2(42, 0) * scale_value,
 		center + Vector2(0, 22) * scale_value, center + Vector2(-42, 0) * scale_value,
@@ -1102,27 +1104,29 @@ func _draw_magic_sanctuary(center: Vector2, scale_value: float) -> void:
 	])
 	draw_polyline(outer + PackedVector2Array([outer[0]]), glow, 7.0 * scale_value, true)
 	draw_polyline(outer + PackedVector2Array([outer[0]]), cyan, 2.0 * scale_value, true)
-	draw_polyline(inner + PackedVector2Array([inner[0]]), Color(0.75, 1.0, 0.91, 0.62), 1.2 * scale_value, true)
+	draw_polyline(inner + PackedVector2Array([inner[0]]), Color(0.70, 0.86, 0.79, 0.52), 1.2 * scale_value, true)
 	for point in outer:
-		_draw_magic_crystal(point - Vector2(0, 2) * scale_value)
+		_draw_magic_crystal(point - Vector2(0, 2) * scale_value, scale_value * 0.62)
 	_draw_magic_portal(center - Vector2(0, 9) * scale_value, scale_value)
 
 
 func _draw_magic_portal(center: Vector2, scale_value: float) -> void:
-	draw_circle(center, 17.0 * scale_value, Color(0.35, 0.91, 0.86, 0.16))
-	draw_arc(center, 14.0 * scale_value, 0, TAU, 28, Color("#8de8df"), 3.0 * scale_value, true)
-	draw_arc(center, 8.0 * scale_value, 0, TAU, 20, Color("#304d62"), 5.0 * scale_value, true)
+	draw_circle(center, 17.0 * scale_value, Color(0.35, 0.73, 0.69, 0.11))
+	draw_arc(center, 14.0 * scale_value, 0, TAU, 28, Color("#82bdb4"), 3.0 * scale_value, true)
+	draw_arc(center, 8.0 * scale_value, 0, TAU, 20, Color("#38545b"), 5.0 * scale_value, true)
 	draw_line(center + Vector2(-18, 16) * scale_value, center + Vector2(-12, -14) * scale_value, Color("#66746f"), 3.0 * scale_value)
 	draw_line(center + Vector2(18, 16) * scale_value, center + Vector2(12, -14) * scale_value, Color("#66746f"), 3.0 * scale_value)
 
 
-func _draw_magic_observatory(center: Vector2) -> void:
-	_draw_iso_building(center, Vector2(34, 18), 37.0, Color("#677674"), Color("#455b5c"), Color("#9fae9d"), Color("#79ded5"))
+func _draw_magic_observatory(center: Vector2, scale_value: float) -> void:
+	draw_set_transform(center * (1.0 - scale_value), 0.0, Vector2.ONE * scale_value)
+	_draw_iso_building(center, Vector2(34, 18), 37.0, Color("#677674"), Color("#455b5c"), Color("#9fae9d"), Color("#70b9af"))
 	draw_circle(center - Vector2(0, 47), 13.0, Color("#3d5d68"))
-	draw_arc(center - Vector2(0, 47), 13.0, 0, TAU, 24, Color("#82e3da"), 2.5, true)
+	draw_arc(center - Vector2(0, 47), 13.0, 0, TAU, 24, Color("#78b9b0"), 2.5, true)
 	for arm_index in range(4):
 		var angle := float(arm_index) * PI * 0.5 + PI * 0.25
 		draw_line(center - Vector2(0, 47), center - Vector2(0, 47) + Vector2(cos(angle), sin(angle)) * 20.0, Color("#c4d7c8"), 1.8)
+	draw_set_transform(Vector2.ZERO)
 
 
 func _draw_ship(center: Vector2, scale_value: float = 1.0) -> void:
