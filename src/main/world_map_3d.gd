@@ -20,6 +20,8 @@ const NATURE_MEGAKIT_ROOT := "res://assets/environment/quaternius_nature_megakit
 const MEDIEVAL_VILLAGE_ROOT := "res://assets/environment/quaternius_medieval_village/"
 const MODULAR_STREETS_ROOT := "res://assets/environment/quaternius_modular_streets/"
 const SHIPS_ROOT := "res://assets/environment/quaternius_ships/"
+const INDUSTRIAL_CITY_ROOT := "res://assets/environment/kenney_city_industrial/"
+const COMMERCIAL_CITY_ROOT := "res://assets/environment/kenney_city_commercial/"
 const ROAD_TEXTURE_ROOT := "res://assets/environment/road_textures/polyhaven/"
 const LOAND_RIVER_PATH := [Vector2(-4.0, -6.0), Vector2(-4.7, -5.0), Vector2(-4.5, -4.0), Vector2(-5.2, -3.0), Vector2(-4.9, -2.0), Vector2(-5.6, -0.9), Vector2(-5.1, 0.2), Vector2(-5.5, 1.3), Vector2(-4.6, 2.3), Vector2(-3.8, 3.2), Vector2(-2.4, 3.9), Vector2(-0.6, 4.3)]
 const HEREN_RIVER_PATH := [Vector2(7.8, -8.2), Vector2(7.3, -7.2), Vector2(6.7, -6.3), Vector2(7.2, -5.4), Vector2(6.4, -4.5), Vector2(6.2, -3.7), Vector2(6.9, -2.9), Vector2(7.8, -2.2), Vector2(8.7, -1.4), Vector2(9.8, -0.7), Vector2(10.5, 0.2), Vector2(11.6, 0.0), Vector2(12.6, 0.5)]
@@ -191,6 +193,7 @@ func _complete_surface_build(generated: Node3D) -> void:
 	_add_world_roads(generated)
 	_add_terrain_cover(generated)
 	_add_biome_detail_clusters(generated)
+	_add_geographic_detail_bands(generated)
 	_add_roadside_asset_details(generated)
 	_add_regional_architecture(generated)
 	_add_river_mouth_ports(generated)
@@ -259,7 +262,7 @@ func _add_terrain_cover(parent: Node3D) -> void:
 	var broadleaf_b_transforms: Array[Transform3D] = []
 	var birch_transforms: Array[Transform3D] = []
 	var bush_transforms: Array[Transform3D] = []
-	for _index in range(800):
+	for _index in range(1180):
 		var x := random.randf_range(-12.8, -1.0)
 		var z := random.randf_range(-3.4, 4.8)
 		var loand_forest := exp(-(pow((x + 6.1) / 5.0, 2.0) + pow((z + 0.7) / 3.4, 2.0)))
@@ -270,7 +273,7 @@ func _add_terrain_cover(parent: Node3D) -> void:
 		var height := _height_at(x, z)
 		if height <= 12.0 or height > 390.0 or _terrain_normal_at(x, z).y < 0.88:
 			continue
-		var tree_transform := _asset_transform(x, z, height, random.randf_range(34.0, 47.0), random.randf_range(0.0, TAU), 0.12, 2.0)
+		var tree_transform := _asset_transform(x, z, height, random.randf_range(42.0, 59.0), random.randf_range(0.0, TAU), 0.12, 2.0)
 		var tree_variant := random.randf()
 		if tree_variant < 0.06:
 			birch_transforms.append(tree_transform)
@@ -285,7 +288,7 @@ func _add_terrain_cover(parent: Node3D) -> void:
 
 	var pine_a_transforms: Array[Transform3D] = []
 	var pine_b_transforms: Array[Transform3D] = []
-	for _index in range(520):
+	for _index in range(920):
 		var x := random.randf_range(-1.5, 11.2)
 		var z := random.randf_range(-7.0, -3.0)
 		var foothill_density := exp(-(pow((x - 5.0) / 7.0, 2.0) + pow((z + 4.8) / 1.8, 2.0)))
@@ -295,10 +298,10 @@ func _add_terrain_cover(parent: Node3D) -> void:
 		if height < 70.0 or height > 590.0 or _terrain_normal_at(x, z).y < 0.84:
 			continue
 		var destination := pine_a_transforms if random.randf() < 0.56 else pine_b_transforms
-		destination.append(_asset_transform(x, z, height, random.randf_range(37.0, 51.0), random.randf_range(0.0, TAU), 0.14, 2.0))
+		destination.append(_asset_transform(x, z, height, random.randf_range(46.0, 64.0), random.randf_range(0.0, TAU), 0.14, 2.0))
 
 	var mountain_tree_transforms: Array[Transform3D] = []
-	for _index in range(620):
+	for _index in range(900):
 		var x := random.randf_range(-10.8, 11.8)
 		var z := random.randf_range(-7.2, 4.4)
 		var loand_tree_line := exp(-(pow((x + 5.1) / 5.2, 2.0) + pow((z + 4.0) / 1.45, 2.0)))
@@ -311,7 +314,7 @@ func _add_terrain_cover(parent: Node3D) -> void:
 		var tree_line_factor := clampf((920.0 - height) / 520.0, 0.0, 1.0)
 		if height < 170.0 or height > 920.0 or random.randf() > tree_line_factor or _terrain_normal_at(x, z).y < 0.78:
 			continue
-		mountain_tree_transforms.append(_asset_transform(x, z, height, random.randf_range(34.0, 47.0), random.randf_range(0.0, TAU), 0.18, 2.0))
+		mountain_tree_transforms.append(_asset_transform(x, z, height, random.randf_range(40.0, 57.0), random.randf_range(0.0, TAU), 0.18, 2.0))
 
 	var desert_dead_tree_transforms: Array[Transform3D] = []
 	var desert_bush_transforms: Array[Transform3D] = []
@@ -480,6 +483,114 @@ func _add_biome_detail_clusters(parent: Node3D) -> void:
 	_add_asset_multimesh(parent, "MountainPebbles_02", NATURE_MEGAKIT_ROOT + "pebble_round_3.glb", pebbles_c)
 
 
+func _add_geographic_detail_bands(parent: Node3D) -> void:
+	var random := RandomNumberGenerator.new()
+	random.seed = 0x47454F4752415048
+	var cliff_a: Array[Transform3D] = []
+	var cliff_b: Array[Transform3D] = []
+	var cliff_c: Array[Transform3D] = []
+	var foothill_rocks: Array[Transform3D] = []
+	var river_reeds: Array[Transform3D] = []
+	var coast_grass: Array[Transform3D] = []
+	var forest_edge_trees: Array[Transform3D] = []
+
+	var ridge_paths := [
+		[Vector2(1.4, -6.8), Vector2(4.5, -7.8), Vector2(8.2, -7.2), Vector2(11.8, -5.8)],
+		[Vector2(-8.8, -3.5), Vector2(-6.1, -4.8), Vector2(-3.1, -4.5), Vector2(-1.1, -3.4)],
+		[Vector2(-7.8, 3.8), Vector2(-3.8, 4.2), Vector2(0.2, 3.7), Vector2(4.3, 4.1), Vector2(8.0, 3.6)],
+	]
+	for ridge_index in range(ridge_paths.size()):
+		var sampled := _densify_map_path(ridge_paths[ridge_index], 0.42)
+		for point_index in range(sampled.size()):
+			if point_index % 2 != 0 and random.randf() > 0.28:
+				continue
+			var point: Vector2 = sampled[point_index]
+			var direction: Vector2
+			if point_index == 0:
+				direction = sampled[1] - sampled[0]
+			elif point_index == sampled.size() - 1:
+				direction = sampled[-1] - sampled[-2]
+			else:
+				direction = sampled[point_index + 1] - sampled[point_index - 1]
+			var side: Vector2 = Vector2(-direction.y, direction.x).normalized()
+			for side_sign in [-1.0, 1.0]:
+				if random.randf() < 0.22:
+					continue
+				var distance := random.randf_range(0.22, 0.68)
+				var rock_point: Vector2 = point + side * distance * side_sign + Vector2(random.randf_range(-0.10, 0.10), random.randf_range(-0.10, 0.10))
+				if not _is_land(rock_point.x, rock_point.y) or _near_world_road(rock_point.x, rock_point.y, 0.12):
+					continue
+				var height := _height_at(rock_point.x, rock_point.y)
+				var normal := _terrain_normal_at(rock_point.x, rock_point.y)
+				if height < 150.0 or normal.y < 0.62:
+					continue
+				var transform := _asset_transform(rock_point.x, rock_point.y, height, random.randf_range(58.0, 112.0), random.randf_range(0.0, TAU), 0.74, random.randf_range(8.0, 28.0))
+				match (ridge_index + point_index + int(side_sign > 0.0)) % 3:
+					0: cliff_a.append(transform)
+					1: cliff_b.append(transform)
+					2: cliff_c.append(transform)
+
+	for _index in range(420):
+		var x := random.randf_range(-11.8, 12.2)
+		var z := random.randf_range(-7.7, 4.8)
+		if not _is_land(x, z) or _near_world_road(x, z, 0.11):
+			continue
+		var height := _height_at(x, z)
+		var normal := _terrain_normal_at(x, z)
+		if height < 95.0 or height > 720.0 or normal.y < 0.72 or normal.y > 0.94:
+			continue
+		foothill_rocks.append(_asset_transform(x, z, height, random.randf_range(24.0, 54.0), random.randf_range(0.0, TAU), 0.82, random.randf_range(4.0, 12.0)))
+
+	var waterways := [LOAND_RIVER_PATH, HEREN_RIVER_PATH, SOUTHERN_RIVER_PATH, LOAND_WEST_TRIBUTARY, LOAND_NORTH_TRIBUTARY, HEREN_EAST_TRIBUTARY]
+	for waterway_index in range(waterways.size()):
+		var river_points := _densify_map_path(waterways[waterway_index], 0.30)
+		for point_index in range(river_points.size()):
+			if point_index % 2 != 0:
+				continue
+			var point: Vector2 = river_points[point_index]
+			var next_point: Vector2 = river_points[min(point_index + 1, river_points.size() - 1)]
+			var previous_point: Vector2 = river_points[max(point_index - 1, 0)]
+			var side: Vector2 = Vector2(-(next_point - previous_point).y, (next_point - previous_point).x).normalized()
+			for side_sign in [-1.0, 1.0]:
+				if random.randf() < 0.32:
+					continue
+				var reed_point: Vector2 = point + side * random.randf_range(0.14, 0.24) * side_sign
+				if not _is_land(reed_point.x, reed_point.y):
+					continue
+				river_reeds.append(_asset_transform(reed_point.x, reed_point.y, _height_at(reed_point.x, reed_point.y), random.randf_range(25.0, 43.0), random.randf_range(0.0, TAU), 0.56, 2.0))
+
+	for _index in range(780):
+		var x := random.randf_range(-14.3, 14.3)
+		var z := random.randf_range(-8.8, 9.2)
+		var height := _height_at(x, z)
+		if height < 10.0 or height > 78.0 or _terrain_normal_at(x, z).y < 0.86:
+			continue
+		var scale_factor := random.randf_range(22.0, 41.0)
+		coast_grass.append(_asset_transform(x, z, height, scale_factor, random.randf_range(0.0, TAU), 0.62, 1.0))
+
+	var forest_fronts := [
+		[Vector2(-11.2, -2.2), Vector2(-9.4, -1.1), Vector2(-8.4, 0.6), Vector2(-7.0, 1.9)],
+		[Vector2(-3.5, -3.0), Vector2(-2.4, -1.8), Vector2(-2.2, 0.2), Vector2(-1.8, 2.1)],
+	]
+	for front_index in range(forest_fronts.size()):
+		var front := _densify_map_path(forest_fronts[front_index], 0.36)
+		for point in front:
+			if random.randf() < 0.18:
+				continue
+			var tree_point: Vector2 = point + Vector2(random.randf_range(-0.25, 0.25), random.randf_range(-0.20, 0.20))
+			if not _is_land(tree_point.x, tree_point.y) or _near_world_road(tree_point.x, tree_point.y, 0.18):
+				continue
+			forest_edge_trees.append(_asset_transform(tree_point.x, tree_point.y, _height_at(tree_point.x, tree_point.y), random.randf_range(38.0, 56.0), random.randf_range(0.0, TAU), 0.16, 2.0))
+
+	_add_asset_multimesh(parent, "MountainCliffBandA", STYLIZED_NATURE_ROOT + "stone_outcrop_1.glb", cliff_a)
+	_add_asset_multimesh(parent, "MountainCliffBandB", STYLIZED_NATURE_ROOT + "stone_outcrop_2.glb", cliff_b)
+	_add_asset_multimesh(parent, "MountainCliffBandC", STYLIZED_NATURE_ROOT + "stone_outcrop_3.glb", cliff_c)
+	_add_asset_multimesh(parent, "FoothillRockTransition", NATURE_MEGAKIT_ROOT + "rock_medium_2.glb", foothill_rocks)
+	_add_asset_multimesh(parent, "RiverbankReedBands", NATURE_MEGAKIT_ROOT + "grass_common_tall.glb", river_reeds)
+	_add_asset_multimesh(parent, "CoastalGrassTransition", NATURE_MEGAKIT_ROOT + "grass_wispy_tall.glb", coast_grass)
+	_add_asset_multimesh(parent, "LoandForestEdge", STYLIZED_NATURE_ROOT + "normal_tree_2.glb", forest_edge_trees)
+
+
 func _add_roadside_asset_details(parent: Node3D) -> void:
 	var random := RandomNumberGenerator.new()
 	random.seed = 0x524F414453494445
@@ -512,43 +623,50 @@ func _add_roadside_asset_details(parent: Node3D) -> void:
 
 func _add_lakes(parent: Node3D) -> void:
 	var lakes := [
-		["CentralBasinLake", Vector2(-1.7, -0.7), Vector2(1.18, 0.68)],
-		["DattBorderLake", Vector2(6.8, 1.8), Vector2(0.90, 0.58)],
-		["SouthernSaltLake", Vector2(-2.3, 6.5), Vector2(1.28, 0.73)],
+		["CentralBasinLake", Vector2(-1.7, -0.7), Vector2(1.18, 0.68), 1.4],
+		["DattBorderLake", Vector2(6.8, 1.8), Vector2(0.90, 0.58), 3.2],
+		["SouthernSaltLake", Vector2(-2.3, 6.5), Vector2(1.28, 0.73), 5.1],
 	]
 	for lake_data in lakes:
 		var lake := Node3D.new()
 		lake.name = str(lake_data[0])
 		lake.position = Vector3(lake_data[1].x * MAP_SCALE, 0.0, lake_data[1].y * MAP_SCALE)
 		var radius: Vector2 = lake_data[2]
+		var phase: float = lake_data[3]
 		var shore := MeshInstance3D.new()
 		shore.name = "Shore"
-		var shore_mesh := CylinderMesh.new()
-		shore_mesh.top_radius = 1.0
-		shore_mesh.bottom_radius = 1.0
-		shore_mesh.height = 5.0
-		shore_mesh.radial_segments = 48
-		shore.mesh = shore_mesh
+		shore.mesh = _build_irregular_lake_mesh(radius * MAP_SCALE * 1.08, 5.0, phase)
 		shore.position.y = 5.0
-		shore.scale = Vector3(radius.x * MAP_SCALE * 1.08, 1.0, radius.y * MAP_SCALE * 1.08)
 		shore.material_override = _material(Color("#b9a66c"), 0.88)
 		_attach(lake, shore)
 
 		var water := MeshInstance3D.new()
 		water.name = "Water"
-		var water_mesh := CylinderMesh.new()
-		water_mesh.top_radius = 1.0
-		water_mesh.bottom_radius = 1.0
-		water_mesh.height = 4.0
-		water_mesh.radial_segments = 48
-		water.mesh = water_mesh
+		water.mesh = _build_irregular_lake_mesh(radius * MAP_SCALE, 4.0, phase)
 		water.position.y = 9.0
-		water.scale = Vector3(radius.x * MAP_SCALE, 1.0, radius.y * MAP_SCALE)
 		var water_material := ShaderMaterial.new()
 		water_material.shader = MINIATURE_WATER_SHADER
 		water.material_override = water_material
 		_attach(lake, water)
 		_attach(parent, lake)
+
+
+func _build_irregular_lake_mesh(radius: Vector2, depth: float, phase: float) -> ArrayMesh:
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var segments := 40
+	var top_ring: Array[Vector3] = []
+	var bottom_ring: Array[Vector3] = []
+	for index in range(segments):
+		var angle := TAU * float(index) / float(segments)
+		var contour := 1.0 + sin(angle * 3.0 + phase) * 0.075 + cos(angle * 5.0 - phase * 0.7) * 0.045 + sin(angle * 7.0 + phase * 1.6) * 0.025
+		var point := Vector3(cos(angle) * radius.x * contour, depth * 0.5, sin(angle) * radius.y * contour)
+		top_ring.append(point)
+		bottom_ring.append(Vector3(point.x * 0.98, -depth * 0.5, point.z * 0.98))
+	_add_surface_ring(surface, top_ring, bottom_ring)
+	_add_surface_cap(surface, top_ring, Vector3(0.0, depth * 0.5, 0.0), true)
+	surface.generate_normals()
+	return surface.commit()
 
 
 func _add_western_floating_islands(parent: Node3D) -> void:
@@ -1068,6 +1186,9 @@ func _add_regional_architecture(parent: Node3D) -> void:
 	_add_loand_village(architecture, Vector2(-8.2, 1.0), 0.92, "LoandRiverTown")
 	_add_loand_village(architecture, Vector2(-2.4, 1.3), 0.72, "LoandEastVillage")
 	_add_collected_loand_assets(architecture)
+	_add_loand_hamlet_ring(architecture)
+	_add_datt_urban_satellites(architecture)
+	_add_heren_industrial_corridor(architecture)
 
 
 func _add_collected_loand_assets(parent: Node3D) -> void:
@@ -1085,6 +1206,58 @@ func _add_collected_loand_assets(parent: Node3D) -> void:
 	]
 	for definition in definitions:
 		_add_map_asset(parent, definition[0], MEDIEVAL_VILLAGE_ROOT + definition[1], definition[2], definition[3], definition[4], 8.0)
+
+
+func _add_loand_hamlet_ring(parent: Node3D) -> void:
+	var hamlets := [
+		["NorthPassHamlet", Vector2(-6.7, -2.75), ["house_2.glb", "house_4.glb", "stable.glb"]],
+		["WesternWoodHamlet", Vector2(-10.1, 2.15), ["house_1.glb", "house_3.glb", "sawmill.glb"]],
+		["SouthernMarketHamlet", Vector2(-5.8, 2.55), ["house_2.glb", "inn.glb", "house_4.glb"]],
+		["CanalApproachHamlet", Vector2(-1.45, 0.45), ["house_1.glb", "blacksmith.glb", "house_3.glb"]],
+	]
+	var offsets := [Vector2(-0.24, -0.12), Vector2(0.20, -0.16), Vector2(0.04, 0.24)]
+	for hamlet_index in range(hamlets.size()):
+		var hamlet: Array = hamlets[hamlet_index]
+		var center: Vector2 = hamlet[1]
+		var asset_names: Array = hamlet[2]
+		for asset_index in range(asset_names.size()):
+			var point: Vector2 = center + offsets[asset_index]
+			_add_map_asset(parent, "%s_%02d" % [hamlet[0], asset_index], MEDIEVAL_VILLAGE_ROOT + str(asset_names[asset_index]), point, 205.0 + float((hamlet_index + asset_index) % 3) * 24.0, float(hamlet_index) * 0.63 + float(asset_index) * 1.17, 6.0)
+
+
+func _add_datt_urban_satellites(parent: Node3D) -> void:
+	var definitions := [
+		["DattWestResidentialA", "building-c.glb", Vector2(1.55, -0.82), 330.0, 0.24],
+		["DattWestResidentialB", "building-f.glb", Vector2(2.05, -1.55), 360.0, -0.35],
+		["DattCanalOfficeA", "building-skyscraper-b.glb", Vector2(3.10, -2.05), 470.0, 0.10],
+		["DattCanalOfficeB", "building-j.glb", Vector2(4.58, -2.02), 420.0, -0.18],
+		["DattEastOfficeA", "building-skyscraper-d.glb", Vector2(5.35, -1.43), 485.0, 0.26],
+		["DattEastOfficeB", "building-h.glb", Vector2(5.85, -0.72), 390.0, -0.42],
+		["DattSouthExchangeA", "building-l.glb", Vector2(3.15, -0.42), 385.0, 0.52],
+		["DattSouthExchangeB", "building-n.glb", Vector2(4.18, 0.08), 345.0, -0.20],
+		["DattPortApproachA", "building-skyscraper-a.glb", Vector2(7.35, -0.56), 440.0, 0.35],
+		["DattPortApproachB", "building-e.glb", Vector2(8.05, -0.10), 350.0, -0.30],
+	]
+	for definition in definitions:
+		_add_map_asset(parent, definition[0], COMMERCIAL_CITY_ROOT + definition[1], definition[2], definition[3], definition[4], 10.0)
+
+
+func _add_heren_industrial_corridor(parent: Node3D) -> void:
+	var definitions := [
+		["HerenSteelWorks", "building-q.glb", Vector2(9.45, -4.65), 520.0, 0.24],
+		["HerenOreRefinery", "building-r.glb", Vector2(10.25, -4.08), 490.0, -0.18],
+		["HerenMachineWorks", "building-b.glb", Vector2(10.75, -3.38), 470.0, 0.42],
+		["HerenCoastalSmelter", "building-t.glb", Vector2(11.15, -2.68), 500.0, -0.30],
+		["HerenWarmCurrentWorks", "building-l.glb", Vector2(11.25, -1.88), 440.0, 0.12],
+		["HerenPortWarehouse", "building-g.glb", Vector2(11.42, -1.12), 425.0, -0.22],
+		["HerenIndustrialTankA", "detail-tank.glb", Vector2(9.90, -3.48), 220.0, 0.0],
+		["HerenIndustrialTankB", "detail-tank.glb", Vector2(10.78, -2.22), 210.0, 0.0],
+		["HerenIndustrialStackA", "chimney-large.glb", Vector2(9.78, -4.32), 340.0, 0.0],
+		["HerenIndustrialStackB", "chimney-medium.glb", Vector2(10.94, -3.02), 300.0, 0.0],
+		["HerenIndustrialStackC", "chimney-large.glb", Vector2(11.36, -1.55), 330.0, 0.0],
+	]
+	for definition in definitions:
+		_add_map_asset(parent, definition[0], INDUSTRIAL_CITY_ROOT + definition[1], definition[2], definition[3], definition[4], 8.0)
 
 
 func _add_datt_future_district(parent: Node3D, center: Vector2, scale_factor: float, node_name: String) -> void:

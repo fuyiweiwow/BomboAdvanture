@@ -10,6 +10,22 @@ Commons CC0 1.0 Universal license.
 - Files used: selected tree, pine, cactus, and rock GLB models in
   `kenney_nature/`.
 
+## Kenney City Kit (Industrial)
+
+- Source: https://kenney.nl/assets/city-kit-industrial
+- Author: Kenney
+- License: CC0 1.0
+- Files used: industrial buildings, chimneys, and storage tanks in
+  `kenney_city_industrial/`.
+
+## Kenney City Kit (Commercial)
+
+- Source: https://kenney.nl/assets/city-kit-commercial
+- Author: Kenney
+- License: CC0 1.0
+- Files used: commercial buildings and skyscrapers in
+  `kenney_city_commercial/`.
+
 ## Quaternius Ultimate Stylized Nature Pack
 
 - Source: https://quaternius.com/packs/ultimatestylizednature.html

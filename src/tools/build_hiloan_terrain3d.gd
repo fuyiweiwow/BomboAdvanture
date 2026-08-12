@@ -4,10 +4,10 @@ const DATA_DIRECTORY := "res://assets/terrain3d/hiloan"
 const SCENE_PATH := "res://src/main/hiloan_terrain3d.tscn"
 const MAP_SIZE := 1024
 const REGION_SIZE := 256
-const VERTEX_SPACING := 64.0
+const VERTEX_SPACING := 32.0
 const WORLD_SCALE := 800.0
 const HEIGHT_SCALE := 160.0
-const WORLD_ORIGIN := -32768.0
+const WORLD_ORIGIN := -16384.0
 
 const TEXTURE_GRASS := 0
 const TEXTURE_FOREST := 1
@@ -127,11 +127,11 @@ func _create_terrain_assets() -> Resource:
 	var assets := ClassDB.instantiate("Terrain3DAssets") as Resource
 	assert(assets != null)
 	var texture_definitions := [
-		["Cartoon Grassland", TEXTURE_GRASS, "res://assets/environment/terrain_textures/packed/grassland_alb_ht.png", "res://assets/environment/terrain_textures/packed/grassland_nrm_rgh.png", Color("#6b9656"), 0.0022],
-		["Cartoon Forest", TEXTURE_FOREST, "res://assets/environment/terrain_textures/packed/grassland_alb_ht.png", "res://assets/environment/terrain_textures/packed/grassland_nrm_rgh.png", Color("#356940"), 0.0024],
-		["Cartoon Mountain Rock", TEXTURE_ROCK, "res://assets/environment/terrain_textures/packed/mountain_rock_alb_ht.png", "res://assets/environment/terrain_textures/packed/mountain_rock_nrm_rgh.png", Color("#707977"), 0.0020],
-		["Cartoon Southern Sand", TEXTURE_SAND, "res://assets/environment/terrain_textures/packed/sand_01_alb_ht.png", "res://assets/environment/terrain_textures/packed/sand_01_nrm_rgh.png", Color("#c0924e"), 0.0018],
-		["Northern Peak Snow", TEXTURE_SNOW, "res://assets/environment/terrain_textures/packed/snow_02_alb_ht.png", "res://assets/environment/terrain_textures/packed/snow_02_nrm_rgh.png", Color("#e7eee9"), 0.0020],
+		["Cartoon Grassland", TEXTURE_GRASS, "res://assets/environment/terrain_textures/packed/grassland_alb_ht.png", "res://assets/environment/terrain_textures/packed/grassland_nrm_rgh.png", Color("#6b9656"), 0.0022, 0.34, 0.78],
+		["Cartoon Forest", TEXTURE_FOREST, "res://assets/environment/terrain_textures/packed/grassland_alb_ht.png", "res://assets/environment/terrain_textures/packed/grassland_nrm_rgh.png", Color("#356940"), 0.0024, 0.42, 0.78],
+		["Cartoon Mountain Rock", TEXTURE_ROCK, "res://assets/environment/terrain_textures/packed/mountain_rock_alb_ht.png", "res://assets/environment/terrain_textures/packed/mountain_rock_nrm_rgh.png", Color("#707977"), 0.0020, 0.58, 0.82],
+		["Cartoon Southern Sand", TEXTURE_SAND, "res://assets/environment/terrain_textures/packed/sand_01_alb_ht.png", "res://assets/environment/terrain_textures/packed/sand_01_nrm_rgh.png", Color("#c0924e"), 0.0018, 0.36, 0.82],
+		["Northern Peak Snow", TEXTURE_SNOW, "res://assets/environment/terrain_textures/packed/snow_02_alb_ht.png", "res://assets/environment/terrain_textures/packed/snow_02_nrm_rgh.png", Color("#e7eee9"), 0.0020, 0.24, 0.74],
 	]
 	for definition in texture_definitions:
 		var texture_asset := ClassDB.instantiate("Terrain3DTextureAsset") as Resource
@@ -140,18 +140,18 @@ func _create_terrain_assets() -> Resource:
 		texture_asset.set("albedo_texture", load(definition[2]))
 		texture_asset.set("normal_texture", load(definition[3]))
 		texture_asset.set("albedo_color", definition[4])
-		texture_asset.set("normal_depth", 0.12)
-		texture_asset.set("roughness", 0.32)
+		texture_asset.set("normal_depth", definition[6])
+		texture_asset.set("roughness", definition[7])
 		texture_asset.set("uv_scale", definition[5])
 		texture_asset.set("detiling_rotation", 0.13)
 		_set_texture_asset(assets, int(definition[1]), texture_asset)
 
 	var mesh_definitions := [
-		["Broadleaf Tree", "res://assets/environment/kenney_nature/tree_default.glb", 0.46],
-		["Oak Tree", "res://assets/environment/kenney_nature/tree_oak.glb", 0.48],
-		["Northern Pine", "res://assets/environment/kenney_nature/tree_pineDefaultA.glb", 0.48],
-		["Mountain Rock", "res://assets/environment/kenney_nature/rock_largeA.glb", 0.24],
-		["Desert Cactus", "res://assets/environment/kenney_nature/cactus_tall.glb", 0.44],
+		["Broadleaf Tree", "res://assets/environment/quaternius_stylized/normal_tree_1.glb", 0.0],
+		["Birch Tree", "res://assets/environment/quaternius_stylized/birch_tree_2.glb", 0.0],
+		["Northern Pine", "res://assets/environment/quaternius_stylized/pine_tree_2.glb", 0.0],
+		["Mountain Rock", "res://assets/environment/quaternius_stylized/rock_5.glb", 0.0],
+		["Desert Dead Tree", "res://assets/environment/quaternius_stylized/dead_tree_1.glb", 0.0],
 	]
 	for mesh_id in range(mesh_definitions.size()):
 		var definition: Array = mesh_definitions[mesh_id]
@@ -185,8 +185,9 @@ func _world_height(x: float, z: float) -> float:
 
 	var east := clampf((x + 15.0) / 30.0, 0.0, 1.0)
 	var north := clampf((-z + 10.0) / 20.0, 0.0, 1.0)
-	var broad_relief := _terrain_noise(x * 0.52, z * 0.52) * 0.22
-	var land_height := 0.48 + east * 0.38 + north * 0.58 + broad_relief
+	var broad_relief := _terrain_noise(x * 0.42, z * 0.42) * 0.31
+	var rolling_relief := _terrain_noise(x * 1.08 + 3.1, z * 1.08 - 1.7) * 0.16
+	var land_height := 0.48 + east * 0.38 + north * 0.58 + broad_relief + rolling_relief
 
 	# Loand's protected fertile basin and Datt's broad, buildable transport plain.
 	var loand_basin := _gaussian(x, z, -5.2, -0.6, 4.5, 3.2)
@@ -195,34 +196,56 @@ func _world_height(x: float, z: float) -> float:
 	land_height = lerpf(land_height, 0.82, datt_plain * 0.72)
 
 	# Continuous ridges make the main ranges legible at continent scale.
-	var ridge_detail := 0.70 + absf(_terrain_noise(x * 1.35, z * 1.35)) * 0.46
-	var heren_ridge := _ridge_mask(Vector2(x, z), [Vector2(1.4, -6.8), Vector2(4.5, -7.8), Vector2(8.2, -7.2), Vector2(11.8, -5.8)], 0.82)
-	var loand_crown := _ridge_mask(Vector2(x, z), [Vector2(-8.8, -3.5), Vector2(-6.1, -4.8), Vector2(-3.1, -4.5), Vector2(-1.1, -3.4)], 0.68)
-	var eastern_spine := _ridge_mask(Vector2(x, z), [Vector2(11.7, -5.1), Vector2(12.4, -2.9), Vector2(12.1, -0.4), Vector2(11.4, 1.2)], 0.58)
-	var heren_peaks := 0.58 + pow(absf(sin(x * 0.92 + z * 0.18)), 1.7) * 0.52
-	land_height += heren_ridge * 12.2 * ridge_detail * heren_peaks
-	land_height += loand_crown * 8.0 * ridge_detail
-	land_height += eastern_spine * 5.4 * ridge_detail
-	for peak in [Vector4(2.4, -7.1, 0.54, 4.1), Vector4(5.7, -7.7, 0.50, 5.3), Vector4(8.7, -6.9, 0.54, 5.8), Vector4(-6.0, -4.7, 0.50, 3.5), Vector4(-3.2, -4.4, 0.48, 3.0)]:
-		land_height += _gaussian(x, z, peak.x, peak.y, peak.z, peak.z) * peak.w
-	var heren_inner_spur := _ridge_mask(Vector2(x, z), [Vector2(2.0, -6.1), Vector2(4.0, -5.1), Vector2(5.8, -3.9)], 0.54)
-	var loand_west_spur := _ridge_mask(Vector2(x, z), [Vector2(-10.0, -3.0), Vector2(-10.7, -1.0), Vector2(-9.0, 0.9)], 0.58)
+	var point := Vector2(x, z)
+	var ridge_detail := 0.72 + absf(_terrain_noise(x * 1.35, z * 1.35)) * 0.42
+	var heren_path := [Vector2(1.4, -6.8), Vector2(4.5, -7.8), Vector2(8.2, -7.2), Vector2(11.8, -5.8)]
+	var loand_path := [Vector2(-8.8, -3.5), Vector2(-6.1, -4.8), Vector2(-3.1, -4.5), Vector2(-1.1, -3.4)]
+	var eastern_path := [Vector2(11.7, -5.1), Vector2(12.4, -2.9), Vector2(12.1, -0.4), Vector2(11.4, 1.2)]
+	var heren_ridge := _ridge_mask(point, heren_path, 1.18)
+	var heren_core := _ridge_mask(point, heren_path, 0.43)
+	var loand_crown := _ridge_mask(point, loand_path, 1.04)
+	var loand_core := _ridge_mask(point, loand_path, 0.38)
+	var eastern_spine := _ridge_mask(point, eastern_path, 0.88)
+	var eastern_core := _ridge_mask(point, eastern_path, 0.34)
+	var heren_crest := 0.74 + pow(absf(sin(x * 1.22 + z * 0.31)), 1.45) * 0.33
+	var loand_crest := 0.77 + pow(absf(sin(x * 1.48 - z * 0.22 + 0.7)), 1.6) * 0.27
+	land_height += heren_ridge * 5.5 * ridge_detail + heren_core * 4.7 * heren_crest
+	land_height += loand_crown * 3.7 * ridge_detail + loand_core * 3.1 * loand_crest
+	land_height += eastern_spine * 3.0 * ridge_detail + eastern_core * 2.1
+
+	# Secondary ridges and foothills make each range read as a mountain system, not isolated cones.
+	var heren_branch_west := _ridge_mask(point, [Vector2(2.0, -6.7), Vector2(1.0, -5.6), Vector2(0.4, -4.4)], 0.62)
+	var heren_branch_mid := _ridge_mask(point, [Vector2(5.7, -7.2), Vector2(5.1, -5.9), Vector2(5.8, -4.7)], 0.64)
+	var heren_branch_east := _ridge_mask(point, [Vector2(9.2, -6.8), Vector2(10.0, -5.4), Vector2(9.7, -4.2)], 0.58)
+	var loand_branch_west := _ridge_mask(point, [Vector2(-8.0, -3.8), Vector2(-9.2, -2.7), Vector2(-9.6, -1.2)], 0.62)
+	var loand_branch_mid := _ridge_mask(point, [Vector2(-5.5, -4.4), Vector2(-5.0, -3.1), Vector2(-5.8, -2.0)], 0.54)
+	var loand_branch_east := _ridge_mask(point, [Vector2(-2.8, -4.1), Vector2(-1.9, -3.0), Vector2(-1.2, -2.2)], 0.52)
+	var branch_detail := 0.78 + absf(_terrain_noise(x * 1.9 - 2.0, z * 1.9 + 4.0)) * 0.38
+	land_height += maxf(heren_branch_west, maxf(heren_branch_mid, heren_branch_east)) * 2.55 * branch_detail
+	land_height += maxf(loand_branch_west, maxf(loand_branch_mid, loand_branch_east)) * 1.95 * branch_detail
+	var heren_inner_spur := _ridge_mask(point, [Vector2(2.0, -6.1), Vector2(4.0, -5.1), Vector2(5.8, -3.9)], 0.72)
+	var loand_west_spur := _ridge_mask(point, [Vector2(-10.0, -3.0), Vector2(-10.7, -1.0), Vector2(-9.0, 0.9)], 0.74)
 	land_height += heren_inner_spur * 3.2 * ridge_detail
 	land_height += loand_west_spur * 2.4 * ridge_detail
 
 	# This escarpment keeps Datt from cheaply absorbing the distant southern belt.
-	var barrier := _ridge_mask(Vector2(x, z), [Vector2(-7.8, 3.8), Vector2(-3.8, 4.2), Vector2(0.2, 3.7), Vector2(4.3, 4.1), Vector2(8.0, 3.6)], 0.66)
+	var barrier_path := [Vector2(-7.8, 3.8), Vector2(-3.8, 4.2), Vector2(0.2, 3.7), Vector2(4.3, 4.1), Vector2(8.0, 3.6)]
+	var barrier := _ridge_mask(point, barrier_path, 0.98)
+	var barrier_core := _ridge_mask(point, barrier_path, 0.38)
 	var pass_factor := 1.0
 	for pass_x in [-4.2, 1.7, 7.3]:
 		pass_factor *= 1.0 - _gaussian(x, z, pass_x, 3.85, 0.52, 0.68) * 0.86
-	land_height += barrier * pass_factor * 7.0 * ridge_detail
+	land_height += (barrier * 3.6 + barrier_core * 2.35) * pass_factor * ridge_detail
 	var southern_spurs := maxf(
-		_ridge_mask(Vector2(x, z), [Vector2(-5.8, 4.0), Vector2(-4.6, 5.0), Vector2(-4.0, 6.2)], 0.50),
-		_ridge_mask(Vector2(x, z), [Vector2(4.8, 4.0), Vector2(5.9, 5.0), Vector2(6.5, 6.1)], 0.50)
+		_ridge_mask(point, [Vector2(-5.8, 4.0), Vector2(-4.6, 5.0), Vector2(-4.0, 6.2)], 0.66),
+		_ridge_mask(point, [Vector2(4.8, 4.0), Vector2(5.9, 5.0), Vector2(6.5, 6.1)], 0.66)
 	)
 	land_height += southern_spurs * 2.2 * ridge_detail
 	var mountain_detail_mask := maxf(heren_ridge, maxf(loand_crown, maxf(barrier, maxf(heren_inner_spur, loand_west_spur))))
-	land_height += mountain_detail_mask * absf(_terrain_noise(x * 3.1 + 1.0, z * 3.1 - 2.0)) * 0.46
+	land_height += mountain_detail_mask * (
+		absf(_terrain_noise(x * 3.1 + 1.0, z * 3.1 - 2.0)) * 0.52
+		+ absf(_terrain_noise(x * 5.7 - 4.0, z * 5.7 + 2.0)) * 0.16
+	)
 	land_height += smoothstep(4.2, 7.8, z) * 0.76
 	var dune_field := smoothstep(4.6, 7.4, z) * (1.0 - eastern_spine)
 	land_height += dune_field * (sin(x * 2.15 + z * 0.52) + sin(x * 1.08 - z * 1.34)) * 0.09
@@ -242,9 +265,13 @@ func _world_height(x: float, z: float) -> float:
 	land_height = lerpf(land_height, -0.06, canal_blend * 0.97)
 
 	# Three distinct inland lakes: a western basin lake, a Datt-border lake, and a southern salt lake.
+	var lake_edge_noise := _terrain_noise(x * 2.35 + 8.0, z * 2.35 - 3.0) * 0.12
 	var lake_mask := maxf(
-		_gaussian(x, z, -1.7, -0.7, 1.25, 0.72),
-		maxf(_gaussian(x, z, 6.8, 1.8, 0.95, 0.62), _gaussian(x, z, -2.3, 6.5, 1.35, 0.78))
+		_gaussian(x, z, -1.7, -0.7, 1.25, 0.72) + lake_edge_noise,
+		maxf(
+			_gaussian(x, z, 6.8, 1.8, 0.95, 0.62) + lake_edge_noise * 0.82,
+			_gaussian(x, z, -2.3, 6.5, 1.35, 0.78) + lake_edge_noise * 1.12
+		)
 	)
 	land_height = lerpf(land_height, -0.08, smoothstep(0.30, 0.72, lake_mask))
 
@@ -253,7 +280,7 @@ func _world_height(x: float, z: float) -> float:
 	var island_relief := 0.54 + _terrain_noise(x * 1.15 + 4.0, z * 1.15) * 0.13
 	land_height = lerpf(land_height, island_relief, archipelago * 0.94)
 
-	var detail := _terrain_noise(x * 1.65, z * 1.65) * 0.09
+	var detail := _terrain_noise(x * 1.65, z * 1.65) * 0.12
 	land_height += detail * clampf((land_height - 0.35) / 2.8, 0.0, 1.0)
 	return lerpf(-2.6, land_height, coast)
 
