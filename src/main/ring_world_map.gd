@@ -754,9 +754,16 @@ func _draw_landmarks() -> void:
 	_draw_castle(_design_to_world(Vector2(18, 14)))
 	_draw_datt_metropolis(_design_to_world(Vector2(32, 16)))
 	_draw_heren_industrial_coast(_design_to_world(Vector2(40, 11)))
+	_draw_mining_complex(_design_to_world(Vector2(35, 9)))
+	_draw_mining_complex(_design_to_world(Vector2(38, 8)) + Vector2(28, 10))
 	_draw_modern_port(_design_to_world(Vector2(42, 19)))
 	_draw_desert_outpost(_design_to_world(Vector2(24, 24)))
-	_draw_ship(_design_to_world(Vector2(40, 26)) + Vector2(18, 24))
+	_draw_psetia_archipelago()
+	_draw_magic_sanctuary(_design_to_world(Vector2(5, 8)), 1.0)
+	_draw_magic_sanctuary(_design_to_world(Vector2(3, 12)), 0.72)
+	_draw_magic_observatory(_design_to_world(Vector2(8, 13)))
+	_draw_ship(_design_to_world(Vector2(39, 29)), 1.0)
+	_draw_ship(_design_to_world(Vector2(46, 20)), 0.82)
 	_draw_airship(_design_to_world(Vector2(8, 8)) + Vector2(-4, -48), 0.82)
 	_draw_airship(_design_to_world(Vector2(4, 13)) + Vector2(-18, -34), 0.62)
 
@@ -828,6 +835,51 @@ func _draw_heren_industrial_coast(center: Vector2) -> void:
 		draw_circle(tank_center - Vector2(0, 8), 8.0, Color("#a2a69e"))
 		draw_rect(Rect2(tank_center + Vector2(-8, -8), Vector2(16, 10)), Color("#737872"))
 		draw_arc(tank_center - Vector2(0, 8), 8.0, PI, TAU, 14, Color("#d2d4ca"), 1.3)
+
+
+func _draw_mining_complex(center: Vector2) -> void:
+	# The mine mouth sits against a rock spoil bank instead of floating as an icon.
+	draw_ellipse_shadow(center + Vector2(12, 8), Vector2(44, 13), Color(0.03, 0.05, 0.04, 0.34))
+	draw_colored_polygon(PackedVector2Array([
+		center + Vector2(-35, 7), center + Vector2(-20, -23), center + Vector2(2, -31),
+		center + Vector2(23, -18), center + Vector2(36, 8),
+	]), Color("#555b55"))
+	draw_colored_polygon(PackedVector2Array([
+		center + Vector2(-31, 6), center + Vector2(-18, -18), center + Vector2(0, -25), center + Vector2(-5, 7),
+	]), Color("#74786e"))
+	draw_arc(center + Vector2(2, 7), 13.0, PI, TAU, 18, Color("#272d2c"), 11.0, true)
+	draw_rect(Rect2(center + Vector2(-11, 4), Vector2(26, 10)), Color("#292e2d"))
+	# Timber portal, ore conveyor and processing shed are separate model pieces.
+	var timber := Color("#7c6543")
+	draw_line(center + Vector2(-14, 10), center + Vector2(-14, -7), timber, 4.0)
+	draw_line(center + Vector2(16, 10), center + Vector2(16, -7), timber, 4.0)
+	draw_line(center + Vector2(-16, -7), center + Vector2(18, -7), timber, 4.0)
+	var conveyor_start := center + Vector2(17, 9)
+	var conveyor_end := center + Vector2(66, 33)
+	draw_line(conveyor_start, conveyor_end, Color("#4d5350"), 9.0, true)
+	draw_line(conveyor_start, conveyor_end, Color("#a58b5e"), 4.0, true)
+	for support_index in range(4):
+		var support: Vector2 = conveyor_start.lerp(conveyor_end, 0.18 + float(support_index) * 0.21)
+		draw_line(support, support + Vector2(0, 13), Color("#5b5140"), 2.0)
+	_draw_iso_building(center + Vector2(70, 35), Vector2(31, 16), 21.0, Color("#675f50"), Color("#484e4b"), Color("#8c8066"))
+	_draw_ore_cart(center + Vector2(38, 27))
+	for pile_index in range(3):
+		var pile_center := center + Vector2(46 + pile_index * 13, 51 + float(pile_index % 2) * 4.0)
+		draw_colored_polygon(PackedVector2Array([
+			pile_center + Vector2(-8, 3), pile_center + Vector2(0, -8 - pile_index * 2), pile_center + Vector2(9, 3),
+		]), [Color("#776f62"), Color("#655f58"), Color("#8a7351")][pile_index])
+
+
+func _draw_ore_cart(center: Vector2) -> void:
+	draw_colored_polygon(PackedVector2Array([
+		center + Vector2(-10, -5), center + Vector2(8, -5), center + Vector2(6, 4), center + Vector2(-7, 4),
+	]), Color("#575d59"))
+	draw_colored_polygon(PackedVector2Array([
+		center + Vector2(-8, -4), center + Vector2(6, -4), center + Vector2(3, 1), center + Vector2(-5, 1),
+	]), Color("#8b7251"))
+	draw_circle(center + Vector2(-5, 6), 2.8, Color("#303534"))
+	draw_circle(center + Vector2(5, 6), 2.8, Color("#303534"))
+	draw_line(center + Vector2(-14, 9), center + Vector2(15, 9), Color("#9ba098"), 1.5)
 
 
 func _draw_netherit_gate(center: Vector2) -> void:
@@ -939,7 +991,6 @@ func _draw_modern_port(center: Vector2) -> void:
 	draw_arc(center + Vector2(83, -18), 18.0, PI, TAU, 24, Color("#85ddd3"), 3.0, true)
 	draw_line(center + Vector2(65, -18), center + Vector2(101, -18), Color("#9fb3ad"), 3.0, true)
 	_draw_airship(center + Vector2(83, -58), 0.70)
-	_draw_ship(center + Vector2(-43, 41))
 	_draw_fast_boat(center + Vector2(29, 53), 0.72)
 
 
@@ -985,14 +1036,106 @@ func _draw_desert_outpost(center: Vector2) -> void:
 	draw_colored_polygon(PackedVector2Array([center + Vector2(-4, -40), center + Vector2(17, -33), center + Vector2(-4, -26)]), Color("#d5b25f"))
 
 
-func _draw_ship(center: Vector2) -> void:
-	draw_line(center + Vector2(-30, 14), center + Vector2(24, 14), Color(0.61, 0.89, 0.88, 0.35), 3.0)
-	draw_colored_polygon(PackedVector2Array([center + Vector2(-27, -5), center + Vector2(24, -5), center + Vector2(14, 10), center + Vector2(-16, 11)]), Color("#d9ddd5"))
-	draw_colored_polygon(PackedVector2Array([center + Vector2(-16, 5), center + Vector2(14, 5), center + Vector2(24, -5), center + Vector2(-27, -5)]), Color("#647f80"))
-	draw_rect(Rect2(center + Vector2(-6, -18), Vector2(19, 13)), Color("#e3e5dc"))
-	draw_rect(Rect2(center + Vector2(-2, -15), Vector2(13, 5)), Color("#3e737b"))
-	draw_line(center + Vector2(5, -18), center + Vector2(5, -30), Color("#87928d"), 2.0)
-	draw_colored_polygon(PackedVector2Array([center + Vector2(5, -30), center + Vector2(17, -25), center + Vector2(5, -21)]), Color("#71c9c2"))
+func _draw_psetia_archipelago() -> void:
+	_draw_psetia_settlement(_design_to_world(Vector2(35, 27)), 0.88, true)
+	_draw_psetia_settlement(_design_to_world(Vector2(41, 26)), 1.0, true)
+	_draw_psetia_settlement(_design_to_world(Vector2(45, 23)), 0.74, false)
+	_draw_psetia_settlement(_design_to_world(Vector2(29, 28)), 0.68, false)
+
+
+func _draw_psetia_settlement(center: Vector2, scale_value: float, has_temple: bool) -> void:
+	var house_offsets := [Vector2(-24, 2), Vector2(2, -10), Vector2(25, 5), Vector2(-2, 18)]
+	for index in range(house_offsets.size()):
+		_draw_stilt_house(center + house_offsets[index] * scale_value, scale_value * (0.78 + float(index % 2) * 0.12))
+	if has_temple:
+		_draw_psetia_temple(center + Vector2(8, -5) * scale_value, scale_value)
+	_draw_island_pier(center + Vector2(-8, 28) * scale_value, scale_value)
+
+
+func _draw_stilt_house(center: Vector2, scale_value: float) -> void:
+	var wall := Color("#b58a58")
+	var dark_wall := Color("#7e6045")
+	var roof := Color("#5f4938")
+	for stilt_x in [-8.0, 7.0]:
+		draw_line(center + Vector2(stilt_x, -1) * scale_value, center + Vector2(stilt_x, 12) * scale_value, Color("#594635"), 2.0 * scale_value)
+	_draw_iso_building(center, Vector2(24, 13) * scale_value, 15.0 * scale_value, wall, dark_wall, Color("#9e7248"))
+	draw_colored_polygon(PackedVector2Array([
+		center + Vector2(-17, -18) * scale_value,
+		center + Vector2(0, -34) * scale_value,
+		center + Vector2(19, -18) * scale_value,
+		center + Vector2(0, -9) * scale_value,
+	]), roof)
+	draw_line(center + Vector2(-18, -17) * scale_value, center + Vector2(19, -17) * scale_value, Color("#d1a568"), 1.5 * scale_value)
+
+
+func _draw_psetia_temple(center: Vector2, scale_value: float) -> void:
+	for tier in range(3):
+		var tier_scale := scale_value * (1.0 - float(tier) * 0.20)
+		var tier_center := center - Vector2(0, float(tier) * 14.0 * scale_value)
+		_draw_iso_building(tier_center, Vector2(31, 16) * tier_scale, 12.0 * scale_value, Color("#b99965"), Color("#826a50"), Color("#d0af68"))
+		draw_colored_polygon(PackedVector2Array([
+			tier_center + Vector2(-20, -14) * tier_scale, tier_center + Vector2(0, -26) * tier_scale,
+			tier_center + Vector2(21, -14) * tier_scale, tier_center + Vector2(0, -6) * tier_scale,
+		]), Color("#7c4938").lightened(float(tier) * 0.06))
+	draw_line(center + Vector2(0, -58) * scale_value, center + Vector2(0, -72) * scale_value, Color("#d6b65f"), 2.0)
+
+
+func _draw_island_pier(center: Vector2, scale_value: float) -> void:
+	var end := center + Vector2(30, 15) * scale_value
+	draw_line(center, end, Color("#5f4935"), 7.0 * scale_value, true)
+	draw_line(center, end, Color("#b18a55"), 4.0 * scale_value, true)
+	for post_index in range(3):
+		var post: Vector2 = center.lerp(end, 0.22 + float(post_index) * 0.28)
+		draw_line(post, post + Vector2(0, 8) * scale_value, Color("#584434"), 1.7 * scale_value)
+
+
+func _draw_magic_sanctuary(center: Vector2, scale_value: float) -> void:
+	var cyan := Color("#74ddd5")
+	var glow := Color(0.43, 0.94, 0.88, 0.22)
+	var outer := PackedVector2Array([
+		center + Vector2(0, -22) * scale_value, center + Vector2(42, 0) * scale_value,
+		center + Vector2(0, 22) * scale_value, center + Vector2(-42, 0) * scale_value,
+	])
+	var inner := PackedVector2Array([
+		center + Vector2(0, -13) * scale_value, center + Vector2(25, 0) * scale_value,
+		center + Vector2(0, 13) * scale_value, center + Vector2(-25, 0) * scale_value,
+	])
+	draw_polyline(outer + PackedVector2Array([outer[0]]), glow, 7.0 * scale_value, true)
+	draw_polyline(outer + PackedVector2Array([outer[0]]), cyan, 2.0 * scale_value, true)
+	draw_polyline(inner + PackedVector2Array([inner[0]]), Color(0.75, 1.0, 0.91, 0.62), 1.2 * scale_value, true)
+	for point in outer:
+		_draw_magic_crystal(point - Vector2(0, 2) * scale_value)
+	_draw_magic_portal(center - Vector2(0, 9) * scale_value, scale_value)
+
+
+func _draw_magic_portal(center: Vector2, scale_value: float) -> void:
+	draw_circle(center, 17.0 * scale_value, Color(0.35, 0.91, 0.86, 0.16))
+	draw_arc(center, 14.0 * scale_value, 0, TAU, 28, Color("#8de8df"), 3.0 * scale_value, true)
+	draw_arc(center, 8.0 * scale_value, 0, TAU, 20, Color("#304d62"), 5.0 * scale_value, true)
+	draw_line(center + Vector2(-18, 16) * scale_value, center + Vector2(-12, -14) * scale_value, Color("#66746f"), 3.0 * scale_value)
+	draw_line(center + Vector2(18, 16) * scale_value, center + Vector2(12, -14) * scale_value, Color("#66746f"), 3.0 * scale_value)
+
+
+func _draw_magic_observatory(center: Vector2) -> void:
+	_draw_iso_building(center, Vector2(34, 18), 37.0, Color("#677674"), Color("#455b5c"), Color("#9fae9d"), Color("#79ded5"))
+	draw_circle(center - Vector2(0, 47), 13.0, Color("#3d5d68"))
+	draw_arc(center - Vector2(0, 47), 13.0, 0, TAU, 24, Color("#82e3da"), 2.5, true)
+	for arm_index in range(4):
+		var angle := float(arm_index) * PI * 0.5 + PI * 0.25
+		draw_line(center - Vector2(0, 47), center - Vector2(0, 47) + Vector2(cos(angle), sin(angle)) * 20.0, Color("#c4d7c8"), 1.8)
+
+
+func _draw_ship(center: Vector2, scale_value: float = 1.0) -> void:
+	# Open-water wake establishes that the vessel is afloat, not sitting on an island tile.
+	for wake_index in range(3):
+		var wake_y := 14.0 + float(wake_index) * 5.0
+		draw_arc(center + Vector2(-24, wake_y) * scale_value, (20.0 + wake_index * 7.0) * scale_value, 3.45, 5.92, 16, Color(0.63, 0.91, 0.88, 0.34 - wake_index * 0.07), 1.6 * scale_value, true)
+	draw_colored_polygon(PackedVector2Array([center + Vector2(-27, -5) * scale_value, center + Vector2(24, -5) * scale_value, center + Vector2(14, 10) * scale_value, center + Vector2(-16, 11) * scale_value]), Color("#d9ddd5"))
+	draw_colored_polygon(PackedVector2Array([center + Vector2(-16, 5) * scale_value, center + Vector2(14, 5) * scale_value, center + Vector2(24, -5) * scale_value, center + Vector2(-27, -5) * scale_value]), Color("#647f80"))
+	draw_rect(Rect2(center + Vector2(-6, -18) * scale_value, Vector2(19, 13) * scale_value), Color("#e3e5dc"))
+	draw_rect(Rect2(center + Vector2(-2, -15) * scale_value, Vector2(13, 5) * scale_value), Color("#3e737b"))
+	draw_line(center + Vector2(5, -18) * scale_value, center + Vector2(5, -30) * scale_value, Color("#87928d"), 2.0 * scale_value)
+	draw_colored_polygon(PackedVector2Array([center + Vector2(5, -30) * scale_value, center + Vector2(17, -25) * scale_value, center + Vector2(5, -21) * scale_value]), Color("#71c9c2"))
 
 
 func _draw_village(center: Vector2, roof_color: Color) -> void:

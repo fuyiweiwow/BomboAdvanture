@@ -40,6 +40,15 @@ The active campaign map is a lightweight 2D isometric tile map implemented in
   angles that disagree with the terrain.
 - Loand's castle is a multi-part isometric model made from a raised bailey,
   outer walls, four corner towers, a central keep, gatehouse, chapel and flag.
+- Psetia's southern islands contain compact Southeast Asian-inspired stilt
+  houses, steep roofs, tiered temples and timber piers. Ocean vessels are
+  anchored to validated water cells and use wakes to keep them visually in the
+  water rather than on top of island tiles.
+- Western floating islands contain cyan rune sanctuaries, standing portals,
+  crystals and a magical observatory alongside the existing air traffic.
+- Heren's mountain mines use rock-backed mine mouths, timber portals,
+  conveyors, processing sheds, ore carts and spoil piles, distinct from the
+  factories along the eastern coast.
 - The campaign marker and route layer is currently disabled so landmarks stay
   readable while the world art is being developed. Set
   `show_campaign_overlay` on the map scene when that layer is ready to return.
