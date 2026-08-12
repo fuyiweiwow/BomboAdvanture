@@ -9,10 +9,10 @@ const GRID_ROWS := 30
 const TILE_WIDTH := 44.0
 const TILE_HEIGHT := 22.0
 const MAP_ORIGIN := Vector2(1020.0, 126.0)
-const CAMERA_HOME := Vector2(1200.0, 530.0)
-const CAMERA_MIN_ZOOM := 0.48
-const CAMERA_MAX_ZOOM := 1.80
-const CAMERA_HOME_ZOOM := 0.90
+const CAMERA_HOME := Vector2(1260.0, 538.0)
+const CAMERA_MIN_ZOOM := 0.72
+const CAMERA_MAX_ZOOM := 2.70
+const CAMERA_HOME_ZOOM := 1.53
 
 const OCEAN := Color("#326f78")
 const OCEAN_DEEP := Color("#173f4d")
@@ -383,8 +383,8 @@ func _draw_pine(center: Vector2, color: Color, scale_value: float = 1.0) -> void
 
 
 func _draw_mountain(center: Vector2, seed: float, snow_cap: bool) -> void:
-	var height := 28.0 + seed * 25.0
-	var width := 14.0 + seed * 7.0
+	var height := 13.0 + seed * 11.0
+	var width := 20.0 + seed * 10.0
 	draw_ellipse_shadow(center + Vector2(7, 7), Vector2(width * 0.9, 5.5), Color(0.04, 0.07, 0.06, 0.34))
 	draw_colored_polygon(PackedVector2Array([center + Vector2(-width, 6), center + Vector2(0, -height), center + Vector2(width, 6)]), Color("#4d5450"))
 	draw_colored_polygon(PackedVector2Array([center + Vector2(-width, 6), center + Vector2(0, -height), center + Vector2(-2, 2)]), Color("#7b8075"))
@@ -584,13 +584,82 @@ func _draw_landmarks() -> void:
 	_draw_village(_grid_to_world(Vector2(28, 21)), Color("#9b754b"))
 	_draw_netherit_gate(_grid_to_world(Vector2(39, 2)))
 	_draw_castle(_grid_to_world(Vector2(18, 14)))
-	_draw_future_hub(_grid_to_world(Vector2(32, 16)))
-	_draw_factory_district(_grid_to_world(Vector2(40, 11)))
+	_draw_datt_metropolis(_grid_to_world(Vector2(32, 16)))
+	_draw_heren_industrial_coast(_grid_to_world(Vector2(40, 11)))
 	_draw_modern_port(_grid_to_world(Vector2(42, 19)))
 	_draw_desert_outpost(_grid_to_world(Vector2(24, 24)))
 	_draw_ship(_grid_to_world(Vector2(40, 26)) + Vector2(18, 24))
 	_draw_airship(_grid_to_world(Vector2(8, 8)) + Vector2(-4, -48), 0.82)
 	_draw_airship(_grid_to_world(Vector2(4, 13)) + Vector2(-18, -34), 0.62)
+
+
+func _draw_iso_building(base: Vector2, footprint: Vector2, height: float, front: Color, side: Color, roof: Color, window_color: Color = Color.TRANSPARENT) -> void:
+	var top := base - Vector2(0, height)
+	var diamond := PackedVector2Array([
+		top + Vector2(0, -footprint.y * 0.5),
+		top + Vector2(footprint.x * 0.5, 0),
+		top + Vector2(0, footprint.y * 0.5),
+		top + Vector2(-footprint.x * 0.5, 0),
+	])
+	draw_ellipse_shadow(base + Vector2(height * 0.18, 4), Vector2(footprint.x * 0.56, footprint.y * 0.42), Color(0.02, 0.06, 0.06, 0.28))
+	draw_colored_polygon(PackedVector2Array([
+		diamond[1], diamond[2], diamond[2] + Vector2(0, height), diamond[1] + Vector2(0, height),
+	]), side)
+	draw_colored_polygon(PackedVector2Array([
+		diamond[2], diamond[3], diamond[3] + Vector2(0, height), diamond[2] + Vector2(0, height),
+	]), front)
+	draw_colored_polygon(diamond, roof)
+	if window_color.a <= 0.0 or height < 18.0:
+		return
+	var floor_count := maxi(1, int(height / 9.0))
+	for floor_index in range(floor_count):
+		var y := base.y - height + 7.0 + float(floor_index) * 8.0
+		if y > base.y - 3.0:
+			break
+		draw_line(Vector2(base.x - footprint.x * 0.32, y + footprint.y * 0.15), Vector2(base.x - 2, y + footprint.y * 0.30), window_color, 1.4)
+		draw_line(Vector2(base.x + 3, y + footprint.y * 0.28), Vector2(base.x + footprint.x * 0.30, y + footprint.y * 0.12), window_color.darkened(0.08), 1.4)
+
+
+func _draw_datt_metropolis(center: Vector2) -> void:
+	var district_offsets := [
+		Vector2(-76, -18), Vector2(-57, 10), Vector2(-40, -27), Vector2(-24, 18),
+		Vector2(28, -27), Vector2(43, 13), Vector2(61, -8), Vector2(75, 21),
+		Vector2(-66, 35), Vector2(27, 39), Vector2(55, 43),
+	]
+	for index in range(district_offsets.size()):
+		var offset: Vector2 = district_offsets[index]
+		var height := 24.0 + float((index * 17) % 31)
+		var footprint := Vector2(17.0 + float(index % 3) * 3.0, 10.0 + float(index % 2) * 2.0)
+		var front := Color("#607d7c").lightened(float(index % 3) * 0.045)
+		var side := Color("#405f62").lightened(float(index % 2) * 0.05)
+		_draw_iso_building(center + offset, footprint, height, front, side, Color("#a6b9b2"), Color("#73ddd4"))
+		if index % 3 == 0:
+			draw_line(center + offset - Vector2(0, height + 5), center + offset - Vector2(0, height + 15), Color("#86e7db"), 1.5)
+	_draw_transit_ring(center)
+	_draw_future_hub(center)
+
+
+func _draw_transit_ring(center: Vector2) -> void:
+	draw_arc(center + Vector2(0, 4), 70.0, 0.16, PI - 0.10, 42, Color(0.05, 0.10, 0.11, 0.50), 7.0, true)
+	draw_arc(center + Vector2(0, 4), 70.0, 0.16, PI - 0.10, 42, Color("#aab6ae"), 4.0, true)
+	draw_arc(center + Vector2(0, 4), 70.0, 0.16, PI - 0.10, 42, Color("#6ed8ce"), 1.2, true)
+	for angle_index in range(7):
+		var angle := lerpf(0.25, PI - 0.18, float(angle_index) / 6.0)
+		var point := center + Vector2(cos(angle), sin(angle)) * 70.0 + Vector2(0, 4)
+		draw_circle(point, 2.8, Color("#d9e1d6"))
+
+
+func _draw_heren_industrial_coast(center: Vector2) -> void:
+	for row_index in range(2):
+		for column_index in range(4):
+			var offset := Vector2(float(column_index) * 26.0 - 41.0, float(row_index) * 25.0 - 9.0)
+			_draw_iso_building(center + offset, Vector2(24, 12), 13.0 + float((column_index + row_index) % 2) * 5.0, Color("#625f56"), Color("#494d4a"), Color("#857862"))
+	_draw_factory_district(center + Vector2(0, -8))
+	for tank_index in range(3):
+		var tank_center := center + Vector2(-48 + tank_index * 25, 38)
+		draw_circle(tank_center - Vector2(0, 8), 8.0, Color("#a2a69e"))
+		draw_rect(Rect2(tank_center + Vector2(-8, -8), Vector2(16, 10)), Color("#737872"))
+		draw_arc(tank_center - Vector2(0, 8), 8.0, PI, TAU, 14, Color("#d2d4ca"), 1.3)
 
 
 func _draw_netherit_gate(center: Vector2) -> void:
@@ -657,18 +726,73 @@ func _draw_factory_district(center: Vector2) -> void:
 
 
 func _draw_modern_port(center: Vector2) -> void:
-	draw_ellipse_shadow(center + Vector2(12, 10), Vector2(48, 14), Color(0.02, 0.07, 0.09, 0.38))
-	draw_colored_polygon(PackedVector2Array([center + Vector2(-42, 0), center + Vector2(0, -22), center + Vector2(43, 0), center + Vector2(0, 22)]), Color("#426f70"))
-	draw_polyline(PackedVector2Array([center + Vector2(-39, 0), center + Vector2(0, -19), center + Vector2(39, 0)]), Color("#8bd2c8"), 2.0, true)
-	for offset in [-25.0, -7.0, 11.0, 29.0]:
-		draw_line(center + Vector2(offset, -5), center + Vector2(offset + 13, 27), Color("#d3bc77"), 3.2, true)
-		draw_line(center + Vector2(offset + 13, 27), center + Vector2(offset + 22, 22), Color("#d3bc77"), 2.0, true)
-		draw_line(center + Vector2(offset + 6, 10), center + Vector2(offset + 16, 7), Color("#d3bc77"), 1.5, true)
-	draw_arc(center + Vector2(-8, -29), 14.0, 0.0, TAU, 24, Color("#7ce1d4"), 3.0, true)
-	draw_circle(center + Vector2(-8, -29), 5.0, Color("#d8e0d7"))
-	draw_rect(Rect2(center + Vector2(13, -33), Vector2(11, 30)), Color("#6b8883"))
-	draw_line(center + Vector2(18, -29), center + Vector2(18, -8), Color("#8ee5d9"), 2.0)
-	_draw_airship(center + Vector2(20, -66), 0.48)
+	# Deep-water basin and three long cargo fingers establish the port as a district.
+	draw_ellipse_shadow(center + Vector2(13, 16), Vector2(86, 25), Color(0.02, 0.07, 0.09, 0.38))
+	draw_colored_polygon(PackedVector2Array([
+		center + Vector2(-82, 5), center + Vector2(-23, -27), center + Vector2(75, 14), center + Vector2(17, 49),
+	]), Color("#35666c"))
+	draw_polyline(PackedVector2Array([
+		center + Vector2(-78, 5), center + Vector2(-23, -23), center + Vector2(71, 14),
+	]), Color(0.52, 0.84, 0.81, 0.52), 2.0, true)
+	for pier_index in range(3):
+		var pier_origin := center + Vector2(-47 + pier_index * 30, 4 + pier_index * 8)
+		_draw_port_pier(pier_origin, pier_index)
+
+	# Warehouses and the mineral/futures exchange occupy the landward side.
+	for warehouse_index in range(4):
+		var warehouse_base := center + Vector2(-62 + warehouse_index * 28, -25 - float(warehouse_index % 2) * 7.0)
+		_draw_iso_building(warehouse_base, Vector2(27, 14), 15.0, Color("#777065"), Color("#535c59"), Color("#aaa184"))
+		for door_index in range(3):
+			draw_line(warehouse_base + Vector2(-8 + door_index * 7, -7), warehouse_base + Vector2(-8 + door_index * 7, -2), Color("#384a49"), 2.0)
+	var exchange_base := center + Vector2(53, -25)
+	_draw_iso_building(exchange_base, Vector2(27, 15), 48.0, Color("#637e7b"), Color("#405e61"), Color("#b2c2b9"), Color("#7be0d4"))
+	draw_arc(exchange_base - Vector2(0, 54), 9.0, 0.0, TAU, 20, Color("#79e0d4"), 2.5, true)
+	draw_line(exchange_base - Vector2(0, 48), exchange_base - Vector2(0, 67), Color("#b9d8cf"), 2.0)
+
+	# Rail terminal and elevated air terminal complete the water-land-air hub.
+	var terminal_base := center + Vector2(76, 15)
+	_draw_iso_building(terminal_base, Vector2(39, 17), 18.0, Color("#687b78"), Color("#485d60"), Color("#b1b59d"), Color("#7de0d5"))
+	for rail_index in range(3):
+		draw_line(center + Vector2(30, 30 + rail_index * 4), center + Vector2(103, 30 + rail_index * 4), Color("#aeb4aa"), 1.5, true)
+	draw_arc(center + Vector2(83, -18), 18.0, PI, TAU, 24, Color("#85ddd3"), 3.0, true)
+	draw_line(center + Vector2(65, -18), center + Vector2(101, -18), Color("#9fb3ad"), 3.0, true)
+	_draw_airship(center + Vector2(83, -58), 0.70)
+	_draw_ship(center + Vector2(-43, 41))
+	_draw_fast_boat(center + Vector2(29, 53), 0.72)
+
+
+func _draw_port_pier(center: Vector2, variant: int) -> void:
+	var length := 48.0 + float(variant) * 5.0
+	var end := center + Vector2(length, 24.0)
+	draw_line(center, end, Color(0.04, 0.11, 0.12, 0.52), 12.0, true)
+	draw_line(center, end, Color("#a79b79"), 8.0, true)
+	draw_line(center, end, Color("#d0bd87"), 1.4, true)
+	for crane_index in range(3):
+		var anchor := center.lerp(end, 0.22 + float(crane_index) * 0.27)
+		_draw_cargo_crane(anchor, 0.74 + float(variant) * 0.05)
+	for container_index in range(4):
+		var stack := center.lerp(end, 0.16 + float(container_index) * 0.19) + Vector2(-4, 5)
+		draw_rect(Rect2(stack + Vector2(-4, -5), Vector2(8, 5)), [Color("#a65f49"), Color("#4d7b78"), Color("#b7934d")][(container_index + variant) % 3])
+
+
+func _draw_cargo_crane(center: Vector2, scale_value: float) -> void:
+	var gold := Color("#d0ad5f")
+	draw_line(center, center + Vector2(0, -31) * scale_value, gold, 3.0, true)
+	draw_line(center + Vector2(0, -28) * scale_value, center + Vector2(21, -37) * scale_value, gold, 2.4, true)
+	draw_line(center + Vector2(5, -30) * scale_value, center + Vector2(12, -3) * scale_value, gold.darkened(0.08), 1.8, true)
+	draw_line(center + Vector2(17, -35) * scale_value, center + Vector2(17, -18) * scale_value, Color("#7d6d52"), 1.1, true)
+
+
+func _draw_fast_boat(center: Vector2, scale_value: float) -> void:
+	draw_line(center + Vector2(-18, 8) * scale_value, center + Vector2(21, 8) * scale_value, Color(0.55, 0.88, 0.87, 0.42), 2.0)
+	draw_colored_polygon(PackedVector2Array([
+		center + Vector2(-16, 0) * scale_value, center + Vector2(22, 0) * scale_value,
+		center + Vector2(10, 8) * scale_value, center + Vector2(-10, 7) * scale_value,
+	]), Color("#d9ddd5"))
+	draw_colored_polygon(PackedVector2Array([
+		center + Vector2(-3, -7) * scale_value, center + Vector2(10, -7) * scale_value,
+		center + Vector2(15, 0) * scale_value, center + Vector2(-8, 0) * scale_value,
+	]), Color("#49777c"))
 
 
 func _draw_desert_outpost(center: Vector2) -> void:

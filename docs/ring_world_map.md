@@ -16,6 +16,12 @@ The active campaign map is a lightweight 2D isometric tile map implemented in
 - Rivers and roads use smoothed paths. Datt's crossing canals, future rail,
   regional landmarks, forests, fields, mountains, ships and airships are drawn
   directly by Godot and require no external 3D assets.
+- The active map viewport renders at 1920 by 1080 with 2x MSAA. Terrain,
+  buildings and infrastructure are vector-drawn CanvasItem geometry rather
+  than a single low-resolution background image.
+- Datt and the modern port are multi-tile districts. Their towers, warehouses,
+  exchange, terminals, cargo piers, cranes and vessels are separate draw
+  elements, so the districts can be expanded without replacing the continent.
 - The campaign marker and route layer is currently disabled so landmarks stay
   readable while the world art is being developed. Set
   `show_campaign_overlay` on the map scene when that layer is ready to return.
