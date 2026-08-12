@@ -127,10 +127,10 @@ func _create_terrain_assets() -> Resource:
 	var assets := ClassDB.instantiate("Terrain3DAssets") as Resource
 	assert(assets != null)
 	var texture_definitions := [
-		["Cartoon Grassland", TEXTURE_GRASS, "res://assets/environment/terrain_textures/packed/grassland_alb_ht.png", "res://assets/environment/terrain_textures/packed/grassland_nrm_rgh.png", Color("#6b9656"), 0.0022, 0.34, 0.78],
-		["Cartoon Forest", TEXTURE_FOREST, "res://assets/environment/terrain_textures/packed/grassland_alb_ht.png", "res://assets/environment/terrain_textures/packed/grassland_nrm_rgh.png", Color("#356940"), 0.0024, 0.42, 0.78],
-		["Cartoon Mountain Rock", TEXTURE_ROCK, "res://assets/environment/terrain_textures/packed/mountain_rock_alb_ht.png", "res://assets/environment/terrain_textures/packed/mountain_rock_nrm_rgh.png", Color("#707977"), 0.0020, 0.58, 0.82],
-		["Cartoon Southern Sand", TEXTURE_SAND, "res://assets/environment/terrain_textures/packed/sand_01_alb_ht.png", "res://assets/environment/terrain_textures/packed/sand_01_nrm_rgh.png", Color("#c0924e"), 0.0018, 0.36, 0.82],
+		["Cartoon Grassland", TEXTURE_GRASS, "res://assets/environment/terrain_textures/packed/grassland_alb_ht.png", "res://assets/environment/terrain_textures/packed/grassland_nrm_rgh.png", Color("#709a55"), 0.0026, 0.40, 0.80],
+		["Cartoon Forest", TEXTURE_FOREST, "res://assets/environment/terrain_textures/packed/grassland_alb_ht.png", "res://assets/environment/terrain_textures/packed/grassland_nrm_rgh.png", Color("#326a3f"), 0.0028, 0.46, 0.80],
+		["Cartoon Mountain Rock", TEXTURE_ROCK, "res://assets/environment/terrain_textures/packed/mountain_rock_alb_ht.png", "res://assets/environment/terrain_textures/packed/mountain_rock_nrm_rgh.png", Color("#77756d"), 0.0025, 0.70, 0.84],
+		["Cartoon Southern Sand", TEXTURE_SAND, "res://assets/environment/terrain_textures/packed/sand_01_alb_ht.png", "res://assets/environment/terrain_textures/packed/sand_01_nrm_rgh.png", Color("#c99a4f"), 0.0022, 0.42, 0.84],
 		["Northern Peak Snow", TEXTURE_SNOW, "res://assets/environment/terrain_textures/packed/snow_02_alb_ht.png", "res://assets/environment/terrain_textures/packed/snow_02_nrm_rgh.png", Color("#e7eee9"), 0.0020, 0.24, 0.74],
 	]
 	for definition in texture_definitions:
@@ -198,20 +198,39 @@ func _world_height(x: float, z: float) -> float:
 	# Continuous ridges make the main ranges legible at continent scale.
 	var point := Vector2(x, z)
 	var ridge_detail := 0.72 + absf(_terrain_noise(x * 1.35, z * 1.35)) * 0.42
-	var heren_path := [Vector2(1.4, -6.8), Vector2(4.5, -7.8), Vector2(8.2, -7.2), Vector2(11.8, -5.8)]
+	var heren_path := [Vector2(0.8, -6.6), Vector2(3.6, -7.8), Vector2(6.8, -7.4), Vector2(9.5, -6.0)]
 	var loand_path := [Vector2(-8.8, -3.5), Vector2(-6.1, -4.8), Vector2(-3.1, -4.5), Vector2(-1.1, -3.4)]
-	var eastern_path := [Vector2(11.7, -5.1), Vector2(12.4, -2.9), Vector2(12.1, -0.4), Vector2(11.4, 1.2)]
-	var heren_ridge := _ridge_mask(point, heren_path, 1.18)
-	var heren_core := _ridge_mask(point, heren_path, 0.43)
-	var loand_crown := _ridge_mask(point, loand_path, 1.04)
-	var loand_core := _ridge_mask(point, loand_path, 0.38)
-	var eastern_spine := _ridge_mask(point, eastern_path, 0.88)
-	var eastern_core := _ridge_mask(point, eastern_path, 0.34)
+	var eastern_path := [Vector2(9.2, -5.2), Vector2(10.0, -3.4), Vector2(9.8, -1.2), Vector2(9.3, 0.8)]
+	var heren_ridge := _ridge_mask(point, heren_path, 0.84)
+	var heren_core := _ridge_mask(point, heren_path, 0.28)
+	var loand_crown := _ridge_mask(point, loand_path, 0.76)
+	var loand_core := _ridge_mask(point, loand_path, 0.25)
+	var eastern_spine := _ridge_mask(point, eastern_path, 0.68)
+	var eastern_core := _ridge_mask(point, eastern_path, 0.23)
 	var heren_crest := 0.74 + pow(absf(sin(x * 1.22 + z * 0.31)), 1.45) * 0.33
 	var loand_crest := 0.77 + pow(absf(sin(x * 1.48 - z * 0.22 + 0.7)), 1.6) * 0.27
-	land_height += heren_ridge * 5.5 * ridge_detail + heren_core * 4.7 * heren_crest
-	land_height += loand_crown * 3.7 * ridge_detail + loand_core * 3.1 * loand_crest
-	land_height += eastern_spine * 3.0 * ridge_detail + eastern_core * 2.1
+	land_height += heren_ridge * 4.0 * ridge_detail + heren_core * 4.9 * heren_crest
+	land_height += loand_crown * 2.8 * ridge_detail + loand_core * 3.6 * loand_crest
+	land_height += eastern_spine * 2.8 * ridge_detail + eastern_core * 3.2
+
+	# Distinct summits keep the ranges readable as mountains rather than smooth berms.
+	var peak_definitions := [
+		Vector4(0.6, -6.5, 2.8, 0.42), Vector4(1.8, -6.9, 3.1, 0.45),
+		Vector4(3.0, -7.5, 3.5, 0.46), Vector4(4.2, -7.7, 3.8, 0.48),
+		Vector4(5.5, -7.5, 3.4, 0.45), Vector4(6.8, -7.1, 3.2, 0.43),
+		Vector4(8.0, -6.6, 3.0, 0.42), Vector4(9.1, -6.0, 2.8, 0.40),
+		Vector4(-8.5, -3.6, 2.2, 0.42), Vector4(-7.3, -4.1, 2.5, 0.43),
+		Vector4(-6.0, -4.6, 2.8, 0.44), Vector4(-4.7, -4.7, 2.6, 0.42),
+		Vector4(-3.4, -4.4, 2.5, 0.40), Vector4(-2.2, -3.9, 2.2, 0.38),
+		Vector4(9.5, -4.5, 2.4, 0.38), Vector4(9.9, -3.1, 2.6, 0.38), Vector4(9.7, -1.6, 2.3, 0.36),
+		Vector4(-6.8, 3.9, 2.3, 0.42), Vector4(-5.2, 4.1, 2.6, 0.42),
+		Vector4(-3.5, 4.1, 2.7, 0.43), Vector4(-1.7, 3.8, 2.5, 0.40),
+		Vector4(0.1, 3.8, 2.6, 0.41), Vector4(1.9, 4.0, 2.4, 0.39),
+		Vector4(3.6, 4.1, 2.6, 0.42), Vector4(5.3, 3.9, 2.4, 0.40), Vector4(6.8, 3.6, 2.1, 0.38),
+	]
+	for peak in peak_definitions:
+		var peak_mask := _gaussian(x, z, peak.x, peak.y, peak.w, peak.w)
+		land_height += pow(peak_mask, 1.72) * peak.z * (0.90 + absf(_terrain_noise(x * 3.7, z * 3.7)) * 0.22)
 
 	# Secondary ridges and foothills make each range read as a mountain system, not isolated cones.
 	var heren_branch_west := _ridge_mask(point, [Vector2(2.0, -6.7), Vector2(1.0, -5.6), Vector2(0.4, -4.4)], 0.62)
@@ -230,17 +249,22 @@ func _world_height(x: float, z: float) -> float:
 
 	# This escarpment keeps Datt from cheaply absorbing the distant southern belt.
 	var barrier_path := [Vector2(-7.8, 3.8), Vector2(-3.8, 4.2), Vector2(0.2, 3.7), Vector2(4.3, 4.1), Vector2(8.0, 3.6)]
-	var barrier := _ridge_mask(point, barrier_path, 0.98)
-	var barrier_core := _ridge_mask(point, barrier_path, 0.38)
+	var barrier := _ridge_mask(point, barrier_path, 0.76)
+	var barrier_core := _ridge_mask(point, barrier_path, 0.25)
 	var pass_factor := 1.0
 	for pass_x in [-4.2, 1.7, 7.3]:
 		pass_factor *= 1.0 - _gaussian(x, z, pass_x, 3.85, 0.52, 0.68) * 0.86
-	land_height += (barrier * 3.6 + barrier_core * 2.35) * pass_factor * ridge_detail
+	land_height += (barrier * 3.3 + barrier_core * 3.2) * pass_factor * ridge_detail
 	var southern_spurs := maxf(
 		_ridge_mask(point, [Vector2(-5.8, 4.0), Vector2(-4.6, 5.0), Vector2(-4.0, 6.2)], 0.66),
 		_ridge_mask(point, [Vector2(4.8, 4.0), Vector2(5.9, 5.0), Vector2(6.5, 6.1)], 0.66)
 	)
 	land_height += southern_spurs * 2.2 * ridge_detail
+
+	# A warm current keeps Heren's outer east coast green and buildable below the inland spine.
+	var warm_coast := _gaussian(x, z, 11.7, -2.4, 2.1, 3.5) * smoothstep(10.0, 11.3, x)
+	var warm_coast_height := 0.84 + _terrain_noise(x * 0.92 + 2.0, z * 0.92 - 3.0) * 0.10
+	land_height = lerpf(land_height, warm_coast_height, warm_coast * 0.88)
 	var mountain_detail_mask := maxf(heren_ridge, maxf(loand_crown, maxf(barrier, maxf(heren_inner_spur, loand_west_spur))))
 	land_height += mountain_detail_mask * (
 		absf(_terrain_noise(x * 3.1 + 1.0, z * 3.1 - 2.0)) * 0.52
@@ -249,6 +273,11 @@ func _world_height(x: float, z: float) -> float:
 	land_height += smoothstep(4.2, 7.8, z) * 0.76
 	var dune_field := smoothstep(4.6, 7.4, z) * (1.0 - eastern_spine)
 	land_height += dune_field * (sin(x * 2.15 + z * 0.52) + sin(x * 1.08 - z * 1.34)) * 0.09
+
+	# Datt's canal metropolis was built on a deliberately graded transport platform.
+	var city_extent := maxf(absf((x - 3.9) / 3.45), absf((z + 1.4) / 2.05))
+	var city_grade := 1.0 - smoothstep(0.72, 1.0, city_extent)
+	land_height = lerpf(land_height, 0.86, city_grade * 0.97)
 
 	# Natural river valleys remain below the surrounding relief.
 	land_height = _carve_valley(land_height, Vector2(x, z), LOAND_RIVER, 0.42, 0.58)
@@ -286,27 +315,29 @@ func _world_height(x: float, z: float) -> float:
 
 
 func _land_field(x: float, z: float) -> float:
-	var nx := x / 14.5
-	var nz := (z + 0.25) / 9.5
-	var angle := atan2(nz, nx)
-	var coast_waves := sin(angle * 5.0 + 0.7) * 0.095 + sin(angle * 9.0 - 1.1) * 0.055
-	coast_waves += _terrain_noise(x * 0.82, z * 0.82) * 0.065
-	var mainland := 1.0 - (pow(absf(nx), 2.18) + pow(absf(nz), 2.02)) + coast_waves
+	# Overlapping continental plates create the asymmetric silhouette seen in the concept art.
+	var loand_plate := _ellipse_field(x, z, -6.8, 0.1, 7.7, 5.5)
+	var datt_plate := _ellipse_field(x, z, 2.3, -0.4, 7.8, 5.2)
+	var heren_plate := _ellipse_field(x, z, 4.8, -5.9, 10.1, 4.0)
+	var east_coast_plate := _ellipse_field(x, z, 10.4, -1.8, 4.2, 5.2)
+	var frontier_plate := _ellipse_field(x, z, -0.6, 5.8, 9.7, 3.8)
+	var mainland_shape := maxf(loand_plate, maxf(datt_plate, maxf(heren_plate, maxf(east_coast_plate, frontier_plate))))
 
-	# Headlands and coastal bights break the silhouette without changing the political layout.
-	mainland += _gaussian(x, z, -11.8, -4.7, 3.2, 2.0) * 0.22
-	mainland += _gaussian(x, z, 9.8, -5.2, 3.1, 2.2) * 0.18
-	mainland += _gaussian(x, z, -10.6, 5.2, 2.7, 1.9) * 0.17
-	mainland -= _gaussian(x, z, -13.2, 0.5, 2.5, 2.7) * 0.78
-	mainland -= _gaussian(x, z, -9.8, 7.4, 2.0, 1.7) * 0.42
-	mainland -= _gaussian(x, z, 6.0, 7.8, 3.0, 2.0) * 0.72
-	mainland -= _gaussian(x, z, 13.4, -0.8, 1.8, 2.0) * 0.46
-	mainland -= _gaussian(x, z, 13.4, 2.5, 2.1, 2.6) * 0.50
+	var coastline_noise := _terrain_noise(x * 0.92 + 1.4, z * 0.92 - 2.1) * 0.105
+	coastline_noise += sin(x * 1.68 - z * 0.57) * 0.028 + cos(z * 2.12 + x * 0.31) * 0.022
+	mainland_shape += coastline_noise
 
-	var north_crown := 1.0 - (pow((x - 4.2) / 10.2, 2.0) + pow((z + 7.5) / 3.1, 2.0))
-	var mainland_shape := maxf(mainland, north_crown * 0.82)
-	# Keep an open sea channel between the continent and the southern island federation.
-	mainland_shape -= _gaussian(x, z, 5.7, 8.5, 6.7, 1.35) * 0.70
+	# Deep bays and narrow headlands stop the mainland reading as one rounded slab.
+	mainland_shape -= _gaussian(x, z, -13.2, -0.2, 2.0, 2.8) * 0.86
+	mainland_shape -= _gaussian(x, z, -9.7, 6.8, 2.3, 1.7) * 0.62
+	mainland_shape -= _gaussian(x, z, 7.7, 7.8, 3.5, 1.8) * 0.76
+	mainland_shape -= _gaussian(x, z, 13.2, 2.8, 1.8, 2.8) * 0.62
+	mainland_shape -= _gaussian(x, z, 12.9, -6.4, 2.2, 1.5) * 0.35
+	mainland_shape += _gaussian(x, z, -12.0, -4.4, 3.0, 1.8) * 0.20
+	mainland_shape += _gaussian(x, z, 12.0, -3.4, 2.1, 2.5) * 0.16
+
+	# Keep an open navigable strait before the Psetian federation.
+	mainland_shape -= _gaussian(x, z, 3.0, 9.0, 11.0, 1.35) * 0.88
 	return maxf(mainland_shape, _southern_archipelago_field(x, z))
 
 
@@ -343,20 +374,25 @@ func _world_color(x: float, z: float, height: float) -> Color:
 
 	var datt_plain := _gaussian(x, z, 3.8, -1.3, 4.6, 3.0)
 	color = color.lerp(Color("#729a50"), datt_plain * 0.74)
-	var south_dryness := smoothstep(2.8, 7.0, z) * (1.0 - _gaussian(x, z, 10.5, 4.2, 3.2, 2.8) * 0.5)
+	var south_dryness := smoothstep(3.6, 7.2, z) * (1.0 - _gaussian(x, z, 10.5, 4.2, 3.2, 2.8) * 0.5)
 	color = color.lerp(Color("#b9843f"), south_dryness * 0.92)
 	var dunes := south_dryness * (sin(x * 2.15 + z * 0.52) * 0.5 + 0.5)
 	color = color.lerp(Color("#d2a552"), dunes * 0.20)
 	var archipelago := smoothstep(-0.06, 0.20, _southern_archipelago_field(x, z))
 	color = color.lerp(Color("#558c58"), archipelago * 0.96)
 
-	var heren_coast := _gaussian(x, z, 10.7, -3.4, 2.2, 2.4)
-	color = color.lerp(Color("#4c7854"), heren_coast * 0.54)
+	var heren_coast := _gaussian(x, z, 11.4, -2.5, 2.2, 3.5)
+	color = color.lerp(Color("#56864f"), heren_coast * 0.76)
 	var northern_cold := smoothstep(4.8, 8.8, -z)
-	color = color.lerp(Color("#778e83"), northern_cold * 0.30)
-	var exposed_rock := smoothstep(2.2, 4.7, height)
-	color = color.lerp(Color("#5c6462"), exposed_rock * 0.86)
-	var snow := _snow_mask(z, height)
+	color = color.lerp(Color("#778e83"), northern_cold * 0.26 * (1.0 - heren_coast * 0.82))
+	var exposed_rock := smoothstep(3.2, 6.3, height)
+	var rock_noise := _terrain_noise(x * 2.8 + 5.0, z * 2.8 - 7.0) * 0.5 + 0.5
+	var rock_strata := sin(height * 2.15 + x * 0.78 - z * 0.42) * 0.5 + 0.5
+	var rock_color := Color("#555a57").lerp(Color("#77766e"), rock_noise * 0.44 + rock_strata * 0.20)
+	color = color.lerp(rock_color, exposed_rock * 0.92)
+	var upper_ridge := smoothstep(6.8, 11.8, height) * (0.25 + rock_strata * 0.22)
+	color = color.lerp(Color("#343d3d"), upper_ridge * (1.0 - northern_cold * 0.42))
+	var snow := _snow_mask(x, z, height)
 	color = color.lerp(Color("#e2ebe5"), snow)
 	# Slow painterly color drift keeps the terrain soft at the campaign-map scale.
 	var variation := _terrain_noise(x * 0.62, z * 0.62) * 0.026
@@ -374,7 +410,7 @@ func _world_control(x: float, z: float, height: float) -> Color:
 		var loand_forest := _gaussian(x, z, -6.0, -0.8, 5.0, 3.4)
 		var west_forest := _gaussian(x, z, -10.5, 2.8, 2.8, 2.4)
 		blend = clampf(maxf(loand_forest * 0.92, west_forest), 0.0, 0.92)
-		var desert := smoothstep(2.8, 7.0, z)
+		var desert := smoothstep(3.6, 7.2, z)
 		if desert > 0.05:
 			overlay_id = TEXTURE_SAND
 			blend = desert
@@ -383,11 +419,11 @@ func _world_control(x: float, z: float, height: float) -> Color:
 			base_id = TEXTURE_GRASS
 			overlay_id = TEXTURE_FOREST
 			blend = archipelago * 0.28
-		var rock := smoothstep(1.85, 3.75, height)
+		var rock := smoothstep(3.0, 6.0, height)
 		if rock > 0.05:
 			overlay_id = TEXTURE_ROCK
 			blend = rock
-		var snow := _snow_mask(z, height)
+		var snow := _snow_mask(x, z, height)
 		if snow > 0.05:
 			base_id = TEXTURE_ROCK
 			overlay_id = TEXTURE_SNOW
@@ -398,10 +434,11 @@ func _world_control(x: float, z: float, height: float) -> Color:
 	return Color(Terrain3DUtil.as_float(bits), 0.0, 0.0, 1.0)
 
 
-func _snow_mask(z: float, height: float) -> float:
-	var northern_latitude := smoothstep(5.4, 7.2, -z)
-	var high_peak := smoothstep(10.0, 14.2, height)
-	return northern_latitude * high_peak
+func _snow_mask(x: float, z: float, height: float) -> float:
+	var northern_latitude := smoothstep(5.9, 7.8, -z)
+	var high_peak := smoothstep(11.2, 16.0, height)
+	var warm_current_suppression := 1.0 - _gaussian(x, z, 11.4, -2.5, 2.2, 3.5) * 0.92
+	return northern_latitude * high_peak * warm_current_suppression
 
 
 func _carve_valley(height: float, point: Vector2, polyline: Array, width: float, depth: float) -> float:
@@ -442,3 +479,7 @@ func _distance_to_segment(point: Vector2, start: Vector2, finish: Vector2) -> fl
 
 func _gaussian(x: float, z: float, center_x: float, center_z: float, radius_x: float, radius_z: float) -> float:
 	return exp(-(pow((x - center_x) / radius_x, 2.0) + pow((z - center_z) / radius_z, 2.0)))
+
+
+func _ellipse_field(x: float, z: float, center_x: float, center_z: float, radius_x: float, radius_z: float) -> float:
+	return 1.0 - (pow((x - center_x) / radius_x, 2.0) + pow((z - center_z) / radius_z, 2.0))

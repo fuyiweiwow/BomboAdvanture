@@ -22,6 +22,8 @@ const MODULAR_STREETS_ROOT := "res://assets/environment/quaternius_modular_stree
 const SHIPS_ROOT := "res://assets/environment/quaternius_ships/"
 const INDUSTRIAL_CITY_ROOT := "res://assets/environment/kenney_city_industrial/"
 const COMMERCIAL_CITY_ROOT := "res://assets/environment/kenney_city_commercial/"
+const SUBURBAN_CITY_ROOT := "res://assets/environment/kenney_city_suburban/"
+const CITY_ROADS_ROOT := "res://assets/environment/kenney_city_roads/"
 const KAYKIT_MEDIEVAL_ROOT := "res://assets/environment/kaykit_medieval/buildings/"
 const KAYKIT_CITY_ROOT := "res://assets/environment/kaykit_city/"
 const KAYKIT_SPACE_ROOT := "res://assets/environment/kaykit_space/"
@@ -199,6 +201,8 @@ func _complete_surface_build(generated: Node3D) -> void:
 	_add_geographic_detail_bands(generated)
 	_add_roadside_asset_details(generated)
 	_add_regional_architecture(generated)
+	_add_nether_sanctum(generated)
+	_add_psetia_settlements(generated)
 	_add_river_mouth_ports(generated)
 	_add_transport_network(generated)
 	_add_southern_future_fleet(generated)
@@ -246,10 +250,20 @@ func _add_ocean(parent: Node3D) -> void:
 	var ocean := MeshInstance3D.new()
 	ocean.name = "Ocean"
 	var mesh := PlaneMesh.new()
-	mesh.size = Vector2(100000.0, 100000.0)
+	mesh.size = Vector2(200000.0, 200000.0)
+	mesh.subdivide_width = 12
+	mesh.subdivide_depth = 12
 	ocean.mesh = mesh
 	ocean.position.y = 4.0
-	ocean.material_override = _material(Color("#184f5c"), 0.52)
+	var water_material := ShaderMaterial.new()
+	water_material.shader = MINIATURE_WATER_SHADER
+	water_material.set_shader_parameter("deep_color", Color("#123f50"))
+	water_material.set_shader_parameter("shallow_color", Color("#247786"))
+	water_material.set_shader_parameter("highlight_color", Color("#8ed8d1"))
+	water_material.set_shader_parameter("wave_scale", 24.0)
+	water_material.set_shader_parameter("highlight_strength", 0.006)
+	water_material.set_shader_parameter("water_alpha", 1.0)
+	ocean.material_override = water_material
 	_attach(parent, ocean)
 
 func _add_terrain(parent: Node3D) -> void:
@@ -501,9 +515,10 @@ func _add_geographic_detail_bands(parent: Node3D) -> void:
 	var forest_edge_trees: Array[Transform3D] = []
 
 	var ridge_paths := [
-		[Vector2(1.4, -6.8), Vector2(4.5, -7.8), Vector2(8.2, -7.2), Vector2(11.8, -5.8)],
+		[Vector2(0.8, -6.6), Vector2(3.6, -7.8), Vector2(6.8, -7.4), Vector2(9.5, -6.0)],
 		[Vector2(-8.8, -3.5), Vector2(-6.1, -4.8), Vector2(-3.1, -4.5), Vector2(-1.1, -3.4)],
 		[Vector2(-7.8, 3.8), Vector2(-3.8, 4.2), Vector2(0.2, 3.7), Vector2(4.3, 4.1), Vector2(8.0, 3.6)],
+		[Vector2(9.2, -5.2), Vector2(10.0, -3.4), Vector2(9.8, -1.2), Vector2(9.3, 0.8)],
 	]
 	for ridge_index in range(ridge_paths.size()):
 		var sampled := _densify_map_path(ridge_paths[ridge_index], 0.42)
@@ -530,7 +545,7 @@ func _add_geographic_detail_bands(parent: Node3D) -> void:
 				var normal := _terrain_normal_at(rock_point.x, rock_point.y)
 				if height < 150.0 or normal.y < 0.62:
 					continue
-				var transform := _asset_transform(rock_point.x, rock_point.y, height, random.randf_range(58.0, 112.0), random.randf_range(0.0, TAU), 0.74, random.randf_range(8.0, 28.0))
+				var transform := _asset_transform(rock_point.x, rock_point.y, height, random.randf_range(88.0, 156.0), random.randf_range(0.0, TAU), 0.74, random.randf_range(12.0, 36.0))
 				match (ridge_index + point_index + int(side_sign > 0.0)) % 3:
 					0: cliff_a.append(transform)
 					1: cliff_b.append(transform)
@@ -746,6 +761,11 @@ func _add_western_floating_islands(parent: Node3D) -> void:
 			tree_transforms.append(Transform3D(basis, Vector3(cos(angle) * distance, 48.0, sin(angle) * distance)))
 		var island_tree_asset := "normal_tree_1.glb" if index % 2 == 0 else "normal_tree_2.glb"
 		_add_asset_multimesh(island, "IslandTrees", STYLIZED_NATURE_ROOT + island_tree_asset, tree_transforms)
+		var sky_buildings := [
+			"building_tower_A_blue.gltf", "building_church_blue.gltf", "building_market_blue.gltf",
+			"building_tower_B_blue.gltf", "building_windmill_blue.gltf", "building_castle_blue.gltf",
+		]
+		_add_local_map_asset(island, "SkySettlement_%02d" % index, KAYKIT_MEDIEVAL_ROOT + sky_buildings[index], Vector3(0.0, 56.0, 0.0), 230.0 + float(index % 3) * 24.0, float(index) * 0.67)
 
 
 func _build_floating_rock_mesh(radius: float, depth: float, shape_index: int) -> ArrayMesh:
@@ -908,7 +928,7 @@ func _add_map_asset(parent: Node3D, node_name: String, scene_path: String, cente
 	source_root.scale = Vector3.ONE * scale_factor
 	var bounds_center := bounds.position + bounds.size * 0.5
 	source_root.position = Vector3(-bounds_center.x, -bounds.position.y, -bounds_center.z) * scale_factor
-	_tune_scene_asset(source_root)
+	_tune_scene_asset(source_root, scene_path)
 	_attach(wrapper, source_root)
 	_attach(parent, wrapper)
 	return wrapper
@@ -935,7 +955,7 @@ func _add_local_map_asset(parent: Node3D, node_name: String, scene_path: String,
 	source_root.scale = Vector3.ONE * scale_factor
 	var bounds_center := bounds.position + bounds.size * 0.5
 	source_root.position = Vector3(-bounds_center.x, -bounds.position.y, -bounds_center.z) * scale_factor
-	_tune_scene_asset(source_root)
+	_tune_scene_asset(source_root, scene_path)
 	_attach(wrapper, source_root)
 	_attach(parent, wrapper)
 	return wrapper
@@ -965,7 +985,8 @@ func _scene_bounds(root_node: Node3D) -> AABB:
 	return bounds
 
 
-func _tune_scene_asset(root_node: Node3D) -> void:
+func _tune_scene_asset(root_node: Node3D, scene_path: String) -> void:
+	var is_city_road := scene_path.contains("kenney_city_roads")
 	for raw_mesh in root_node.find_children("*", "MeshInstance3D", true, false):
 		var mesh_instance := raw_mesh as MeshInstance3D
 		if mesh_instance == null or mesh_instance.mesh == null:
@@ -976,6 +997,8 @@ func _tune_scene_asset(root_node: Node3D) -> void:
 			if not source_material is StandardMaterial3D:
 				continue
 			var material := source_material.duplicate(true) as StandardMaterial3D
+			if is_city_road:
+				material.albedo_color *= Color("#748184")
 			material.roughness = maxf(material.roughness, 0.82)
 			material.metallic = 0.0
 			material.normal_enabled = material.normal_texture != null
@@ -1214,8 +1237,76 @@ func _add_regional_architecture(parent: Node3D) -> void:
 	architecture.name = "RegionalArchitecture"
 	_attach(parent, architecture)
 	_add_kaykit_loand_settlements(architecture)
-	_add_kaykit_datt_city(architecture)
-	_add_kaykit_heren_industry(architecture)
+	_add_datt_urban_satellites(architecture)
+	_add_datt_suburban_ring(architecture)
+	_add_datt_future_accents(architecture)
+	_add_datt_city_road_grid(architecture)
+	_add_heren_industrial_corridor(architecture)
+
+
+func _add_nether_sanctum(parent: Node3D) -> void:
+	var center := Vector2(7.75, -8.35)
+	var sanctum := Node3D.new()
+	sanctum.name = "NetherRiverBirthplace"
+	sanctum.position = _surface_point(center.x, center.y, 0.04)
+	_attach(parent, sanctum)
+
+	var seal := MeshInstance3D.new()
+	seal.name = "AncientFrozenSeal"
+	var seal_mesh := TorusMesh.new()
+	seal_mesh.inner_radius = 240.0
+	seal_mesh.outer_radius = 292.0
+	seal_mesh.rings = 30
+	seal_mesh.ring_segments = 8
+	seal.mesh = seal_mesh
+	seal.position.y = 24.0
+	seal.material_override = _material(Color("#62d5d2"), 0.18, true)
+	_attach(sanctum, seal)
+
+	_add_local_map_asset(sanctum, "ForsakenWatchtower", KAYKIT_MEDIEVAL_ROOT + "building_tower_B_blue.gltf", Vector3(0.0, 28.0, 0.0), 310.0, 0.24)
+	for shard_index in range(7):
+		var angle := TAU * float(shard_index) / 7.0 + 0.32
+		var radius := 330.0 + float(shard_index % 2) * 64.0
+		_add_cone_child(
+			sanctum,
+			"NetherIceShard_%02d" % shard_index,
+			Vector3(cos(angle) * radius, 8.0, sin(angle) * radius),
+			38.0 + float(shard_index % 3) * 8.0,
+			190.0 + float(shard_index % 4) * 46.0,
+			Color("#bcece8"),
+			true,
+			6
+		)
+
+
+func _add_psetia_settlements(parent: Node3D) -> void:
+	var federation := Node3D.new()
+	federation.name = "PsetiaIslandFederation"
+	_attach(parent, federation)
+	var city_definitions := [
+		["WestIslandApartments", "building-type-d.glb", Vector2(-7.38, 10.92), 220.0, 0.18],
+		["WestIslandCivic", "building-type-t.glb", Vector2(-6.86, 11.12), 245.0, -0.16],
+		["WestIslandHousing", "building-type-k.glb", Vector2(-7.02, 11.38), 190.0, 0.08],
+		["TwinIslandOffice", "building-type-f.glb", Vector2(-3.12, 11.88), 225.0, 0.28],
+		["TwinIslandHousing", "building-type-r.glb", Vector2(-2.67, 12.12), 195.0, -0.20],
+		["FederalExchange", "building-type-u.glb", Vector2(0.94, 11.02), 255.0, 0.10],
+		["FederalHousing", "building-type-b.glb", Vector2(1.42, 11.30), 210.0, -0.30],
+		["CentralIslandOffice", "building-type-n.glb", Vector2(5.38, 12.10), 230.0, 0.22],
+		["CentralIslandHousing", "building-type-h.glb", Vector2(5.82, 12.35), 195.0, -0.12],
+		["EastIslandCivic", "building-type-e.glb", Vector2(9.27, 10.88), 235.0, 0.18],
+		["EastIslandHousing", "building-type-q.glb", Vector2(9.73, 11.18), 200.0, -0.26],
+		["FarEastIslandTown", "building-type-j.glb", Vector2(12.72, 12.72), 195.0, 0.12],
+	]
+	for definition in city_definitions:
+		_add_map_asset(federation, definition[0], SUBURBAN_CITY_ROOT + definition[1], definition[2], definition[3], definition[4], 2.0)
+
+	var port_definitions := [
+		["WestIslandAirPier", Vector2(-6.55, 11.10), 210.0, 0.28],
+		["FederalAirPier", Vector2(1.72, 11.18), 230.0, -0.16],
+		["EastIslandAirPier", Vector2(10.02, 11.03), 205.0, 0.22],
+	]
+	for definition in port_definitions:
+		_add_map_asset(federation, definition[0], KAYKIT_SPACE_ROOT + "landingpad_small.gltf", definition[1], definition[2], definition[3], 2.0)
 
 
 func _add_kaykit_loand_settlements(parent: Node3D) -> void:
@@ -1233,6 +1324,12 @@ func _add_kaykit_loand_settlements(parent: Node3D) -> void:
 		["EastVillageHomeB", "building_home_B_blue.gltf", Vector2(-2.08, 1.52), 176.0, -0.44],
 		["EastVillageWindmill", "building_windmill_blue.gltf", Vector2(-1.78, 0.88), 235.0, -0.22],
 		["NorthernPassTower", "building_tower_A_blue.gltf", Vector2(-6.62, -2.72), 230.0, 0.10],
+		["CapitalHomeA", "building_home_A_blue.gltf", Vector2(-5.28, -1.78), 165.0, 0.36],
+		["CapitalHomeB", "building_home_B_blue.gltf", Vector2(-4.48, -1.72), 170.0, -0.24],
+		["CapitalBarracks", "building_barracks_blue.gltf", Vector2(-5.18, -2.16), 225.0, 0.12],
+		["RiverVillageHome", "building_home_A_blue.gltf", Vector2(-5.38, 0.54), 165.0, -0.42],
+		["ForestVillageChurch", "building_church_blue.gltf", Vector2(-9.36, 1.72), 210.0, 0.26],
+		["ForestVillageMarket", "building_market_blue.gltf", Vector2(-9.78, 2.06), 190.0, -0.18],
 	]
 	for definition in definitions:
 		_add_map_asset(parent, definition[0], KAYKIT_MEDIEVAL_ROOT + definition[1], definition[2], definition[3], definition[4], 2.0)
@@ -1247,6 +1344,12 @@ func _add_kaykit_datt_city(parent: Node3D) -> void:
 		["DattSouthApartments", "building_F.gltf", Vector2(4.72, -0.48), 330.0, 0.22],
 		["DattEastCommerce", "building_D.gltf", Vector2(5.55, -1.22), 315.0, -0.32],
 		["DattPortDistrict", "building_B.gltf", Vector2(7.45, -0.48), 300.0, 0.28],
+		["DattWestOffice", "building_C.gltf", Vector2(1.62, -1.88), 285.0, -0.20],
+		["DattNorthResearch", "building_D.gltf", Vector2(3.14, -2.78), 300.0, 0.16],
+		["DattEastTower", "building_H.gltf", Vector2(5.34, -1.88), 390.0, -0.12],
+		["DattSouthCommerce", "building_E.gltf", Vector2(4.68, 0.12), 310.0, 0.28],
+		["DattCanalHousing", "building_B.gltf", Vector2(2.42, -0.36), 275.0, -0.30],
+		["DattPortOffice", "building_G.gltf", Vector2(6.74, -0.92), 325.0, 0.16],
 	]
 	for definition in urban_definitions:
 		_add_map_asset(parent, definition[0], KAYKIT_CITY_ROOT + definition[1], definition[2], definition[3], definition[4], 2.0)
@@ -1258,6 +1361,9 @@ func _add_kaykit_datt_city(parent: Node3D) -> void:
 		["DattAerialTerminal", "landingpad_large.gltf", Vector2(6.16, -0.04), 330.0, -0.10],
 		["DattAirTaxi", "lander_A.gltf", Vector2(6.22, -0.08), 175.0, 0.42],
 		["DattSolarArray", "solarpanel.gltf", Vector2(6.76, -0.32), 190.0, -0.18],
+		["DattEnergyModule", "basemodule_E.gltf", Vector2(2.18, -2.54), 275.0, 0.20],
+		["DattFreightDepot", "cargodepot_A.gltf", Vector2(6.22, -1.42), 290.0, -0.24],
+		["DattTransitHauler", "spacetruck.gltf", Vector2(5.92, -1.02), 155.0, 0.34],
 	]
 	for definition in future_definitions:
 		_add_map_asset(parent, definition[0], KAYKIT_SPACE_ROOT + definition[1], definition[2], definition[3], definition[4], 3.0)
@@ -1275,6 +1381,11 @@ func _add_kaykit_heren_industry(parent: Node3D) -> void:
 		["HerenSolarWorks", "roofmodule_solarpanels.gltf", Vector2(10.72, -1.52), 220.0, -0.16],
 		["HerenPortWarehouse", "cargodepot_C.gltf", Vector2(11.40, -1.10), 330.0, 0.26],
 		["HerenHauler", "spacetruck_large.gltf", Vector2(10.70, -2.12), 190.0, -0.48],
+		["HerenNorthRefinery", "structure_low.gltf", Vector2(9.82, -4.52), 315.0, -0.14],
+		["HerenCoastalCargo", "cargo_A_stacked.gltf", Vector2(11.52, -3.18), 185.0, 0.24],
+		["HerenWarmCoastDepot", "cargodepot_A.gltf", Vector2(11.72, -0.52), 300.0, -0.18],
+		["HerenWarmCoastTurbine", "windturbine_low.gltf", Vector2(10.92, -0.72), 245.0, 0.12],
+		["HerenPortTruck", "spacetruck.gltf", Vector2(11.18, -0.88), 150.0, 0.42],
 	]
 	for definition in definitions:
 		_add_map_asset(parent, definition[0], KAYKIT_SPACE_ROOT + definition[1], definition[2], definition[3], definition[4], 2.0)
@@ -1333,20 +1444,104 @@ func _add_datt_urban_satellites(parent: Node3D) -> void:
 
 func _add_heren_industrial_corridor(parent: Node3D) -> void:
 	var definitions := [
-		["HerenSteelWorks", "building-q.glb", Vector2(9.45, -4.65), 520.0, 0.24],
-		["HerenOreRefinery", "building-r.glb", Vector2(10.25, -4.08), 490.0, -0.18],
-		["HerenMachineWorks", "building-b.glb", Vector2(10.75, -3.38), 470.0, 0.42],
-		["HerenCoastalSmelter", "building-t.glb", Vector2(11.15, -2.68), 500.0, -0.30],
-		["HerenWarmCurrentWorks", "building-l.glb", Vector2(11.25, -1.88), 440.0, 0.12],
-		["HerenPortWarehouse", "building-g.glb", Vector2(11.42, -1.12), 425.0, -0.22],
-		["HerenIndustrialTankA", "detail-tank.glb", Vector2(9.90, -3.48), 220.0, 0.0],
-		["HerenIndustrialTankB", "detail-tank.glb", Vector2(10.78, -2.22), 210.0, 0.0],
-		["HerenIndustrialStackA", "chimney-large.glb", Vector2(9.78, -4.32), 340.0, 0.0],
-		["HerenIndustrialStackB", "chimney-medium.glb", Vector2(10.94, -3.02), 300.0, 0.0],
-		["HerenIndustrialStackC", "chimney-large.glb", Vector2(11.36, -1.55), 330.0, 0.0],
+		["HerenSteelWorks", "building-q.glb", Vector2(10.62, -4.62), 500.0, 0.24],
+		["HerenOreRefinery", "building-r.glb", Vector2(11.28, -4.12), 470.0, -0.18],
+		["HerenMachineWorks", "building-b.glb", Vector2(10.58, -3.52), 450.0, 0.42],
+		["HerenCoastalSmelter", "building-t.glb", Vector2(11.34, -3.02), 475.0, -0.30],
+		["HerenWarmCurrentWorks", "building-l.glb", Vector2(10.72, -2.34), 425.0, 0.12],
+		["HerenPortWarehouse", "building-g.glb", Vector2(11.42, -1.62), 410.0, -0.22],
+		["HerenIndustrialTankA", "detail-tank.glb", Vector2(11.52, -4.58), 205.0, 0.0],
+		["HerenIndustrialTankB", "detail-tank.glb", Vector2(11.42, -2.32), 195.0, 0.0],
+		["HerenIndustrialStackA", "chimney-large.glb", Vector2(10.84, -4.22), 320.0, 0.0],
+		["HerenIndustrialStackB", "chimney-medium.glb", Vector2(10.88, -3.10), 285.0, 0.0],
+		["HerenIndustrialStackC", "chimney-large.glb", Vector2(11.28, -1.92), 310.0, 0.0],
 	]
 	for definition in definitions:
 		_add_map_asset(parent, definition[0], INDUSTRIAL_CITY_ROOT + definition[1], definition[2], definition[3], definition[4], 8.0)
+
+
+func _add_datt_suburban_ring(parent: Node3D) -> void:
+	var definitions := [
+		["DattWestHousingA", "building-type-a.glb", Vector2(1.58, -2.02), 235.0, 0.12],
+		["DattWestHousingB", "building-type-d.glb", Vector2(1.62, -0.88), 245.0, -0.18],
+		["DattNorthHousingA", "building-type-k.glb", Vector2(2.76, -3.03), 220.0, 0.24],
+		["DattNorthHousingB", "building-type-q.glb", Vector2(4.02, -3.10), 230.0, -0.12],
+		["DattNorthHousingC", "building-type-g.glb", Vector2(5.22, -3.02), 225.0, 0.20],
+		["DattEastHousingA", "building-type-t.glb", Vector2(6.36, -2.05), 255.0, -0.22],
+		["DattEastHousingB", "building-type-n.glb", Vector2(6.42, -0.92), 235.0, 0.18],
+		["DattSouthHousingA", "building-type-r.glb", Vector2(5.92, 0.18), 220.0, -0.24],
+		["DattSouthHousingB", "building-type-h.glb", Vector2(4.82, 0.30), 210.0, 0.12],
+		["DattSouthHousingC", "building-type-p.glb", Vector2(3.42, 0.28), 225.0, -0.16],
+		["DattCanalHousingA", "building-type-f.glb", Vector2(2.92, -1.92), 220.0, 0.28],
+		["DattCanalHousingB", "building-type-u.glb", Vector2(5.02, -0.94), 235.0, -0.20],
+	]
+	for definition in definitions:
+		_add_map_asset(parent, definition[0], SUBURBAN_CITY_ROOT + definition[1], definition[2], definition[3], definition[4], 8.0)
+
+
+func _add_datt_future_accents(parent: Node3D) -> void:
+	var definitions := [
+		["DattExchangeSpire", "structure_tall.gltf", Vector2(4.48, -1.86), 430.0, 0.12],
+		["DattResearchModule", "basemodule_C.gltf", Vector2(2.92, -2.70), 250.0, -0.34],
+		["DattAerialTerminal", "landingpad_large.gltf", Vector2(6.02, -0.08), 295.0, -0.10],
+		["DattAirTaxi", "lander_A.gltf", Vector2(6.02, -0.08), 145.0, 0.42],
+		["DattSolarArray", "solarpanel.gltf", Vector2(6.68, -0.28), 165.0, -0.18],
+		["DattFreightDepot", "cargodepot_A.gltf", Vector2(6.18, -1.46), 255.0, -0.24],
+	]
+	for definition in definitions:
+		_add_map_asset(parent, definition[0], KAYKIT_SPACE_ROOT + definition[1], definition[2], definition[3], definition[4], 10.0)
+
+
+func _add_datt_city_road_grid(parent: Node3D) -> void:
+	var roads := Node3D.new()
+	roads.name = "DattZonedStreetGrid"
+	_attach(parent, roads)
+	var row_zs: Array[float] = [-2.60, -0.60]
+	var column_xs: Array[float] = [2.30, 5.50]
+	for row_index in range(row_zs.size()):
+		var row_z := row_zs[row_index]
+		for tile_index in range(14):
+			var x := 1.50 + float(tile_index) * 0.40
+			var asset_name := "road-straight.glb"
+			if absf(x - column_xs[0]) < 0.01 or absf(x - column_xs[1]) < 0.01:
+				asset_name = "road-crossroad.glb"
+			elif absf(x - 3.90) < 0.01:
+				asset_name = "road-bridge.glb"
+			var tile := _add_map_asset(roads, "Boulevard_%02d_%02d" % [row_index, tile_index], CITY_ROADS_ROOT + asset_name, Vector2(x, row_z), 320.0, PI * 0.5, 18.0, 138.0)
+			if tile != null and asset_name != "road-crossroad.glb":
+				tile.scale.x = 0.64
+	for column_index in range(column_xs.size()):
+		var column_x := column_xs[column_index]
+		for tile_index in range(10):
+			var z := -3.0 + float(tile_index) * 0.40
+			if absf(z - row_zs[0]) < 0.01 or absf(z - row_zs[1]) < 0.01:
+				continue
+			var asset_name := "road-bridge.glb" if absf(z + 1.40) < 0.01 else "road-straight.glb"
+			var tile := _add_map_asset(roads, "Avenue_%02d_%02d" % [column_index, tile_index], CITY_ROADS_ROOT + asset_name, Vector2(column_x, z), 320.0, 0.0, 18.0, 138.0)
+			if tile != null:
+				tile.scale.x = 0.64
+
+
+func _add_heren_industrial_service_roads(parent: Node3D) -> void:
+	var roads := Node3D.new()
+	roads.name = "HerenIndustrialServiceRoads"
+	_attach(parent, roads)
+	var definitions := [
+		["MineRoadA", "road-straight.glb", Vector2(9.72, -4.70), 0.0],
+		["MineRoadB", "road-straight.glb", Vector2(9.72, -4.24), 0.0],
+		["MineRoadC", "road-straight.glb", Vector2(9.72, -3.78), 0.0],
+		["MineBend", "road-bend.glb", Vector2(9.72, -3.32), 0.0],
+		["CoastLinkA", "road-straight.glb", Vector2(10.18, -3.32), PI * 0.5],
+		["CoastLinkB", "road-straight.glb", Vector2(10.64, -3.32), PI * 0.5],
+		["FactoryJunction", "road-crossroad.glb", Vector2(11.10, -3.32), 0.0],
+		["CoastRoadA", "road-straight.glb", Vector2(11.10, -2.86), 0.0],
+		["CoastRoadB", "road-straight.glb", Vector2(11.10, -2.40), 0.0],
+		["CoastRoadC", "road-straight.glb", Vector2(11.10, -1.94), 0.0],
+		["CoastRoadD", "road-straight.glb", Vector2(11.10, -1.48), 0.0],
+		["PortRoad", "road-end-round.glb", Vector2(11.10, -1.02), 0.0],
+	]
+	for definition in definitions:
+		_add_map_asset(roads, definition[0], CITY_ROADS_ROOT + definition[1], definition[2], 350.0, definition[3], 16.0)
 
 
 func _add_datt_future_district(parent: Node3D, center: Vector2, scale_factor: float, node_name: String) -> void:
