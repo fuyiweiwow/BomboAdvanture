@@ -34,6 +34,14 @@ The active campaign map is a lightweight 2D isometric tile map implemented in
 - Rivers that reach the coastline use a dedicated elevation transition from
   the final land cell to the first ocean cell, so their mouths remain visibly
   connected to sea level instead of stopping at the coastal cliff.
+- The Nether landmark and eastern river source sit on a connected polar
+  peninsula rather than offshore. Infrastructure paths stop at their first
+  coastline, preventing detached river or railway fragments from reappearing
+  on islands across open water.
+- River valleys use continuous downhill profiles through biome boundaries.
+  Roads stay on connected land, randomized buildings reserve clear railway,
+  road and waterway cells, and every remaining transport crossing has an
+  explicit bridge.
 - Rendering is ordered as terrain, embedded waterways and roads, bridges,
   vegetation, then buildings. Infrastructure tiles sample terrain elevation,
   roads reserve clear verges, and crossings use separate bridge decks instead

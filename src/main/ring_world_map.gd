@@ -29,7 +29,7 @@ const INDUSTRY := Color("#777269")
 const URBAN := Color("#6f827d")
 
 const RIVER_PATHS := [
-	[Vector2(29, 4), Vector2(28, 8), Vector2(30, 11), Vector2(29, 15), Vector2(31, 18), Vector2(30, 23), Vector2(32, 27)],
+	[Vector2(29, 4), Vector2(28, 8), Vector2(30, 11), Vector2(29, 15), Vector2(31, 18), Vector2(30, 23), Vector2(31, 26)],
 	[Vector2(39, 4), Vector2(38, 8), Vector2(36, 12), Vector2(37, 16), Vector2(39, 18), Vector2(39, 20), Vector2(41, 22)],
 	[Vector2(17, 9), Vector2(19, 12), Vector2(23, 14), Vector2(29, 15)],
 ]
@@ -40,9 +40,9 @@ const CANAL_PATHS := [
 ]
 
 const ROAD_PATHS := [
-	{"points": [Vector2(11, 15), Vector2(17, 14), Vector2(23, 15), Vector2(29, 16), Vector2(32, 16)], "future": false},
-	{"points": [Vector2(32, 16), Vector2(36, 15), Vector2(39, 12), Vector2(42, 10)], "future": true},
-	{"points": [Vector2(32, 16), Vector2(35, 19), Vector2(39, 21), Vector2(42, 24)], "future": true},
+	{"points": [Vector2(11, 15), Vector2(17, 14), Vector2(20, 15), Vector2(21, 17), Vector2(27, 17), Vector2(30, 17), Vector2(32, 16)], "future": false},
+	{"points": [Vector2(32, 16), Vector2(33, 15), Vector2(36, 15), Vector2(39, 12), Vector2(42, 10)], "future": true},
+	{"points": [Vector2(32, 16), Vector2(35, 19), Vector2(39, 20), Vector2(41, 20)], "future": true},
 	{"points": [Vector2(24, 23), Vector2(27, 20), Vector2(30, 18), Vector2(32, 16)], "future": false},
 ]
 
@@ -205,7 +205,7 @@ func _draw_terrain_details() -> void:
 
 
 func _is_world_tile(column: int, row: int) -> bool:
-	if _is_floating_island(column, row) or _is_southern_island(column, row):
+	if _is_floating_island(column, row) or _is_southern_island(column, row) or _is_nether_land(column, row):
 		return true
 	var design := _grid_to_design(Vector2(column, row))
 	var x := (design.x - 27.0) / 20.5
@@ -240,6 +240,17 @@ func _is_southern_island(column: int, row: int) -> bool:
 		or _in_ellipse(design.x, design.y, 45, 23, 2, 1)
 		or _in_ellipse(design.x, design.y, 29, 28, 2, 1)
 	)
+
+
+func _is_nether_land(column: int, row: int) -> bool:
+	var design := _grid_to_design(Vector2(column, row))
+	# An irregular polar peninsula anchors the Nether source to the ice cap.
+	var x := (design.x - 39.0) / 3.35
+	var y := (design.y - 2.0) / 2.25
+	var edge_noise := (_fractal_noise(float(column) * 0.57 + 11.0, float(row) * 0.57 + 5.0) - 0.5) * 0.42
+	var polar_mass := 1.0 - x * x - y * y + edge_noise > 0.08
+	var ice_neck := _in_ellipse(design.x, design.y, 37.2, 3.6, 2.1, 1.15)
+	return polar_mass or ice_neck
 
 
 func _in_ellipse(column: float, row: float, center_x: float, center_y: float, radius_x: float, radius_y: float) -> bool:
@@ -296,15 +307,58 @@ func _biome_color(biome: String) -> Color:
 func _elevation_at(column: int, row: int, biome: String) -> float:
 	var relief := _fractal_noise(float(column) * 0.24, float(row) * 0.24)
 	var north_east_rise := (1.0 - float(row) / float(GRID_ROWS)) * 3.4 + float(column) / float(GRID_COLUMNS) * 2.6
+	var base_elevation: float
 	if biome == "floating":
 		return 23.0 + relief * 13.0
 	if biome == "rock":
-		return 10.0 + relief * 9.0 + north_east_rise
-	if biome in ["snow", "nether"]:
-		return 6.0 + relief * 7.0 + north_east_rise
-	if biome == "desert":
-		return 3.0 + relief * 4.0
-	return 3.0 + relief * 4.0 + north_east_rise * 0.35
+		base_elevation = 10.0 + relief * 9.0 + north_east_rise
+	elif biome in ["snow", "nether"]:
+		base_elevation = 6.0 + relief * 7.0 + north_east_rise
+	elif biome == "desert":
+		base_elevation = 3.0 + relief * 4.0
+	else:
+		base_elevation = 3.0 + relief * 4.0 + north_east_rise * 0.35
+	return _river_valley_elevation(_grid_to_design(Vector2(column, row)), base_elevation)
+
+
+func _river_valley_elevation(design: Vector2, base_elevation: float) -> float:
+	var river_heights := [Vector2(15.0, 4.0), Vector2(16.0, 4.0), Vector2(12.0, 9.2)]
+	var result := base_elevation
+	var channel_floor := INF
+	for path_index in range(RIVER_PATHS.size()):
+		var nearest := _distance_and_progress_on_path(design, RIVER_PATHS[path_index])
+		var distance := nearest.x
+		if distance > 1.45:
+			continue
+		var heights: Vector2 = river_heights[path_index]
+		var valley_height := lerpf(heights.x, heights.y, nearest.y)
+		if distance <= 0.82:
+			channel_floor = minf(channel_floor, valley_height)
+		else:
+			var blend := smoothstep(0.82, 1.45, distance)
+			result = minf(result, lerpf(valley_height, base_elevation, blend))
+	return channel_floor if channel_floor < INF else result
+
+
+func _distance_and_progress_on_path(point: Vector2, path: Array) -> Vector2:
+	var total_length := 0.0
+	for index in range(path.size() - 1):
+		total_length += (path[index + 1] as Vector2).distance_to(path[index] as Vector2)
+	var nearest_distance := INF
+	var nearest_progress := 0.0
+	var traversed := 0.0
+	for index in range(path.size() - 1):
+		var from := path[index] as Vector2
+		var to := path[index + 1] as Vector2
+		var segment := to - from
+		var segment_length := segment.length()
+		var t := 0.0 if segment_length <= 0.0001 else clampf((point - from).dot(segment) / segment.length_squared(), 0.0, 1.0)
+		var distance := point.distance_to(from + segment * t)
+		if distance < nearest_distance:
+			nearest_distance = distance
+			nearest_progress = (traversed + segment_length * t) / maxf(total_length, 0.0001)
+		traversed += segment_length
+	return Vector2(nearest_distance, nearest_progress)
 
 
 func _draw_tile(center: Vector2, color: Color, elevation: float) -> void:
@@ -354,7 +408,7 @@ func _draw_tile_detail(center: Vector2, column: int, row: int, biome: String) ->
 	if _near_infrastructure(Vector2(column, row), 0.64):
 		if biome in ["forest", "rock", "snow", "tundra", "plains", "coast"]:
 			_draw_verge_detail(center, column, row, biome)
-			return
+		return
 	match biome:
 		"forest":
 			var tree_count := 2 + int(noise * 3.0)
@@ -521,7 +575,7 @@ func _draw_magic_crystal(center: Vector2, scale_value: float = 1.0) -> void:
 func _draw_waterways() -> void:
 	for path in RIVER_PATHS:
 		_draw_tiled_infrastructure(path, "river")
-	_draw_river_mouth(RIVER_PATHS[1])
+		_draw_river_mouth(path)
 	for path in CANAL_PATHS:
 		_draw_tiled_infrastructure(path, "canal")
 
@@ -567,7 +621,7 @@ func _draw_ground_roads() -> void:
 
 
 func _draw_tiled_infrastructure(grid_points: Array, kind: String) -> void:
-	var cells := _rasterize_grid_path(grid_points)
+	var cells := _continuous_land_cells(_rasterize_grid_path(grid_points))
 	for index in range(cells.size()):
 		var connections: Array[Vector2i] = []
 		if index > 0:
@@ -575,6 +629,18 @@ func _draw_tiled_infrastructure(grid_points: Array, kind: String) -> void:
 		if index < cells.size() - 1:
 			connections.append(cells[index + 1] - cells[index])
 		_draw_infrastructure_tile(cells[index], connections, kind, index)
+
+
+func _continuous_land_cells(cells: Array[Vector2i]) -> Array[Vector2i]:
+	var result: Array[Vector2i] = []
+	var entered_land := false
+	for cell in cells:
+		if _is_world_tile(cell.x, cell.y):
+			entered_land = true
+			result.append(cell)
+		elif entered_land:
+			break
+	return result
 
 
 func _rasterize_grid_path(grid_points: Array) -> Array[Vector2i]:
@@ -721,9 +787,11 @@ func _distance_to_segment(point: Vector2, from: Vector2, to: Vector2) -> float:
 
 
 func _draw_bridges() -> void:
-	_draw_bridge(Vector2(29.2, 15.3), Vector2(1.0, 0.34), false)
-	_draw_bridge(Vector2(36.8, 15.8), Vector2(0.88, 0.48), true)
-	_draw_bridge(Vector2(30.5, 18.1), Vector2(0.72, -0.70), false)
+	_draw_bridge(Vector2(20.8, 16.0), Vector2(0.58, 0.82), false)
+	_draw_bridge(Vector2(32.0, 16.0), Vector2(1.0, 0.48), true)
+	_draw_bridge(Vector2(36.9, 14.5), Vector2(0.84, -0.54), true)
+	_draw_bridge(Vector2(39.6, 20.1), Vector2(0.82, 0.58), true)
+	_draw_bridge(Vector2(30.6, 17.2), Vector2(0.72, -0.70), false)
 
 
 func _draw_bridge(grid: Vector2, direction: Vector2, future: bool) -> void:
