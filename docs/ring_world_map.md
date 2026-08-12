@@ -22,6 +22,10 @@ The active campaign map is a lightweight 2D isometric tile map implemented in
 - Datt and the modern port are multi-tile districts. Their towers, warehouses,
   exchange, terminals, cargo piers, cranes and vessels are separate draw
   elements, so the districts can be expanded without replacing the continent.
+- Rendering is ordered as terrain, carved waterways and roads, bridges,
+  vegetation, then buildings. Rivers use variable-width bank and water ribbons
+  sampled against terrain elevation; roads reserve clear verges and crossings
+  use separate bridge decks instead of drawing one line over another.
 - The campaign marker and route layer is currently disabled so landmarks stay
   readable while the world art is being developed. Set
   `show_campaign_overlay` on the map scene when that layer is ready to return.
