@@ -13,7 +13,6 @@ var _preview_base_pos: Vector2 = Vector2.ZERO
 var _preview_move_offset: Vector2 = Vector2.ZERO
 
 var _tab_basic: VBoxContainer
-var _tab_creator: VBoxContainer
 var _tab_deco: VBoxContainer
 var _tab_skills: VBoxContainer
 var _tab_tex: VBoxContainer
@@ -82,7 +81,7 @@ func _build_top_bar() -> void:
 	add_child(btn_new)
 
 func _build_tabs() -> void:
-	var LEFT_W = 340
+	var LEFT_W = 480
 	var TAB_Y = 80
 	var TAB_H = 510
 
@@ -91,27 +90,45 @@ func _build_tabs() -> void:
 	tab_container.size = Vector2(LEFT_W, TAB_H)
 	add_child(tab_container)
 
-	_tab_creator = _ui.add_tab("Appearance", tab_container)
 	_tab_basic = _ui.add_tab("Basic", tab_container)
+	_tab_deco = _ui.add_tab("Decorations", tab_container)
 	_tab_skills = _ui.add_tab("Skills", tab_container)
+	_tab_tex = _ui.add_tab("Custom Textures", tab_container)
 
 	var preview_bg = ColorRect.new()
-	preview_bg.position = Vector2(360, TAB_Y)
-	preview_bg.size = Vector2(430, TAB_H)
+	preview_bg.position = Vector2(500, TAB_Y)
+	preview_bg.size = Vector2(290, TAB_H)
 	preview_bg.color = Color(0.14, 0.15, 0.19)
 	add_child(preview_bg)
 
 	var preview_border = ColorRect.new()
-	preview_border.position = Vector2(360, TAB_Y)
-	preview_border.size = Vector2(430, TAB_H)
+	preview_border.position = Vector2(500, TAB_Y)
+	preview_border.size = Vector2(290, TAB_H)
 	preview_border.color = Color(0.3, 0.32, 0.38)
 	preview_border.mouse_filter = Control.MOUSE_FILTER_PASS
 	add_child(preview_border)
 
+	var lb_preview = Label.new()
+	lb_preview.text = "Preview"
+	lb_preview.position = Vector2(510, TAB_Y + 10)
+	lb_preview.size = Vector2(120, 24)
+	lb_preview.add_theme_font_size_override("font_size", 17)
+	lb_preview.add_theme_color_override("font_color", Color(0.8, 0.85, 0.9))
+	add_child(lb_preview)
+
+	var hint = Label.new()
+	hint.text = "WASD: move  SPACE: bomb"
+	hint.position = Vector2(505, TAB_Y + 32)
+	hint.size = Vector2(280, 16)
+	hint.add_theme_font_size_override("font_size", 11)
+	hint.add_theme_color_override("font_color", Color(0.5, 0.55, 0.6))
+	add_child(hint)
+
 func _rebuild_ui() -> void:
-	_ui.build_creator_tab(_tab_creator)
 	_ui.build_basic_tab(_tab_basic)
+	_ui.build_deco_tab(_tab_deco)
 	_ui.build_skills_tab(_tab_skills)
+	_ui.build_tex_tab(_tab_tex)
 	_render_preview()
 
 func _on_field_changed(new_text: String, key: String) -> void:
@@ -128,36 +145,9 @@ func _on_float_changed(value: float, key: String) -> void:
 	_dirty = true
 
 func _render_preview() -> void:
-	if _hero.get("creator_mode", false):
-		if _preview_instance != null and _preview_instance is HiloanCreator3DPreview:
-			_preview_instance.set_hero(_hero)
-			_preview_instance.set_focus(_ui._creator_page)
-			return
-		if _preview_instance != null:
-			_preview_instance.queue_free()
-		_preview_instance = null
-		var area_x = 360
-		var area_y = 80
-		var area_w = 430
-		var area_h = 510
-		_preview_instance = load("res://src/player_editor/hiloan_creator_3d_preview.gd").new()
-		_preview_instance.position = Vector2(area_x + 1, area_y + 1)
-		_preview_instance.size = Vector2(area_w - 2, area_h - 2)
-		_preview_instance.set_hero(_hero)
-		add_child(_preview_instance)
-		_preview_instance.set_focus(_ui._creator_page)
-		return
-
 	if _preview_instance != null:
 		_preview_instance.queue_free()
 		_preview_instance = null
-
-	var area_x = 360
-	var area_y = 80
-	var area_w = 430
-	var area_h = 510
-	_preview_base_pos = Vector2(area_x + area_w * 0.5, area_y + area_h * 0.5 + 10)
-	_preview_move_offset = Vector2.ZERO
 
 	var result = CharacterGenerator.generate_from_hero(_hero, _current_color)
 	if result.is_empty():
@@ -165,13 +155,16 @@ func _render_preview() -> void:
 
 	_preview_instance = CharacterPreview.new()
 	_preview_instance.set_character(result, _preview_orient, _current_color)
+
+	var area_x = 500
+	var area_y = 80
+	var area_w = 290
+	var area_h = 510
+	_preview_base_pos = Vector2(area_x + area_w * 0.5, area_y + area_h * 0.5 + 10)
+	_preview_move_offset = Vector2.ZERO
 	_preview_instance.position = _preview_base_pos
 	_preview_instance.scale = Vector2(2.0, 2.0)
 	add_child(_preview_instance)
-
-func _set_creator_focus(page: String) -> void:
-	if _preview_instance != null and _preview_instance.has_method("set_focus"):
-		_preview_instance.set_focus(page)
 
 func _on_save() -> void:
 	if not _hero.has("name") or str(_hero["name"]).strip_edges() == "":
@@ -207,8 +200,24 @@ func _on_restore() -> void:
 	_rebuild_ui()
 
 func _on_new_character() -> void:
-	_hero = HeroData.create_hiloan_creator_hero()
-	_use_custom_tex = false
+	var use_custom = _use_custom_tex
+	var template = {
+		"name": "NewHero",
+		"character": "" if use_custom else "CharacterBlank",
+		"icon_img": "",
+		"use_custom_textures": use_custom,
+		"decorations": {
+			"disable_foot_and_leg": false, "bomb_skin": "bomb1",
+			"cap": null, "hair": null, "eye": null, "ear": null, "mouth": null,
+			"cladorn": null, "fpack": null, "npack": null, "thadorn": null, "footprint": null,
+			"head_effect": null, "body_effect": null
+		},
+		"blood": 4500, "speed": 5.83333, "bomb": 7, "restore": 700,
+		"power": 3, "damage": 3500, "defense": 0, "skills": []
+	}
+	if use_custom:
+		template["custom_texture_offsets"] = {}
+	_hero = template
 	_dirty = true
 	_rebuild_ui()
 
@@ -244,8 +253,6 @@ func _do_quit() -> void:
 func _process(_delta: float) -> void:
 	if _preview_instance == null:
 		return
-	if _hero.get("creator_mode", false):
-		return
 	var moving = false
 	var new_orient = ""
 	if Input.is_key_pressed(KEY_W) or Input.is_key_pressed(KEY_UP):
@@ -272,8 +279,6 @@ func _process(_delta: float) -> void:
 			_preview_instance.set_moving(false)
 
 func _unhandled_input(event: InputEvent) -> void:
-	if _hero.get("creator_mode", false):
-		return
 	if event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:
 			KEY_SPACE:

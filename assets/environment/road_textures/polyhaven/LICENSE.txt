@@ -1,8 +1,0 @@
-Poly Haven road textures
-
-Gravel Road: https://polyhaven.com/a/gravel_road
-Stony Dirt Path: https://polyhaven.com/a/stony_dirt_path
-Pavement 05: https://polyhaven.com/a/pavement_05
-
-License: CC0 1.0 Universal
-https://creativecommons.org/publicdomain/zero/1.0/

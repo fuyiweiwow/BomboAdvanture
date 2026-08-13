@@ -214,7 +214,20 @@ func _on_hero_selected(idx: int) -> void:
 	p.remove_child(self)
 
 func _on_new_character() -> void:
-	var template = HeroData.create_hiloan_creator_hero()
+	var template = {
+		"name": "NewHero",
+		"character": "CharacterBlank",
+		"icon_img": "",
+		"use_custom_textures": false,
+		"decorations": {
+			"disable_foot_and_leg": false, "bomb_skin": "bomb1",
+			"cap": null, "hair": null, "eye": null, "ear": null, "mouth": null,
+			"cladorn": null, "fpack": null, "npack": null, "thadorn": null, "footprint": null,
+			"head_effect": null, "body_effect": null
+		},
+		"blood": 4500, "speed": 5.83333, "bomb": 7, "restore": 700,
+		"power": 3, "damage": 3500, "defense": 0, "skills": []
+	}
 	var editor = load("res://src/player_editor/character_editor.gd").new(template)
 	editor.set_meta("list_ref", self)
 	var p = get_parent()

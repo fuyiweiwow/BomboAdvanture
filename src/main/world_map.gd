@@ -5,14 +5,14 @@ const LEVEL_CATALOG := preload("res://src/level/level_catalog.gd")
 const LEVEL_PROGRESS_REPOSITORY := preload("res://src/level/level_progress_repository.gd")
 const WORLD_CAMPAIGN_CATALOG := preload("res://src/level/world_campaign_catalog.gd")
 const LEVEL_SESSION := preload("res://src/level/level_session.gd")
-const RING_WORLD_MAP := preload("res://src/main/ring_world_map.tscn")
+const CAMPAIGN_MAP_CANVAS := preload("res://src/main/campaign_map_canvas.tscn")
 
 var catalog
 var campaign
 var progress_repository
 var map_view: SubViewportContainer
 var map_viewport: SubViewport
-var ring_world_map: AdventureRingWorldMap
+var campaign_map: AdventureCampaignMapCanvas
 var detail_title: Label
 var detail_description: Label
 var detail_state: Label
@@ -37,7 +37,7 @@ func _build() -> void:
 	add_child(background)
 
 	map_view = SubViewportContainer.new()
-	map_view.name = "RingWorldMapContainer"
+	map_view.name = "CampaignMapContainer"
 	map_view.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	map_view.offset_top = 64.0
 	map_view.offset_bottom = -126.0
@@ -46,7 +46,7 @@ func _build() -> void:
 	add_child(map_view)
 
 	map_viewport = SubViewport.new()
-	map_viewport.name = "RingWorldMapViewport"
+	map_viewport.name = "CampaignMapViewport"
 	map_viewport.size = Vector2i(1920, 1080)
 	map_viewport.msaa_2d = Viewport.MSAA_2X
 	map_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
@@ -54,13 +54,13 @@ func _build() -> void:
 	map_view.add_child(map_viewport)
 
 	var profiles := _visible_profiles()
-	ring_world_map = RING_WORLD_MAP.instantiate() as AdventureRingWorldMap
-	ring_world_map.show_campaign_overlay = true
-	ring_world_map.show_campaign_routes = false
-	ring_world_map.configure(profiles)
-	ring_world_map.level_focused.connect(_show_profile)
-	ring_world_map.level_activated.connect(_enter_level)
-	map_viewport.add_child(ring_world_map)
+	campaign_map = CAMPAIGN_MAP_CANVAS.instantiate() as AdventureCampaignMapCanvas
+	campaign_map.show_campaign_overlay = true
+	campaign_map.show_campaign_routes = false
+	campaign_map.configure(profiles)
+	campaign_map.level_focused.connect(_show_profile)
+	campaign_map.level_activated.connect(_enter_level)
+	map_viewport.add_child(campaign_map)
 
 	add_child(_build_header())
 	add_child(_build_detail_band())
@@ -103,7 +103,7 @@ func _build_header() -> Control:
 	reset_button.tooltip_text = "恢复地图初始视角"
 	reset_button.custom_minimum_size = Vector2(108, 42)
 	reset_button.add_theme_font_size_override("font_size", 16)
-	reset_button.pressed.connect(func(): ring_world_map.reset_camera())
+	reset_button.pressed.connect(func(): campaign_map.reset_camera())
 	header.add_child(reset_button)
 	return panel
 
@@ -195,7 +195,7 @@ func _show_profile(profile: Dictionary) -> void:
 	detail_title.text = "%s · 候选点 %s  %s" % [str(profile.get("campaign_stage_name", "")), str(int(profile.get("campaign_candidate_index", 0)) + 1), str(profile.get("name", level_id))]
 	detail_description.text = "%s · 前往方式：%s\n%s" % [str(profile.get("region_name", "")), travel_label, str(profile.get("region_subtitle", ""))]
 	enter_button.disabled = not unlocked
-	ring_world_map.focus_level(level_id)
+	campaign_map.focus_level(level_id)
 
 
 func _enter_selected_level() -> void:

@@ -1,7 +1,7 @@
 class_name AdventureWorldCampaignCatalog
 extends RefCounted
 
-const DEFAULT_PATH := "res://assets/config/ring_world_campaign.json"
+const DEFAULT_PATH := "res://assets/config/hiloan_campaign.json"
 const LEVEL_CATALOG := preload("res://src/level/level_catalog.gd")
 
 var config_path: String

@@ -7,18 +7,3 @@ Thumbs.db
 
 # Python caches
 __pycache__/
-
-# Character creator Blender iteration artifacts
-assets/creator/hiloan_3d/blender/*.blend1
-assets/creator/hiloan_3d/blender/*_before_fit_repair.blend
-assets/creator/hiloan_3d/blender/*_backup.blend
-assets/creator/hiloan_3d/blender/*_preview.png
-assets/creator/hiloan_3d/blender/*.png
-assets/creator/hiloan_3d/blender/art_master_previews/
-assets/creator/hiloan_3d/blender/fit_repair_previews/
-assets/creator/hiloan_3d/blender/hiloan_character_creator_draft.blend
-assets/creator/hiloan_3d/blender/hiloan_character_creator_draft.blend.import
-assets/creator/hiloan_3d/blender/hiloan_character_creator_draft_preview.png.import
-assets/creator/hiloan_3d/blender/hiloan_character_creator_fitting_v2.blend
-assets/creator/hiloan_3d/blender/hiloan_character_creator_raw_source.blend
-assets/creator/hiloan_3d/blender/hiloan_character_creator_source_edit.blend

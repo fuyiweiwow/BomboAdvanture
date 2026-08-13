@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/main/campaign_map_canvas.gd" id="1_campaign_map"]
+
+[node name="HiloanCampaignMap" type="Node2D"]
+script = ExtResource("1_campaign_map")

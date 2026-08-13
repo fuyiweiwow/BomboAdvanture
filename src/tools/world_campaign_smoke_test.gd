@@ -3,7 +3,7 @@ extends SceneTree
 const LEVEL_CATALOG := preload("res://src/level/level_catalog.gd")
 const CAMPAIGN_CATALOG := preload("res://src/level/world_campaign_catalog.gd")
 const PROGRESS_REPOSITORY := preload("res://src/level/level_progress_repository.gd")
-const RING_WORLD_MAP := preload("res://src/main/ring_world_map.gd")
+const CAMPAIGN_MAP_CANVAS := preload("res://src/main/campaign_map_canvas.gd")
 
 var _failures: Array[String] = []
 
@@ -33,7 +33,7 @@ func _init() -> void:
 			var profile: Dictionary = levels.profile(level_id)
 			profile.merge(campaign.campaign_profile(level_id), true)
 			profiles.append(profile)
-	var map = RING_WORLD_MAP.new()
+	var map = CAMPAIGN_MAP_CANVAS.new()
 	map.configure(profiles)
 	var marker_cells: Dictionary = map.campaign_marker_cells()
 	_expect(marker_cells.size() == profiles.size(), "every configured candidate must receive a map cell")
