@@ -47,8 +47,8 @@ func _build() -> void:
 
 	map_viewport = SubViewport.new()
 	map_viewport.name = "CampaignMapViewport"
-	map_viewport.size = Vector2i(1920, 1080)
-	map_viewport.msaa_2d = Viewport.MSAA_2X
+	map_viewport.size = Vector2i(2560, 1440)
+	map_viewport.msaa_2d = Viewport.MSAA_4X
 	map_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	map_viewport.handle_input_locally = true
 	map_view.add_child(map_viewport)

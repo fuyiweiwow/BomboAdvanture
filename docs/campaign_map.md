@@ -5,10 +5,9 @@ The active campaign map is a lightweight 2D isometric tile map implemented in
 
 ## Structure
 
-- An 80 by 50 runtime grid provides 4,000 addressable world cells. A separate
-  48 by 30 design coordinate system preserves the authored geography while
-  adding roughly 2.8 times as many cells for future levels and landmarks. The
-  current continent mask contains 2,291 land and island cells.
+- A 120 by 75 runtime grid provides 9,000 addressable world cells. A separate
+  48 by 30 design coordinate system preserves the authored geography while the
+  denser runtime mesh smooths coastlines, rivers and biome boundaries.
 - Layered value noise controls coastline shape, terrain tint and elevation, so
   the map remains reproducible without looking like a flat board.
 - Coast tiles add shallow-water foam and cliff shading; floating islands add
@@ -25,7 +24,7 @@ The active campaign map is a lightweight 2D isometric tile map implemented in
 - Datt's crossing canals, future rail, regional landmarks, forests, fields,
   mountains, ships and airships are drawn directly by Godot and require no
   external 3D assets.
-- The active map viewport renders at 1920 by 1080 with 2x MSAA. Terrain,
+- The active map viewport renders at 2560 by 1440 with 4x MSAA. Terrain,
   buildings and infrastructure are vector-drawn CanvasItem geometry rather
   than a single low-resolution background image.
 - Datt and the modern port are multi-tile districts. Their towers, warehouses,
@@ -56,11 +55,10 @@ The active campaign map is a lightweight 2D isometric tile map implemented in
   elevation before drawing. Castles, mines, city districts and island villages
   therefore sit on the terrain surface instead of using the flat projection
   plane beneath it.
-- Runtime tiles are 52 by 26 units. Combined with the 80 by 50 grid, this makes
-  the projected continent about 35 percent wider and taller than the previous
-  48 by 30 version while increasing placement density. The default camera is a
-  regional view; zoom out for the continent overview or drag the camera to
-  inspect each country at model scale.
+- Runtime tiles are 35 by 17.5 units. The smaller cells preserve the overall
+  continent size while replacing the coarse stepped silhouette with finer
+  terrain transitions. The default camera shows the continent overview; zoom
+  in or drag the camera to inspect each miniature district.
 - Roads, railways, rivers and canals are assembled from projected tile modules.
   Every entrance, exit, turn, shoulder and surface texture shares the same 2:1
   axes as the ground diamond, so infrastructure cannot drift into screen-space
@@ -76,7 +74,7 @@ The active campaign map is a lightweight 2D isometric tile map implemented in
 - Heren's mountain mines use rock-backed mine mouths, timber portals,
   conveyors, processing sheds, ore carts and spoil piles, distinct from the
   factories along the eastern coast.
-- Secondary regional props follow the base 52 by 26 tile scale: villages,
+- Secondary regional props follow the denser terrain scale: villages,
   island settlements, mines, vessels and magical structures stay within one
   or two local cells, while only capital districts use a larger footprint.
 - Campaign flow is configured in `assets/config/hiloan_campaign.json`. The

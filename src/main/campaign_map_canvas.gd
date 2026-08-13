@@ -6,10 +6,10 @@ signal level_activated(level_id: String)
 
 const DESIGN_GRID_COLUMNS := 48
 const DESIGN_GRID_ROWS := 30
-const GRID_COLUMNS := 80
-const GRID_ROWS := 50
-const TILE_WIDTH := 52.0
-const TILE_HEIGHT := 26.0
+const GRID_COLUMNS := 120
+const GRID_ROWS := 75
+const TILE_WIDTH := 35.0
+const TILE_HEIGHT := 17.5
 const MAP_ORIGIN := Vector2(1900.0, 180.0)
 const CAMERA_HOME := Vector2(2300.0, 980.0)
 const CAMERA_MIN_ZOOM := 0.34
@@ -84,7 +84,8 @@ func focus_level(level_id: String) -> void:
 		var profile := marker.get_meta("profile", {}) as Dictionary
 		_camera.position = _profile_to_world(profile)
 	_refresh_markers()
-	queue_redraw()
+	if show_campaign_routes:
+		queue_redraw()
 
 
 func reset_camera() -> void:
@@ -191,7 +192,7 @@ func _draw_land_shadow() -> void:
 		for column in range(GRID_COLUMNS):
 			if not _is_world_tile(column, row):
 				continue
-			var center := _grid_to_world(Vector2(column, row)) + Vector2(14.0, 22.0)
+			var center := _grid_to_world(Vector2(column, row)) + Vector2(9.0, 14.0)
 			var diamond := _tile_diamond(center, 0.0)
 			draw_colored_polygon(diamond, Color(0.02, 0.09, 0.11, 0.16))
 
@@ -232,7 +233,7 @@ func _is_world_tile(column: int, row: int) -> bool:
 	var design := _grid_to_design(Vector2(column, row))
 	var x := (design.x - 27.0) / 20.5
 	var y := (design.y - 14.0) / 12.4
-	var edge_noise := (_fractal_noise(float(column) * 0.31, float(row) * 0.31) - 0.5) * 0.56
+	var edge_noise := (_fractal_noise(design.x * 0.52, design.y * 0.52) - 0.5) * 0.56
 	var shape := 1.0 - x * x - y * y + edge_noise
 	shape += sin(design.x * 0.72) * 0.07 + cos(design.y * 0.91) * 0.06
 	if design.x < 13 and design.y < 8:
@@ -269,7 +270,7 @@ func _is_nether_land(column: int, row: int) -> bool:
 	# An irregular polar peninsula anchors the Nether source to the ice cap.
 	var x := (design.x - 39.0) / 3.35
 	var y := (design.y - 2.0) / 2.25
-	var edge_noise := (_fractal_noise(float(column) * 0.57 + 11.0, float(row) * 0.57 + 5.0) - 0.5) * 0.42
+	var edge_noise := (_fractal_noise(design.x * 0.96 + 11.0, design.y * 0.96 + 5.0) - 0.5) * 0.42
 	var polar_mass := 1.0 - x * x - y * y + edge_noise > 0.08
 	var ice_neck := _in_ellipse(design.x, design.y, 37.2, 3.6, 2.1, 1.15)
 	return polar_mass or ice_neck
@@ -292,7 +293,7 @@ func _biome_at(column: int, row: int) -> String:
 	if design.y <= 5:
 		return "snow"
 	if design.y <= 8:
-		return "tundra" if _fractal_noise(float(column) * 0.25, float(row) * 0.25) > 0.34 else "snow"
+		return "tundra" if _fractal_noise(design.x * 0.42, design.y * 0.42) > 0.34 else "snow"
 	if design.y >= 22 and design.x < 34:
 		return "desert"
 	if design.x >= 37 and design.y <= 15:
@@ -300,12 +301,12 @@ func _biome_at(column: int, row: int) -> String:
 	if design.x >= 39 and design.y <= 21:
 		return "industry"
 	if design.x >= 27 and design.x <= 36 and design.y >= 12 and design.y <= 20:
-		return "urban" if _fractal_noise(float(column) * 0.37, float(row) * 0.37) > 0.42 else "plains"
+		return "urban" if _fractal_noise(design.x * 0.62, design.y * 0.62) > 0.42 else "plains"
 	if design.x <= 22 and design.y >= 9 and design.y <= 20:
-		return "forest" if _fractal_noise(float(column) * 0.31, float(row) * 0.31) > 0.38 else "plains"
+		return "forest" if _fractal_noise(design.x * 0.52, design.y * 0.52) > 0.38 else "plains"
 	if (design.x >= 24 and design.x <= 35 and design.y <= 10) or (design.x >= 34 and design.y <= 13):
 		return "rock"
-	if _fractal_noise(float(column) * 0.29, float(row) * 0.29) > 0.67:
+	if _fractal_noise(design.x * 0.49, design.y * 0.49) > 0.67:
 		return "forest"
 	return "plains"
 
@@ -327,7 +328,8 @@ func _biome_color(biome: String) -> Color:
 
 
 func _elevation_at(column: int, row: int, biome: String) -> float:
-	var relief := _fractal_noise(float(column) * 0.24, float(row) * 0.24)
+	var design := _grid_to_design(Vector2(column, row))
+	var relief := _fractal_noise(design.x * 0.40, design.y * 0.40)
 	var north_east_rise := (1.0 - float(row) / float(GRID_ROWS)) * 3.4 + float(column) / float(GRID_COLUMNS) * 2.6
 	var base_elevation: float
 	if biome == "floating":
@@ -393,11 +395,10 @@ func _draw_tile(center: Vector2, color: Color, elevation: float) -> void:
 	])
 	draw_colored_polygon(side_right, color.darkened(0.34))
 	draw_colored_polygon(side_left, color.darkened(0.22))
-	var tint := (_fractal_noise(center.x * 0.012, center.y * 0.012) - 0.5) * 0.09
+	var tint := (_fractal_noise(center.x * 0.0075, center.y * 0.0075) - 0.5) * 0.055
 	var surface := color.lightened(tint)
 	draw_colored_polygon(diamond, surface)
-	draw_colored_polygon(PackedVector2Array([diamond[0], diamond[1], diamond[2]]), Color(0.90, 0.94, 0.78, 0.018))
-	draw_line(diamond[3], diamond[0], surface.lightened(0.055), 0.75, true)
+	draw_colored_polygon(PackedVector2Array([diamond[0], diamond[1], diamond[2]]), Color(0.90, 0.94, 0.78, 0.012))
 
 
 func _tile_diamond(center: Vector2, elevation: float) -> PackedVector2Array:
@@ -423,9 +424,9 @@ func _draw_coast_detail(center: Vector2, column: int, row: int) -> void:
 		var shore_color := Color("#c8b987") if biome in ["plains", "coast", "desert"] else Color("#89978b")
 		if _is_floating_island(column, row):
 			shore_color = Color("#485b50")
-		draw_line(diamond[from_index] + Vector2(0, 1), diamond[to_index] + Vector2(0, 1), shore_color, 3.4, true)
-		draw_line(diamond[from_index] + Vector2(0, 5), diamond[to_index] + Vector2(0, 5), Color(0.65, 0.91, 0.86, 0.43), 1.8, true)
-		draw_line(diamond[from_index] + Vector2(0, 10), diamond[to_index] + Vector2(0, 10), Color(0.38, 0.73, 0.74, 0.17), 3.0, true)
+		draw_line(diamond[from_index] + Vector2(0, 1), diamond[to_index] + Vector2(0, 1), shore_color, 2.2, true)
+		draw_line(diamond[from_index] + Vector2(0, 4), diamond[to_index] + Vector2(0, 4), Color(0.65, 0.91, 0.86, 0.43), 1.3, true)
+		draw_line(diamond[from_index] + Vector2(0, 8), diamond[to_index] + Vector2(0, 8), Color(0.38, 0.73, 0.74, 0.17), 2.0, true)
 		if _is_floating_island(column, row) and _hash_noise(column * 5 + index, row * 7) > 0.66:
 			var waterfall_start := diamond[from_index].lerp(diamond[to_index], 0.52) + Vector2(0, 4)
 			draw_line(waterfall_start, waterfall_start + Vector2(0, 28), Color(0.53, 0.92, 0.90, 0.58), 2.2, true)
@@ -466,7 +467,7 @@ func _lake_basin_index(column: int, row: int) -> int:
 		var center: Vector2 = basin["center"]
 		var radius: Vector2 = basin["radius"]
 		var normalized := (design - center) / radius
-		var distortion := (_fractal_noise(float(column) * 0.51 + index * 3.0, float(row) * 0.51) - 0.5) * 0.22
+		var distortion := (_fractal_noise(design.x * 0.86 + index * 3.0, design.y * 0.86) - 0.5) * 0.22
 		if normalized.length_squared() + distortion <= 1.0:
 			return index
 	return -1
@@ -484,8 +485,9 @@ func _scaled_polygon(points: PackedVector2Array, center: Vector2, scale_value: f
 
 
 func _draw_tile_detail(center: Vector2, column: int, row: int, biome: String) -> void:
-	var noise := _fractal_noise(float(column) * 0.43 + 8.1, float(row) * 0.43 + 3.9)
 	var design := _grid_to_design(Vector2(column, row))
+	var noise := _fractal_noise(design.x * 0.72 + 8.1, design.y * 0.72 + 3.9)
+	var distribution := _hash_noise(column * 17 + row * 3, row * 19 + column)
 	if _is_lake_cell(column, row):
 		return
 	if _near_infrastructure(Vector2(column, row), 0.64):
@@ -494,8 +496,10 @@ func _draw_tile_detail(center: Vector2, column: int, row: int, biome: String) ->
 		return
 	match biome:
 		"forest":
-			var tree_count := 3 + int(noise * 3.0)
-			draw_ellipse_shadow(center + Vector2(2, 3), Vector2(18, 5), Color(0.06, 0.15, 0.07, 0.18))
+			if distribution < 0.40:
+				return
+			var tree_count := 2 + int(noise * 2.0)
+			draw_ellipse_shadow(center + Vector2(2, 3), Vector2(14, 4), Color(0.06, 0.15, 0.07, 0.16))
 			for index in range(tree_count):
 				var offset := Vector2(
 					(_hash_noise(column * 7 + index, row * 5 + 2) - 0.5) * 25.0,
@@ -503,43 +507,44 @@ func _draw_tile_detail(center: Vector2, column: int, row: int, biome: String) ->
 				)
 				_draw_tree(center + offset, _hash_noise(column + index * 13, row + index * 7))
 		"rock":
-			if noise > 0.48:
+			if noise > 0.52 and distribution > 0.28:
 				_draw_mountain(center + Vector2(0.0, -3.0), noise, design.y < 8)
-			elif noise > 0.24:
+			elif noise > 0.27 and distribution > 0.48:
 				_draw_rock_cluster(center, noise)
 		"snow", "tundra":
-			if noise > 0.72 or (design.y < 5 and noise > 0.51):
+			if distribution > 0.36 and (noise > 0.72 or (design.y < 5 and noise > 0.54)):
 				_draw_mountain(center + Vector2(0, -2), 0.55 + noise * 0.40, true)
-			elif noise > 0.50:
+			elif noise > 0.54 and distribution > 0.42:
 				_draw_pine(center + Vector2(-4.0, -3.0), Color("#345d55"), 0.85 + noise * 0.35)
-			if noise > 0.63 and noise <= 0.72:
+			if noise > 0.63 and noise <= 0.72 and distribution > 0.72:
 				_draw_pine(center + Vector2(8.0, 1.0), Color("#486f61"), 0.68)
 		"desert":
-			_draw_dunes(center, column, row, noise)
+			if distribution > 0.36:
+				_draw_dunes(center, column, row, noise)
 		"industry":
-			if noise > 0.52:
+			if noise > 0.58 and distribution > 0.56:
 				_draw_small_factory(center)
 		"urban":
-			if noise > 0.52:
+			if noise > 0.56 and distribution > 0.52:
 				_draw_small_block(center, noise)
 		"floating":
-			if noise > 0.68:
+			if noise > 0.70 and distribution > 0.52:
 				_draw_magic_crystal(center)
-			elif noise > 0.42:
+			elif noise > 0.48 and distribution > 0.45:
 				_draw_tree(center + Vector2(2, -2), noise)
 		"plains", "coast":
-			if noise > 0.72:
+			if noise > 0.72 and distribution > 0.58:
 				_draw_tree(center + Vector2(4, -2), noise)
-			elif noise < 0.21 and design.y > 10:
+			elif noise < 0.21 and design.y > 10 and distribution > 0.45:
 				_draw_field(center, column, row)
-			elif noise > 0.58:
+			elif noise > 0.60 and distribution > 0.56:
 				_draw_low_hill(center, noise)
-			else:
+			elif distribution > 0.62:
 				_draw_grass_detail(center, column, row, noise)
 
 
 func _draw_tree(center: Vector2, seed: float) -> void:
-	var scale_value := 0.72 + seed * 0.40
+	var scale_value := 0.60 + seed * 0.34
 	draw_ellipse_shadow(center + Vector2(4, 3), Vector2(8, 3) * scale_value, Color(0.04, 0.10, 0.06, 0.30))
 	draw_rect(Rect2(center + Vector2(-1.4, -7.0) * scale_value, Vector2(2.8, 10.0) * scale_value), Color("#5c4933"))
 	var dark := Color("#294e37")
@@ -1383,13 +1388,43 @@ func _draw_ship(center: Vector2, scale_value: float = 1.0) -> void:
 
 
 func _draw_village(center: Vector2, roof_color: Color) -> void:
-	for index in range(3):
-		var offset := Vector2(float(index - 1) * 13.0, float(index % 2) * 7.0)
-		draw_ellipse_shadow(center + offset + Vector2(3, 4), Vector2(8, 3), Color(0.05, 0.07, 0.04, 0.24))
-		draw_rect(Rect2(center + offset + Vector2(-6, -9), Vector2(12, 11)), Color("#b8a77e"))
-		draw_colored_polygon(PackedVector2Array([
-			center + offset + Vector2(-8, -9), center + offset + Vector2(0, -17), center + offset + Vector2(8, -9),
-		]), roof_color.lightened(float(index) * 0.05))
+	var offsets := [Vector2(-23, 0), Vector2(-7, -13), Vector2(15, -5), Vector2(-9, 13), Vector2(17, 15)]
+	draw_line(center + Vector2(-32, 12), center + Vector2(29, -7), Color("#a18d68"), 5.5, true)
+	draw_line(center + Vector2(-32, 10), center + Vector2(29, -9), Color(0.82, 0.73, 0.52, 0.42), 1.0, true)
+	for index in range(offsets.size()):
+		_draw_cottage(center + offsets[index], roof_color.lightened(float(index % 3) * 0.045), index)
+	var well_center := center + Vector2(3, 11)
+	draw_ellipse_shadow(well_center + Vector2(2, 2), Vector2(6, 2), Color(0.03, 0.06, 0.04, 0.26))
+	draw_circle(well_center, 5.0, Color("#8d866f"))
+	draw_circle(well_center, 2.8, Color("#315f61"))
+	for fence_index in range(5):
+		var post := center + Vector2(-31 + fence_index * 8, 22 - fence_index * 2)
+		draw_line(post, post - Vector2(0, 5), Color("#765f3f"), 1.2)
+		if fence_index > 0:
+			var previous := center + Vector2(-31 + (fence_index - 1) * 8, 22 - (fence_index - 1) * 2) - Vector2(0, 3)
+			draw_line(previous, post - Vector2(0, 3), Color("#94784e"), 1.0, true)
+
+
+func _draw_cottage(base: Vector2, roof_color: Color, variant: int) -> void:
+	var footprint := Vector2(16.0 + float(variant % 2) * 2.0, 8.0 + float((variant + 1) % 2))
+	var height := 10.0 + float(variant % 3)
+	_draw_iso_building(base, footprint, height, Color("#b6a47d"), Color("#81775f"), roof_color.darkened(0.04))
+	var roof_center := base - Vector2(0, height)
+	var half_width := footprint.x * 0.57
+	var half_depth := footprint.y * 0.58
+	var ridge := roof_center - Vector2(0, 7.0 + float(variant % 2))
+	draw_colored_polygon(PackedVector2Array([
+		roof_center + Vector2(-half_width, 0), ridge, roof_center + Vector2(0, half_depth),
+	]), roof_color.lightened(0.08))
+	draw_colored_polygon(PackedVector2Array([
+		ridge, roof_center + Vector2(half_width, 0), roof_center + Vector2(0, half_depth),
+	]), roof_color.darkened(0.10))
+	draw_line(roof_center + Vector2(-half_width * 0.55, 0), ridge, Color(0.90, 0.79, 0.58, 0.30), 0.8, true)
+	draw_rect(Rect2(base + Vector2(-2, -6), Vector2(4, 6)), Color("#5a4735"))
+	if variant % 2 == 0:
+		draw_rect(Rect2(base + Vector2(half_width * 0.35, -height + 2), Vector2(2.5, 4.0)), Color("#d7c978"))
+	if variant % 3 == 0:
+		draw_rect(Rect2(ridge + Vector2(3, -5), Vector2(2.5, 7)), Color("#6f6251"))
 
 
 func _draw_airship(center: Vector2, scale_value: float) -> void:
@@ -1455,7 +1490,8 @@ func _build_level_markers() -> void:
 func _on_marker_pressed(level_id: String) -> void:
 	_selected_level_id = level_id
 	_refresh_markers()
-	queue_redraw()
+	if show_campaign_routes:
+		queue_redraw()
 	var marker := _marker_by_id.get(level_id) as Button
 	if marker != null:
 		level_focused.emit((marker.get_meta("profile", {}) as Dictionary).duplicate(true))
@@ -1570,8 +1606,9 @@ func _generate_stage_cells(profile: Dictionary, count: int, occupied: Array[Vect
 	var bounds: Array = profile.get("campaign_region_bounds", [])
 	var allowed_biomes: Array = profile.get("campaign_region_biomes", [])
 	var placement: Dictionary = profile.get("campaign_placement", {})
-	var minimum_spacing := float(placement.get("minimum_spacing", 2.4))
-	var infrastructure_clearance := float(placement.get("infrastructure_clearance", 1.1))
+	var density_scale := float(GRID_COLUMNS - 1) / 79.0
+	var minimum_spacing := float(placement.get("minimum_spacing", 2.4)) * density_scale
+	var infrastructure_clearance := float(placement.get("infrastructure_clearance", 1.1)) * density_scale
 	var landmark_clearance := float(placement.get("landmark_clearance", 2.2))
 	var design_min := Vector2(float(bounds[0]), float(bounds[1])) if bounds.size() >= 4 else Vector2(4, 1)
 	var design_max := Vector2(float(bounds[2]), float(bounds[3])) if bounds.size() >= 4 else Vector2(45, 28)
@@ -1646,8 +1683,9 @@ func _near_landmark(grid: Vector2, radius: float) -> bool:
 
 
 func _is_campaign_clearing(cell: Vector2i) -> bool:
+	var clearing_radius := float(GRID_COLUMNS - 1) / 79.0
 	for marker_cell in _campaign_marker_cells.values():
-		if cell.distance_to(marker_cell as Vector2i) <= 1.0:
+		if cell.distance_to(marker_cell as Vector2i) <= clearing_radius:
 			return true
 	return false
 
