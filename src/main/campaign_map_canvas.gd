@@ -11,10 +11,10 @@ const GRID_ROWS := 50
 const TILE_WIDTH := 52.0
 const TILE_HEIGHT := 26.0
 const MAP_ORIGIN := Vector2(1900.0, 180.0)
-const CAMERA_HOME := Vector2(1980.0, 900.0)
+const CAMERA_HOME := Vector2(2300.0, 980.0)
 const CAMERA_MIN_ZOOM := 0.34
 const CAMERA_MAX_ZOOM := 2.70
-const CAMERA_HOME_ZOOM := 1.05
+const CAMERA_HOME_ZOOM := 0.38
 
 const OCEAN := Color("#326f78")
 const OCEAN_DEEP := Color("#173f4d")
@@ -44,6 +44,12 @@ const ROAD_PATHS := [
 	{"points": [Vector2(32, 16), Vector2(33, 15), Vector2(36, 15), Vector2(39, 12), Vector2(42, 10)], "future": true},
 	{"points": [Vector2(32, 16), Vector2(35, 19), Vector2(39, 20), Vector2(41, 20)], "future": true},
 	{"points": [Vector2(24, 23), Vector2(27, 20), Vector2(30, 18), Vector2(32, 16)], "future": false},
+]
+
+const LAKE_BASINS := [
+	{"center": Vector2(17.0, 9.2), "radius": Vector2(1.8, 1.05)},
+	{"center": Vector2(13.4, 18.8), "radius": Vector2(1.45, 0.82)},
+	{"center": Vector2(27.0, 21.4), "radius": Vector2(1.25, 0.72)},
 ]
 
 var _profiles: Array[Dictionary] = []
@@ -146,7 +152,9 @@ func _draw() -> void:
 	_draw_ocean()
 	_draw_land_shadow()
 	_draw_terrain_tiles()
+	_draw_lakes_and_wetlands()
 	_draw_waterways()
+	_draw_landmark_foundations()
 	_draw_ground_roads()
 	_draw_bridges()
 	_draw_terrain_details()
@@ -157,20 +165,25 @@ func _draw() -> void:
 
 func _draw_ocean() -> void:
 	draw_rect(Rect2(-5000.0, -3000.0, 12000.0, 8000.0), OCEAN_DEEP)
-	for band in range(5):
-		var band_color := OCEAN.lightened(0.04 * float(band))
-		band_color.a = 0.12 - float(band) * 0.014
-		draw_rect(Rect2(-5000.0, 120.0 + float(band) * 180.0, 12000.0, 180.0), band_color)
-	for row in range(22):
+	for band in range(7):
+		var band_color := OCEAN.lightened(0.035 * float(band))
+		band_color.a = 0.10 - float(band) * 0.009
+		draw_rect(Rect2(-5000.0, 40.0 + float(band) * 170.0, 12000.0, 180.0), band_color)
+	for row in range(28):
 		var y := 28.0 + float(row) * 54.0
 		var offset := float(row % 2) * 42.0
-		for column in range(27):
+		for column in range(46):
 			var x := -90.0 + offset + float(column) * 94.0
 			var wave := 14.0 + _hash_noise(column + 17, row + 9) * 12.0
 			var alpha := 0.07 + _hash_noise(column, row) * 0.08
 			draw_arc(Vector2(x, y), wave, 0.25, 2.82, 10, Color(0.63, 0.86, 0.86, alpha), 1.4, true)
 			if (column + row) % 5 == 0:
 				draw_line(Vector2(x - wave * 0.45, y + 5), Vector2(x + wave * 0.65, y + 5), Color(0.18, 0.48, 0.55, 0.16), 1.0)
+	for current_index in range(11):
+		var current_center := Vector2(430.0 + float(current_index) * 365.0, 330.0 + float(current_index % 4) * 390.0)
+		var current_width := 105.0 + _hash_noise(current_index + 7, 31) * 75.0
+		draw_arc(current_center, current_width, 3.38, 5.78, 30, Color(0.48, 0.78, 0.79, 0.10), 4.0, true)
+		draw_arc(current_center + Vector2(18, 9), current_width * 0.72, 3.38, 5.78, 24, Color(0.67, 0.90, 0.87, 0.08), 1.5, true)
 
 
 func _draw_land_shadow() -> void:
@@ -380,8 +393,11 @@ func _draw_tile(center: Vector2, color: Color, elevation: float) -> void:
 	])
 	draw_colored_polygon(side_right, color.darkened(0.34))
 	draw_colored_polygon(side_left, color.darkened(0.22))
-	var tint := (_fractal_noise(center.x * 0.035, center.y * 0.035) - 0.5) * 0.13
-	draw_colored_polygon(diamond, color.lightened(tint))
+	var tint := (_fractal_noise(center.x * 0.012, center.y * 0.012) - 0.5) * 0.09
+	var surface := color.lightened(tint)
+	draw_colored_polygon(diamond, surface)
+	draw_colored_polygon(PackedVector2Array([diamond[0], diamond[1], diamond[2]]), Color(0.90, 0.94, 0.78, 0.018))
+	draw_line(diamond[3], diamond[0], surface.lightened(0.055), 0.75, true)
 
 
 func _tile_diamond(center: Vector2, elevation: float) -> PackedVector2Array:
@@ -403,24 +419,83 @@ func _draw_coast_detail(center: Vector2, column: int, row: int) -> void:
 			continue
 		var from_index := index
 		var to_index := (index + 1) % 4
-		draw_line(diamond[from_index] + Vector2(0, 3), diamond[to_index] + Vector2(0, 3), Color(0.65, 0.91, 0.86, 0.42), 2.0, true)
-		draw_line(diamond[from_index] + Vector2(0, 7), diamond[to_index] + Vector2(0, 7), Color(0.38, 0.73, 0.74, 0.18), 3.0, true)
+		var biome := _biome_at(column, row)
+		var shore_color := Color("#c8b987") if biome in ["plains", "coast", "desert"] else Color("#89978b")
+		if _is_floating_island(column, row):
+			shore_color = Color("#485b50")
+		draw_line(diamond[from_index] + Vector2(0, 1), diamond[to_index] + Vector2(0, 1), shore_color, 3.4, true)
+		draw_line(diamond[from_index] + Vector2(0, 5), diamond[to_index] + Vector2(0, 5), Color(0.65, 0.91, 0.86, 0.43), 1.8, true)
+		draw_line(diamond[from_index] + Vector2(0, 10), diamond[to_index] + Vector2(0, 10), Color(0.38, 0.73, 0.74, 0.17), 3.0, true)
 		if _is_floating_island(column, row) and _hash_noise(column * 5 + index, row * 7) > 0.66:
 			var waterfall_start := diamond[from_index].lerp(diamond[to_index], 0.52) + Vector2(0, 4)
 			draw_line(waterfall_start, waterfall_start + Vector2(0, 28), Color(0.53, 0.92, 0.90, 0.58), 2.2, true)
 			draw_line(waterfall_start + Vector2(3, 1), waterfall_start + Vector2(3, 23), Color(0.83, 1.0, 0.96, 0.30), 1.0, true)
 
 
+func _draw_lakes_and_wetlands() -> void:
+	var water_heights := [7.0, 4.5, 3.5]
+	var directions: Array[Vector2i] = [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]
+	for row in range(GRID_ROWS):
+		for column in range(GRID_COLUMNS):
+			var basin_index := _lake_basin_index(column, row)
+			if basin_index < 0 or not _is_world_tile(column, row):
+				continue
+			var center := _grid_to_world(Vector2(column, row)) - Vector2(0, water_heights[basin_index])
+			var diamond := _tile_diamond(center, 0.0)
+			draw_colored_polygon(diamond, Color("#377b7d").lightened(float(basin_index) * 0.025))
+			if (column + row) % 3 == 0:
+				draw_line(center + Vector2(-8, -1), center + Vector2(7, -4), Color(0.70, 0.91, 0.84, 0.33), 1.0, true)
+			for edge_index in range(directions.size()):
+				var neighbor := Vector2i(column, row) + directions[edge_index]
+				if neighbor.x >= 0 and neighbor.y >= 0 and neighbor.x < GRID_COLUMNS and neighbor.y < GRID_ROWS and _lake_basin_index(neighbor.x, neighbor.y) == basin_index:
+					continue
+				var edge_from := diamond[edge_index]
+				var edge_to := diamond[(edge_index + 1) % 4]
+				draw_line(edge_from, edge_to, Color("#75815d"), 3.2, true)
+				draw_line(edge_from + Vector2(0, 2), edge_to + Vector2(0, 2), Color(0.68, 0.88, 0.78, 0.30), 1.0, true)
+				if (column * 3 + row + edge_index) % 5 == 0:
+					for reed_index in range(3):
+						var reed_base := edge_from.lerp(edge_to, 0.25 + reed_index * 0.23)
+						draw_line(reed_base, reed_base - Vector2(1, 5 + reed_index), Color("#576c42"), 1.0)
+
+
+func _lake_basin_index(column: int, row: int) -> int:
+	var design := _grid_to_design(Vector2(column, row))
+	for index in range(LAKE_BASINS.size()):
+		var basin: Dictionary = LAKE_BASINS[index]
+		var center: Vector2 = basin["center"]
+		var radius: Vector2 = basin["radius"]
+		var normalized := (design - center) / radius
+		var distortion := (_fractal_noise(float(column) * 0.51 + index * 3.0, float(row) * 0.51) - 0.5) * 0.22
+		if normalized.length_squared() + distortion <= 1.0:
+			return index
+	return -1
+
+
+func _is_lake_cell(column: int, row: int) -> bool:
+	return _lake_basin_index(column, row) >= 0
+
+
+func _scaled_polygon(points: PackedVector2Array, center: Vector2, scale_value: float) -> PackedVector2Array:
+	var result := PackedVector2Array()
+	for point in points:
+		result.append(center + (point - center) * scale_value)
+	return result
+
+
 func _draw_tile_detail(center: Vector2, column: int, row: int, biome: String) -> void:
 	var noise := _fractal_noise(float(column) * 0.43 + 8.1, float(row) * 0.43 + 3.9)
 	var design := _grid_to_design(Vector2(column, row))
+	if _is_lake_cell(column, row):
+		return
 	if _near_infrastructure(Vector2(column, row), 0.64):
 		if biome in ["forest", "rock", "snow", "tundra", "plains", "coast"]:
 			_draw_verge_detail(center, column, row, biome)
 		return
 	match biome:
 		"forest":
-			var tree_count := 2 + int(noise * 3.0)
+			var tree_count := 3 + int(noise * 3.0)
+			draw_ellipse_shadow(center + Vector2(2, 3), Vector2(18, 5), Color(0.06, 0.15, 0.07, 0.18))
 			for index in range(tree_count):
 				var offset := Vector2(
 					(_hash_noise(column * 7 + index, row * 5 + 2) - 0.5) * 25.0,
@@ -428,9 +503,9 @@ func _draw_tile_detail(center: Vector2, column: int, row: int, biome: String) ->
 				)
 				_draw_tree(center + offset, _hash_noise(column + index * 13, row + index * 7))
 		"rock":
-			if noise > 0.22:
+			if noise > 0.48:
 				_draw_mountain(center + Vector2(0.0, -3.0), noise, design.y < 8)
-			elif noise > 0.08:
+			elif noise > 0.24:
 				_draw_rock_cluster(center, noise)
 		"snow", "tundra":
 			if noise > 0.72 or (design.y < 5 and noise > 0.51):
@@ -457,13 +532,15 @@ func _draw_tile_detail(center: Vector2, column: int, row: int, biome: String) ->
 				_draw_tree(center + Vector2(4, -2), noise)
 			elif noise < 0.21 and design.y > 10:
 				_draw_field(center, column, row)
+			elif noise > 0.58:
+				_draw_low_hill(center, noise)
 			else:
 				_draw_grass_detail(center, column, row, noise)
 
 
 func _draw_tree(center: Vector2, seed: float) -> void:
 	var scale_value := 0.72 + seed * 0.40
-	draw_ellipse_shadow(center + Vector2(3, 2), Vector2(7, 3) * scale_value, Color(0.04, 0.10, 0.06, 0.28))
+	draw_ellipse_shadow(center + Vector2(4, 3), Vector2(8, 3) * scale_value, Color(0.04, 0.10, 0.06, 0.30))
 	draw_rect(Rect2(center + Vector2(-1.4, -7.0) * scale_value, Vector2(2.8, 10.0) * scale_value), Color("#5c4933"))
 	var dark := Color("#294e37")
 	var mid := Color("#3e6c45")
@@ -472,6 +549,7 @@ func _draw_tree(center: Vector2, seed: float) -> void:
 	draw_circle(center + Vector2(4.0, -10.0) * scale_value, 6.2 * scale_value, mid)
 	draw_circle(center + Vector2(0.0, -15.0) * scale_value, 6.6 * scale_value, light)
 	draw_circle(center + Vector2(-2.0, -17.0) * scale_value, 2.1 * scale_value, Color(0.58, 0.70, 0.40, 0.65))
+	draw_arc(center + Vector2(0, -12) * scale_value, 7.5 * scale_value, 3.4, 5.8, 10, Color(0.73, 0.82, 0.52, 0.26), 1.0, true)
 
 
 func _draw_pine(center: Vector2, color: Color, scale_value: float = 1.0) -> void:
@@ -488,19 +566,39 @@ func _draw_pine(center: Vector2, color: Color, scale_value: float = 1.0) -> void
 
 
 func _draw_mountain(center: Vector2, seed: float, snow_cap: bool) -> void:
-	var height := 13.0 + seed * 11.0
-	var width := 20.0 + seed * 10.0
-	draw_ellipse_shadow(center + Vector2(7, 7), Vector2(width * 0.9, 5.5), Color(0.04, 0.07, 0.06, 0.34))
-	draw_colored_polygon(PackedVector2Array([center + Vector2(-width, 6), center + Vector2(0, -height), center + Vector2(width, 6)]), Color("#4d5450"))
-	draw_colored_polygon(PackedVector2Array([center + Vector2(-width, 6), center + Vector2(0, -height), center + Vector2(-2, 2)]), Color("#7b8075"))
-	draw_colored_polygon(PackedVector2Array([center + Vector2(-2, 2), center + Vector2(0, -height), center + Vector2(width, 6)]), Color("#5c625d"))
-	draw_line(center + Vector2(-2, -height + 8), center + Vector2(-9, -3), Color(0.78, 0.78, 0.68, 0.35), 1.2)
-	draw_line(center + Vector2(2, -height + 13), center + Vector2(8, 1), Color(0.19, 0.22, 0.21, 0.42), 1.4)
+	var height := 18.0 + seed * 16.0
+	var width := 19.0 + seed * 10.0
+	draw_ellipse_shadow(center + Vector2(8, 8), Vector2(width, 6.5), Color(0.04, 0.07, 0.06, 0.36))
+	var left_peak := center + Vector2(-width * 0.43, -height * 0.58)
+	var right_peak := center + Vector2(width * 0.46, -height * 0.45)
+	draw_colored_polygon(PackedVector2Array([center + Vector2(-width, 6), left_peak, center + Vector2(0, 6)]), Color("#626963"))
+	draw_colored_polygon(PackedVector2Array([center + Vector2(-2, 6), right_peak, center + Vector2(width, 6)]), Color("#4d5551"))
+	draw_colored_polygon(PackedVector2Array([center + Vector2(-width * 0.74, 6), center + Vector2(0, -height), center + Vector2(width * 0.72, 6)]), Color("#565e59"))
+	draw_colored_polygon(PackedVector2Array([center + Vector2(-width * 0.74, 6), center + Vector2(0, -height), center + Vector2(-3, 3)]), Color("#858a7d"))
+	draw_colored_polygon(PackedVector2Array([center + Vector2(-3, 3), center + Vector2(0, -height), center + Vector2(width * 0.72, 6)]), Color("#626963"))
+	draw_line(center + Vector2(-2, -height + 8), center + Vector2(-10, 0), Color(0.82, 0.82, 0.70, 0.34), 1.1)
+	draw_line(center + Vector2(3, -height + 12), center + Vector2(11, 3), Color(0.16, 0.20, 0.19, 0.45), 1.3)
 	if snow_cap:
 		draw_colored_polygon(PackedVector2Array([
-			center + Vector2(-7, -height + 13), center + Vector2(0, -height), center + Vector2(8, -height + 15),
-			center + Vector2(3, -height + 11), center + Vector2(0, -height + 16), center + Vector2(-3, -height + 11),
+			center + Vector2(-8, -height + 14), center + Vector2(0, -height), center + Vector2(9, -height + 16),
+			center + Vector2(4, -height + 12), center + Vector2(0, -height + 18), center + Vector2(-4, -height + 12),
 		]), Color("#eef1e9"))
+	else:
+		draw_colored_polygon(PackedVector2Array([
+			center + Vector2(-5, -height + 12), center + Vector2(0, -height), center + Vector2(6, -height + 13), center + Vector2(1, -height + 9),
+		]), Color("#9a9b87"))
+	if seed > 0.52 and not snow_cap:
+		_draw_pine(center + Vector2(-width * 0.52, 4), Color("#354f3b"), 0.52)
+		_draw_pine(center + Vector2(width * 0.46, 5), Color("#405b42"), 0.45)
+
+
+func _draw_low_hill(center: Vector2, seed: float) -> void:
+	var width := 13.0 + seed * 6.0
+	draw_colored_polygon(PackedVector2Array([
+		center + Vector2(-width, 4), center + Vector2(-4, -5 - seed * 4),
+		center + Vector2(width, 3), center + Vector2(3, 7),
+	]), Color("#718752"))
+	draw_line(center + Vector2(-width * 0.72, 1), center + Vector2(-3, -4 - seed * 3), Color(0.76, 0.82, 0.55, 0.26), 1.0, true)
 
 
 func _draw_rock_cluster(center: Vector2, seed: float) -> void:
@@ -627,6 +725,25 @@ func _draw_river_mouth(path: Array) -> void:
 func _draw_ground_roads() -> void:
 	for road in ROAD_PATHS:
 		_draw_tiled_infrastructure(road["points"], "rail" if bool(road["future"]) else "road")
+
+
+func _draw_landmark_foundations() -> void:
+	_draw_ground_pad(_design_surface_to_world(Vector2(18, 14), 0.6), Vector2(126, 57), Color("#78835e"), Color("#9b956e"))
+	_draw_ground_pad(_design_surface_to_world(Vector2(32, 16), 0.7), Vector2(205, 92), Color("#667a72"), Color("#8a9a8f"))
+	_draw_ground_pad(_design_surface_to_world(Vector2(40, 11), 0.6), Vector2(150, 68), Color("#6f7065"), Color("#918b77"))
+	_draw_ground_pad(_design_surface_to_world(Vector2(42, 19), 0.6), Vector2(142, 62), Color("#6d7770"), Color("#9ba397"))
+	_draw_ground_pad(_design_surface_to_world(Vector2(24, 24), 0.5), Vector2(58, 27), Color("#a78550"), Color("#cfb477"))
+
+
+func _draw_ground_pad(center: Vector2, size: Vector2, fill: Color, rim: Color) -> void:
+	var diamond := PackedVector2Array([
+		center + Vector2(0, -size.y * 0.5), center + Vector2(size.x * 0.5, 0),
+		center + Vector2(0, size.y * 0.5), center + Vector2(-size.x * 0.5, 0),
+	])
+	draw_colored_polygon(diamond, fill)
+	draw_polyline(diamond + PackedVector2Array([diamond[0]]), rim, 1.4, true)
+	var inset := _scaled_polygon(diamond, center, 0.86)
+	draw_polyline(inset + PackedVector2Array([inset[0]]), Color(rim, 0.28), 0.8, true)
 
 
 func _draw_tiled_infrastructure(grid_points: Array, kind: String) -> void:
@@ -860,21 +977,21 @@ func _draw_direction_chevrons(from: Vector2, to: Vector2, color: Color) -> void:
 
 
 func _draw_landmarks() -> void:
-	_draw_village(_design_to_world(Vector2(13, 17)), Color("#8a5d45"))
-	_draw_village(_design_to_world(Vector2(22, 18)), Color("#7e6148"))
-	_draw_village(_design_to_world(Vector2(28, 21)), Color("#9b754b"))
-	_draw_netherit_gate(_design_to_world(Vector2(39, 2)))
-	_draw_castle(_design_to_world(Vector2(18, 14)))
-	_draw_datt_metropolis(_design_to_world(Vector2(32, 16)))
-	_draw_heren_industrial_coast(_design_to_world(Vector2(40, 11)))
-	_draw_mining_complex(_design_to_world(Vector2(35, 9)), 0.52)
-	_draw_mining_complex(_design_to_world(Vector2(38, 8)) + Vector2(28, 10), 0.46)
-	_draw_modern_port(_design_to_world(Vector2(42, 19)))
-	_draw_desert_outpost(_design_to_world(Vector2(24, 24)))
+	_draw_village(_design_surface_to_world(Vector2(13, 17)), Color("#8a5d45"))
+	_draw_village(_design_surface_to_world(Vector2(22, 18)), Color("#7e6148"))
+	_draw_village(_design_surface_to_world(Vector2(28, 21)), Color("#9b754b"))
+	_draw_netherit_gate(_design_surface_to_world(Vector2(39, 2)))
+	_draw_castle(_design_surface_to_world(Vector2(18, 14)))
+	_draw_datt_metropolis(_design_surface_to_world(Vector2(32, 16)))
+	_draw_heren_industrial_coast(_design_surface_to_world(Vector2(40, 11)))
+	_draw_mining_complex(_design_surface_to_world(Vector2(35, 9)), 0.52)
+	_draw_mining_complex(_design_surface_to_world(Vector2(38, 8)) + Vector2(28, 10), 0.46)
+	_draw_modern_port(_design_surface_to_world(Vector2(42, 19)))
+	_draw_desert_outpost(_design_surface_to_world(Vector2(24, 24)))
 	_draw_psetia_archipelago()
-	_draw_magic_sanctuary(_design_to_world(Vector2(5, 8)), 0.54)
-	_draw_magic_sanctuary(_design_to_world(Vector2(3, 12)), 0.44)
-	_draw_magic_observatory(_design_to_world(Vector2(8, 13)), 0.58)
+	_draw_magic_sanctuary(_design_surface_to_world(Vector2(5, 8)), 0.54)
+	_draw_magic_sanctuary(_design_surface_to_world(Vector2(3, 12)), 0.44)
+	_draw_magic_observatory(_design_surface_to_world(Vector2(8, 13)), 0.58)
 	_draw_ship(_design_to_world(Vector2(39, 29)), 0.62)
 	_draw_ship(_design_to_world(Vector2(46, 20)), 0.55)
 	_draw_airship(_design_to_world(Vector2(8, 8)) + Vector2(-4, -48), 0.82)
@@ -1162,10 +1279,10 @@ func _draw_desert_outpost(center: Vector2) -> void:
 
 
 func _draw_psetia_archipelago() -> void:
-	_draw_psetia_settlement(_design_to_world(Vector2(35, 27)), 0.48, true)
-	_draw_psetia_settlement(_design_to_world(Vector2(41, 26)), 0.54, true)
-	_draw_psetia_settlement(_design_to_world(Vector2(45, 23)), 0.44, false)
-	_draw_psetia_settlement(_design_to_world(Vector2(29, 28)), 0.40, false)
+	_draw_psetia_settlement(_design_surface_to_world(Vector2(35, 27)), 0.48, true)
+	_draw_psetia_settlement(_design_surface_to_world(Vector2(41, 26)), 0.54, true)
+	_draw_psetia_settlement(_design_surface_to_world(Vector2(45, 23)), 0.44, false)
+	_draw_psetia_settlement(_design_surface_to_world(Vector2(29, 28)), 0.40, false)
 
 
 func _draw_psetia_settlement(center: Vector2, scale_value: float, has_temple: bool) -> void:
@@ -1467,6 +1584,8 @@ func _generate_stage_cells(profile: Dictionary, count: int, occupied: Array[Vect
 				continue
 			if not _is_world_tile(column, row):
 				continue
+			if _is_lake_cell(column, row):
+				continue
 			if not allowed_biomes.is_empty() and not allowed_biomes.has(_biome_at(column, row)):
 				continue
 			var grid := Vector2(column, row)
@@ -1535,6 +1654,10 @@ func _is_campaign_clearing(cell: Vector2i) -> bool:
 
 func _design_to_world(design: Vector2) -> Vector2:
 	return _grid_to_world(_design_to_grid(design))
+
+
+func _design_surface_to_world(design: Vector2, lift: float = 0.0) -> Vector2:
+	return _grid_surface_to_world(_design_to_grid(design), lift)
 
 
 func _design_to_grid(design: Vector2) -> Vector2:

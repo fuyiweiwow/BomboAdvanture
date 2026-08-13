@@ -13,6 +13,12 @@ The active campaign map is a lightweight 2D isometric tile map implemented in
   the map remains reproducible without looking like a flat board.
 - Coast tiles add shallow-water foam and cliff shading; floating islands add
   deeper escarpments and occasional waterfalls.
+- The default camera opens on a full-continent bird's-eye composition. Players
+  can zoom into the same vector scene to inspect districts without swapping to
+  a separate background image.
+- Three irregular inland lake basins add reeds, shallow banks and reflected
+  highlights. Candidate levels reserve these cells so markers remain on usable
+  ground.
 - The northern Nether River, Heren industrial coast, Loand woodland, Datt
   transport hub, southern frontier and archipelago, and western floating
   islands are authored as distinct regions.
@@ -46,6 +52,10 @@ The active campaign map is a lightweight 2D isometric tile map implemented in
   vegetation, then buildings. Infrastructure tiles sample terrain elevation,
   roads reserve clear verges, and crossings use separate bridge decks instead
   of drawing one line over another.
+- Landmark foundations and every land-based settlement now sample terrain
+  elevation before drawing. Castles, mines, city districts and island villages
+  therefore sit on the terrain surface instead of using the flat projection
+  plane beneath it.
 - Runtime tiles are 52 by 26 units. Combined with the 80 by 50 grid, this makes
   the projected continent about 35 percent wider and taller than the previous
   48 by 30 version while increasing placement density. The default camera is a
