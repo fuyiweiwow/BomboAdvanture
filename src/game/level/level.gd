@@ -65,23 +65,26 @@ var district_alarming: bool = false
 var district_all_finished: bool = false
 var finish_flag: bool = false
 
-func _init(your_name_: String, map_name_: String, me_, accumulation_time_: int):
+func _init(your_name_: String, map_name_: String, me_, accumulation_time_: int, map_data: Dictionary = {}):
 	Game.current_level = self
 	me = me_
 	your_name = your_name_
 	map_name = map_name_
 	accumulation_time = accumulation_time_
-	load_map_json()
+	load_map_json(map_data)
 	load_floor()
 	load_obstacle()
 	load_music()
 	# load_ui() -- TODO: port game/ui/*
 
-func load_map_json() -> void:
-	var path = G.GAME_ROOT + "map/" + map_name + ".json"
-	var mj: Variant = Utils.load_json(path)
-	if mj == null:
-		push_error("Level: missing map %s" % path)
+func load_map_json(map_data: Dictionary = {}) -> void:
+	var mj: Variant = map_data
+	var use_memory: bool = mj != null and mj is Dictionary and not (mj as Dictionary).is_empty()
+	if not use_memory:
+		var path = G.GAME_ROOT + "map/" + map_name + ".json"
+		mj = Utils.load_json(path)
+	if mj == null or not mj is Dictionary:
+		push_error("Level: missing map %s" % map_name)
 		return
 	map_json = mj
 	me.set_xy(int(map_json["basic"]["begin"][0]), int(map_json["basic"]["begin"][1]))
