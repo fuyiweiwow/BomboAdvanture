@@ -1,6 +1,7 @@
 extends Control
 
 const ITEM_LOADER = preload("res://src/item_editor/item_data.gd")
+const MAP_GENERATOR = preload("res://src/game/level/map_generator.gd")
 
 var _level = null
 var _hero = null
@@ -26,6 +27,22 @@ var _spawn_y_sb: SpinBox
 var _item_option: OptionButton
 var _potion_option: OptionButton
 
+# random map UI
+var _map_width_sb: SpinBox
+var _map_height_sb: SpinBox
+var _map_seed_sb: SpinBox
+var _map_density_sb: SpinBox
+var _map_floor_opt: OptionButton
+var _map_wall_opt: OptionButton
+var _map_breakable_opt: OptionButton
+var _pool_monster_opt: OptionButton
+var _pool_count_sb: SpinBox
+var _pool_list: VBoxContainer
+var _monster_pool: Array = []           # [{id, chs_name, max}]
+var _available_floors: Array = []
+var _available_walls: Array = []
+var _available_breakables: Array = []
+
 # input state
 var _bomb_old: int = 0
 var _skills_old: Array = [false, false, false, false, false, false, false]
@@ -35,6 +52,7 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = MOUSE_FILTER_STOP
 	_load_monsters()
+	_load_map_resources()
 	_init_sandbox()
 	_build_config_ui()
 
@@ -51,12 +69,65 @@ func _load_npc_list() -> Array:
 	while fname != "":
 		if fname.ends_with(".json"):
 			var j = Utils.load_json(G.GAME_ROOT + "npc/" + fname)
-			if j != null and j.has("id"):
+			if j != null and (j.has("name") or j.has("id")):
+				j["id"] = fname.trim_suffix(".json")
 				result.append(j)
 		fname = dir.get_next()
 	dir.list_dir_end()
 	result.sort_custom(func(a, b): return str(a.get("id", "")) < str(b.get("id", "")))
 	return result
+
+func _load_map_resources() -> void:
+	_available_floors = _discover_floors()
+	var obstacles = _discover_obstacles()
+	_available_walls = obstacles["walls"]
+	_available_breakables = obstacles["breakables"]
+
+func _discover_floors() -> Array:
+	var result: Array = []
+	var dir = DirAccess.open(G.RES_IMG_ROOT + "mapElem/exploration/")
+	if dir == null:
+		return ["elem220"]
+	dir.list_dir_begin()
+	var fname = dir.get_next()
+	while fname != "":
+		if fname.ends_with(".png") and not fname.ends_with(".import"):
+			var base = fname.trim_suffix(".png")
+			if not base.contains("_stand") and not base.contains("_die") and not base.contains("_trigger") and not result.has(base):
+				result.append(base)
+		fname = dir.get_next()
+	dir.list_dir_end()
+	result.sort()
+	if result.is_empty():
+		result = ["elem220"]
+	return result
+
+func _discover_obstacles() -> Dictionary:
+	var walls: Array = []
+	var breakables: Array = []
+	var dir = DirAccess.open(G.FRAME_ROOT + "obstacle/exploration/")
+	if dir == null:
+		return {"walls": ["elem212"], "breakables": ["elem225", "elem226", "elem227"]}
+	dir.list_dir_begin()
+	var fname = dir.get_next()
+	while fname != "":
+		if fname.ends_with(".json"):
+			var name = fname.trim_suffix(".json")
+			var j = Utils.load_json(G.FRAME_ROOT + "obstacle/exploration/" + fname)
+			if j != null:
+				if bool(j.get("BREAKABLE", false)):
+					breakables.append(name)
+				else:
+					walls.append(name)
+		fname = dir.get_next()
+	dir.list_dir_end()
+	walls.sort()
+	breakables.sort()
+	if walls.is_empty():
+		walls = ["elem212"]
+	if breakables.is_empty():
+		breakables = ["elem225", "elem226", "elem227"]
+	return {"walls": walls, "breakables": breakables}
 
 func _init_sandbox() -> void:
 	var hero_name = Game.cfg_json.get("your_hero", "hero1")
@@ -112,6 +183,7 @@ func _build_config_ui() -> void:
 	_build_action_buttons(panel, y)
 	y += 80
 	_build_status_display(panel, y)
+	_build_random_map_section(panel, y + 34)
 
 func _build_hero_section(panel: Control, y: int) -> void:
 	var sep = ColorRect.new()
@@ -366,6 +438,251 @@ func _build_status_display(panel: Control, y: int) -> void:
 		)
 		add_child(timer)
 		timer.start()
+
+func _build_random_map_section(panel: Control, y: int) -> void:
+	var sep = ColorRect.new()
+	sep.color = Color(0.2, 0.2, 0.3, 0.5)
+	sep.position = Vector2(8, y)
+	sep.size = Vector2(784, 1)
+	panel.add_child(sep)
+
+	var rl = Label.new()
+	rl.text = "随机地图生成"
+	rl.position = Vector2(12, y + 4)
+	rl.add_theme_font_size_override("font_size", 13)
+	rl.add_theme_color_override("font_color", Color(1.0, 0.7, 0.4))
+	panel.add_child(rl)
+
+	# row 1: size / seed / density
+	_map_width_sb = _make_spinbox(panel, "宽", Vector2(12, y + 22), Vector2(40, y + 20), 5, 50, 1, 21)
+	_map_height_sb = _make_spinbox(panel, "高", Vector2(92, y + 22), Vector2(120, y + 20), 5, 50, 1, 15)
+	_map_seed_sb = _make_spinbox(panel, "种子(0=随机)", Vector2(170, y + 22), Vector2(258, y + 20), 0, 999999999, 1, 0)
+	_map_density_sb = _make_spinbox(panel, "可炸密度", Vector2(344, y + 22), Vector2(406, y + 20), 0.0, 0.8, 0.05, 0.25)
+
+	# row 2: floor / wall / breakable resources
+	_make_label(panel, "地板", Vector2(12, y + 50))
+	_map_floor_opt = OptionButton.new()
+	_map_floor_opt.position = Vector2(48, y + 48)
+	_map_floor_opt.custom_minimum_size = Vector2(84, 22)
+	for f in _available_floors:
+		_map_floor_opt.add_item(str(f))
+	_select_option(_map_floor_opt, "elem220", _available_floors)
+	panel.add_child(_map_floor_opt)
+
+	_make_label(panel, "墙体", Vector2(140, y + 50))
+	_map_wall_opt = OptionButton.new()
+	_map_wall_opt.position = Vector2(176, y + 48)
+	_map_wall_opt.custom_minimum_size = Vector2(84, 22)
+	for w in _available_walls:
+		_map_wall_opt.add_item(str(w))
+	_select_option(_map_wall_opt, "elem212", _available_walls)
+	panel.add_child(_map_wall_opt)
+
+	_make_label(panel, "可破坏", Vector2(268, y + 50))
+	_map_breakable_opt = OptionButton.new()
+	_map_breakable_opt.position = Vector2(318, y + 48)
+	_map_breakable_opt.custom_minimum_size = Vector2(150, 22)
+	_map_breakable_opt.add_item("随机混合(225/226/227)")
+	for b in _available_breakables:
+		_map_breakable_opt.add_item(str(b))
+	_map_breakable_opt.selected = 0
+	panel.add_child(_map_breakable_opt)
+
+	# row 3: monster pool controls
+	_make_label(panel, "怪物池", Vector2(12, y + 78))
+	_pool_monster_opt = OptionButton.new()
+	_pool_monster_opt.position = Vector2(70, y + 76)
+	_pool_monster_opt.custom_minimum_size = Vector2(170, 22)
+	for m in _all_monsters:
+		_pool_monster_opt.add_item(str(m.get("chs_name", m.get("id", "?"))))
+	panel.add_child(_pool_monster_opt)
+
+	_make_label(panel, "最大", Vector2(250, y + 78))
+	_pool_count_sb = SpinBox.new()
+	_pool_count_sb.min_value = 1
+	_pool_count_sb.max_value = 50
+	_pool_count_sb.value = 3
+	_pool_count_sb.position = Vector2(282, y + 76)
+	_pool_count_sb.custom_minimum_size = Vector2(48, 22)
+	panel.add_child(_pool_count_sb)
+
+	var add_btn = Button.new()
+	add_btn.text = "加入"
+	add_btn.position = Vector2(336, y + 76)
+	add_btn.custom_minimum_size = Vector2(52, 24)
+	add_btn.pressed.connect(_add_to_pool)
+	panel.add_child(add_btn)
+
+	var clear_btn = Button.new()
+	clear_btn.text = "清空"
+	clear_btn.position = Vector2(394, y + 76)
+	clear_btn.custom_minimum_size = Vector2(52, 24)
+	clear_btn.pressed.connect(_clear_pool)
+	panel.add_child(clear_btn)
+
+	# row 4: pool list
+	var scroll = ScrollContainer.new()
+	scroll.position = Vector2(12, y + 104)
+	scroll.size = Vector2(760, 60)
+	panel.add_child(scroll)
+	_pool_list = VBoxContainer.new()
+	_pool_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_pool_list.add_theme_constant_override("separation", 2)
+	scroll.add_child(_pool_list)
+	_refresh_pool_list()
+
+	# row 5: generate / reroll
+	var gen_btn = Button.new()
+	gen_btn.text = "生成随机地图"
+	gen_btn.position = Vector2(12, y + 170)
+	gen_btn.custom_minimum_size = Vector2(130, 26)
+	gen_btn.add_theme_color_override("font_color", Color(1, 0.8, 0.4))
+	gen_btn.pressed.connect(_generate_random_map)
+	panel.add_child(gen_btn)
+
+	var reroll_btn = Button.new()
+	reroll_btn.text = "重掷种子"
+	reroll_btn.position = Vector2(150, y + 170)
+	reroll_btn.custom_minimum_size = Vector2(80, 26)
+	reroll_btn.pressed.connect(_reroll_seed)
+	panel.add_child(reroll_btn)
+
+func _make_label(panel: Control, text: String, pos: Vector2) -> void:
+	var lbl = Label.new()
+	lbl.text = text
+	lbl.position = pos
+	lbl.add_theme_font_size_override("font_size", 11)
+	panel.add_child(lbl)
+
+func _make_spinbox(panel: Control, label: String, label_pos: Vector2, sb_pos: Vector2, min_v: float, max_v: float, step: float, default_v: float) -> SpinBox:
+	_make_label(panel, label, label_pos)
+	var sb = SpinBox.new()
+	sb.min_value = min_v
+	sb.max_value = max_v
+	sb.step = step
+	sb.value = default_v
+	sb.position = sb_pos
+	sb.custom_minimum_size = Vector2(46, 22)
+	sb.add_theme_font_size_override("font_size", 10)
+	panel.add_child(sb)
+	return sb
+
+func _select_option(opt: OptionButton, name: String, list: Array) -> void:
+	for i in range(list.size()):
+		if str(list[i]) == name:
+			opt.selected = i
+			return
+	opt.selected = 0
+
+func _add_to_pool() -> void:
+	var idx = _pool_monster_opt.selected
+	if idx < 0 or idx >= _all_monsters.size():
+		return
+	var m = _all_monsters[idx]
+	var id = str(m.get("id", ""))
+	var max_count = int(_pool_count_sb.value)
+	for spec in _monster_pool:
+		if str(spec.get("id", "")) == id:
+			spec["max"] = max_count
+			_refresh_pool_list()
+			return
+	_monster_pool.append({"id": id, "chs_name": str(m.get("chs_name", id)), "max": max_count})
+	_refresh_pool_list()
+
+func _remove_from_pool(id: String) -> void:
+	for i in range(_monster_pool.size() - 1, -1, -1):
+		if str(_monster_pool[i].get("id", "")) == id:
+			_monster_pool.remove_at(i)
+	_refresh_pool_list()
+
+func _clear_pool() -> void:
+	_monster_pool.clear()
+	_refresh_pool_list()
+
+func _refresh_pool_list() -> void:
+	if _pool_list == null:
+		return
+	for c in _pool_list.get_children():
+		c.queue_free()
+	for spec in _monster_pool:
+		var row = HBoxContainer.new()
+		var lbl = Label.new()
+		lbl.text = "%s  x%d" % [str(spec.get("chs_name", spec.get("id", "?"))), int(spec.get("max", 0))]
+		lbl.custom_minimum_size = Vector2(240, 18)
+		lbl.add_theme_font_size_override("font_size", 11)
+		row.add_child(lbl)
+		var rm = Button.new()
+		rm.text = "移除"
+		rm.custom_minimum_size = Vector2(48, 18)
+		var rid = str(spec.get("id", ""))
+		rm.pressed.connect(func(): _remove_from_pool(rid))
+		row.add_child(rm)
+		_pool_list.add_child(row)
+
+func _collect_generator_params() -> Dictionary:
+	var width = clampi(int(_map_width_sb.value), 5, 50)
+	var height = clampi(int(_map_height_sb.value), 5, 50)
+	if width % 2 == 0:
+		width += 1
+	if height % 2 == 0:
+		height += 1
+
+	var seed_val = int(_map_seed_sb.value)
+	if seed_val == 0:
+		var rng = RandomNumberGenerator.new()
+		rng.randomize()
+		seed_val = rng.randi_range(1, 999999999)
+
+	var floor_name = "elem220"
+	if _map_floor_opt.selected >= 0 and _map_floor_opt.selected < _available_floors.size():
+		floor_name = str(_available_floors[_map_floor_opt.selected])
+	var wall_name = "elem212"
+	if _map_wall_opt.selected >= 0 and _map_wall_opt.selected < _available_walls.size():
+		wall_name = str(_available_walls[_map_wall_opt.selected])
+
+	var interactive_pool: Array
+	if _map_breakable_opt.selected <= 0:
+		interactive_pool = ["elem225", "elem226", "elem227"]
+	else:
+		var bi = _map_breakable_opt.selected - 1
+		interactive_pool = [str(_available_breakables[bi])] if bi < _available_breakables.size() else ["elem225"]
+
+	var monster_pool: Array = []
+	for spec in _monster_pool:
+		monster_pool.append({"name": str(spec.get("id", "")), "max": int(spec.get("max", 0))})
+
+	return {
+		"width": width,
+		"height": height,
+		"seed": seed_val,
+		"breakable_density": float(_map_density_sb.value),
+		"floor_texture_pool": [floor_name],
+		"obstacle_pool": [wall_name],
+		"interactive_pool": interactive_pool,
+		"monster_pool": monster_pool,
+		"begin": [1, 1],
+	}
+
+func _reroll_seed() -> void:
+	var rng = RandomNumberGenerator.new()
+	rng.randomize()
+	_map_seed_sb.value = rng.randi_range(1, 999999999)
+
+func _generate_random_map() -> void:
+	if _hero == null:
+		return
+	var params = _collect_generator_params()
+	var generated = MAP_GENERATOR.generate(params)
+	if generated.is_empty():
+		_show_toast("地图生成失败")
+		return
+	_hero.state = _hero.NORMAL
+	_level = Level.new("Sandbox", "sandbox_generated", _hero, 500, generated)
+	Game.me = _hero
+	Game.current_level = _level
+	_active_npcs.clear()
+	_show_toast("已生成 %dx%d 随机地图 (seed=%d)" % [int(params["width"]), int(params["height"]), int(params["seed"])])
+	queue_redraw()
 
 func _toggle_config() -> void:
 	_config_open = not _config_open
