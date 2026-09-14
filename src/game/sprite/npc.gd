@@ -22,6 +22,7 @@ var bomb_skin: Dictionary = {}
 var gifts = null
 var death = null
 var face_texture: Texture2D = null
+var drops_key: bool = false
 
 func _init(npc_name: String, xy: Vector2i, color_: Color = C.CHARACTER_RED):
 	super._init(npc_name, xy, color_)
@@ -186,6 +187,15 @@ func _apply_item_effect(_data: Dictionary) -> void:
 func die() -> void:
 	super.die()
 	gene_gifts()
+	if drops_key:
+		_drop_key()
+
+func _drop_key() -> void:
+	var cl = Game.current_level
+	var item_data = ItemData.load_item("iron_key")
+	if item_data.is_empty():
+		return
+	ItemInstance.new(x, y, cl.item_instances, item_data)
 
 func gene_gifts() -> void:
 	if gifts == null or gifts.is_empty():

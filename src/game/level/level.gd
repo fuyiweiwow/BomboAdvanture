@@ -65,6 +65,13 @@ var district_alarming: bool = false
 var district_all_finished: bool = false
 var finish_flag: bool = false
 
+# --- world mode (map_json has "zones"): tree of zones with gated passages ---
+var world_mode: bool = false
+var world_doors: Array = []          # {x, y, gate, zone, obstacle, opened}
+var zone_npc_alive: Dictionary = {}  # zone id -> alive npc count
+var zone_cleared: Dictionary = {}    # zone id -> bool
+var npc_zone: Dictionary = {}        # Npc -> zone id
+
 func _init(your_name_: String, map_name_: String, me_, accumulation_time_: int, map_data: Dictionary = {}):
 	Game.current_level = self
 	me = me_
@@ -74,6 +81,7 @@ func _init(your_name_: String, map_name_: String, me_, accumulation_time_: int, 
 	load_map_json(map_data)
 	load_floor()
 	load_obstacle()
+	load_world()
 	load_music()
 	# load_ui() -- TODO: port game/ui/*
 
@@ -188,6 +196,76 @@ func load_obstacle() -> void:
 			for point in o["points"]:
 				ObstacleInstance.new(int(point["x"]), int(point["y"]), obstacle_instances, obs)
 
+func load_world() -> void:
+	if not map_json.has("zones") or not map_json.has("districts"):
+		return
+	world_mode = true
+	world_doors = []
+	zone_npc_alive = {}
+	zone_cleared = {}
+	for d in map_json["districts"]:
+		var zid := str(d.get("id", ""))
+		# place gate obstacles on non-open passages
+		for p in d.get("passages", []):
+			var gt := str(p.get("gate", ""))
+			if gt == "open":
+				continue
+			var gx := int(p.get("x", 0))
+			var gy := int(p.get("y", 0))
+			var obs: Dictionary
+			if gt == "hidden":
+				obs = ObstacleLoader.get_obstacle("exploration", "elem225")
+			else:
+				obs = ObstacleLoader.get_obstacle("exploration", "elem212")
+			var oi = ObstacleInstance.new(gx, gy, obstacle_instances, obs)
+			world_doors.append({"x": gx, "y": gy, "gate": gt, "zone": zid, "obstacle": oi, "opened": false})
+		# spawn monsters
+		var alive := 0
+		for n in d.get("npcs", []):
+			var npc = Npc.new(str(n["name"]), Vector2i(int(n["x"]), int(n["y"])))
+			if bool(n.get("drops_key", false)):
+				npc.drops_key = true
+			npcs.append(npc)
+			npc_zone[npc] = zid
+			alive += 1
+		zone_npc_alive[zid] = alive
+		zone_cleared[zid] = false
+
+
+func open_door(door: Dictionary) -> void:
+	if door.get("opened", false):
+		return
+	door["opened"] = true
+	var oi = door.get("obstacle", null)
+	if oi != null and is_instance_valid(oi):
+		oi.uninstall()
+	obstacle_instances_need_to_update = true
+
+
+func update_world_doors() -> void:
+	for zid in zone_npc_alive.keys():
+		if zone_npc_alive[zid] <= 0 and not zone_cleared[zid]:
+			zone_cleared[zid] = true
+			for door in world_doors:
+				if door.get("gate", "") == "clear" and door.get("zone", "") == zid and not door.get("opened", false):
+					open_door(door)
+
+
+func check_key_doors() -> void:
+	if me == null:
+		return
+	var key_count := int(me.keys.get("iron_key", 0))
+	if key_count <= 0:
+		return
+	for door in world_doors:
+		if door.get("opened", false) or door.get("gate", "") != "key":
+			continue
+		if abs(me.x - int(door["x"])) + abs(me.y - int(door["y"])) <= 1:
+			me.keys["iron_key"] = key_count - 1
+			open_door(door)
+			break
+
+
 func load_music() -> void:
 	# TODO: port game/music + game/sound
 	pass
@@ -222,13 +300,17 @@ func update() -> void:
 	current_time = Time.get_ticks_msec()
 	if score_board != null and map_time > 0:
 		map_remaining_time = int(ceil(float(map_time * 1000 - current_time + map_init_time) / 1000.0)) + 1
-	if current_time - map_init_time > 3000:
+	if current_time - map_init_time > 3000 and not world_mode:
 		load_district_and_enemies()
 	grid_damage_frame -= 1
 	for b in bomb_instances.duplicate():
 		b.update()
 	for n in npcs.duplicate():
 		if n.remain_blood <= 0:
+			if world_mode and npc_zone.has(n):
+				var zid = npc_zone[n]
+				zone_npc_alive[zid] = maxi(0, int(zone_npc_alive[zid]) - 1)
+				npc_zone.erase(n)
 			npcs.erase(n)
 		else:
 			n.update()
@@ -240,6 +322,9 @@ func update() -> void:
 			g.update()
 	recal_ghost_paths = false
 	me.update()
+	if world_mode:
+		update_world_doors()
+		check_key_doors()
 	pass_map()
 	for f in flame_instances.duplicate():
 		if f.state == -1:
@@ -341,6 +426,15 @@ func update_obstacles_update_list() -> void:
 				obstacle_instances_update.append(obstacle_instances[key])
 
 func pass_map() -> void:
+	if world_mode:
+		var all_clear := true
+		for zid in zone_cleared:
+			if not zone_cleared[zid]:
+				all_clear = false
+				break
+		if all_clear:
+			finish_flag = true
+		return
 	if district_all_finished:
 		if finish_at.x >= 0:
 			if me.x == finish_at.x and me.y == finish_at.y:

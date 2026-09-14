@@ -91,7 +91,7 @@ static func generate(params: Dictionary) -> Dictionary:
 		_carve_winding(grid, centers[ids[i]], centers[parent_of[ids[i]]], rng)
 	_carve_extra_rooms(grid, total_w, total_h, rng)
 	_scatter_stone(grid, total_w, total_h, float(params.get("stone_ratio", 0.30)), rng)
-	_fortify_seams(grid, total_w, total_h, origins, zw, zh, rng)
+	var passages := _fortify_seams(grid, total_w, total_h, origins, zw, zh, parent_of, ids, rng)
 	_ensure_connected(grid, total_w, total_h, centers[ids[0]])
 	_clear_spawn(grid, total_w, total_h, centers[ids[0]])
 
@@ -107,7 +107,7 @@ static func generate(params: Dictionary) -> Dictionary:
 		for dy in range(-1, 2):
 			spawn_guard[Vector2i(spawn_c.x + dx, spawn_c.y + dy)] = true
 
-	return _stitch(ids, origins, zw, zh, total_w, total_h, grid, parent_of, children_of, theme_of, centers, spawn_guard, count, seed_val)
+	return _stitch(ids, origins, zw, zh, total_w, total_h, grid, parent_of, children_of, theme_of, centers, spawn_guard, passages, count, seed_val)
 
 
 static func _layout(ids: Array, parent_of: Dictionary, rng: RandomNumberGenerator) -> Dictionary:
@@ -233,79 +233,147 @@ static func _value_noise(noise: Array, fx: float, fy: float) -> float:
 	return lerpf(a, b, sy)
 
 
-# Turn the shared edge between every pair of adjacent zones into a natural
-# "mountain wall", then cut 2..3 wide passes through it. Each pass is a short
-# canyon (extends inward on both sides until it hits open ground), so zones
-# still read as a continuous world but have limited, game-controllable entry
-# points (the basis for the district lock/clear progression).
-static func _fortify_seams(grid: Array, w: int, h: int, origins: Dictionary, zw: int, zh: int, rng: RandomNumberGenerator) -> void:
+# Seal every adjacent-zone seam into mountain wall, then cut one wide "pass"
+# (canyon) per tree edge. Each tree edge gets a gate type:
+#   open   — no barrier, walk through freely
+#   clear  — a door that opens once the parent zone's monsters are cleared
+#   key    — a locked door; kill the zone's key holder to get a key
+#   hidden — the pass is disguised as breakable blocks (bomb to reveal)
+# Non-tree adjacency is fully walled (mountain), so travel follows the tree.
+static func _fortify_seams(grid: Array, w: int, h: int, origins: Dictionary, zw: int, zh: int, parent_of: Dictionary, ids: Array, rng: RandomNumberGenerator) -> Dictionary:
+	var passages: Dictionary = {}
+	for id in ids:
+		passages[id] = []
+
+	# 1. seal ALL physical adjacencies into mountain wall
 	var keys: Array = origins.keys()
 	for i in range(keys.size()):
 		for j in range(i + 1, keys.size()):
 			var a: Vector2i = origins[keys[i]]
 			var b: Vector2i = origins[keys[j]]
-			# horizontal adjacency (share a vertical seam between two columns)
 			if a.x + zw == b.x:
 				var lo := maxi(a.y, b.y)
 				var hi := mini(a.y + zh, b.y + zh)
 				if hi > lo:
-					_fortify_h(grid, a.x + zw - 1, b.x, lo, hi, w, rng)
+					_seal_h(grid, a.x + zw - 1, b.x, lo, hi)
 			elif b.x + zw == a.x:
 				var lo := maxi(a.y, b.y)
 				var hi := mini(a.y + zh, b.y + zh)
 				if hi > lo:
-					_fortify_h(grid, b.x + zw - 1, a.x, lo, hi, w, rng)
-			# vertical adjacency (share a horizontal seam between two rows)
+					_seal_h(grid, b.x + zw - 1, a.x, lo, hi)
 			elif a.y + zh == b.y:
 				var lo := maxi(a.x, b.x)
 				var hi := mini(a.x + zw, b.x + zw)
 				if hi > lo:
-					_fortify_v(grid, a.y + zh - 1, b.y, lo, hi, h, rng)
+					_seal_v(grid, a.y + zh - 1, b.y, lo, hi)
 			elif b.y + zh == a.y:
 				var lo := maxi(a.x, b.x)
 				var hi := mini(a.x + zw, b.x + zw)
 				if hi > lo:
-					_fortify_v(grid, b.y + zh - 1, a.y, lo, hi, h, rng)
+					_seal_v(grid, b.y + zh - 1, a.y, lo, hi)
+
+	# 2. carve one pass per tree edge, with a gate type
+	for i in range(1, ids.size()):
+		var child = ids[i]
+		var parent = parent_of[child]
+		var pc: Vector2i = origins[parent]
+		var cc: Vector2i = origins[child]
+		var gate := _pick_gate_type(rng)
+		var px := 0
+		var py := 0
+		var pdir := ""
+		var cdir := ""
+		if cc.x > pc.x:
+			var lo := maxi(pc.y, cc.y)
+			var hi := mini(pc.y + zh, cc.y + zh)
+			var y := rng.randi_range(lo + 2, hi - 3)
+			_carve_pass_h(grid, pc.x + zw - 1, cc.x, y, w)
+			px = pc.x + zw - 1
+			py = y
+			pdir = "R"
+			cdir = "L"
+		elif cc.x < pc.x:
+			var lo := maxi(pc.y, cc.y)
+			var hi := mini(pc.y + zh, cc.y + zh)
+			var y := rng.randi_range(lo + 2, hi - 3)
+			_carve_pass_h(grid, cc.x + zw - 1, pc.x, y, w)
+			px = pc.x
+			py = y
+			pdir = "L"
+			cdir = "R"
+		elif cc.y > pc.y:
+			var lo := maxi(pc.x, cc.x)
+			var hi := mini(pc.x + zw, cc.x + zw)
+			var x := rng.randi_range(lo + 2, hi - 3)
+			_carve_pass_v(grid, x, pc.y + zh - 1, cc.y, h)
+			px = x
+			py = pc.y + zh - 1
+			pdir = "D"
+			cdir = "U"
+		else:
+			var lo := maxi(pc.x, cc.x)
+			var hi := mini(pc.x + zw, cc.x + zw)
+			var x := rng.randi_range(lo + 2, hi - 3)
+			_carve_pass_v(grid, x, cc.y + zh - 1, pc.y, h)
+			px = x
+			py = pc.y
+			pdir = "U"
+			cdir = "D"
+
+		passages[parent].append({"target": child, "gate": gate, "x": px, "y": py, "dir": pdir})
+		passages[child].append({"target": parent, "gate": "open", "x": px, "y": py, "dir": cdir})
+
+	return passages
 
 
-static func _fortify_h(grid: Array, col_a: int, col_b: int, y0: int, y1: int, w: int, rng: RandomNumberGenerator) -> void:
-	var n := y1 - y0
+static func _pick_gate_type(rng: RandomNumberGenerator) -> String:
+	var r := rng.randi_range(0, 99)
+	if r < 30:
+		return "clear"
+	if r < 50:
+		return "open"
+	if r < 70:
+		return "key"
+	return "hidden"
+
+
+static func _has_key_gate(passages: Array) -> bool:
+	for p in passages:
+		if str(p.get("gate", "")) == "key":
+			return true
+	return false
+
+
+static func _seal_h(grid: Array, col_a: int, col_b: int, y0: int, y1: int) -> void:
 	for y in range(y0, y1):
 		grid[col_a][y] = STONE
 		grid[col_b][y] = STONE
-	var n_passes := 2 if n < 12 else 3
-	for k in range(n_passes):
-		var seg_lo := y0 + int(float(k) * float(n) / float(n_passes))
-		var seg_hi := y0 + int(float(k + 1) * float(n) / float(n_passes))
-		var cy := rng.randi_range(seg_lo + 1, maxi(seg_lo + 1, seg_hi - 3))
-		var pw := rng.randi_range(2, 3)
-		for dy in range(pw):
-			var y := cy + dy
-			if y < y0 or y >= y1:
-				continue
-			grid[col_a][y] = EMPTY
-			grid[col_b][y] = EMPTY
-			_canyon_h(grid, col_a, col_b, y, w)
 
 
-static func _fortify_v(grid: Array, row_a: int, row_b: int, x0: int, x1: int, h: int, rng: RandomNumberGenerator) -> void:
-	var n := x1 - x0
+static func _seal_v(grid: Array, row_a: int, row_b: int, x0: int, x1: int) -> void:
 	for x in range(x0, x1):
 		grid[x][row_a] = STONE
 		grid[x][row_b] = STONE
-	var n_passes := 2 if n < 12 else 3
-	for k in range(n_passes):
-		var seg_lo := x0 + int(float(k) * float(n) / float(n_passes))
-		var seg_hi := x0 + int(float(k + 1) * float(n) / float(n_passes))
-		var cx := rng.randi_range(seg_lo + 1, maxi(seg_lo + 1, seg_hi - 3))
-		var pw := rng.randi_range(2, 3)
-		for dx in range(pw):
-			var x := cx + dx
-			if x < x0 or x >= x1:
-				continue
-			grid[x][row_a] = EMPTY
-			grid[x][row_b] = EMPTY
-			_canyon_v(grid, x, row_a, row_b, h)
+
+
+static func _carve_pass_h(grid: Array, col_a: int, col_b: int, y: int, w: int) -> void:
+	for dy in range(2):
+		var yy := y + dy
+		if yy < 0 or yy >= grid[col_a].size():
+			continue
+		grid[col_a][yy] = EMPTY
+		grid[col_b][yy] = EMPTY
+		_canyon_h(grid, col_a, col_b, yy, w)
+
+
+static func _carve_pass_v(grid: Array, x: int, row_a: int, row_b: int, h: int) -> void:
+	for dx in range(2):
+		var xx := x + dx
+		if xx < 0 or xx >= grid.size():
+			continue
+		grid[xx][row_a] = EMPTY
+		grid[xx][row_b] = EMPTY
+		_canyon_v(grid, xx, row_a, row_b, h)
 
 
 static func _canyon_h(grid: Array, col_a: int, col_b: int, y: int, w: int) -> void:
@@ -388,15 +456,16 @@ static func _flood(grid: Array, w: int, h: int, start: Vector2i) -> Dictionary:
 	return reached
 
 
-static func _stitch(ids: Array, origins: Dictionary, zw: int, zh: int, total_w: int, total_h: int, grid: Array, parent_of: Dictionary, children_of: Dictionary, theme_of: Dictionary, centers: Dictionary, spawn_guard: Dictionary, count: int, seed_val: int) -> Dictionary:
+static func _stitch(ids: Array, origins: Dictionary, zw: int, zh: int, total_w: int, total_h: int, grid: Array, parent_of: Dictionary, children_of: Dictionary, theme_of: Dictionary, centers: Dictionary, spawn_guard: Dictionary, passages: Dictionary, count: int, seed_val: int) -> Dictionary:
 	var floor_points: Dictionary = {}
 	var wall_pts: Dictionary = {}     # wall_name -> points
 	var breakable_pts: Dictionary = {} # breakable_name -> points
-	var monsters: Array = []
+	var zone_monsters: Dictionary = {} # zone id -> npc list
 	var zone_meta: Array = []
 
 	for i in range(count):
 		var id = ids[i]
+		zone_monsters[id] = []
 		var o: Vector2i = origins[id]
 		var theme: Dictionary = theme_of[id]
 		var floor_name := str(theme.get("floor", "elem220"))
@@ -428,6 +497,8 @@ static func _stitch(ids: Array, origins: Dictionary, zw: int, zh: int, total_w: 
 			breakable_pts["_pool_" + id]["cells"].append({"x": int(cell.x), "y": int(cell.y), "name": str(placed_break[cell])})
 
 		# monsters
+		var key_needed := _has_key_gate(passages.get(id, []))
+		var key_assigned := false
 		for spec in _monster_specs(theme.get("monsters", [])):
 			var remain := int(spec.get("max", 0))
 			var candidates: Array = []
@@ -439,7 +510,11 @@ static func _stitch(ids: Array, origins: Dictionary, zw: int, zh: int, total_w: 
 			for c in candidates:
 				if remain <= 0:
 					break
-				monsters.append({"name": str(spec.get("name", "")), "x": int(c.x), "y": int(c.y)})
+				var entry := {"name": str(spec.get("name", "")), "x": int(c.x), "y": int(c.y)}
+				if key_needed and not key_assigned:
+					entry["drops_key"] = true
+					key_assigned = true
+				zone_monsters[id].append(entry)
 				remain -= 1
 
 		zone_meta.append({
@@ -447,6 +522,7 @@ static func _stitch(ids: Array, origins: Dictionary, zw: int, zh: int, total_w: 
 			"ox": o.x, "oy": o.y, "w": zw, "h": zh,
 			"cx": centers[id].x, "cy": centers[id].y,
 			"theme_name": str(theme.get("name", "")),
+			"passages": passages.get(id, []),
 		})
 
 	# assemble breakables by real name
@@ -472,6 +548,17 @@ static func _stitch(ids: Array, origins: Dictionary, zw: int, zh: int, total_w: 
 
 	var begin: Vector2i = centers[ids[0]]
 
+	# districts: one per zone, each holding that zone's monsters + its gate info
+	var districts: Array = []
+	for id in ids:
+		var o: Vector2i = origins[id]
+		districts.append({
+			"id": id,
+			"square": {"x1": o.x, "y1": o.y, "x2": o.x + zw - 1, "y2": o.y + zh - 1},
+			"npcs": zone_monsters[id],
+			"passages": passages.get(id, []),
+		})
+
 	return {
 		"basic": {
 			"name": "world", "width": total_w, "height": total_h,
@@ -482,9 +569,7 @@ static func _stitch(ids: Array, origins: Dictionary, zw: int, zh: int, total_w: 
 		"floor": floor_arr,
 		"obstacle": obstacle,
 		"obstacles": [],
-		"districts": [
-			{"square": {"x1": 0, "y1": 0, "x2": total_w - 1, "y2": total_h - 1}, "npcs": monsters}
-		],
+		"districts": districts,
 		"zones": zone_meta,
 	}
 

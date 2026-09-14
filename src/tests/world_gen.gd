@@ -106,7 +106,8 @@ func _render_world(world: Dictionary) -> Image:
 	# monsters
 	for d in world.get("districts", []):
 		for n in d.get("npcs", []):
-			img.fill_rect(Rect2i(int(n["x"]) * _cell, int(n["y"]) * _cell, _cell, _cell), COLOR_NPC)
+			var c := Color(0.95, 0.2, 0.8) if n.get("drops_key", false) else COLOR_NPC
+			img.fill_rect(Rect2i(int(n["x"]) * _cell, int(n["y"]) * _cell, _cell, _cell), c)
 
 	# begin
 	var b = world["basic"].get("begin", [1, 1])
@@ -124,6 +125,15 @@ func _render_world(world: Dictionary) -> Image:
 		img.fill_rect(Rect2i(ox + zw - 1, oy, 1, zh), Color(0.2, 0.2, 0.25))
 		# center marker
 		img.fill_rect(Rect2i(int(z["cx"]) * _cell, int(z["cy"]) * _cell, _cell, _cell), Color(0.9, 0.5, 0.2))
+
+	# gates (only meaningful non-open ones) — clear=blue, key=yellow, hidden=orange
+	for z in world["zones"]:
+		for p in z.get("passages", []):
+			var gt := str(p.get("gate", ""))
+			if gt == "open":
+				continue
+			var gc := Color(0.2, 0.4, 0.9) if gt == "clear" else (Color(1.0, 0.8, 0.1) if gt == "key" else Color(1.0, 0.45, 0.1))
+			img.fill_rect(Rect2i(int(p["x"]) * _cell, int(p["y"]) * _cell, _cell, _cell), gc)
 	return img
 
 

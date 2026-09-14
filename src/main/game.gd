@@ -5,6 +5,7 @@ const Level = preload("res://src/game/level/level.gd")
 const LevelData = preload("res://src/level_editor/level_data.gd")
 const LEVEL_SESSION = preload("res://src/level/level_session.gd")
 const LEVEL_PROGRESS_REPOSITORY = preload("res://src/level/level_progress_repository.gd")
+const WorldMapGenerator = preload("res://src/game/level/world_map_generator.gd")
 
 var cfg_json: Dictionary = {}
 var your_name: String = ""
@@ -25,6 +26,7 @@ var selected_hero: String = ""
 var selected_color: String = ""
 var selected_level: String = ""
 var level_json: Dictionary = {}
+var _pending_map_data: Dictionary = {}
 
 var _ui_layer: CanvasLayer = null
 
@@ -191,15 +193,17 @@ func proceed_game(is_reset = false) -> void:
 			return _on_game_complete()
 		var map_entry = level_json["maps"][map_set_at]
 		var map_name: String
+		var map_data: Dictionary = {}
 		if map_entry.get("type") == "predefined":
 			map_name = str(map_entry.get("map_id", ""))
 		else:
 			map_name = _generate_procedural_map(map_entry)
+			map_data = _pending_map_data
 		if map_name == "":
 			return _on_game_complete()
 		var hero_name: String = selected_hero if selected_hero != "" else str(cfg_json["your_hero"])
 		var character_color: String = selected_color if selected_color != "" else str(cfg_json["your_character_color"])
-		set_level(your_name, map_name, hero_name, character_color, is_reset)
+		set_level(your_name, map_name, hero_name, character_color, is_reset, map_data)
 	else:
 		if map_set_at >= map_set_json["maps"].size():
 			return _on_game_complete()
@@ -209,14 +213,70 @@ func proceed_game(is_reset = false) -> void:
 		set_level(your_name, map_name, hero_name, character_color, is_reset)
 
 func _generate_procedural_map(map_entry: Dictionary) -> String:
-	return ""
+	# Generate a procedural world from the level entry's generator_params and
+	# stash it in _pending_map_data (consumed by set_level). Returns a placeholder
+	# name; the actual map comes from memory, not a file.
+	var params = map_entry.get("generator_params", {})
+	var recipe: Dictionary = {
+		"floor": str(params.get("floor", "elem220")),
+		"wall": str(params.get("wall", "elem212")),
+		"breakable": params.get("breakable", ["elem225", "elem226", "elem227"]),
+		"monsters": _monsters_from_params(params),
+		"density": float(params.get("density", 0.25)),
+		"name": str(params.get("name", "procedural")),
+	}
+	var world = WorldMapGenerator.generate({
+		"count": clampi(int(params.get("count", 5)), 1, 20),
+		"seed": int(params.get("seed", 0)),
+		"zone_width": clampi(int(params.get("width", 21)), 11, 60),
+		"zone_height": clampi(int(params.get("height", 15)), 11, 40),
+		"recipe": recipe,
+	})
+	_pending_map_data = world
+	return "procedural"
+
+
+func _monsters_from_params(params: Dictionary) -> Array:
+	var pool = params.get("monster_pool", [])
+	var out: Array = []
+	if pool is Array:
+		for m in pool:
+			out.append({"name": str(m), "max": 4})
+	return out
+
+
+# One-click entry: generate a fresh procedural world and jump straight in.
+func start_procedural_world(recipe_name: String = "") -> void:
+	var recipe: Dictionary = {}
+	if recipe_name != "":
+		recipe = RM.get_json("res://src/tests/recipes/" + recipe_name + ".json")
+		if recipe == null:
+			recipe = {}
+	var params := {
+		"count": 6,
+		"seed": 0,
+		"width": int(recipe.get("width", 21)),
+		"height": int(recipe.get("height", 15)),
+		"floor": str(recipe.get("floor", "elem220")),
+		"wall": str(recipe.get("wall", "elem212")),
+		"breakable": recipe.get("breakable", ["elem225", "elem226", "elem227"]),
+		"monster_pool": recipe.get("monsters", []),
+		"density": float(recipe.get("density", 0.25)),
+		"name": str(recipe.get("name", "procedural")),
+	}
+	_generate_procedural_map({"generator_params": params})
+	selected_level = ""
+	selected_level_profile = {}
+	map_set_json = {"maps": ["procedural"]}
+	map_set_at = -1
+	proceed_game()
 
 func _on_game_complete() -> void:
 	game_complete = true
 	current_level = null
 	me = null
 
-func set_level(your_name_: String, map_name: String, hero_name: String, character_color: String, is_reset = false) -> void:
+func set_level(your_name_: String, map_name: String, hero_name: String, character_color: String, is_reset = false, map_data: Dictionary = {}) -> void:
 	var character_colors = {
 		"Red": C.CHARACTER_RED, "Blue": C.CHARACTER_BLUE, "Yellow": C.CHARACTER_YELLOW,
 		"Green": C.CHARACTER_GREEN, "Orange": C.CHARACTER_ORANGE, "Pink": C.CHARACTER_PINK,
@@ -227,7 +287,10 @@ func set_level(your_name_: String, map_name: String, hero_name: String, characte
 	if me != null and not is_reset:
 		new_me.skill_remains = me.skill_remains
 	me = new_me
-	current_level = Level.new(your_name_, map_name, me, grid_damage_duration)
+	if map_data.is_empty() and not _pending_map_data.is_empty():
+		map_data = _pending_map_data
+	_pending_map_data = {}
+	current_level = Level.new(your_name_, map_name, me, grid_damage_duration, map_data)
 
 func frame_step() -> void:
 	if current_level != null:
