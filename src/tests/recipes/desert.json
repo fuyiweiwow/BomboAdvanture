@@ -1,0 +1,17 @@
+{
+  "name": "沙漠",
+  "note": "沙地(field/elem17) + 沙色岩墙/木箱可炸块（desert 贴图缺失，用 field 沙色元素）",
+  "floor_type": "field",
+  "floor": "elem17",
+  "obstacle_type": "field",
+  "wall": "elem11",
+  "breakable": ["elem12", "elem4"],
+  "width": 25,
+  "height": 15,
+  "density": 0.24,
+  "monsters": [
+    {"name": "YeWaiFireBall0", "max": 4},
+    {"name": "YeWaiPoisonBall", "max": 3},
+    {"name": "YeWaiGhost", "max": 3}
+  ]
+}

@@ -5,13 +5,21 @@
 #   - Level (which accepts an in-memory map via the optional map_data argument)
 #   - the existing map JSON format under assets/map/*.json
 #
-# Generation guarantees:
-#   - a solid indestructible border
-#   - an interior lattice of indestructible pillars (classic bomberman grid)
-#   - breakable blocks scattered so that the walkable area always stays connected
-#   - monsters placed on reachable, non-adjacent cells with a per-monster max count
+# Two terrain algorithms are supported (choose via params["algorithm"]):
+#   "organic" (default) — rooms + corridors + value-noise stone scatter.
+#        Reads as natural with no visible lattice. Uses OrganicGrid.
+#   "lattice"  — classic bomberman grid (even-even indestructible pillars).
+#        Kept for backward compatibility with older recipes/saves.
+#
+# Common guarantees regardless of algorithm:
+#   - solid indestructible border
+#   - walkable area fully connected
+#   - breakable blocks placed without breaking connectivity
+#   - monsters placed on reachable cells with a per-monster max count
 class_name MapGenerator
 extends RefCounted
+
+const OrganicGrid = preload("res://src/game/level/organic_grid.gd")
 
 const EMPTY := 0
 const WALL := 1
@@ -55,7 +63,18 @@ static func generate(params: Dictionary) -> Dictionary:
 
 	var monster_specs := _monster_specs(params.get("monster_pool", []), int(params.get("monster_count_max", 0)))
 
-	var grid := _build_grid(width, height)
+	var algorithm := str(params.get("algorithm", "organic"))
+	var grid: Array
+	if algorithm == "lattice":
+		grid = _build_grid_lattice(width, height)
+	else:
+		grid = OrganicGrid.generate(width, height, rng, {
+			"stone_ratio": float(params.get("stone_ratio", 0.30)),
+			"room_min": int(params.get("room_min", 3)),
+			"room_max": int(params.get("room_max", 7)),
+			"rooms": int(params.get("rooms", 0)),
+		})
+
 	var breakable_names := _place_breakables(grid, width, height, begin, density, interactive_pool, rng)
 	var npcs := _place_monsters(grid, width, height, begin, monster_specs, rng)
 
@@ -66,7 +85,7 @@ static func generate(params: Dictionary) -> Dictionary:
 	)
 
 
-static func _build_grid(width: int, height: int) -> Array:
+static func _build_grid_lattice(width: int, height: int) -> Array:
 	var grid: Array = []
 	for x in range(width):
 		var col: Array = []
@@ -80,7 +99,6 @@ static func _build_grid(width: int, height: int) -> Array:
 	for y in range(height):
 		grid[0][y] = WALL
 		grid[width - 1][y] = WALL
-	# indestructible pillars at even-even interior coordinates form a connected lattice
 	for x in range(2, width - 1, 2):
 		for y in range(2, height - 1, 2):
 			grid[x][y] = WALL

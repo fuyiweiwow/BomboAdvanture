@@ -1,0 +1,17 @@
+{
+  "name": "森林",
+  "note": "草地(field/elem1) + 绿色树墙/灌木可炸块（field 全贴图可用）",
+  "floor_type": "field",
+  "floor": "elem1",
+  "obstacle_type": "field",
+  "wall": "elem10",
+  "breakable": ["elem2", "elem3", "elem6"],
+  "width": 25,
+  "height": 15,
+  "density": 0.32,
+  "monsters": [
+    {"name": "SenLin11CaiQingQing", "max": 4},
+    {"name": "SenLin33PengTouShu", "max": 3},
+    {"name": "MiZhiDiGreenWorm1", "max": 4}
+  ]
+}

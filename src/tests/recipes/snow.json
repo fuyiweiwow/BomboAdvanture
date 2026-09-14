@@ -1,0 +1,17 @@
+{
+  "name": "雪山",
+  "note": "冰雪地板(snow/elem29) + 通用墙体/可炸块（snow 障碍贴图缺失，暂用 exploration）",
+  "floor_type": "snow",
+  "floor": "elem29",
+  "obstacle_type": "exploration",
+  "wall": "elem212",
+  "breakable": ["elem225", "elem226", "elem227"],
+  "width": 25,
+  "height": 15,
+  "density": 0.28,
+  "monsters": [
+    {"name": "YongDongWinterBear", "max": 3},
+    {"name": "YongDongSnowElf", "max": 3},
+    {"name": "FengBaoSnowball", "max": 4}
+  ]
+}
