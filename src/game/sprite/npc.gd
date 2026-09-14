@@ -23,6 +23,7 @@ var gifts = null
 var death = null
 var face_texture: Texture2D = null
 var drops_key: bool = false
+var npc_file_name: String = ""
 
 func _init(npc_name: String, xy: Vector2i, color_: Color = C.CHARACTER_RED):
 	super._init(npc_name, xy, color_)
@@ -31,6 +32,7 @@ func _init(npc_name: String, xy: Vector2i, color_: Color = C.CHARACTER_RED):
 	load_npc(npc_name, color_)
 
 func load_npc(npc_name: String, color_: Color) -> void:
+	npc_file_name = npc_name
 	var path = G.GAME_ROOT + "npc/" + npc_name + ".json"
 	npc_json = Utils.load_json(path)
 	if npc_json == null:
@@ -197,32 +199,104 @@ func _drop_key() -> void:
 		return
 	ItemInstance.new(x, y, cl.item_instances, item_data)
 
+
+const SNOW_PREFIXES := ["YongDong", "FengBao", "JiZhou", "ShouWang", "NuFeng", "ShowWang"]
+const FOREST_PREFIXES := ["SenLin", "MiZhiDi", "Journey"]
+const FIRE_PREFIXES := ["HeiLong", "FireBall", "Fire"]
+
+
 func gene_gifts() -> void:
+	_drop_gold()
+	_drop_material()
+	_drop_rare()
+	_drop_configured_gifts()
+
+
+# Gold: base economy, amount scales with monster blood.
+func _drop_gold() -> void:
+	var count := clampi(int(blood) / 1500, 1, 3)
+	var item_data = ItemData.load_item("gold_coin")
+	if item_data.is_empty():
+		return
+	for _i in range(count):
+		_drop_item_scatter(item_data)
+
+
+# Material: themed alchemy ingredient, 50% chance.
+func _drop_material() -> void:
+	if randi() % 100 >= 50:
+		return
+	var mid := _material_for_npc()
+	if mid == "":
+		return
+	var item_data = ItemData.load_item(mid)
+	if item_data.is_empty():
+		return
+	_drop_item_scatter(item_data)
+
+
+# Rare: occasional power-up, 5% chance.
+func _drop_rare() -> void:
+	if randi() % 100 >= 5:
+		return
+	var pool := ["bomb_up", "power_up", "speed_up"]
+	var item_data = ItemData.load_item(pool[randi() % pool.size()])
+	if item_data.is_empty():
+		return
+	_drop_item_scatter(item_data)
+
+
+# Configurable gifts from the npc json (name/possibility). Original QQT item ids
+# that don't exist in this project are skipped gracefully.
+func _drop_configured_gifts() -> void:
 	if gifts == null or gifts.is_empty():
 		return
-	var cl = Game.current_level
 	for gift in gifts:
-		var id = str(gift.get("id", ""))
+		var id := str(gift.get("name", gift.get("id", "")))
 		if id == "":
 			continue
-		var weight = int(gift.get("weight", 0))
-		if weight <= 0:
+		var possibility := float(gift.get("possibility", gift.get("weight", 1.0)))
+		if possibility < 1.0 and randf() >= possibility:
 			continue
-		if randi() % 100 >= weight:
-			continue
-		var min_count = int(gift.get("min", 1))
-		var max_count = int(gift.get("max", 1))
-		var count = min_count + randi() % maxi(1, max_count - min_count + 1)
+		if possibility > 1.0:
+			# legacy weight form (0..100)
+			if randi() % 100 >= int(possibility):
+				continue
 		var item_data = ItemData.load_item(id)
 		if item_data.is_empty():
 			continue
-		for _i in range(count):
-			var drop_x = x + randi() % 3 - 1
-			var drop_y = y + randi() % 3 - 1
-			if cl.block[0][drop_x][drop_y] > 0 or cl.obstacle_instances.has(Vector2i(drop_x, drop_y)):
-				drop_x = x
-				drop_y = y
-			ItemInstance.new(drop_x, drop_y, cl.item_instances, item_data)
+		_drop_item_scatter(item_data)
+
+
+func _material_for_npc() -> String:
+	for p in SNOW_PREFIXES:
+		if npc_file_name.begins_with(p):
+			return "ice_crystal"
+	for p in FOREST_PREFIXES:
+		if npc_file_name.begins_with(p):
+			return "red_herb"
+	for p in FIRE_PREFIXES:
+		if npc_file_name.begins_with(p):
+			return "fire_flower"
+	return "blue_herb"
+
+
+func _drop_item_scatter(item_data: Dictionary) -> void:
+	var cl = Game.current_level
+	for attempt in range(9):
+		var dx := attempt % 3 - 1
+		var dy := attempt / 3 - 1
+		var px := x + dx
+		var py := y + dy
+		if px < 0 or py < 0 or px >= cl.map_x or py >= cl.map_y:
+			continue
+		if cl.block[0][px][py] > 0 or cl.obstacle_instances.has(Vector2i(px, py)):
+			continue
+		if cl.item_instances.has(Vector2i(px, py)):
+			continue
+		ItemInstance.new(px, py, cl.item_instances, item_data)
+		return
+	ItemInstance.new(x, y, cl.item_instances, item_data)
 
 func try_using_skills() -> void:
 	if not resentful and not mocking or friendly:

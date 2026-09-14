@@ -13,6 +13,7 @@ func _ready() -> void:
 	failures += _verify_clear()
 	failures += _verify_key()
 	failures += _verify_game_flow()
+	failures += _verify_drop()
 	print("FAILURES=", failures)
 	get_tree().quit(failures)
 
@@ -37,6 +38,36 @@ func _verify_game_flow() -> int:
 		print("FAIL: world level has no doors")
 		return 1
 	print("OK: game flow -> procedural world with %d doors" % level.world_doors.size())
+	return 0
+
+
+func _verify_drop() -> int:
+	var level = _make_level(99)
+	if level.npcs.is_empty():
+		print("FAIL: no monsters to kill")
+		return 1
+	var has_gold := false
+	var has_material := false
+	for i in range(mini(3, level.npcs.size())):
+		var npc = level.npcs[i]
+		npc.defense = 0
+		npc.try_damage(999999)
+		level.update()
+		level.update()
+	for key in level.item_instances:
+		var item = level.item_instances[key]
+		var id := str(item.item_data.get("id", ""))
+		if id == "gold_coin":
+			has_gold = true
+		if id in ["red_herb", "blue_herb", "ice_crystal", "fire_flower", "slime_goo"]:
+			has_material = true
+	if not has_gold:
+		print("FAIL: no gold dropped")
+		return 1
+	if not has_material:
+		print("FAIL: no material dropped")
+		return 1
+	print("OK: gold + material dropped (items=%d)" % level.item_instances.size())
 	return 0
 
 
