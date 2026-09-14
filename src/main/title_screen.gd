@@ -119,6 +119,9 @@ func _on_procedural_world() -> void:
 	Game.start_procedural_world()
 
 func _on_city() -> void:
+	if Game.me == null:
+		var hero_name = str(Game.cfg_json.get("your_hero", "Maria"))
+		Game.me = Hero.new(hero_name, Vector2i(0, 0), C.CHARACTER_RED)
 	var city = load("res://src/city/city_scene.gd").new()
 	_add_screen(city)
 	queue_free()

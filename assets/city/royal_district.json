@@ -1,0 +1,14 @@
+{
+  "id": "royal_district",
+  "name": "王城区",
+  "desc": "王城所在，世界观与主线剧情的核心区域。",
+  "buildings": [
+    { "id": "royal_court", "name": "王城", "action": "royal", "desc": "觐见国王" }
+  ],
+  "exits": [
+    { "to": "living_district", "label": "→ 生活区" }
+  ],
+  "npcs": [
+    { "id": "npc_king", "name": "国王" }
+  ]
+}

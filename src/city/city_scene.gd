@@ -98,6 +98,10 @@ func _on_building(action: String) -> void:
 	match action:
 		"home":
 			_open_home()
+		"shop":
+			_open_shop()
+		"royal":
+			_open_royal()
 		_:
 			_toast("建筑未实现: " + action)
 
@@ -106,6 +110,18 @@ func _open_home() -> void:
 	var home = load("res://src/city/home_scene.gd").new()
 	home.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(home)
+
+
+func _open_shop() -> void:
+	var shop = load("res://src/city/shop_scene.gd").new()
+	shop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(shop)
+
+
+func _open_royal() -> void:
+	var royal = load("res://src/city/royal_scene.gd").new()
+	royal.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(royal)
 
 
 func _goto_district(to: String) -> void:

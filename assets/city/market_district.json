@@ -1,0 +1,14 @@
+{
+  "id": "market_district",
+  "name": "商品区",
+  "desc": "热闹的市集，冒险者的物资补给地。",
+  "buildings": [
+    { "id": "shop", "name": "商店", "action": "shop", "desc": "购买道具" }
+  ],
+  "exits": [
+    { "to": "living_district", "label": "→ 生活区" }
+  ],
+  "npcs": [
+    { "id": "npc_merchant", "name": "商人" }
+  ]
+}
