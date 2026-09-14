@@ -1,0 +1,12 @@
+{
+  "id": "living_district",
+  "name": "生活区",
+  "desc": "主角的住所所在地，宁静的居民区。",
+  "buildings": [
+    { "id": "player_home", "name": "主角的房子", "action": "home", "desc": "你的家" }
+  ],
+  "exits": [],
+  "npcs": [
+    { "id": "npc_neighbor", "name": "邻居老王" }
+  ]
+}

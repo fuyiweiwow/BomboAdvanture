@@ -44,6 +44,7 @@ func _build() -> void:
 	panel.add_child(_make_menu_button("Alchemy Test", _on_alchemy_test))
 	panel.add_child(_make_menu_button("Combat Sandbox", _on_combat_sandbox))
 	panel.add_child(_make_menu_button("Procedural World", _on_procedural_world))
+	panel.add_child(_make_menu_button("City", _on_city))
 	panel.add_child(_make_menu_button("Tournament", _on_tournament))
 	panel.add_child(_spacer(4))
 	panel.add_child(_make_menu_button("Level Editor", _on_level_editor))
@@ -116,6 +117,11 @@ func _on_combat_sandbox() -> void:
 func _on_procedural_world() -> void:
 	queue_free()
 	Game.start_procedural_world()
+
+func _on_city() -> void:
+	var city = load("res://src/city/city_scene.gd").new()
+	_add_screen(city)
+	queue_free()
 
 func _on_tournament() -> void:
 	var t = load("res://src/tournament/tournament.gd").new()
