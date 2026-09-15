@@ -14,6 +14,10 @@ func run() -> Array[String]:
 	var session := MissionService.accept(mission)
 	if session.get("status") != "active":
 		failures.append("valid mission was not accepted")
+	if str(session.get("claim_id", "")).is_empty():
+		failures.append("accepted mission has no persistent claim id")
+	if session.duplicate(true).get("claim_id") != session.get("claim_id"):
+		failures.append("copied mission changed its claim id")
 
 	var run_stats := {"bomb": 1, "remain_bombs": 1, "power": 1, "speed": 1.0}
 	run_stats = RogueItemRules.apply(run_stats, {"id": "bomb_up", "lifecycle": "run", "effects": {"bomb": 1}})
