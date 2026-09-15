@@ -4,6 +4,7 @@ const MissionService = preload("res://src/adventure/mission_service.gd")
 const RogueItemRules = preload("res://src/adventure/rogue_item_rules.gd")
 const ProfileRepository = preload("res://src/adventure/adventure_profile_repository.gd")
 const GeneratorConfig = preload("res://src/adventure/adventure_generator_config.gd")
+const SettlementService = preload("res://src/adventure/adventure_settlement_service.gd")
 
 func run() -> Array[String]:
 	var failures: Array[String] = []
@@ -82,4 +83,17 @@ func run() -> Array[String]:
 	if profile.get("gold") != 10 or profile.get("items", {}).get("red_herb") != 2:
 		failures.append("persistent reward totals are incorrect")
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(profile_path))
+
+	var settlement_path := "user://silent_adventure_settlement.json"
+	if FileAccess.file_exists(settlement_path):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(settlement_path))
+	var settlement_repository := ProfileRepository.new(settlement_path)
+	var completed_run := MissionService.accept(mission)
+	MissionService.add_progress(completed_run, 3, "defeat")
+	var completed_result := SettlementService.complete(completed_run, settlement_repository)
+	if completed_result.get("status") != "claimed" or completed_result.get("gold") != 25:
+		failures.append("completed adventure was not claimed")
+	if not SettlementService.complete(completed_run.duplicate(true), settlement_repository).is_empty():
+		failures.append("copied completed adventure was claimed twice")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(settlement_path))
 	return failures
