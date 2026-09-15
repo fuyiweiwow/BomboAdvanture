@@ -291,22 +291,30 @@ func start_adventure_mission(definition: Dictionary) -> bool:
 func record_mission_progress(event_type: String, amount: int = 1) -> bool:
 	return MissionService.add_progress(active_mission, amount, event_type)
 
-func _complete_adventure_mission() -> void:
+func _complete_adventure_mission() -> bool:
 	var result := AdventureSettlementService.complete(active_mission, _adventure_profile_repository)
-	if not result.is_empty():
-		_apply_adventure_rewards(result)
-		last_mission_result = result
+	if result.is_empty():
+		return false
+	_apply_adventure_rewards(result)
+	last_mission_result = result
 	active_mission = {}
 	_return_to_city()
+	return true
 
 func _apply_adventure_rewards(result: Dictionary) -> void:
 	if me == null:
 		return
-	me.gold = int(me.gold) + int(result.get("gold", 0))
-	var reward_items = result.get("items", {})
-	if reward_items is Dictionary:
-		for item_id in reward_items:
-			me.items[item_id] = int(me.items.get(item_id, 0)) + int(reward_items[item_id])
+	hydrate_adventure_profile(me)
+
+func hydrate_adventure_profile(hero) -> void:
+	if hero == null:
+		return
+	var profile := _adventure_profile_repository.snapshot()
+	hero.gold = int(profile.get("gold", 0))
+	hero.items = (profile.get("items", {}) as Dictionary).duplicate(true)
+
+func persist_adventure_profile(hero) -> bool:
+	return hero != null and _adventure_profile_repository.save_balances(int(hero.gold), hero.items)
 
 func _return_to_city() -> void:
 	current_level = null
@@ -337,10 +345,14 @@ func set_level(your_name_: String, map_name: String, hero_name: String, characte
 	current_level = Level.new(your_name_, map_name, me, grid_damage_duration, map_data)
 
 func frame_step() -> void:
+	if not active_mission.is_empty() and MissionService.is_complete(active_mission):
+		if _complete_adventure_mission():
+			return
 	if current_level != null:
 		if current_level.finish_flag:
 			if not active_mission.is_empty():
-				_complete_adventure_mission()
+				# A durable claim failure is retried on a later frame; keep the run.
+				pass
 			elif not selected_level_profile.is_empty():
 				_complete_selected_level()
 				_on_game_complete()

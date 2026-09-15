@@ -46,7 +46,24 @@ func _claim_locked(claim_id: String, rewards: Dictionary) -> bool:
 
 
 func snapshot() -> Dictionary:
-	return _profile.duplicate(true)
+	_claim_mutex.lock()
+	_profile = _load_profile()
+	var result := _profile.duplicate(true)
+	_claim_mutex.unlock()
+	return result
+
+
+func save_balances(gold: int, items: Dictionary) -> bool:
+	_claim_mutex.lock()
+	_profile = _load_profile()
+	var next_profile := _profile.duplicate(true)
+	next_profile["gold"] = maxi(0, gold)
+	next_profile["items"] = _normalize_rewards({"items": items})["items"]
+	var saved := JsonStore.write_atomic(_path, next_profile)
+	if saved:
+		_profile = next_profile
+	_claim_mutex.unlock()
+	return saved
 
 
 func _load_profile() -> Dictionary:

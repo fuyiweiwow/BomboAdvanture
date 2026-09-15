@@ -84,8 +84,15 @@ func _buy(item_id: String) -> void:
 	if int(hero.gold) < price:
 		_toast("金币不足")
 		return
-	hero.gold = int(hero.gold) - price
+	var old_gold := int(hero.gold)
+	var old_items: Dictionary = hero.items.duplicate(true)
+	hero.gold = old_gold - price
 	hero._apply_item_effect(item)
+	if not Game.persist_adventure_profile(hero):
+		hero.gold = old_gold
+		hero.items = old_items
+		_toast("保存失败，购买已取消")
+		return
 	_update_gold()
 	_toast("购买 " + str(item.get("chs_name", item_id)))
 
