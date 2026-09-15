@@ -10,6 +10,8 @@ func run() -> Array[String]:
 		failures.append("adventure guild has no missions")
 	elif str(missions[0].get("id", "")) == "":
 		failures.append("catalog returned mission without id")
+	if not MissionCatalog.get_mission("../config").is_empty():
+		failures.append("mission catalog allowed path traversal")
 	var living := CityData.load_district("living_district")
 	var has_guild := false
 	for building in living.get("buildings", []):
