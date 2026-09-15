@@ -70,6 +70,13 @@ func run() -> Array[String]:
 		failures.append("weighted Rogue drops are not reproducible with a fixed seed")
 	if RogueDropPool.validate([{"item_id": "", "rarity": "mythic", "weight": 0}]).size() != 3:
 		failures.append("invalid Rogue drop fields were not all rejected")
+	if RogueDropPool.validate([]).is_empty() or not RogueDropPool.pick([], first_rng).is_empty():
+		failures.append("empty Rogue drop pool was not rejected safely")
+	if RogueDropPool.validate([{"item_id": "bomb_up", "rarity": "common", "weight": NAN}]).is_empty():
+		failures.append("non-finite Rogue drop weight was accepted")
+	var configured_amounts := RogueItemRules.apply(original, {"lifecycle": "run", "effects": {"bomb": 2, "power": 3, "speed": 0.5}})
+	if configured_amounts.get("bomb") != 3 or configured_amounts.get("remain_bombs") != 3 or configured_amounts.get("power") != 4 or not is_equal_approx(configured_amounts.get("speed"), 1.5):
+		failures.append("Rogue upgrade amounts are not driven by item configuration")
 	var safe_rewards := MissionService.accept({"id": "safe", "objective": {"type": "defeat", "target": 1}, "rewards": []})
 	if safe_rewards.is_empty() or not safe_rewards.get("rewards", {}).get("items", {}).is_empty():
 		failures.append("malformed rewards were not normalized")
