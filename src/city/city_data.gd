@@ -17,9 +17,10 @@ const CITY_DIR = "res://assets/city/"
 
 static func load_district(id: String) -> Dictionary:
 	var path = CITY_DIR + id + ".json"
-	var j = Utils.load_json(path)
-	if j == null:
+	var j := JsonStore.read_dictionary(path)
+	if j.is_empty():
 		return {}
+	j = j.duplicate(true)
 	j["_id"] = id
 	return j
 
@@ -29,16 +30,4 @@ static func district_exists(id: String) -> bool:
 
 
 static func list_districts() -> Array:
-	var result: Array = []
-	var dir = DirAccess.open(CITY_DIR)
-	if dir == null:
-		return result
-	dir.list_dir_begin()
-	var fname = dir.get_next()
-	while fname != "":
-		if fname.ends_with(".json"):
-			result.append(fname.trim_suffix(".json"))
-		fname = dir.get_next()
-	dir.list_dir_end()
-	result.sort()
-	return result
+	return JsonStore.list_json_ids(CITY_DIR)

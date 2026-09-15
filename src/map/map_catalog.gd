@@ -91,16 +91,7 @@ func next_level_id(level_id: String) -> String:
 	return ""
 
 func _discover_map_sets() -> Array[String]:
-	var discovered: Array[String] = []
-	var da = DirAccess.open(MAP_SET_ROOT)
-	if da != null:
-		da.list_dir_begin()
-		var fn = da.get_next()
-		while fn != "":
-			if not da.current_is_dir() and fn.ends_with(".json"):
-				discovered.append(fn.trim_suffix(".json"))
-			fn = da.get_next()
-		da.list_dir_end()
+	var discovered := JsonStore.list_json_ids(MAP_SET_ROOT)
 	var ordered: Array[String] = []
 	for name in REGION_ORDER:
 		if discovered.has(name):
@@ -157,12 +148,7 @@ func _map_position(set_index: int, set_count: int, local_index: int, set_size: i
 	return Vector2(clampf(x, 0.08, 0.92), clampf(y, 0.18, 0.78))
 
 func _load_json(path: String) -> Variant:
-	var file = FileAccess.open(path, FileAccess.READ)
-	if file == null:
-		return null
-	var data = JSON.parse_string(file.get_as_text())
-	file.close()
-	return data
+	return JsonStore.read(path, null)
 
 func _array_to_vec2i(value: Variant) -> Vector2i:
 	if value is Array:

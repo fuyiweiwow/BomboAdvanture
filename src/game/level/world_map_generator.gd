@@ -286,7 +286,7 @@ static func _fortify_seams(grid: Array, w: int, h: int, origins: Dictionary, zw:
 		if cc.x > pc.x:
 			var lo := maxi(pc.y, cc.y)
 			var hi := mini(pc.y + zh, cc.y + zh)
-			var y := rng.randi_range(lo + 2, hi - 3)
+			var y := _passage_coordinate(rng, lo, hi)
 			_carve_pass_h(grid, pc.x + zw - 1, cc.x, y, w)
 			px = pc.x + zw - 1
 			py = y
@@ -295,7 +295,7 @@ static func _fortify_seams(grid: Array, w: int, h: int, origins: Dictionary, zw:
 		elif cc.x < pc.x:
 			var lo := maxi(pc.y, cc.y)
 			var hi := mini(pc.y + zh, cc.y + zh)
-			var y := rng.randi_range(lo + 2, hi - 3)
+			var y := _passage_coordinate(rng, lo, hi)
 			_carve_pass_h(grid, cc.x + zw - 1, pc.x, y, w)
 			px = pc.x
 			py = y
@@ -304,7 +304,7 @@ static func _fortify_seams(grid: Array, w: int, h: int, origins: Dictionary, zw:
 		elif cc.y > pc.y:
 			var lo := maxi(pc.x, cc.x)
 			var hi := mini(pc.x + zw, cc.x + zw)
-			var x := rng.randi_range(lo + 2, hi - 3)
+			var x := _passage_coordinate(rng, lo, hi)
 			_carve_pass_v(grid, x, pc.y + zh - 1, cc.y, h)
 			px = x
 			py = pc.y + zh - 1
@@ -313,7 +313,7 @@ static func _fortify_seams(grid: Array, w: int, h: int, origins: Dictionary, zw:
 		else:
 			var lo := maxi(pc.x, cc.x)
 			var hi := mini(pc.x + zw, cc.x + zw)
-			var x := rng.randi_range(lo + 2, hi - 3)
+			var x := _passage_coordinate(rng, lo, hi)
 			_carve_pass_v(grid, x, cc.y + zh - 1, pc.y, h)
 			px = x
 			py = pc.y
@@ -324,6 +324,16 @@ static func _fortify_seams(grid: Array, w: int, h: int, origins: Dictionary, zw:
 		passages[child].append({"target": parent, "gate": "open", "x": px, "y": py, "dir": cdir})
 
 	return passages
+
+
+static func _passage_coordinate(rng: RandomNumberGenerator, lo: int, hi: int) -> int:
+	# Prefer an interior coordinate, but fall back to the midpoint when zones
+	# are narrow. The old range could invert for small overlap windows.
+	var inner_lo := lo + 2
+	var inner_hi := hi - 3
+	if inner_lo > inner_hi:
+		return (lo + hi - 1) / 2
+	return rng.randi_range(inner_lo, inner_hi)
 
 
 static func _pick_gate_type(rng: RandomNumberGenerator) -> String:
@@ -431,6 +441,10 @@ static func _clear_spawn(grid: Array, w: int, h: int, center: Vector2i) -> void:
 
 static func _flood(grid: Array, w: int, h: int, start: Vector2i) -> Dictionary:
 	var reached: Dictionary = {}
+	if w <= 0 or h <= 0 or grid.is_empty():
+		return reached
+	start.x = clampi(start.x, 0, w - 1)
+	start.y = clampi(start.y, 0, h - 1)
 	if grid[start.x][start.y] != EMPTY:
 		# find any empty cell
 		for x in range(1, w - 1):

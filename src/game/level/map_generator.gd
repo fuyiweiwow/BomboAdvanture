@@ -74,6 +74,9 @@ static func generate(params: Dictionary) -> Dictionary:
 			"room_max": int(params.get("room_max", 7)),
 			"rooms": int(params.get("rooms", 0)),
 		})
+	# Organic terrain is intentionally noisy, so the requested begin cell may
+	# be stone. Normalize it before connectivity and spawn placement run.
+	_ensure_begin_walkable(grid, width, height, begin)
 
 	var breakable_names := _place_breakables(grid, width, height, begin, density, interactive_pool, rng)
 	var npcs := _place_monsters(grid, width, height, begin, monster_specs, rng)
@@ -83,6 +86,22 @@ static func generate(params: Dictionary) -> Dictionary:
 		floor_type, floor_name, obstacle_type, wall_name, interactive_pool[0],
 		grid, breakable_names, npcs
 	)
+
+
+static func _ensure_begin_walkable(grid: Array, width: int, height: int, begin: Vector2i) -> void:
+	if grid.is_empty() or width <= 0 or height <= 0:
+		return
+	var bx := clampi(begin.x, 1, width - 2)
+	var by := clampi(begin.y, 1, height - 2)
+	if grid[bx][by] == EMPTY:
+		return
+	# Clear a small safe pocket, matching the world generator's spawn guard.
+	for dx in range(-1, 2):
+		for dy in range(-1, 2):
+			var x := bx + dx
+			var y := by + dy
+			if x > 0 and y > 0 and x < width - 1 and y < height - 1:
+				grid[x][y] = EMPTY
 
 
 static func _build_grid_lattice(width: int, height: int) -> Array:

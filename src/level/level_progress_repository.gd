@@ -44,19 +44,7 @@ func complete_level(level_id: String) -> bool:
 	return _write_json({"version": 1, "completed": completed})
 
 func _read_json() -> Variant:
-	if not FileAccess.file_exists(progress_path):
-		return null
-	var file = FileAccess.open(progress_path, FileAccess.READ)
-	if file == null:
-		return null
-	var data = JSON.parse_string(file.get_as_text())
-	file.close()
-	return data
+	return JsonStore.read(progress_path, null)
 
 func _write_json(data: Dictionary) -> bool:
-	var file = FileAccess.open(progress_path, FileAccess.WRITE)
-	if file == null:
-		return false
-	file.store_string(JSON.stringify(data, "\t"))
-	file.close()
-	return true
+	return JsonStore.write(progress_path, data)

@@ -46,20 +46,13 @@ const EFFECT_DEFAULTS = {
 }
 
 static func list_items() -> Array:
-	var dir = DirAccess.open(ITEM_DIR)
-	if dir == null:
-		return []
 	var result: Array = []
-	dir.list_dir_begin()
-	var fname = dir.get_next()
-	while fname != "":
-		if fname.ends_with(".json"):
-			var j = Utils.load_json(ITEM_DIR + fname)
-			if j != null and j.has("id"):
-				j["_path"] = ITEM_DIR + fname
-				result.append(j)
-		fname = dir.get_next()
-	dir.list_dir_end()
+	for item_id in JsonStore.list_json_ids(ITEM_DIR):
+		var path := ITEM_DIR + item_id + ".json"
+		var j := JsonStore.read_dictionary(path)
+		if j.has("id"):
+			j["_path"] = path
+			result.append(j)
 	result.sort_custom(func(a, b): return str(a.get("id", "")) < str(b.get("id", "")))
 	return result
 
@@ -79,14 +72,9 @@ static func save_item(data: Dictionary) -> bool:
 	if not data.has("id") or str(data["id"]).strip_edges() == "":
 		return false
 	var path = ITEM_DIR + str(data["id"]) + ".json"
-	var f = FileAccess.open(path, FileAccess.WRITE)
-	if f == null:
-		return false
 	var clean = data.duplicate()
 	clean.erase("_path")
-	f.store_string(JSON.new().stringify(clean, "\t"))
-	f.close()
-	return true
+	return JsonStore.write(path, clean)
 
 static func delete_item(item_id: String) -> bool:
 	var path = ITEM_DIR + item_id + ".json"

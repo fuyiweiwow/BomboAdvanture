@@ -3,6 +3,8 @@
 class_name Level
 extends RefCounted
 
+const MapDataValidator = preload("res://src/game/level/map_data_validator.gd")
+
 var times_num: int = 0
 var frames_num: int = 0
 var me = null
@@ -94,22 +96,33 @@ func load_map_json(map_data: Dictionary = {}) -> void:
 	if mj == null or not mj is Dictionary:
 		push_error("Level: missing map %s" % map_name)
 		return
-	map_json = mj
-	me.set_xy(int(map_json["basic"]["begin"][0]), int(map_json["basic"]["begin"][1]))
-	map_x = int(map_json["basic"]["width"])
-	map_y = int(map_json["basic"]["height"])
+	if not MapDataValidator.is_valid(mj):
+		push_error("Level: map %s has no basic metadata" % map_name)
+		return
+	map_json = MapDataValidator.normalize(mj)
+	var basic: Dictionary = map_json["basic"]
+	var begin: Array = basic.get("begin", [1, 1])
+	if begin.size() < 2:
+		begin = [1, 1]
+	map_x = maxi(1, int(basic.get("width", 1)))
+	map_y = maxi(1, int(basic.get("height", 1)))
+	if me != null:
+		me.set_xy(clampi(int(begin[0]), 0, map_x - 1), clampi(int(begin[1]), 0, map_y - 1))
 	map_x_pos = map_x * G.GAME_SQUARE - 1
 	map_y_pos = map_y * G.GAME_SQUARE - 1
 	map_grids = []
 	for gx in range(map_x):
 		for gy in range(map_y):
 			map_grids.append(Vector2i(gx, gy))
-	scroll_x_pos = float(int(map_json["basic"]["scroll"][0])) * G.GAME_SQUARE
-	scroll_y_pos = float(int(map_json["basic"]["scroll"][1])) * G.GAME_SQUARE
+	var scroll: Array = basic.get("scroll", [0, 0])
+	if scroll.size() < 2:
+		scroll = [0, 0]
+	scroll_x_pos = float(int(scroll[0])) * G.GAME_SQUARE
+	scroll_y_pos = float(int(scroll[1])) * G.GAME_SQUARE
 	scroll_x_pos_max = maxf(0.0, float(map_x_pos - G.MAIN_AREA_X_POS))
 	scroll_y_pos_max = maxf(0.0, float(map_y_pos - G.MAIN_AREA_Y_POS))
 	map_init_time = Time.get_ticks_msec()
-	map_music = str(map_json["basic"].get("music", ""))
+	map_music = str(basic.get("music", ""))
 	flame_instances = []
 	item_instances = {}
 	obstacle_instances = {}
