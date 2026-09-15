@@ -5,6 +5,7 @@
 extends Control
 
 const ItemData = preload("res://src/item_editor/item_data.gd")
+const ShopPurchaseRules = preload("res://src/city/shop_purchase_rules.gd")
 
 var _gold_label: Label
 
@@ -67,7 +68,7 @@ func _build() -> void:
 func _buyable_items() -> Array:
 	var result: Array = []
 	for item in ItemData.list_items():
-		if int(item.get("buy_price", 0)) > 0:
+		if ShopPurchaseRules.is_supported(item):
 			result.append(item)
 	return result
 
@@ -80,19 +81,18 @@ func _buy(item_id: String) -> void:
 	var item = ItemData.load_item(item_id)
 	if item.is_empty():
 		return
-	var price := int(item.get("buy_price", 0))
-	if int(hero.gold) < price:
+	var purchase := ShopPurchaseRules.plan(
+		{"gold": int(hero.gold), "items": hero.items},
+		item
+	)
+	if purchase.is_empty():
 		_toast("金币不足")
 		return
-	var old_gold := int(hero.gold)
-	var old_items: Dictionary = hero.items.duplicate(true)
-	hero.gold = old_gold - price
-	hero._apply_item_effect(item)
-	if not Game.persist_adventure_profile(hero):
-		hero.gold = old_gold
-		hero.items = old_items
+	if not Game.persist_adventure_balances(purchase["gold"], purchase["items"]):
 		_toast("保存失败，购买已取消")
 		return
+	hero.gold = int(purchase["gold"])
+	hero.items = (purchase["items"] as Dictionary).duplicate(true)
 	_update_gold()
 	_toast("购买 " + str(item.get("chs_name", item_id)))
 

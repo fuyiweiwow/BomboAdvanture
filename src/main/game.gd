@@ -356,6 +356,9 @@ func hydrate_adventure_profile(hero) -> void:
 func persist_adventure_profile(hero) -> bool:
 	return hero != null and _adventure_profile_repository.save_balances(int(hero.gold), hero.items)
 
+func persist_adventure_balances(gold: int, items: Dictionary) -> bool:
+	return _adventure_profile_repository.save_balances(gold, items)
+
 func _return_to_city() -> void:
 	current_level = null
 	game_complete = false
