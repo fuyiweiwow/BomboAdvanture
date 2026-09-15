@@ -36,9 +36,16 @@ func run() -> Array[String]:
 
 	var level := DropLevel.new()
 	Game.current_level = level
-	var hero := Hero.new("Asha", Vector2i(3, 3))
+	var hero := Hero.new("Asha", Vector2i(3, 3), C.CHARACTER_RED, false)
+	hero.bomb = 1
+	hero.remain_bombs = 1
+	hero.power = 1
+	hero.base_speed = 1.0
+	hero.speed = 1.0
 	var original_bomb := hero.bomb
-	var npc := Npc.new("YeWaiFireBall", Vector2i(3, 3))
+	var npc := Npc.new("YeWaiFireBall", Vector2i(3, 3), C.CHARACTER_RED, false)
+	npc.blood = 1500
+	npc.npc_file_name = "YeWaiFireBall"
 	npc.rogue_drop_config_path = TEST_CONFIG_PATH
 	npc.drop_rng = RandomNumberGenerator.new()
 	npc.drop_rng.seed = 20260915
