@@ -83,10 +83,15 @@ func draw_ui() -> void:
 func _draw_game_top() -> void:
 	if _tex_game_top != null:
 		draw_texture(_tex_game_top, Vector2(0, 0))
+	else:
+		draw_rect(Rect2(0, 0, 800, 27), Color(0.06, 0.08, 0.12))
 
 func _draw_game_left() -> void:
 	if _tex_game_left != null:
 		draw_texture(_tex_game_left, Vector2(0, 27))
+	else:
+		draw_rect(Rect2(0, 27, 96, 510), Color(0.08, 0.10, 0.14))
+		draw_line(Vector2(96, 27), Vector2(96, 537), Color(0.25, 0.3, 0.4), 1.0)
 
 func _draw_left_panel(me) -> void:
 	_update_icon()
@@ -94,6 +99,8 @@ func _draw_left_panel(me) -> void:
 		draw_texture(_tex_icon, Vector2(0, 78))
 	if _tex_mask_player != null:
 		draw_texture(_tex_mask_player, Vector2(0, 120))
+	else:
+		draw_rect(Rect2(0, 120, 88, 16), Color(0.12, 0.16, 0.22))
 	if _ui_font != null:
 		draw_string(_ui_font, Vector2(4, 135), str(me.remain_blood), HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0, 1, 1))
 	if _tex_life_slice != null and me.blood > 0:
@@ -104,8 +111,14 @@ func _draw_left_panel(me) -> void:
 		while i < n:
 			draw_texture(_tex_life_slice, Vector2(float(i), 136.0))
 			i += 1
+	elif me.blood > 0:
+		var ratio := clampf(float(me.remain_blood) / float(me.blood), 0.0, 1.0)
+		draw_rect(Rect2(4, 136, 84, 8), Color(0.15, 0.15, 0.15))
+		draw_rect(Rect2(4, 136, 84.0 * ratio, 8), Color(0.2, 0.85, 0.45))
 	if _tex_medal != null:
 		draw_texture(_tex_medal, Vector2(0, 142))
+	else:
+		draw_circle(Vector2(14, 153), 7.0, Color(0.85, 0.65, 0.18))
 	if _ui_font != null and me != null:
 		draw_string(_ui_font, Vector2(4, 158), "Gold: " + str(me.gold), HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1, 0.84, 0.0))
 
@@ -156,12 +169,18 @@ func _draw_skill_bar(me) -> void:
 		_tex_status_bar = _load_tex("res://assets/img/ui/game/statusBar.png")
 	if _tex_status_bar != null:
 		draw_texture(_tex_status_bar, Vector2(bar_x, bar_y))
+	else:
+		draw_rect(Rect2(bar_x, bar_y, 550, 60), Color(0.08, 0.10, 0.14, 0.96))
 	if _tex_misc510 != null:
 		draw_texture(_tex_misc510, Vector2(556, bar_y))
 	if _tex_dlg_bg != null:
 		draw_texture(_tex_dlg_bg, Vector2(619, 537))
 	if _tex_btn_leave != null:
 		draw_texture(_tex_btn_leave, Vector2(732, 545))
+	else:
+		draw_rect(Rect2(732, 545, 52, 47), Color(0.25, 0.12, 0.16))
+		if _ui_font != null:
+			draw_string(_ui_font, Vector2(740, 573), "退出", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(1, 0.8, 0.8))
 	var names = me.skill_names
 	if names.size() == 0:
 		return
