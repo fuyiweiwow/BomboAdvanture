@@ -16,11 +16,10 @@ func get_texture(original_path: String) -> Texture2D:
 	# noisy load error on every headless run.
 	if path.begins_with("res://") and not FileAccess.file_exists(path):
 		return null
-	# Load raster assets directly. This bypasses stale .godot/imported cache
-	# entries in partial checkouts and also supports absolute custom-dir paths.
-	if path.to_lower().ends_with(".png") or path.to_lower().ends_with(".jpg") or path.to_lower().ends_with(".jpeg") or path.to_lower().ends_with(".webp"):
-		var image := Image.load(path)
-		if image != null and not image.is_empty():
+	# Absolute custom-dir raster paths cannot be handled by ResourceLoader.
+	if not path.begins_with("res://") and (path.to_lower().ends_with(".png") or path.to_lower().ends_with(".jpg") or path.to_lower().ends_with(".jpeg") or path.to_lower().ends_with(".webp")):
+		var image := Image.new()
+		if image.load(path) == OK and not image.is_empty():
 			var raster_texture := ImageTexture.create_from_image(image)
 			_texture_cache[path] = raster_texture
 			return raster_texture

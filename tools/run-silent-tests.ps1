@@ -4,7 +4,8 @@ param(
     [string]$Project = "",
     [string]$Runner = "res://src/tests/silent_test_runner.gd",
     [switch]$Import,
-    [switch]$VerboseOutput
+    [switch]$VerboseOutput,
+    [switch]$AllowEngineErrors
 )
 
 $ErrorActionPreference = "Stop"
@@ -20,6 +21,23 @@ function Invoke-Godot([string[]]$Arguments) {
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 }
 
+function Test-EngineErrors([string[]]$Lines) {
+    $fatalPatterns = @(
+        '^SCRIPT ERROR:',
+        '^ERROR:',
+        'Parse Error:',
+        'Compile Error:',
+        'Failed to load script',
+        'Failed to instantiate an autoload'
+    )
+    foreach ($line in $Lines) {
+        foreach ($pattern in $fatalPatterns) {
+            if ($line -match $pattern) { return $true }
+        }
+    }
+    return $false
+}
+
 if ($Import) {
     # Import assets once, then stop. A timeout prevents a broken plugin from
     # leaving CI hanging forever.
@@ -29,10 +47,22 @@ if ($Import) {
 }
 
 $args = @("--headless", "--path", $Project, "--script", $Runner)
-if ($VerboseOutput) { Invoke-Godot $args }
-else {
-    $output = & $Godot @args
-    $exitCode = $LASTEXITCODE
-    $output | Select-Object -Last 1
-    exit $exitCode
+$stdoutPath = Join-Path ([IO.Path]::GetTempPath()) ("bombo-test-{0}.out" -f [guid]::NewGuid())
+$stderrPath = Join-Path ([IO.Path]::GetTempPath()) ("bombo-test-{0}.err" -f [guid]::NewGuid())
+try {
+    $proc = Start-Process -FilePath $Godot -ArgumentList $args -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath
+    $output = @(@(Get-Content -LiteralPath $stdoutPath -ErrorAction SilentlyContinue) + @(Get-Content -LiteralPath $stderrPath -ErrorAction SilentlyContinue))
+    $exitCode = $proc.ExitCode
 }
+finally {
+    Remove-Item -LiteralPath $stdoutPath, $stderrPath -Force -ErrorAction SilentlyContinue
+}
+if ($VerboseOutput) { $output | Write-Output }
+else { $output | Where-Object { $_ -match '^\{' -or $_ -match '^\}' -or $_ -match '"passed"' -or $_ -match '"tests"' -or $_ -match '"name"' -or $_ -match '"failures"' } | Write-Output }
+
+if ($exitCode -ne 0) { exit $exitCode }
+if (-not $AllowEngineErrors -and (Test-EngineErrors $output)) {
+    Write-Error "Godot reported engine/script errors; silent tests are considered failed. Rerun with -VerboseOutput for details."
+    exit 2
+}
+exit 0

@@ -56,6 +56,9 @@ godot --headless --path . res://src/tests/city_selftest.tscn
 
 # 输出完整 Godot 日志（调试解析错误时使用）
 .\tools\run-silent-tests.ps1 -VerboseOutput
+
+# 临时允许已知引擎错误（仅用于诊断，不建议 CI 使用）
+.\tools\run-silent-tests.ps1 -AllowEngineErrors
 ```
 
-退出码为 `0` 表示全部测试通过，非 `0` 表示失败或 Godot 启动/导入错误。新增 feature 时，将测试函数注册到 `silent_test_runner.gd` 的 `_initialize()` 中即可接入统一报告。
+退出码为 `0` 表示测试通过且 Godot 未报告脚本/引擎错误；`1` 表示测试断言失败；`2` 表示 Godot 虽返回成功，但日志包含脚本、编译、autoload 或资源错误。新增 feature 时，将测试函数注册到 `silent_test_runner.gd` 的 `_initialize()` 中即可接入统一报告。

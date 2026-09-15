@@ -42,6 +42,10 @@ func _get_skill_tex(name: String) -> Texture2D:
 	return tex
 
 func _load_tex(path: String) -> Texture2D:
+	# The copied legacy UI set is incomplete. Native drawing below is the
+	# supported placeholder until the resource lab supplies a coherent skin.
+	if path.begins_with("res://assets/img/ui/"):
+		return null
 	if RM == null:
 		return null
 	return RM.get_texture(path)
