@@ -10,6 +10,7 @@
 	"sell_price": 100,
 	"stackable": true,
 	"max_stack": 1,
-	"effects": {},
+	"lifecycle": "run",
+	"effects": {"bomb": 1},
 	"color": [1, 0.5, 0.0]
 }
