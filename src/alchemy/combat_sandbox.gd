@@ -38,6 +38,7 @@ var _map_breakable_opt: OptionButton
 var _pool_monster_opt: OptionButton
 var _pool_count_sb: SpinBox
 var _pool_list: VBoxContainer
+var _status_label: Label
 var _monster_pool: Array = []           # [{id, chs_name, max}]
 var _available_floors: Array = []
 var _available_walls: Array = []
@@ -146,12 +147,23 @@ func _init_sandbox() -> void:
 var _all_materials: Array = []
 
 func _build_config_ui() -> void:
-	var panel = ColorRect.new()
-	panel.color = Color(0.06, 0.06, 0.10, 0.92)
-	panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	panel.mouse_filter = MOUSE_FILTER_STOP
-	panel.name = "_config_panel"
-	add_child(panel)
+	var background := ColorRect.new()
+	background.color = Color(0.06, 0.06, 0.10, 0.92)
+	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	background.mouse_filter = MOUSE_FILTER_IGNORE
+	add_child(background)
+	var scroll := ScrollContainer.new()
+	scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	scroll.offset_left = 8
+	scroll.offset_right = -8
+	scroll.offset_top = 42
+	scroll.offset_bottom = -8
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.name = "_config_panel"
+	add_child(scroll)
+	var panel := Control.new()
+	panel.custom_minimum_size = Vector2(784, 760)
+	scroll.add_child(panel)
 
 	var title = Label.new()
 	title.text = "⚙ 战斗沙盒配置  [Tab: 切换]"
@@ -162,14 +174,14 @@ func _build_config_ui() -> void:
 
 	var close_btn = Button.new()
 	close_btn.text = "关闭配置 (Tab)"
-	close_btn.position = Vector2(640, 6)
+	close_btn.position = Vector2(640, -36)
 	close_btn.custom_minimum_size = Vector2(120, 28)
 	close_btn.pressed.connect(_toggle_config)
 	panel.add_child(close_btn)
 
 	var back_btn = Button.new()
 	back_btn.text = "← 返回"
-	back_btn.position = Vector2(740, 6)
+	back_btn.position = Vector2(740, -36)
 	back_btn.pressed.connect(_on_back)
 	panel.add_child(back_btn)
 
@@ -413,12 +425,13 @@ func _build_status_display(panel: Control, y: int) -> void:
 			_hero.power, _hero.speed * 1000.0 / G.GAME_SQUARE,
 			_level.npcs.size()
 		]
-	var sl = Label.new()
-	sl.text = status_text
-	sl.position = Vector2(12, y)
-	sl.add_theme_font_size_override("font_size", 11)
-	sl.add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))
-	panel.add_child(sl)
+	if _status_label == null:
+		_status_label = Label.new()
+		_status_label.add_theme_font_size_override("font_size", 11)
+		_status_label.add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))
+		panel.add_child(_status_label)
+	_status_label.text = status_text
+	_status_label.position = Vector2(12, y)
 
 	var hint = Label.new()
 	hint.text = "方向键移动 | Space放炸弹 | 1-7技能 | Tab配置 | Esc暂停"
@@ -433,11 +446,17 @@ func _build_status_display(panel: Control, y: int) -> void:
 		timer = Timer.new()
 		timer.name = "_status_timer"
 		timer.wait_time = 0.5
-		timer.timeout.connect(func():
-			_build_status_display(panel, y)
-		)
+			timer.timeout.connect(func(): _refresh_status_label())
 		add_child(timer)
 		timer.start()
+
+func _refresh_status_label() -> void:
+	if _status_label == null or _level == null or _hero == null:
+		return
+	_status_label.text = "状态: HP: %d/%d | 炸弹: %d/%d | 威力: %d | 速度: %.1f | 敌人: %d" % [
+		_hero.remain_blood, _hero.blood, _hero.remain_bombs, _hero.bomb,
+		_hero.power, _hero.speed * 1000.0 / G.GAME_SQUARE, _level.npcs.size()
+	]
 
 func _build_random_map_section(panel: Control, y: int) -> void:
 	var sep = ColorRect.new()
