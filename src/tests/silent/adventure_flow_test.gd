@@ -67,6 +67,9 @@ func run() -> Array[String]:
 	)
 	if not recipe_params.get("monster_pool", [])[0] is Dictionary:
 		failures.append("recipe monster specs were converted to strings")
+	var safe_generator := GeneratorConfig.build({}, {"breakable": "bad"})
+	if not safe_generator.get("breakable") is Array:
+		failures.append("malformed breakable pool was not normalized")
 	var profile_path := "user://silent_adventure_profile.json"
 	if FileAccess.file_exists(profile_path):
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(profile_path))
@@ -82,6 +85,11 @@ func run() -> Array[String]:
 	var profile := reloaded_repository.snapshot()
 	if profile.get("gold") != 10 or profile.get("items", {}).get("red_herb") != 2:
 		failures.append("persistent reward totals are incorrect")
+	if not reloaded_repository.save_balances(4, {"red_herb": 1}):
+		failures.append("updated player balances were not saved")
+	var saved_profile := ProfileRepository.new(profile_path).snapshot()
+	if saved_profile.get("gold") != 4 or saved_profile.get("items", {}).get("red_herb") != 1:
+		failures.append("saved player balances did not survive reload")
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(profile_path))
 
 	var settlement_path := "user://silent_adventure_settlement.json"
