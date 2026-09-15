@@ -32,6 +32,43 @@ static func write(path: String, value: Variant) -> bool:
 	return true
 
 
+# Writes beside the destination first, then replaces it. The backup makes the
+# short replacement window recoverable if the process stops between renames.
+static func write_atomic(path: String, value: Variant) -> bool:
+	if path.strip_edges() == "":
+		return false
+	var suffix := "%d-%d" % [Time.get_ticks_usec(), randi()]
+	var temp_path := path + ".tmp-" + suffix
+	var file := FileAccess.open(temp_path, FileAccess.WRITE)
+	if file == null:
+		return false
+	file.store_string(JSON.stringify(value, "\t"))
+	file.flush()
+	var write_error := file.get_error()
+	file.close()
+	if write_error != OK:
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(temp_path))
+		return false
+
+	var target_absolute := ProjectSettings.globalize_path(path)
+	var temp_absolute := ProjectSettings.globalize_path(temp_path)
+	var backup_absolute := target_absolute + ".bak"
+	var had_target := FileAccess.file_exists(path)
+	if FileAccess.file_exists(backup_absolute):
+		DirAccess.remove_absolute(backup_absolute)
+	if had_target and DirAccess.rename_absolute(target_absolute, backup_absolute) != OK:
+		DirAccess.remove_absolute(temp_absolute)
+		return false
+	if DirAccess.rename_absolute(temp_absolute, target_absolute) != OK:
+		if had_target:
+			DirAccess.rename_absolute(backup_absolute, target_absolute)
+		DirAccess.remove_absolute(temp_absolute)
+		return false
+	if FileAccess.file_exists(backup_absolute):
+		DirAccess.remove_absolute(backup_absolute)
+	return true
+
+
 static func list_json_ids(directory: String) -> Array[String]:
 	var result: Array[String] = []
 	var dir := DirAccess.open(directory)

@@ -5,16 +5,27 @@ extends RefCounted
 
 const JsonStore = preload("res://src/core/json_store.gd")
 
+static var _claim_mutex := Mutex.new()
+
 var _path: String
 var _profile: Dictionary
 
 
 func _init(path: String = "user://adventure_profile.json") -> void:
 	_path = path
-	_profile = _normalize_profile(JsonStore.read_dictionary(_path))
+	_profile = _load_profile()
 
 
 func claim(claim_id: String, rewards: Dictionary) -> bool:
+	_claim_mutex.lock()
+	var result := _claim_locked(claim_id, rewards)
+	_claim_mutex.unlock()
+	return result
+
+
+func _claim_locked(claim_id: String, rewards: Dictionary) -> bool:
+	# Other repository owners may have committed since this instance was made.
+	_profile = _load_profile()
 	var normalized_id := claim_id.strip_edges()
 	if normalized_id.is_empty() or normalized_id in _profile["claimed"]:
 		return false
@@ -28,7 +39,7 @@ func claim(claim_id: String, rewards: Dictionary) -> bool:
 	next_profile["claimed"].append(normalized_id)
 
 	# Publish the in-memory state only after the complete profile was written.
-	if not JsonStore.write(_path, next_profile):
+	if not JsonStore.write_atomic(_path, next_profile):
 		return false
 	_profile = next_profile
 	return true
@@ -36,6 +47,16 @@ func claim(claim_id: String, rewards: Dictionary) -> bool:
 
 func snapshot() -> Dictionary:
 	return _profile.duplicate(true)
+
+
+func _load_profile() -> Dictionary:
+	var backup_path := _path + ".bak"
+	if not FileAccess.file_exists(_path) and FileAccess.file_exists(backup_path):
+		DirAccess.rename_absolute(
+			ProjectSettings.globalize_path(backup_path),
+			ProjectSettings.globalize_path(_path)
+		)
+	return _normalize_profile(JsonStore.read_dictionary(_path))
 
 
 func _normalize_profile(raw: Dictionary) -> Dictionary:
