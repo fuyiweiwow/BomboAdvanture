@@ -3,6 +3,7 @@ extends RefCounted
 const MissionService = preload("res://src/adventure/mission_service.gd")
 const RogueItemRules = preload("res://src/adventure/rogue_item_rules.gd")
 const ProfileRepository = preload("res://src/adventure/adventure_profile_repository.gd")
+const GeneratorConfig = preload("res://src/adventure/adventure_generator_config.gd")
 
 func run() -> Array[String]:
 	var failures: Array[String] = []
@@ -52,6 +53,19 @@ func run() -> Array[String]:
 	var invalid := MissionService.accept({"id": "", "objective": {"target": 0}})
 	if not invalid.is_empty():
 		failures.append("invalid mission was accepted")
+	var generator_params := GeneratorConfig.build(
+		{"width": 21, "monsters": [{"name": "recipe_slime", "max": 4}]},
+		{"count": 3, "monster_pool": ["mission_bat"]}
+	)
+	if generator_params.get("count") != 3:
+		failures.append("mission zone count did not override recipe")
+	if generator_params.get("monster_pool") != ["mission_bat"]:
+		failures.append("mission monster pool did not override recipe")
+	var recipe_params := GeneratorConfig.build(
+		{"monsters": [{"name": "recipe_slime", "max": 4}]}, {}
+	)
+	if not recipe_params.get("monster_pool", [])[0] is Dictionary:
+		failures.append("recipe monster specs were converted to strings")
 	var profile_path := "user://silent_adventure_profile.json"
 	if FileAccess.file_exists(profile_path):
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(profile_path))
