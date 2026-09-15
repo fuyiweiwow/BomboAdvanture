@@ -5,6 +5,7 @@ const RogueItemRules = preload("res://src/adventure/rogue_item_rules.gd")
 const ProfileRepository = preload("res://src/adventure/adventure_profile_repository.gd")
 const GeneratorConfig = preload("res://src/adventure/adventure_generator_config.gd")
 const SettlementService = preload("res://src/adventure/adventure_settlement_service.gd")
+const ShopPurchaseRules = preload("res://src/city/shop_purchase_rules.gd")
 
 func run() -> Array[String]:
 	var failures: Array[String] = []
@@ -103,5 +104,16 @@ func run() -> Array[String]:
 		failures.append("completed adventure was not claimed")
 	if not SettlementService.complete(completed_run.duplicate(true), settlement_repository).is_empty():
 		failures.append("copied completed adventure was claimed twice")
+	var purchase := ShopPurchaseRules.plan(
+		{"gold": 20, "items": {"red_herb": 1}},
+		{"id": "blue_herb", "type": "material", "buy_price": 10}
+	)
+	if purchase.get("gold") != 10 or purchase.get("items", {}).get("blue_herb") != 1:
+		failures.append("material purchase did not produce persistent balances")
+	if not ShopPurchaseRules.plan(
+		{"gold": 500, "items": {}},
+		{"id": "power_up", "type": "weapon", "buy_price": 200}
+	).is_empty():
+		failures.append("shop accepted a non-persistent run upgrade")
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(settlement_path))
 	return failures
