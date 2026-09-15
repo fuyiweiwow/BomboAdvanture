@@ -7,6 +7,7 @@ const LEVEL_SESSION = preload("res://src/level/level_session.gd")
 const LEVEL_PROGRESS_REPOSITORY = preload("res://src/level/level_progress_repository.gd")
 const WorldMapGenerator = preload("res://src/game/level/world_map_generator.gd")
 const MissionService = preload("res://src/adventure/mission_service.gd")
+const AdventureGeneratorConfig = preload("res://src/adventure/adventure_generator_config.gd")
 
 var cfg_json: Dictionary = {}
 var your_name: String = ""
@@ -111,11 +112,13 @@ func _return_to_title() -> void:
 	selected_level = ""
 	level_json = {}
 	selected_level_profile = {}
+	active_mission = {}
 	LEVEL_SESSION.clear()
 	position = Vector2(0, 0)
 	_show_title()
 
 func start_game(dev: bool) -> void:
+	active_mission = {}
 	dev_mode = dev
 	map_set_at = -1
 	_apply_level_session()
@@ -162,6 +165,7 @@ func init_game() -> void:
 	if map_set_json == null:
 		map_set_json = {}
 	selected_level_profile = {}
+	active_mission = {}
 
 func _apply_level_session() -> void:
 	selected_level_profile = {}
@@ -243,29 +247,23 @@ func _monsters_from_params(params: Dictionary) -> Array:
 	var out: Array = []
 	if pool is Array:
 		for m in pool:
-			out.append({"name": str(m), "max": 4})
+			if m is Dictionary:
+				out.append((m as Dictionary).duplicate(true))
+			else:
+				out.append({"name": str(m), "max": 4})
 	return out
 
 
 # One-click entry: generate a fresh procedural world and jump straight in.
-func start_procedural_world(recipe_name: String = "") -> void:
+func start_procedural_world(recipe_name: String = "", overrides: Dictionary = {}, clear_mission: bool = true) -> void:
+	if clear_mission:
+		active_mission = {}
 	var recipe: Dictionary = {}
 	if recipe_name != "":
 		recipe = RM.get_json("res://src/tests/recipes/" + recipe_name + ".json")
 		if recipe == null:
 			recipe = {}
-	var params := {
-		"count": 6,
-		"seed": 0,
-		"width": int(recipe.get("width", 21)),
-		"height": int(recipe.get("height", 15)),
-		"floor": str(recipe.get("floor", "elem220")),
-		"wall": str(recipe.get("wall", "elem212")),
-		"breakable": recipe.get("breakable", ["elem225", "elem226", "elem227"]),
-		"monster_pool": recipe.get("monsters", []),
-		"density": float(recipe.get("density", 0.25)),
-		"name": str(recipe.get("name", "procedural")),
-	}
+	var params := AdventureGeneratorConfig.build(recipe, overrides)
 	_generate_procedural_map({"generator_params": params})
 	selected_level = ""
 	selected_level_profile = {}
@@ -274,12 +272,15 @@ func start_procedural_world(recipe_name: String = "") -> void:
 	proceed_game()
 
 func start_adventure_mission(definition: Dictionary) -> bool:
+	var raw_generator = definition.get("generator", {})
+	if not raw_generator is Dictionary:
+		return false
 	var session := MissionService.accept(definition)
 	if session.is_empty():
 		return false
 	active_mission = session
-	var generator: Dictionary = definition.get("generator", {})
-	start_procedural_world(str(generator.get("recipe", "forest")))
+	var generator: Dictionary = raw_generator
+	start_procedural_world(str(generator.get("recipe", "forest")), generator, false)
 	return true
 
 func _on_game_complete() -> void:
