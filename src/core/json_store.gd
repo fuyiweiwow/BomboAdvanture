@@ -17,7 +17,7 @@ static func read(path: String, fallback: Variant = null) -> Variant:
 
 
 static func read_dictionary(path: String) -> Dictionary:
-	var value := read(path, {})
+	var value: Variant = read(path, {})
 	return value if value is Dictionary else {}
 
 

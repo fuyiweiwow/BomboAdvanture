@@ -36,3 +36,26 @@ godot --headless --path . res://src/tests/city_selftest.tscn
 ```
 
 `refactor_selftest` 覆盖地图校验、异常出生坐标和出生点可行走保证；其余自检覆盖世界门、掉落、城市与商店流程。
+
+## 静默测试 PowerShell 包装
+
+项目提供 `tools/run-silent-tests.ps1`，默认使用本项目约定的 Godot Console 路径，并以 JSON 最后一行作为测试报告：
+
+```powershell
+.\tools\run-silent-tests.ps1
+```
+
+常用参数：
+
+```powershell
+# 重新导入资源后运行
+.\tools\run-silent-tests.ps1 -Import
+
+# 指定 Godot 或项目目录
+.\tools\run-silent-tests.ps1 -Godot "D:\\Tools\\Godot\\Godot_v4.6.2-stable_mono_win64\\Godot_v4.6.2-stable_mono_win64_console.exe" -Project "D:\\Learn\\BomboAdvanture"
+
+# 输出完整 Godot 日志（调试解析错误时使用）
+.\tools\run-silent-tests.ps1 -VerboseOutput
+```
+
+退出码为 `0` 表示全部测试通过，非 `0` 表示失败或 Godot 启动/导入错误。新增 feature 时，将测试函数注册到 `silent_test_runner.gd` 的 `_initialize()` 中即可接入统一报告。
