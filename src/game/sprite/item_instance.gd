@@ -17,13 +17,17 @@ var cx: int = 0
 var cy: int = 0
 var _tint: Color = Color.WHITE
 
-func _init(nx: int, ny: int, item_instances_dict_: Dictionary, item_data_: Dictionary):
+func _init(nx: int, ny: int, item_instances_dict_: Dictionary, item_data_: Dictionary, load_visuals: bool = true):
 	super._init(nx, ny)
 	item_instances_dict = item_instances_dict_
 	item_data = item_data_
-	item = ItemLoader.get_item(str(item_data_.get("frame", "item1")))
-	if item.is_empty():
-		item = ItemLoader.get_item("item1")
+	if load_visuals:
+		item = ItemLoader.get_item(str(item_data_.get("frame", "item1")))
+		if item.is_empty():
+			item = ItemLoader.get_item("item1")
+	else:
+		# Keep the gameplay object usable while avoiding atlas/image work in tests.
+		item = {"INTERVAL": 1000, "STAND": [], "DIE": []}
 	var c = item_data_.get("color", null)
 	if c is Array and c.size() >= 3:
 		_tint = Color(c[0], c[1], c[2])

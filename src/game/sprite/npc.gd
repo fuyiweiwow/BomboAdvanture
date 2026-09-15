@@ -6,11 +6,7 @@ class_name Npc
 extends Player
 
 const RogueDropPool = preload("res://src/adventure/rogue_drop_pool.gd")
-const ROGUE_UPGRADE_POOL: Array = [
-	{"item_id": "bomb_up", "rarity": "uncommon", "weight": 3.0},
-	{"item_id": "power_up", "rarity": "uncommon", "weight": 3.0},
-	{"item_id": "speed_up", "rarity": "rare", "weight": 2.0},
-]
+const RogueDropCatalog = preload("res://src/adventure/rogue_drop_catalog.gd")
 
 var npc_json = {}
 var chs_name: String = ""
@@ -31,12 +27,17 @@ var death = null
 var face_texture: Texture2D = null
 var drops_key: bool = false
 var npc_file_name: String = ""
+var rogue_drop_config_path: String = RogueDropCatalog.DEFAULT_PATH
+var drop_rng: RandomNumberGenerator = null
 
-func _init(npc_name: String, xy: Vector2i, color_: Color = C.CHARACTER_RED):
+func _init(npc_name: String, xy: Vector2i, color_: Color = C.CHARACTER_RED, load_visuals: bool = true):
 	super._init(npc_name, xy, color_)
 	district_locked = true
-	bomb_skin = BombLoader.get_bomb("bomb1")
-	load_npc(npc_name, color_)
+	if load_visuals:
+		bomb_skin = BombLoader.get_bomb("bomb1")
+		load_npc(npc_name, color_)
+	else:
+		npc_file_name = npc_name
 
 func load_npc(npc_name: String, color_: Color) -> void:
 	npc_file_name = npc_name
@@ -244,13 +245,16 @@ func _drop_material() -> void:
 
 # Rare: occasional power-up, 5% chance.
 func _drop_rare() -> void:
-	if randi() % 100 >= 5:
+	var config := RogueDropCatalog.load_config(rogue_drop_config_path)
+	if config.is_empty():
 		return
-	var rng := RandomNumberGenerator.new()
-	# Seed from Godot's run RNG so production remains random while the pure pool
-	# selector stays deterministic under a supplied test seed.
-	rng.seed = randi()
-	var selected := RogueDropPool.pick(ROGUE_UPGRADE_POOL, rng)
+	var rng := drop_rng
+	if rng == null:
+		rng = RandomNumberGenerator.new()
+		rng.randomize()
+	if rng.randf() >= float(config["chance"]):
+		return
+	var selected := RogueDropPool.pick(config["entries"], rng)
 	var item_data = ItemData.load_item(str(selected.get("item_id", "")))
 	if item_data.is_empty():
 		return
@@ -294,6 +298,9 @@ func _material_for_npc() -> String:
 
 func _drop_item_scatter(item_data: Dictionary) -> void:
 	var cl = Game.current_level
+	var load_visuals := true
+	if cl != null and cl.has_method("should_load_visuals"):
+		load_visuals = cl.should_load_visuals()
 	for attempt in range(9):
 		var dx := attempt % 3 - 1
 		var dy := attempt / 3 - 1
@@ -305,9 +312,9 @@ func _drop_item_scatter(item_data: Dictionary) -> void:
 			continue
 		if cl.item_instances.has(Vector2i(px, py)):
 			continue
-		ItemInstance.new(px, py, cl.item_instances, item_data)
+		ItemInstance.new(px, py, cl.item_instances, item_data, load_visuals)
 		return
-	ItemInstance.new(x, y, cl.item_instances, item_data)
+	ItemInstance.new(x, y, cl.item_instances, item_data, load_visuals)
 
 func try_using_skills() -> void:
 	if not resentful and not mocking or friendly:

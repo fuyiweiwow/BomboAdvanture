@@ -100,3 +100,13 @@ func run() -> Array[String]:
 ```
 
 套件超时后 Runner 会停止调度后续套件并退出进程，避免无法取消的 GDScript 协程污染其他测试；它仍无法抢占阻塞 Godot 主线程的死循环，因此测试代码不得执行不让出主线程的无限循环。未知 `-Module` 会明确失败，避免筛选拼写错误造成“零测试通过”。
+
+### Rogue 强化掉落配置与静默验证
+
+默认掉落配置在 `assets/adventure/rogue_drop_pool.json`。`chance` 是怪物死亡时触发强化掉落的概率（`0..1`）；`entries` 中每项填写已有道具的 `item_id`、`rarity` 和正数 `weight`，权重只决定触发后选中哪个道具。修改 JSON 后运行：
+
+```powershell
+.\tools\run-silent-tests.ps1 -Module rogue_drop_integration -VerboseOutput
+```
+
+该套件使用临时 `user://` 配置与固定随机种子，构造真实 NPC、拾取物和 Hero，验证死亡、生成与拾取，不需要窗口、玩家操作或现有贴图。非法概率或权重会被拒绝。当前配置是最小玩法切片；重复强化的上限和平衡仍在后续任务中。

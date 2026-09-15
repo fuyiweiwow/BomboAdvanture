@@ -18,11 +18,12 @@ var bomb_time_old: int = 0
 
 const DECORATION_CATEGORIES = ["cap", "hair", "eye", "eye_eyeball", "eye_iris", "eye_pupil", "eye_highlight", "ear", "mouth", "cladorn", "fpack", "npack", "thadorn", "footprint"]
 
-func _init(hero_name: String, xy: Vector2i, color_: Color = C.CHARACTER_RED):
+func _init(hero_name: String, xy: Vector2i, color_: Color = C.CHARACTER_RED, load_visuals: bool = true):
 	super._init(hero_name, xy, color_)
 	color = color_
 	rooted = 0
-	load_hero(hero_name)
+	if load_visuals:
+		load_hero(hero_name)
 
 func load_hero(hero_name: String) -> void:
 	var path = G.GAME_ROOT + "hero/" + hero_name + ".json"
