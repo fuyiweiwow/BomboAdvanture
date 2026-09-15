@@ -50,7 +50,7 @@ if ($Import) {
 	Remove-Item -LiteralPath $importOut, $importErr -Force -ErrorAction SilentlyContinue
 	if (-not $AllowEngineErrors -and (Test-EngineErrors $importOutput)) {
 		if ($VerboseOutput) { $importOutput | Write-Output }
-		Write-Error "Godot reported errors during import."
+		[Console]::Error.WriteLine("Godot reported errors during import.")
 		exit 2
 	}
 }
@@ -80,7 +80,7 @@ else {
 
 if ($exitCode -ne 0) { exit $exitCode }
 if (-not $AllowEngineErrors -and (Test-EngineErrors $output)) {
-    Write-Error "Godot reported engine/script errors; silent tests are considered failed. Rerun with -VerboseOutput for details."
+    [Console]::Error.WriteLine("Godot reported engine/script errors; silent tests are considered failed. Rerun with -VerboseOutput for details.")
     exit 2
 }
 exit 0
