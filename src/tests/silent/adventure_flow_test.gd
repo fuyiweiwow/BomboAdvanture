@@ -2,6 +2,7 @@ extends RefCounted
 
 const MissionService = preload("res://src/adventure/mission_service.gd")
 const RogueItemRules = preload("res://src/adventure/rogue_item_rules.gd")
+const ProfileRepository = preload("res://src/adventure/adventure_profile_repository.gd")
 
 func run() -> Array[String]:
 	var failures: Array[String] = []
@@ -47,4 +48,16 @@ func run() -> Array[String]:
 	var invalid := MissionService.accept({"id": "", "objective": {"target": 0}})
 	if not invalid.is_empty():
 		failures.append("invalid mission was accepted")
+	var profile_path := "user://silent_adventure_profile.json"
+	if FileAccess.file_exists(profile_path):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(profile_path))
+	var repository := ProfileRepository.new(profile_path)
+	if not repository.claim("claim-1", {"gold": 10, "items": {"red_herb": 2}}):
+		failures.append("first reward claim failed")
+	if repository.claim("claim-1", {"gold": 10, "items": {"red_herb": 2}}):
+		failures.append("duplicate reward claim succeeded")
+	var profile := repository.snapshot()
+	if profile.get("gold") != 10 or profile.get("items", {}).get("red_herb") != 2:
+		failures.append("persistent reward totals are incorrect")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(profile_path))
 	return failures
