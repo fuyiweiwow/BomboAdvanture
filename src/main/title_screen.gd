@@ -21,10 +21,14 @@ func _build() -> void:
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
 
+	var scroll := ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(620, 520)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	center.add_child(scroll)
 	var panel = VBoxContainer.new()
-	panel.custom_minimum_size = Vector2(320, 0)
-	panel.add_theme_constant_override("separation", 6)
-	center.add_child(panel)
+	panel.custom_minimum_size = Vector2(600, 0)
+	panel.add_theme_constant_override("separation", 10)
+	scroll.add_child(panel)
 
 	var title = Label.new()
 	title.text = "BOMBO ADVENTURE"
@@ -33,27 +37,31 @@ func _build() -> void:
 	title.add_theme_color_override("font_color", Color(1.0, 0.80, 0.26))
 	panel.add_child(title)
 
-	panel.add_child(_spacer(4))
-	panel.add_child(_make_menu_button("Start Game", _on_select))
-	panel.add_child(_make_menu_button("Character Editor", _on_char_editor))
-	panel.add_child(_make_menu_button("Monster Editor", _on_monster_editor))
-	panel.add_child(_make_menu_button("Item Editor", _on_item_editor))
-	panel.add_child(_spacer(4))
-	panel.add_child(_make_menu_button("Alchemy Lab", _on_alchemy))
-	panel.add_child(_make_menu_button("Recipe Editor", _on_recipe_editor))
-	panel.add_child(_make_menu_button("Alchemy Test", _on_alchemy_test))
-	panel.add_child(_make_menu_button("Combat Sandbox", _on_combat_sandbox))
-	panel.add_child(_make_menu_button("Procedural World", _on_procedural_world))
-	panel.add_child(_make_menu_button("City", _on_city))
-	panel.add_child(_make_menu_button("Tournament", _on_tournament))
-	panel.add_child(_spacer(4))
-	panel.add_child(_make_menu_button("Level Editor", _on_level_editor))
-	panel.add_child(_make_menu_button("Map Editor", _on_map_editor))
+	panel.add_child(_menu_group(panel, "PLAY", [["Start Game", _on_select], ["Procedural World", _on_procedural_world], ["City", _on_city], ["Tournament", _on_tournament]]))
+	panel.add_child(_menu_group(panel, "CONTENT", [["Character Editor", _on_char_editor], ["Monster Editor", _on_monster_editor], ["Item Editor", _on_item_editor], ["Level Editor", _on_level_editor], ["Map Editor", _on_map_editor]]))
+	panel.add_child(_menu_group(panel, "ALCHEMY", [["Alchemy Lab", _on_alchemy], ["Recipe Editor", _on_recipe_editor], ["Alchemy Test", _on_alchemy_test], ["Combat Sandbox", _on_combat_sandbox]]))
+
+func _menu_group(_parent: Control, heading: String, entries: Array) -> VBoxContainer:
+	var group := VBoxContainer.new()
+	group.add_theme_constant_override("separation", 5)
+	var label := Label.new()
+	label.text = heading
+	label.add_theme_font_size_override("font_size", 13)
+	label.add_theme_color_override("font_color", Color(0.45, 0.7, 0.9))
+	group.add_child(label)
+	var grid := GridContainer.new()
+	grid.columns = 2
+	grid.add_theme_constant_override("h_separation", 8)
+	grid.add_theme_constant_override("v_separation", 6)
+	for entry in entries:
+		grid.add_child(_make_menu_button(str(entry[0]), entry[1]))
+	group.add_child(grid)
+	return group
 
 func _make_menu_button(text: String, fn: Callable) -> Button:
 	var button = Button.new()
 	button.text = text
-	button.custom_minimum_size = Vector2(280, 34)
+	button.custom_minimum_size = Vector2(290, 42)
 	button.size_flags_horizontal = SIZE_EXPAND_FILL
 	button.add_theme_font_size_override("font_size", 15)
 	button.pressed.connect(fn)

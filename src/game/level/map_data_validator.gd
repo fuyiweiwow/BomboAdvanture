@@ -24,7 +24,7 @@ static func normalize(raw: Variant) -> Dictionary:
 	basic["finish"] = [finish.x, finish.y]
 	data["basic"] = basic
 	for key in ["floor", "floors", "obstacle", "obstacles", "districts"]:
-		if not data.get(key, []) is Array:
+		if not data.has(key) or not data[key] is Array:
 			data[key] = []
 	return data
 
