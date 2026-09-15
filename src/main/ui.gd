@@ -42,6 +42,8 @@ func _get_skill_tex(name: String) -> Texture2D:
 	return tex
 
 func _load_tex(path: String) -> Texture2D:
+	if RM == null:
+		return null
 	return RM.get_texture(path)
 
 func _update_icon() -> void:
