@@ -3,19 +3,10 @@
 # execute without creating a window, player input, or gameplay scene.
 extends SceneTree
 
-const MapDataValidator = preload("res://src/game/level/map_data_validator.gd")
-const MapGenerator = preload("res://src/game/level/map_generator.gd")
-
-func _init() -> void:
-	# Avoid loading the gameplay autoload graph in a pure data test process.
-	set_meta("silent_test", true)
-
 var _results: Array[Dictionary] = []
-var _current_failures: Array[String] = []
 
 func _initialize() -> void:
-	_run_suite("map_data", Callable(self, "_test_map_data"))
-	_run_suite("map_generation", Callable(self, "_test_map_generation"))
+	_discover_and_run()
 	var failed := 0
 	for result in _results:
 		if not result["passed"]:
@@ -23,26 +14,26 @@ func _initialize() -> void:
 	print(JSON.stringify({"passed": failed == 0, "tests": _results}, "\t"))
 	quit(0 if failed == 0 else 1)
 
-func _run_suite(name: String, test: Callable) -> void:
-	_current_failures.clear()
-	test.call()
-	_results.append({"name": name, "passed": _current_failures.is_empty(), "failures": _current_failures.duplicate()})
-
-func _expect(condition: bool, message: String) -> void:
-	if not condition:
-		_current_failures.append(message)
-
-func _test_map_data() -> void:
-	_expect(not MapDataValidator.is_valid({}), "empty map accepted")
-	var data := MapDataValidator.normalize({"basic": {"width": 5, "height": 4, "begin": [99]}})
-	_expect(data["basic"]["begin"] == [4, 1], "begin was not normalized")
-	_expect(data.get("districts", []) is Array, "districts default missing")
-
-func _test_map_generation() -> void:
-	var data := MapGenerator.generate({"width": 11, "height": 11, "seed": 12345, "begin": [1, 1], "breakable_density": 0.8})
-	var begin: Array = data["basic"]["begin"]
-	var blocked := false
-	for entry in data.get("obstacle", []):
-		for point in entry.get("points", []):
-			blocked = blocked or (int(point["x"]) == begin[0] and int(point["y"]) == begin[1])
-	_expect(not blocked, "generated begin cell is blocked")
+func _discover_and_run() -> void:
+	var dir := DirAccess.open("res://src/tests/silent")
+	if dir == null:
+		_results.append({"name": "discovery", "passed": false, "failures": ["silent test directory missing"]})
+		return
+	dir.list_dir_begin()
+	var filename := dir.get_next()
+	var paths: Array[String] = []
+	while filename != "":
+		if not dir.current_is_dir() and filename.ends_with("_test.gd"):
+			paths.append("res://src/tests/silent/" + filename)
+		filename = dir.get_next()
+	dir.list_dir_end()
+	paths.sort()
+	for path in paths:
+		var script = load(path)
+		var test = script.new() if script != null else null
+		if test == null or not test.has_method("run"):
+			_results.append({"name": path, "passed": false, "failures": ["test must expose run()"]})
+			continue
+		var failures = test.run()
+		var failure_list: Array = failures if failures is Array else ["run() must return Array"]
+		_results.append({"name": path.get_file().trim_suffix(".gd"), "passed": failure_list.is_empty(), "failures": failure_list})

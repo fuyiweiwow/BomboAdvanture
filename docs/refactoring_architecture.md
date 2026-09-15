@@ -62,3 +62,19 @@ godot --headless --path . res://src/tests/city_selftest.tscn
 ```
 
 退出码为 `0` 表示测试通过且 Godot 未报告脚本/引擎错误；`1` 表示测试断言失败；`2` 表示 Godot 虽返回成功，但日志包含脚本、编译、autoload 或资源错误。新增 feature 时，将测试函数注册到 `silent_test_runner.gd` 的 `_initialize()` 中即可接入统一报告。
+
+### 新增静默测试
+
+在 `src/tests/silent/` 新建以 `_test.gd` 结尾的脚本。Runner 会自动发现，无需修改中央文件：
+
+```gdscript
+extends RefCounted
+
+func run() -> Array[String]:
+	var failures: Array[String] = []
+	if 1 + 1 != 2:
+		failures.append("calculation failed")
+	return failures
+```
+
+`run()` 返回空数组表示通过；每个字符串是一条失败原因。测试应避免创建窗口和读取玩家输入。

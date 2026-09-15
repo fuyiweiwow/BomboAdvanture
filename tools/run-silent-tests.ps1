@@ -51,14 +51,23 @@ $stdoutPath = Join-Path ([IO.Path]::GetTempPath()) ("bombo-test-{0}.out" -f [gui
 $stderrPath = Join-Path ([IO.Path]::GetTempPath()) ("bombo-test-{0}.err" -f [guid]::NewGuid())
 try {
     $proc = Start-Process -FilePath $Godot -ArgumentList $args -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath
-    $output = @(@(Get-Content -LiteralPath $stdoutPath -ErrorAction SilentlyContinue) + @(Get-Content -LiteralPath $stderrPath -ErrorAction SilentlyContinue))
+    $stdout = @(Get-Content -LiteralPath $stdoutPath -ErrorAction SilentlyContinue)
+    $stderr = @(Get-Content -LiteralPath $stderrPath -ErrorAction SilentlyContinue)
+    $output = @($stdout + $stderr)
     $exitCode = $proc.ExitCode
 }
 finally {
     Remove-Item -LiteralPath $stdoutPath, $stderrPath -Force -ErrorAction SilentlyContinue
 }
 if ($VerboseOutput) { $output | Write-Output }
-else { $output | Where-Object { $_ -match '^\{' -or $_ -match '^\}' -or $_ -match '"passed"' -or $_ -match '"tests"' -or $_ -match '"name"' -or $_ -match '"failures"' } | Write-Output }
+else {
+    $jsonStart = -1
+    for ($i = 0; $i -lt $stdout.Count; $i++) {
+        if ($stdout[$i].Trim() -eq "{") { $jsonStart = $i; break }
+    }
+    if ($jsonStart -ge 0) { $stdout[$jsonStart..($stdout.Count - 1)] | Write-Output }
+    else { $stdout | Write-Output }
+}
 
 if ($exitCode -ne 0) { exit $exitCode }
 if (-not $AllowEngineErrors -and (Test-EngineErrors $output)) {
