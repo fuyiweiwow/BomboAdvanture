@@ -81,6 +81,10 @@ func _init(your_name_: String, map_name_: String, me_, accumulation_time_: int, 
 	map_name = map_name_
 	accumulation_time = accumulation_time_
 	load_map_json(map_data)
+	if map_json.is_empty():
+		# Do not run the remaining loaders against an invalid map. This keeps a
+		# malformed editor/save file from cascading into secondary errors.
+		return
 	load_floor()
 	load_obstacle()
 	load_world()
