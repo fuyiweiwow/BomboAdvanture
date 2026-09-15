@@ -5,6 +5,13 @@
 class_name Npc
 extends Player
 
+const RogueDropPool = preload("res://src/adventure/rogue_drop_pool.gd")
+const ROGUE_UPGRADE_POOL: Array = [
+	{"item_id": "bomb_up", "rarity": "uncommon", "weight": 3.0},
+	{"item_id": "power_up", "rarity": "uncommon", "weight": 3.0},
+	{"item_id": "speed_up", "rarity": "rare", "weight": 2.0},
+]
+
 var npc_json = {}
 var chs_name: String = ""
 var idx_motion = {0: "R", 1: "U", 2: "L", 3: "D"}
@@ -239,8 +246,12 @@ func _drop_material() -> void:
 func _drop_rare() -> void:
 	if randi() % 100 >= 5:
 		return
-	var pool := ["bomb_up", "power_up", "speed_up"]
-	var item_data = ItemData.load_item(pool[randi() % pool.size()])
+	var rng := RandomNumberGenerator.new()
+	# Seed from Godot's run RNG so production remains random while the pure pool
+	# selector stays deterministic under a supplied test seed.
+	rng.seed = randi()
+	var selected := RogueDropPool.pick(ROGUE_UPGRADE_POOL, rng)
+	var item_data = ItemData.load_item(str(selected.get("item_id", "")))
 	if item_data.is_empty():
 		return
 	_drop_item_scatter(item_data)

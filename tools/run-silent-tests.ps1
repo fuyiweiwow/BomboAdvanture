@@ -63,7 +63,10 @@ $args = @("--headless", "--path", $Project, "--script", $Runner)
 $userArgs = @("--suite-timeout-msec=$($SuiteTimeoutSeconds * 1000)")
 if ($Module.Count -gt 0) {
     foreach ($moduleName in $Module) {
-        if (-not [string]::IsNullOrWhiteSpace($moduleName)) { $userArgs += "--module=$moduleName" }
+        foreach ($fragment in $moduleName.Split(',')) {
+            $fragment = $fragment.Trim()
+            if (-not [string]::IsNullOrWhiteSpace($fragment)) { $userArgs += "--module=$fragment" }
+        }
     }
 }
 $args += "--"

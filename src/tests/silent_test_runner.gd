@@ -54,7 +54,9 @@ func _discover_and_run(arguments: PackedStringArray) -> void:
 		var execution: Dictionary = await SilentTestTools.run_with_timeout(test.run, _suite_timeout_msec)
 		if execution["timed_out"]:
 			_results.append({"name": path.get_file().trim_suffix(".gd"), "passed": false, "failures": ["suite timed out after %d ms" % _suite_timeout_msec]})
-			continue
+			# GDScript coroutines cannot be cancelled safely. Stop scheduling suites;
+			# SceneTree.quit() will isolate the timed-out coroutine in this process.
+			return
 		var failures = execution["result"]
 		var failure_list: Array = failures if failures is Array else ["run() must return Array"]
 		_results.append({"name": path.get_file().trim_suffix(".gd"), "passed": failure_list.is_empty(), "failures": failure_list})
