@@ -6,6 +6,9 @@ const RARITIES: Array[String] = ["common", "uncommon", "rare", "epic", "legendar
 ## Validates authoring errors separately so content tools can show every bad field.
 static func validate(entries: Array) -> Array[String]:
 	var failures: Array[String] = []
+	if entries.is_empty():
+		failures.append("drop pool requires at least one entry")
+		return failures
 	for index in entries.size():
 		var entry = entries[index]
 		if not entry is Dictionary:
@@ -15,13 +18,14 @@ static func validate(entries: Array) -> Array[String]:
 			failures.append("entry %d requires item_id" % index)
 		if not RARITIES.has(str(entry.get("rarity", ""))):
 			failures.append("entry %d has unknown rarity" % index)
-		if float(entry.get("weight", 0.0)) <= 0.0:
+		var weight := float(entry.get("weight", 0.0))
+		if not is_finite(weight) or weight <= 0.0:
 			failures.append("entry %d requires positive weight" % index)
 	return failures
 
 ## Selects one validated entry. Supplying the RNG makes simulations reproducible.
 static func pick(entries: Array, rng: RandomNumberGenerator) -> Dictionary:
-	if rng == null or not validate(entries).is_empty():
+	if entries.is_empty() or rng == null or not validate(entries).is_empty():
 		return {}
 	var total_weight := 0.0
 	for entry in entries:
@@ -30,6 +34,6 @@ static func pick(entries: Array, rng: RandomNumberGenerator) -> Dictionary:
 	var accumulated := 0.0
 	for entry in entries:
 		accumulated += float(entry["weight"])
-		if roll <= accumulated:
+		if roll < accumulated:
 			return (entry as Dictionary).duplicate(true)
 	return (entries.back() as Dictionary).duplicate(true)

@@ -3,6 +3,8 @@
 class_name Hero
 extends Player
 
+const RogueItemRules = preload("res://src/adventure/rogue_item_rules.gd")
+
 var hero_json: Dictionary = {}
 var bomb_skin: Dictionary = {}
 var bomb_decoration: String = ""
@@ -170,15 +172,17 @@ func _apply_item_effect(data: Dictionary) -> void:
 		base_defense += int(effects["defense"])
 		defense = base_defense
 
-	if item_id == "bomb_up":
-		add_remain_bomb(1)
-
-	if item_id == "power_up":
-		set_power(power + 1)
-
-	if item_id == "speed_up":
-		base_speed += 0.3
-		speed = base_speed
+	var upgraded := RogueItemRules.apply({
+		"bomb": bomb,
+		"remain_bombs": remain_bombs,
+		"power": power,
+		"speed": base_speed,
+	}, data)
+	bomb = int(upgraded["bomb"])
+	remain_bombs = int(upgraded["remain_bombs"])
+	power = int(upgraded["power"])
+	base_speed = float(upgraded["speed"])
+	speed = base_speed
 
 	if effects.has("buff_id"):
 		var buff_name = str(effects["buff_id"])
