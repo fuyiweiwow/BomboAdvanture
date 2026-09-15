@@ -8,6 +8,8 @@ const LEVEL_PROGRESS_REPOSITORY = preload("res://src/level/level_progress_reposi
 const WorldMapGenerator = preload("res://src/game/level/world_map_generator.gd")
 const MissionService = preload("res://src/adventure/mission_service.gd")
 const AdventureGeneratorConfig = preload("res://src/adventure/adventure_generator_config.gd")
+const AdventureProfileRepository = preload("res://src/adventure/adventure_profile_repository.gd")
+const AdventureSettlementService = preload("res://src/adventure/adventure_settlement_service.gd")
 
 var cfg_json: Dictionary = {}
 var your_name: String = ""
@@ -30,6 +32,8 @@ var selected_level: String = ""
 var level_json: Dictionary = {}
 var _pending_map_data: Dictionary = {}
 var active_mission: Dictionary = {}
+var last_mission_result: Dictionary = {}
+var _adventure_profile_repository = AdventureProfileRepository.new()
 
 var _ui_layer: CanvasLayer = null
 
@@ -278,10 +282,38 @@ func start_adventure_mission(definition: Dictionary) -> bool:
 	var session := MissionService.accept(definition)
 	if session.is_empty():
 		return false
+	last_mission_result = {}
 	active_mission = session
 	var generator: Dictionary = raw_generator
 	start_procedural_world(str(generator.get("recipe", "forest")), generator, false)
 	return true
+
+func record_mission_progress(event_type: String, amount: int = 1) -> bool:
+	return MissionService.add_progress(active_mission, amount, event_type)
+
+func _complete_adventure_mission() -> void:
+	var result := AdventureSettlementService.complete(active_mission, _adventure_profile_repository)
+	if not result.is_empty():
+		_apply_adventure_rewards(result)
+		last_mission_result = result
+	active_mission = {}
+	_return_to_city()
+
+func _apply_adventure_rewards(result: Dictionary) -> void:
+	if me == null:
+		return
+	me.gold = int(me.gold) + int(result.get("gold", 0))
+	var reward_items = result.get("items", {})
+	if reward_items is Dictionary:
+		for item_id in reward_items:
+			me.items[item_id] = int(me.items.get(item_id, 0)) + int(reward_items[item_id])
+
+func _return_to_city() -> void:
+	current_level = null
+	game_complete = false
+	position = Vector2.ZERO
+	var city = load("res://src/city/city_scene.gd").new()
+	_add_screen(city)
 
 func _on_game_complete() -> void:
 	game_complete = true
@@ -307,7 +339,9 @@ func set_level(your_name_: String, map_name: String, hero_name: String, characte
 func frame_step() -> void:
 	if current_level != null:
 		if current_level.finish_flag:
-			if not selected_level_profile.is_empty():
+			if not active_mission.is_empty():
+				_complete_adventure_mission()
+			elif not selected_level_profile.is_empty():
 				_complete_selected_level()
 				_on_game_complete()
 			else:

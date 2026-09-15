@@ -324,6 +324,7 @@ func update() -> void:
 		b.update()
 	for n in npcs.duplicate():
 		if n.remain_blood <= 0:
+			Game.record_mission_progress("defeat", 1)
 			if world_mode and npc_zone.has(n):
 				var zid = npc_zone[n]
 				zone_npc_alive[zid] = maxi(0, int(zone_npc_alive[zid]) - 1)

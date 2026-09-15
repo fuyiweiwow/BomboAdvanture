@@ -37,6 +37,7 @@ func _build() -> void:
 	title.add_theme_font_size_override("font_size", 26)
 	title.add_theme_color_override("font_color", Color(1.0, 0.85, 0.4))
 	add_child(title)
+	_add_mission_result()
 
 	if _district.has("desc"):
 		var desc = Label.new()
@@ -161,3 +162,20 @@ func _toast(msg: String) -> void:
 	var tween = create_tween()
 	tween.tween_method(func(v): lbl.modulate.a = v, 1.0, 0.0, 2.0).set_delay(1.0)
 	tween.tween_callback(lbl.queue_free)
+
+
+func _add_mission_result() -> void:
+	var result: Dictionary = Game.last_mission_result
+	if result.is_empty():
+		return
+	var items_text: Array[String] = []
+	for item_id in result.get("items", {}):
+		items_text.append("%s x%d" % [item_id, int(result["items"][item_id])])
+	var summary := Label.new()
+	summary.text = "任务完成　+%d 金币" % int(result.get("gold", 0))
+	if not items_text.is_empty():
+		summary.text += "　" + "、".join(items_text)
+	summary.position = Vector2(300, 24)
+	summary.add_theme_font_size_override("font_size", 16)
+	summary.add_theme_color_override("font_color", Color(0.45, 1.0, 0.55))
+	add_child(summary)

@@ -47,4 +47,10 @@ func _mission_card(mission: Dictionary) -> VBoxContainer:
 
 func _accept(mission: Dictionary) -> void:
 	if Game.start_adventure_mission(mission):
-		queue_free()
+		_close_city_screen()
+
+func _close_city_screen() -> void:
+	var screen: Node = self
+	while screen.get_parent() != null and screen.get_parent() != get_tree().root:
+		screen = screen.get_parent()
+	screen.queue_free()
