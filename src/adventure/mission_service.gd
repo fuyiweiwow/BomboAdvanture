@@ -13,12 +13,18 @@ static func accept(definition: Dictionary) -> Dictionary:
 	var rewards: Dictionary = raw_rewards if raw_rewards is Dictionary else {}
 	return {
 		"mission_id": str(definition["id"]),
+		"claim_id": _new_claim_id(str(definition["id"])),
 		"status": "active",
 		"objective_type": str(objective.get("type", "defeat")),
 		"target": int(objective["target"]),
 		"progress": 0,
 		"rewards": _normalize_rewards(rewards),
 	}
+
+
+static func _new_claim_id(mission_id: String) -> String:
+	var timestamp_us := int(Time.get_unix_time_from_system() * 1000000.0)
+	return "%s:%d:%d" % [mission_id, timestamp_us, randi()]
 
 
 static func add_progress(session: Dictionary, amount: int = 1, event_type: String = "defeat") -> bool:
