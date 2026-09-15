@@ -6,6 +6,7 @@ const ProfileRepository = preload("res://src/adventure/adventure_profile_reposit
 const GeneratorConfig = preload("res://src/adventure/adventure_generator_config.gd")
 const SettlementService = preload("res://src/adventure/adventure_settlement_service.gd")
 const ShopPurchaseRules = preload("res://src/city/shop_purchase_rules.gd")
+const ItemData = preload("res://src/item_editor/item_data.gd")
 
 func run() -> Array[String]:
 	var failures: Array[String] = []
@@ -44,6 +45,11 @@ func run() -> Array[String]:
 	var ignored := RogueItemRules.apply(original, {"lifecycle": "persistent", "effects": {"power": 9}})
 	if ignored != original:
 		failures.append("persistent item was applied as a run upgrade")
+	var configured_stats := original
+	for item_id in ["bomb_up", "power_up", "speed_up"]:
+		configured_stats = RogueItemRules.apply(configured_stats, ItemData.load_item(item_id))
+	if configured_stats.get("bomb") != 2 or configured_stats.get("power") != 2 or not is_equal_approx(configured_stats.get("speed"), 1.3):
+		failures.append("configured Rogue pickup assets do not apply their advertised effects")
 	var safe_rewards := MissionService.accept({"id": "safe", "objective": {"type": "defeat", "target": 1}, "rewards": []})
 	if safe_rewards.is_empty() or not safe_rewards.get("rewards", {}).get("items", {}).is_empty():
 		failures.append("malformed rewards were not normalized")
