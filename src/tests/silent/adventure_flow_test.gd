@@ -56,11 +56,15 @@ func run() -> Array[String]:
 	if FileAccess.file_exists(profile_path):
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(profile_path))
 	var repository := ProfileRepository.new(profile_path)
+	var stale_repository := ProfileRepository.new(profile_path)
 	if not repository.claim("claim-1", {"gold": 10, "items": {"red_herb": 2}}):
 		failures.append("first reward claim failed")
-	if repository.claim("claim-1", {"gold": 10, "items": {"red_herb": 2}}):
+	var reloaded_repository := ProfileRepository.new(profile_path)
+	if reloaded_repository.claim("claim-1", {"gold": 10, "items": {"red_herb": 2}}):
 		failures.append("duplicate reward claim succeeded")
-	var profile := repository.snapshot()
+	if stale_repository.claim("claim-1", {"gold": 10}):
+		failures.append("stale repository approved a duplicate claim")
+	var profile := reloaded_repository.snapshot()
 	if profile.get("gold") != 10 or profile.get("items", {}).get("red_herb") != 2:
 		failures.append("persistent reward totals are incorrect")
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(profile_path))
