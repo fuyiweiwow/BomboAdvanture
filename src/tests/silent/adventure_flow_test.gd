@@ -7,6 +7,7 @@ const GeneratorConfig = preload("res://src/adventure/adventure_generator_config.
 const SettlementService = preload("res://src/adventure/adventure_settlement_service.gd")
 const ShopPurchaseRules = preload("res://src/city/shop_purchase_rules.gd")
 const ItemData = preload("res://src/item_editor/item_data.gd")
+const RogueDropPool = preload("res://src/adventure/rogue_drop_pool.gd")
 
 func run() -> Array[String]:
 	var failures: Array[String] = []
@@ -50,6 +51,25 @@ func run() -> Array[String]:
 		configured_stats = RogueItemRules.apply(configured_stats, ItemData.load_item(item_id))
 	if configured_stats.get("bomb") != 2 or configured_stats.get("power") != 2 or not is_equal_approx(configured_stats.get("speed"), 1.3):
 		failures.append("configured Rogue pickup assets do not apply their advertised effects")
+	var drop_pool := [
+		{"item_id": "bomb_up", "rarity": "uncommon", "weight": 3},
+		{"item_id": "power_up", "rarity": "rare", "weight": 1},
+	]
+	if not RogueDropPool.validate(drop_pool).is_empty():
+		failures.append("valid weighted Rogue drop pool was rejected")
+	var first_rng := RandomNumberGenerator.new()
+	var second_rng := RandomNumberGenerator.new()
+	first_rng.seed = 20260915
+	second_rng.seed = 20260915
+	var first_rolls: Array[String] = []
+	var second_rolls: Array[String] = []
+	for _roll in range(8):
+		first_rolls.append(str(RogueDropPool.pick(drop_pool, first_rng).get("item_id", "")))
+		second_rolls.append(str(RogueDropPool.pick(drop_pool, second_rng).get("item_id", "")))
+	if first_rolls != second_rolls or first_rolls.has(""):
+		failures.append("weighted Rogue drops are not reproducible with a fixed seed")
+	if RogueDropPool.validate([{"item_id": "", "rarity": "mythic", "weight": 0}]).size() != 3:
+		failures.append("invalid Rogue drop fields were not all rejected")
 	var safe_rewards := MissionService.accept({"id": "safe", "objective": {"type": "defeat", "target": 1}, "rewards": []})
 	if safe_rewards.is_empty() or not safe_rewards.get("rewards", {}).get("items", {}).is_empty():
 		failures.append("malformed rewards were not normalized")
