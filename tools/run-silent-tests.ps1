@@ -3,6 +3,8 @@ param(
     [string]$Godot = "",
     [string]$Project = "",
     [string]$Runner = "res://src/tests/silent_test_runner.gd",
+    [Alias("Suite")]
+    [string[]]$Module = @(),
     [switch]$Import,
     [switch]$VerboseOutput,
     [switch]$AllowEngineErrors
@@ -56,6 +58,12 @@ if ($Import) {
 }
 
 $args = @("--headless", "--path", $Project, "--script", $Runner)
+if ($Module.Count -gt 0) {
+    $args += "--"
+    foreach ($moduleName in $Module) {
+        if (-not [string]::IsNullOrWhiteSpace($moduleName)) { $args += "--module=$moduleName" }
+    }
+}
 $stdoutPath = Join-Path ([IO.Path]::GetTempPath()) ("bombo-test-{0}.out" -f [guid]::NewGuid())
 $stderrPath = Join-Path ([IO.Path]::GetTempPath()) ("bombo-test-{0}.err" -f [guid]::NewGuid())
 try {

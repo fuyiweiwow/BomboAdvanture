@@ -3,6 +3,8 @@
 # execute without creating a window, player input, or gameplay scene.
 extends SceneTree
 
+const SilentTestPlan = preload("res://src/tests/silent_test_plan.gd")
+
 var _results: Array[Dictionary] = []
 
 func _initialize() -> void:
@@ -31,12 +33,27 @@ func _discover_and_run() -> void:
 	if paths.is_empty():
 		_results.append({"name": "discovery", "passed": false, "failures": ["no *_test.gd suites discovered"]})
 		return
+	var modules := _read_module_filters(OS.get_cmdline_user_args())
+	paths = SilentTestPlan.filter_paths(paths, modules)
+	if paths.is_empty():
+		_results.append({"name": "selection", "passed": false, "failures": ["no suites matched modules: %s" % ", ".join(modules)]})
+		return
 	for path in paths:
 		var script = load(path)
-		var test = script.new() if script != null else null
-		if test == null or not test.has_method("run"):
+		if script == null or not script.can_instantiate():
+			_results.append({"name": path, "passed": false, "failures": ["test script could not be loaded"]})
+			continue
+		var test = script.new()
+		if not test.has_method("run"):
 			_results.append({"name": path, "passed": false, "failures": ["test must expose run()"]})
 			continue
 		var failures = test.run()
 		var failure_list: Array = failures if failures is Array else ["run() must return Array"]
 		_results.append({"name": path.get_file().trim_suffix(".gd"), "passed": failure_list.is_empty(), "failures": failure_list})
+
+func _read_module_filters(arguments: PackedStringArray) -> Array[String]:
+	var modules: Array[String] = []
+	for argument in arguments:
+		if argument.begins_with("--module="):
+			modules.append(argument.trim_prefix("--module="))
+	return modules
