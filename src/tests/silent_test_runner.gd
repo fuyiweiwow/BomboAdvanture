@@ -28,6 +28,9 @@ func _discover_and_run() -> void:
 		filename = dir.get_next()
 	dir.list_dir_end()
 	paths.sort()
+	if paths.is_empty():
+		_results.append({"name": "discovery", "passed": false, "failures": ["no *_test.gd suites discovered"]})
+		return
 	for path in paths:
 		var script = load(path)
 		var test = script.new() if script != null else null

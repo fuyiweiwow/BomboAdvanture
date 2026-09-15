@@ -41,9 +41,18 @@ function Test-EngineErrors([string[]]$Lines) {
 if ($Import) {
     # Import assets once, then stop. A timeout prevents a broken plugin from
     # leaving CI hanging forever.
-    $proc = Start-Process -FilePath $Godot -ArgumentList @("--headless", "--editor", "--path", $Project, "--quit") -PassThru -NoNewWindow
+	$importOut = Join-Path ([IO.Path]::GetTempPath()) ("bombo-import-{0}.out" -f [guid]::NewGuid())
+	$importErr = Join-Path ([IO.Path]::GetTempPath()) ("bombo-import-{0}.err" -f [guid]::NewGuid())
+	$proc = Start-Process -FilePath $Godot -ArgumentList @("--headless", "--editor", "--path", $Project, "--quit") -PassThru -NoNewWindow -RedirectStandardOutput $importOut -RedirectStandardError $importErr
     if (-not $proc.WaitForExit(60000)) { $proc.Kill(); throw "Godot import timed out after 60 seconds" }
     if ($proc.ExitCode -ne 0) { exit $proc.ExitCode }
+	$importOutput = @(@(Get-Content -LiteralPath $importOut -ErrorAction SilentlyContinue) + @(Get-Content -LiteralPath $importErr -ErrorAction SilentlyContinue))
+	Remove-Item -LiteralPath $importOut, $importErr -Force -ErrorAction SilentlyContinue
+	if (-not $AllowEngineErrors -and (Test-EngineErrors $importOutput)) {
+		if ($VerboseOutput) { $importOutput | Write-Output }
+		Write-Error "Godot reported errors during import."
+		exit 2
+	}
 }
 
 $args = @("--headless", "--path", $Project, "--script", $Runner)

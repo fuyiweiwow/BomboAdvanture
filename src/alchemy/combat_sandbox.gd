@@ -446,7 +446,7 @@ func _build_status_display(panel: Control, y: int) -> void:
 		timer = Timer.new()
 		timer.name = "_status_timer"
 		timer.wait_time = 0.5
-			timer.timeout.connect(func(): _refresh_status_label())
+		timer.timeout.connect(func(): _refresh_status_label())
 		add_child(timer)
 		timer.start()
 
