@@ -16,6 +16,8 @@ func run() -> Array[String]:
 	var timed_out: Dictionary = await SilentTestTools.run_with_timeout(_finish_after_frames.bind(2), 0)
 	if not timed_out.get("timed_out", false):
 		failures.append("run_with_timeout should report a suite that exceeds its deadline")
+	# Let the deliberately timed-out fixture finish so it cannot leak into later suites.
+	await SilentTestTools.advance_frames(3)
 	return failures
 
 func _finish_after_frames(frame_count: int) -> Array[String]:

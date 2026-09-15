@@ -5,6 +5,8 @@ param(
     [string]$Runner = "res://src/tests/silent_test_runner.gd",
     [Alias("Suite")]
     [string[]]$Module = @(),
+    [ValidateRange(1, 3600)]
+    [int]$SuiteTimeoutSeconds = 10,
     [switch]$Import,
     [switch]$VerboseOutput,
     [switch]$AllowEngineErrors
@@ -58,12 +60,14 @@ if ($Import) {
 }
 
 $args = @("--headless", "--path", $Project, "--script", $Runner)
+$userArgs = @("--suite-timeout-msec=$($SuiteTimeoutSeconds * 1000)")
 if ($Module.Count -gt 0) {
-    $args += "--"
     foreach ($moduleName in $Module) {
-        if (-not [string]::IsNullOrWhiteSpace($moduleName)) { $args += "--module=$moduleName" }
+        if (-not [string]::IsNullOrWhiteSpace($moduleName)) { $userArgs += "--module=$moduleName" }
     }
 }
+$args += "--"
+$args += $userArgs
 $stdoutPath = Join-Path ([IO.Path]::GetTempPath()) ("bombo-test-{0}.out" -f [guid]::NewGuid())
 $stderrPath = Join-Path ([IO.Path]::GetTempPath()) ("bombo-test-{0}.err" -f [guid]::NewGuid())
 try {

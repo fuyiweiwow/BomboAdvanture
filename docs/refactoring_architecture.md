@@ -57,6 +57,13 @@ godot --headless --path . res://src/tests/city_selftest.tscn
 # 输出完整 Godot 日志（调试解析错误时使用）
 .\tools\run-silent-tests.ps1 -VerboseOutput
 
+# 只运行名称包含 map 的模块；可传入多个名称片段
+.\tools\run-silent-tests.ps1 -Module map
+.\tools\run-silent-tests.ps1 -Module adventure,guild
+
+# 将每个测试套件的等待上限改为 30 秒（默认 10 秒）
+.\tools\run-silent-tests.ps1 -SuiteTimeoutSeconds 30
+
 # 临时允许已知引擎错误（仅用于诊断，不建议 CI 使用）
 .\tools\run-silent-tests.ps1 -AllowEngineErrors
 ```
@@ -78,3 +85,18 @@ func run() -> Array[String]:
 ```
 
 `run()` 返回空数组表示通过；每个字符串是一条失败原因。测试应避免创建窗口和读取玩家输入。
+
+需要模拟游戏帧时，可把 `run()` 声明为异步测试，并复用 `SilentTestTools`：
+
+```gdscript
+const SilentTestTools = preload("res://src/tests/silent_test_tools.gd")
+
+func run() -> Array[String]:
+	var failures: Array[String] = []
+	await SilentTestTools.advance_frames(5, func(_frame: int) -> void:
+		Game.frame_step()
+	)
+	return failures
+```
+
+套件超时能中止持续 `await` 帧或信号的测试等待，但无法抢占阻塞 Godot 主线程的死循环；测试代码不得执行不让出主线程的无限循环。未知 `-Module` 会明确失败，避免筛选拼写错误造成“零测试通过”。
