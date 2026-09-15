@@ -34,6 +34,10 @@ var _pending_map_data: Dictionary = {}
 var active_mission: Dictionary = {}
 var last_mission_result: Dictionary = {}
 var _adventure_profile_repository = AdventureProfileRepository.new()
+var settlement_error: String = ""
+var _settlement_retry_at_msec: int = 0
+
+const SETTLEMENT_RETRY_DELAY_MSEC := 1000
 
 var _ui_layer: CanvasLayer = null
 
@@ -275,7 +279,7 @@ func start_procedural_world(recipe_name: String = "", overrides: Dictionary = {}
 	map_set_at = -1
 	proceed_game()
 
-func start_adventure_mission(definition: Dictionary) -> bool:
+func start_adventure_mission(definition: Dictionary, launch_world: bool = true) -> bool:
 	var raw_generator = definition.get("generator", {})
 	if not raw_generator is Dictionary:
 		return false
@@ -283,23 +287,59 @@ func start_adventure_mission(definition: Dictionary) -> bool:
 	if session.is_empty():
 		return false
 	last_mission_result = {}
+	settlement_error = ""
+	_settlement_retry_at_msec = 0
+	if me != null:
+		session["run_start_balances"] = {
+			"gold": int(me.gold),
+			"items": (me.items as Dictionary).duplicate(true),
+		}
 	active_mission = session
 	var generator: Dictionary = raw_generator
-	start_procedural_world(str(generator.get("recipe", "forest")), generator, false)
+	if launch_world:
+		start_procedural_world(str(generator.get("recipe", "forest")), generator, false)
 	return true
 
 func record_mission_progress(event_type: String, amount: int = 1) -> bool:
 	return MissionService.add_progress(active_mission, amount, event_type)
 
 func _complete_adventure_mission() -> bool:
-	var result := AdventureSettlementService.complete(active_mission, _adventure_profile_repository)
-	if result.is_empty():
+	var now := Time.get_ticks_msec()
+	if now < _settlement_retry_at_msec:
 		return false
+	var result := AdventureSettlementService.complete(
+		active_mission,
+		_adventure_profile_repository,
+		_run_loot_rewards()
+	)
+	if result.is_empty():
+		settlement_error = "reward_save_failed"
+		_settlement_retry_at_msec = now + SETTLEMENT_RETRY_DELAY_MSEC
+		return false
+	settlement_error = ""
+	_settlement_retry_at_msec = 0
 	_apply_adventure_rewards(result)
 	last_mission_result = result
 	active_mission = {}
 	_return_to_city()
 	return true
+
+func _run_loot_rewards() -> Dictionary:
+	if me == null:
+		return {}
+	var baseline_value = active_mission.get("run_start_balances", {})
+	var baseline: Dictionary = baseline_value if baseline_value is Dictionary else {}
+	var baseline_items_value = baseline.get("items", {})
+	var baseline_items: Dictionary = baseline_items_value if baseline_items_value is Dictionary else {}
+	var item_deltas: Dictionary = {}
+	for item_id in me.items:
+		var delta := int(me.items[item_id]) - int(baseline_items.get(item_id, 0))
+		if delta > 0:
+			item_deltas[str(item_id)] = delta
+	return {
+		"gold": maxi(0, int(me.gold) - int(baseline.get("gold", 0))),
+		"items": item_deltas,
+	}
 
 func _apply_adventure_rewards(result: Dictionary) -> void:
 	if me == null:
@@ -320,6 +360,8 @@ func _return_to_city() -> void:
 	current_level = null
 	game_complete = false
 	position = Vector2.ZERO
+	if not is_inside_tree():
+		return
 	var city = load("res://src/city/city_scene.gd").new()
 	_add_screen(city)
 

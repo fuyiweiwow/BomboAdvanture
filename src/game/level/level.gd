@@ -322,16 +322,9 @@ func update() -> void:
 	grid_damage_frame -= 1
 	for b in bomb_instances.duplicate():
 		b.update()
-	for n in npcs.duplicate():
-		if n.remain_blood <= 0:
-			Game.record_mission_progress("defeat", 1)
-			if world_mode and npc_zone.has(n):
-				var zid = npc_zone[n]
-				zone_npc_alive[zid] = maxi(0, int(zone_npc_alive[zid]) - 1)
-				npc_zone.erase(n)
-			npcs.erase(n)
-		else:
-			n.update()
+	retire_defeated_npcs(npcs, Callable(Game, "record_mission_progress"), Callable(self, "_before_npc_removed"))
+	for n in npcs:
+		n.update()
 	recal_npc_paths = false
 	for g in ghosts.duplicate():
 		if g.remain_time <= 0:
@@ -382,6 +375,27 @@ func update() -> void:
 	for gx in range(map_x):
 		for gy in range(map_y):
 			grid_damage_orientations[Vector2i(gx, gy)] = {}
+
+
+static func retire_defeated_npcs(npc_list: Array, on_defeat: Callable, before_remove: Callable = Callable()) -> int:
+	var removed := 0
+	for npc in npc_list.duplicate():
+		if int(npc.remain_blood) > 0:
+			continue
+		if before_remove.is_valid():
+			before_remove.call(npc)
+		npc_list.erase(npc)
+		removed += 1
+		if on_defeat.is_valid():
+			on_defeat.call("defeat", 1)
+	return removed
+
+
+func _before_npc_removed(npc) -> void:
+	if world_mode and npc_zone.has(npc):
+		var zone_id = npc_zone[npc]
+		zone_npc_alive[zone_id] = maxi(0, int(zone_npc_alive[zone_id]) - 1)
+		npc_zone.erase(npc)
 
 # Draw the world (floor + entities) in WORLD coordinates.
 # Called by a translated WorldRoot node so scroll is handled by the transform.
