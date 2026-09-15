@@ -5,6 +5,7 @@ const CRITICAL_SCRIPTS := [
 	"res://src/main/world_map.gd",
 	"res://src/alchemy/combat_sandbox.gd",
 	"res://src/city/city_scene.gd",
+	"res://src/city/adventure_guild_scene.gd",
 	"res://src/editor/map_editor.gd",
 ]
 

@@ -1,0 +1,8 @@
+{
+  "id": "forest_cleanup",
+  "name": "Forest Cleanup",
+  "description": "Defeat the monsters occupying the forest route.",
+  "objective": {"type": "defeat", "target": 6},
+  "rewards": {"gold": 25, "items": {"red_herb": 2}},
+  "generator": {"count": 5, "recipe": "forest", "monster_pool": ["SenLin11CaiQingQing"]}
+}

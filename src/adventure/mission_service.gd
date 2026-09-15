@@ -3,11 +3,14 @@
 class_name MissionService
 extends RefCounted
 
+const SUPPORTED_OBJECTIVES := ["defeat"]
+
 static func accept(definition: Dictionary) -> Dictionary:
 	if not _is_valid_definition(definition):
 		return {}
 	var objective: Dictionary = definition["objective"]
-	var rewards: Dictionary = definition.get("rewards", {})
+	var raw_rewards = definition.get("rewards", {})
+	var rewards: Dictionary = raw_rewards if raw_rewards is Dictionary else {}
 	return {
 		"mission_id": str(definition["id"]),
 		"status": "active",
@@ -18,16 +21,19 @@ static func accept(definition: Dictionary) -> Dictionary:
 	}
 
 
-static func add_progress(session: Dictionary, amount: int = 1) -> bool:
-	if session.get("status", "") != "active" or amount <= 0:
-		return false
+static func add_progress(session: Dictionary, amount: int = 1, event_type: String = "defeat") -> bool:
 	var target := int(session.get("target", 0))
+	if session.get("status", "") != "active" or amount <= 0 or target <= 0:
+		return false
+	if str(session.get("objective_type", "")) != event_type:
+		return false
 	session["progress"] = mini(target, int(session.get("progress", 0)) + amount)
 	return true
 
 
 static func is_complete(session: Dictionary) -> bool:
-	return session.get("status", "") == "active" and int(session.get("progress", 0)) >= int(session.get("target", 1))
+	var target := int(session.get("target", 0))
+	return session.get("status", "") == "active" and target > 0 and int(session.get("progress", 0)) >= target
 
 
 static func settle(session: Dictionary) -> Dictionary:
@@ -41,7 +47,7 @@ static func _is_valid_definition(definition: Dictionary) -> bool:
 	if str(definition.get("id", "")).strip_edges() == "":
 		return false
 	var objective = definition.get("objective", null)
-	return objective is Dictionary and int(objective.get("target", 0)) > 0
+	return objective is Dictionary and str(objective.get("type", "")) in SUPPORTED_OBJECTIVES and int(objective.get("target", 0)) > 0
 
 
 static func _normalize_rewards(rewards: Dictionary) -> Dictionary:

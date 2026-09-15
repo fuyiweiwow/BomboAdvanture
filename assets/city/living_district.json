@@ -3,7 +3,8 @@
   "name": "生活区",
   "desc": "主角的住所所在地，宁静的居民区。",
   "buildings": [
-    { "id": "player_home", "name": "主角的房子", "action": "home", "desc": "你的家" }
+    { "id": "player_home", "name": "主角的房子", "action": "home", "desc": "你的家" },
+    { "id": "adventure_guild", "name": "冒险工会", "action": "guild", "desc": "接取 Rogue 冒险任务" }
   ],
   "exits": [
     { "to": "market_district", "label": "→ 商品区" },

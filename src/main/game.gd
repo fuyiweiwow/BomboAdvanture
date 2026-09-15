@@ -6,6 +6,7 @@ const LevelData = preload("res://src/level_editor/level_data.gd")
 const LEVEL_SESSION = preload("res://src/level/level_session.gd")
 const LEVEL_PROGRESS_REPOSITORY = preload("res://src/level/level_progress_repository.gd")
 const WorldMapGenerator = preload("res://src/game/level/world_map_generator.gd")
+const MissionService = preload("res://src/adventure/mission_service.gd")
 
 var cfg_json: Dictionary = {}
 var your_name: String = ""
@@ -27,6 +28,7 @@ var selected_color: String = ""
 var selected_level: String = ""
 var level_json: Dictionary = {}
 var _pending_map_data: Dictionary = {}
+var active_mission: Dictionary = {}
 
 var _ui_layer: CanvasLayer = null
 
@@ -270,6 +272,15 @@ func start_procedural_world(recipe_name: String = "") -> void:
 	map_set_json = {"maps": ["procedural"]}
 	map_set_at = -1
 	proceed_game()
+
+func start_adventure_mission(definition: Dictionary) -> bool:
+	var session := MissionService.accept(definition)
+	if session.is_empty():
+		return false
+	active_mission = session
+	var generator: Dictionary = definition.get("generator", {})
+	start_procedural_world(str(generator.get("recipe", "forest")))
+	return true
 
 func _on_game_complete() -> void:
 	game_complete = true

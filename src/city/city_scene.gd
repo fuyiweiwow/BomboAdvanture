@@ -102,6 +102,8 @@ func _on_building(action: String) -> void:
 			_open_shop()
 		"royal":
 			_open_royal()
+		"guild":
+			_open_guild()
 		_:
 			_toast("建筑未实现: " + action)
 
@@ -122,6 +124,11 @@ func _open_royal() -> void:
 	var royal = load("res://src/city/royal_scene.gd").new()
 	royal.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(royal)
+
+func _open_guild() -> void:
+	var guild = load("res://src/city/adventure_guild_scene.gd").new()
+	guild.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(guild)
 
 
 func _goto_district(to: String) -> void:
