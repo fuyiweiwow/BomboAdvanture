@@ -13,4 +13,6 @@ static func list_missions() -> Array[Dictionary]:
 	return result
 
 static func get_mission(mission_id: String) -> Dictionary:
+	if mission_id not in JsonStore.list_json_ids(MISSION_ROOT):
+		return {}
 	return JsonStore.read_dictionary(MISSION_ROOT + mission_id + ".json")
