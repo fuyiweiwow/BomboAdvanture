@@ -37,6 +37,13 @@ func run() -> Array[String]:
 	var loaded := RogueDropCatalog.load_config(TEST_CONFIG_PATH)
 	if loaded != config:
 		failures.append("editable Rogue drop configuration did not round-trip")
+	_write_config({
+		"chance": 1.0,
+		"entries": [{"item_id": "missing_item", "rarity": "rare", "weight": 1.0}],
+	})
+	if not RogueDropCatalog.load_config(TEST_CONFIG_PATH).is_empty():
+		failures.append("drop catalog accepted an item id that does not exist")
+	_write_config(config)
 
 	var level := DropLevel.new()
 	Game.current_level = level
