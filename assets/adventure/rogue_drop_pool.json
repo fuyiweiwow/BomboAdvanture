@@ -1,0 +1,8 @@
+{
+	"chance": 0.05,
+	"entries": [
+		{"item_id": "bomb_up", "rarity": "uncommon", "weight": 3.0},
+		{"item_id": "power_up", "rarity": "uncommon", "weight": 3.0},
+		{"item_id": "speed_up", "rarity": "rare", "weight": 2.0}
+	]
+}
