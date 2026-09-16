@@ -43,6 +43,12 @@ func run() -> Array[String]:
 	})
 	if not RogueDropCatalog.load_config(TEST_CONFIG_PATH).is_empty():
 		failures.append("drop catalog accepted an item id that does not exist")
+	_write_config({
+		"chance": 1.0,
+		"entries": [{"item_id": "../mission/forest_cleanup", "rarity": "rare", "weight": 1.0}],
+	})
+	if not RogueDropCatalog.load_config(TEST_CONFIG_PATH).is_empty():
+		failures.append("drop catalog accepted a path-traversing item id")
 	_write_config(config)
 
 	var level := DropLevel.new()
